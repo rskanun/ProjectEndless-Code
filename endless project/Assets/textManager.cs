@@ -19,6 +19,11 @@ public class textManager : MonoBehaviour
             "네가 이곳의 주인공이구나?",
             "그거 알아? \r\n사실 이곳은 가상세계야."
         });
+
+        textData.Add(2, new string[]
+        {
+            "표지판에 박힌 가시에 찔렸다."
+        });
     }
 
     public string[] getText(int id)
