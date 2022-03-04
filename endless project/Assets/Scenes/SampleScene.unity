@@ -212,12 +212,12 @@ GameObject:
   m_Component:
   - component: {fileID: 393814891}
   - component: {fileID: 393814892}
-  - component: {fileID: 393814894}
   - component: {fileID: 393814893}
+  - component: {fileID: 393814894}
   - component: {fileID: 393814895}
   m_Layer: 0
   m_Name: sign
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

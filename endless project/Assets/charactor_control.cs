@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class charactor_control : MonoBehaviour
 {
     objectManager objData;
+    eventManager eventM;
     option keySet = new option();
 
     public textManager TextManager;
@@ -173,6 +175,12 @@ public class charactor_control : MonoBehaviour
         if (textLineNum <= (lines.Length - 1))
         {
             string str = lines[textLineNum];
+
+            if (str.FirstOrDefault().Equals("/"))
+            {
+                eventM.getEvent(str);
+                return;
+            }
 
             if (lineCnt == 0)
             {
