@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class eventManager : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     void getEvent(string str)
+    {
+        string[] commands = str.Split(' ');
+        string command = str.Split(' ')[0];
+
+        switch (command)
+        {
+            case "/getDamage":
+                break;
+
+            default:
+                Debug.Log(command + " is an incorrect command!");
+                break;
+        }
+    }
+
+    void getDamage(string[] commands)
     {
 
     }

@@ -7,9 +7,9 @@ public class option
     private string file     = @"Assets\Resources\option.txt";
 
     // ¾×¼ÇÅ°
-    string key_attack = "mouse 0";
-    string key_dash     = "mouse 1";
-    string key_interact = "e";
+    private string key_attack = "mouse 0";
+    private string key_dash     = "mouse 1";
+    private string key_interact = "e";
 
     DirectoryInfo di;
 
@@ -52,11 +52,11 @@ public class option
 
         foreach (string s in File.ReadLines(file))
         {
-            sortation(s);
+            setKey(s);
         }
     }
 
-    private void sortation(string s)
+    private void setKey(string s)
     {
         string[] str = s.Split(new string[] { ": " }, System.StringSplitOptions.None);
 
