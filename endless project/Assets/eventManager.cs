@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class eventManager : MonoBehaviour
 {
-    void getEvent(string str)
+    public void getEvent(string str)
     {
         string[] commands = str.Split(' ');
         string command = str.Split(' ')[0];

@@ -4962,13 +4962,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee7d65c478998c544bcccf2899a18d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TextManager: {fileID: 1700734669}
   speed: 50
   highSpeed: 50
   dash_distance: 50
   dash_speed: 0.15
   stop_distance: 0.5
-  setTypingSpeed: 0.04
   subRigid: {fileID: 2102133563}
   textLine: {fileID: 179087010}
   textDialogue: {fileID: 677216894}

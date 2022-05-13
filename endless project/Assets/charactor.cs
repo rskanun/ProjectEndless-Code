@@ -1,23 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class charactor : MonoBehaviour
 {
     objectManager objData;
-    eventManager eventM;
     option keySet = new option();
 
-    public textManager TextManager;
+    textManager TextManager;
 
     bool noKeyDown = false;
-    bool isDash = false;
     bool isTalking = false;
+    bool isDash = false;
     bool npcInArea = false;
-
-    string[] lines;
 
     string key_dash;
     string key_interact;
@@ -28,16 +24,12 @@ public class charactor : MonoBehaviour
     public float dash_distance;
     public float dash_speed;
     public float stop_distance;
-    public float setTypingSpeed;
-
-    float typingSpeed;
 
     int axisH = 0;
     int axisV = 0;
-    int textLineNum = 0;
-    int lineCnt = 0;
 
     public GameObject subRigid;
+
     public Text textLine;
     public GameObject textDialogue;
 
@@ -57,10 +49,10 @@ public class charactor : MonoBehaviour
         animator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
 
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-
         textLine.gameObject.SetActive(false);
         textDialogue.gameObject.SetActive(false);
+
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         init();
     }
@@ -73,6 +65,8 @@ public class charactor : MonoBehaviour
 
         mainEntity = this.gameObject.transform;
         subEntity = subRigid.transform;
+
+        TextManager.init(textLine, textDialogue);
 
         moveVec = Vector2.zero;
     }
@@ -113,6 +107,7 @@ public class charactor : MonoBehaviour
 
         if(Input.GetKeyDown(key_interact) && npcInArea)
         {
+            noKeyDown = true;
             interact();
         }
 
@@ -161,68 +156,7 @@ public class charactor : MonoBehaviour
 
     private void interact()
     {
-        if (textLineNum == 0)
-        {
-            textLine.gameObject.SetActive(true);
-            textDialogue.gameObject.SetActive(true);
-
-            isTalking = true;
-            noKeyDown = true;
-
-            lines = TextManager.getText(objData.id);
-        }
-
-        if (textLineNum <= (lines.Length - 1))
-        {
-            string str = lines[textLineNum];
-
-            if (str.FirstOrDefault().Equals("/"))
-            {
-                eventM.getEvent(str);
-                return;
-            }
-
-            if (lineCnt == 0)
-            {
-                typingSpeed = setTypingSpeed;
-                textLine.text = "";
-                StartCoroutine(chatDelay(lines[textLineNum]));
-
-            }
-
-            else if (lineCnt < str.Length)
-            {
-                typingSpeed = 0;
-            }
-        }
-
-        else
-        {
-            textLineNum = 0;
-            lineCnt = 0;
-            textLine.text = "";
-
-            textLine.gameObject.SetActive(false);
-            textDialogue.gameObject.SetActive(false);
-
-            isTalking = false;
-            noKeyDown = false;
-        }
-    }
-
-    IEnumerator chatDelay(string str)
-    {
-        while (lineCnt < str.Length)
-        {
-            textLine.text = str.Substring(0, lineCnt + 1);
-            lineCnt++;
-
-            yield return new WaitForSeconds(typingSpeed);
-
-        }
-
-        lineCnt = 0;
-        textLineNum++;
+        isTalking = TextManager.talk(objData);
     }
 
     private void FixedUpdate()
