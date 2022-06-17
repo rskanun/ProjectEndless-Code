@@ -8,7 +8,7 @@ public class charactor : MonoBehaviour
     objectManager objData;
     option keySet = new option();
 
-    textManager TextManager;
+    TextManager TextManager;
 
     bool noKeyDown = false;
     bool isTalking = false;
