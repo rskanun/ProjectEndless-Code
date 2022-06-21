@@ -1,29 +1,40 @@
 using System.IO;
+using UnityEngine;
 
-public class Option
+public class Option : MonoBehaviour
 {
     // 저장 파일 위치
     private string folder   = @"Assets\Resources";
     private string file     = @"Assets\Resources\option.txt";
 
     // 컨트롤키
-    private static string left = "left";
+    private static string left  = "left";
     private static string right = "right";
-    private static string up = "up";
-    private static string down = "down";
+    private static string up    = "up";
+    private static string down  = "down";
 
     // 액션키
-    private static string key_attack = "mouse 0";
-    private static string key_dash     = "mouse 1";
-    private static string key_interact = "e";
+    private static string action    = "mouse 0";
+    private static string dash      = "mouse 1";
+    private static string interact  = "e";
+
+    // 스크립트 속도
+    private static float typingSpeed = 0.025f;
 
     DirectoryInfo di;
 
-    public void init()
+    private void Awake()
     {
+        // 폴더 위치 설정
         di = new DirectoryInfo(folder);
 
+        // 설정 불러오기
         loadOption();
+    }
+
+    public static float getTypingSpeed()
+    {
+        return typingSpeed;
     }
 
     public static string getKey(Key key)
@@ -42,14 +53,14 @@ public class Option
             case Key.down:
                 return down;
 
-            case Key.attack:
-                return key_attack;
+            case Key.action:
+                return action;
 
             case Key.dash:
-                return key_dash;
+                return dash;
 
             case Key.interact:
-                return key_interact;
+                return interact;
         }
 
         return null;
@@ -76,15 +87,15 @@ public class Option
         switch (str[0])
         {
             case "attack":
-                key_attack = str[1];
+                action = str[1];
                 break;
 
             case "dash":
-                key_dash = str[1];
+                dash = str[1];
                 break;
 
             case "interact":
-                key_interact = str[1];
+                interact = str[1];
                 break;
 
             default:
@@ -99,9 +110,9 @@ public class Option
 
         StreamWriter textWriter = File.CreateText(file);
         textWriter.WriteLine(
-            "attack: " + key_attack
-            + "\ndash: " + key_dash
-            + "\ninteract: " + key_interact);
+            "action: " + action
+            + "\ndash: " + dash
+            + "\ninteract: " + interact);
 
         textWriter.Dispose();
     }

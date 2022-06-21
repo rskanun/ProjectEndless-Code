@@ -3,6 +3,6 @@ using UnityEngine;
 
 public class Player : ObjectManager
 {
-    public int dashConstant;
-    public int dashSpeed;
+    public float dashConstant;
+    public float dashSpeed;
 }

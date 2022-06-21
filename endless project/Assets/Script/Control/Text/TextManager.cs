@@ -29,18 +29,20 @@ public class TextManager : MonoBehaviour
         textLine.gameObject.SetActive(false);
         textDialogue.gameObject.SetActive(false);
 
+        // 타이핑 속도 가져오기
+        setTypingSpeed = Option.getTypingSpeed();
+
         // 텍스트 데이터 삽입
         textData = new Dictionary<int, string[]>();
         initText();
     }
 
-    public bool talk(ObjectManager objData)
+    public bool talk(NPC npc)
     {
         // 대화 처음 시작 시 텍스트 창 활성화 및 대화 가져오기
         if (textLineNum == 0)
         {
-            initTalk(objData);
-            return true;
+            initTalk(npc);
         }
 
         // 대화 진행
@@ -53,13 +55,13 @@ public class TextManager : MonoBehaviour
         // 대화 종료 시 초기화 및 텍스트 창 비활성화
         else
         {
-            initTalk(objData);
+            initTalk(npc);
             return false;
         }
             
     }
 
-    private void initTalk(ObjectManager objData)
+    private void initTalk(NPC npc)
     {
         // 대화 시작 시
         if (!isTalking)
@@ -69,7 +71,7 @@ public class TextManager : MonoBehaviour
             textDialogue.gameObject.SetActive(true);
 
             // 해당되는 대화목록 가져오기
-            lines = getText(objData.id);
+            lines = getText(npc.id);
 
             // 대화 진행상태로 변경
             isTalking = true;
