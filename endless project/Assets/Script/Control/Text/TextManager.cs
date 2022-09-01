@@ -8,6 +8,8 @@ public class TextManager : MonoBehaviour
 {
     private Dictionary<int, string[]> textData;
 
+    private CSVReader csvReader;
+
     // Game Object
     public Text textLine;
     public GameObject textDialogue;
@@ -25,6 +27,8 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
+        csvReader = GetComponent<CSVReader>();
+
         // 텍스트와 텍스트창 숨김
         textLine.gameObject.SetActive(false);
         textDialogue.gameObject.SetActive(false);
@@ -40,7 +44,7 @@ public class TextManager : MonoBehaviour
     public bool talk(NPC npc)
     {
         // 대화 처음 시작 시 텍스트 창 활성화 및 대화 가져오기
-        if (textLineNum == 0)
+        if (!isTalking)
         {
             initTalk(npc);
         }
@@ -136,18 +140,37 @@ public class TextManager : MonoBehaviour
 
     private void initText()
     {
-        // 대화 목록
-        // 추후 CSV 방식으로 바꿀 예정
-        textData.Add(1, new string[]
-        {
-            "네가 이곳의 주인공이구나?",
-            "그거 알아? \r\n사실 이곳은 가상세계야."
-        });
+        List<string> lines = csvReader.getLines();
 
-        textData.Add(2, new string[]
+        // 텍스트를 정리할 dummy list
+        List<string> strs = new List<string>();
+        // 텍스트 코드를 기억할 dummy int
+        int beforeNum = 0;
+
+        // 파일 끝까지 한 줄씩 읽기
+        foreach (string str in lines)
         {
-            "표지판에 박힌 가시에 찔렸다."
-        });
+            // 해당 줄의 스크립트와 코드 분리
+            string num = str.Split(',')[0];
+            string line = str.Split(',')[1];
+
+            // 새로운 넘버가 출현했을 경우
+            if (num != null)
+            {
+                // 이전 넘버가 있다면
+                if (beforeNum != 0)
+                {
+                    // 이전 넘버 데이터에 텍스트가 정리된 list 추가
+                    textData.Add(beforeNum, strs.ToArray());
+                    strs.Clear();
+                }
+
+                beforeNum = int.Parse(num);
+            }
+
+            else
+                strs.Add(line);
+        }
     }
 
     public string[] getText(int id)

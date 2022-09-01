@@ -5190,7 +5190,6 @@ GameObject:
   - component: {fileID: 823037298}
   - component: {fileID: 823037297}
   - component: {fileID: 823037304}
-  - component: {fileID: 823037303}
   - component: {fileID: 823037300}
   - component: {fileID: 823037299}
   - component: {fileID: 823037301}
@@ -5360,20 +5359,6 @@ PolygonCollider2D:
       - {x: 0.29999998, y: -0.14}
       - {x: 0.32, y: -0.089999996}
       - {x: 0.32, y: 0.099999994}
---- !u!114 &823037303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 823037296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 910b371a17719254bb02ba5197ef2ddf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textLine: {fileID: 179087010}
-  textDialogue: {fileID: 677216894}
 --- !u!114 &823037304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5583,6 +5568,8 @@ GameObject:
   - component: {fileID: 1363184304}
   - component: {fileID: 1363184303}
   - component: {fileID: 1363184302}
+  - component: {fileID: 1363184307}
+  - component: {fileID: 1363184306}
   m_Layer: 5
   m_Name: UI Canvas
   m_TagString: Untagged
@@ -5672,6 +5659,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1363184306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1363184301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e972b31d656722049aba6cf7ec33cb73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1363184307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1363184301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 910b371a17719254bb02ba5197ef2ddf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textLine: {fileID: 179087010}
+  textDialogue: {fileID: 677216894}
 --- !u!1 &1458030098
 GameObject:
   m_ObjectHideFlags: 0
