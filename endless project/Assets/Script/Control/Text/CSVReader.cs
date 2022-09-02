@@ -7,8 +7,9 @@ public class CSVReader : MonoBehaviour
 {
     // csv 파일 위치
     private string file = @"Assets\Resources\dialogue.csv";
+
     // csv 파일을 줄별로 정리할 list
-    private List<string> lines = new List<string>();
+    private static List<string> lines = new List<string>();
     private StreamReader reader;
 
     void Awake()
@@ -23,5 +24,5 @@ public class CSVReader : MonoBehaviour
             lines.Add(reader.ReadLine());
     }
 
-    public List<string> getLines() { return lines; }
+    public static List<string> getLines() { return lines; }
 }

@@ -8,8 +8,6 @@ public class TextManager : MonoBehaviour
 {
     private Dictionary<int, string[]> textData;
 
-    private CSVReader csvReader;
-
     // Game Object
     public Text textLine;
     public GameObject textDialogue;
@@ -25,10 +23,8 @@ public class TextManager : MonoBehaviour
 
     private bool isTalking = false;
 
-    private void Awake()
+    private void Start()
     {
-        csvReader = GetComponent<CSVReader>();
-
         // 텍스트와 텍스트창 숨김
         textLine.gameObject.SetActive(false);
         textDialogue.gameObject.SetActive(false);
@@ -140,7 +136,7 @@ public class TextManager : MonoBehaviour
 
     private void initText()
     {
-        List<string> lines = csvReader.getLines();
+        List<string> lines = CSVReader.getLines();
 
         // 텍스트를 정리할 dummy list
         List<string> strs = new List<string>();
@@ -155,7 +151,7 @@ public class TextManager : MonoBehaviour
             string line = str.Split(',')[1];
 
             // 새로운 넘버가 출현했을 경우
-            if (num != null)
+            if (!string.IsNullOrEmpty(num))
             {
                 // 이전 넘버가 있다면
                 if (beforeNum != 0)
@@ -168,8 +164,17 @@ public class TextManager : MonoBehaviour
                 beforeNum = int.Parse(num);
             }
 
-            else
-                strs.Add(line);
+            // 줄바꿈 인식
+            line = line.Replace("\\r\\n", "\r\n");
+            // 앞에 넘버가 붙는 것에 관계없이 대사를 배열에 추가
+            strs.Add(line);
+        }
+
+        // 아직 남은 대사가 배열안에 있을 경우 전부 대사 데이터에 저장
+        if(!(strs is null))
+        {
+            textData.Add(beforeNum, strs.ToArray());
+            strs.Clear();
         }
     }
 
