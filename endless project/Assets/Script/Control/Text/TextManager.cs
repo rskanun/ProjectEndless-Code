@@ -71,7 +71,8 @@ public class TextManager : MonoBehaviour
             textDialogue.gameObject.SetActive(true);
 
             // 해당되는 대화목록 가져오기
-            lines = getText(npc.id);
+
+            lines = getText(npc.getID());
 
             // 대화 진행상태로 변경
             isTalking = true;

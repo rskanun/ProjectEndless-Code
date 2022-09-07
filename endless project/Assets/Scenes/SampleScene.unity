@@ -438,15 +438,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 393814890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb21ba5318a9a9e4899a76d78119b3e9, type: 3}
+  m_Script: {fileID: 11500000, guid: c1a0dd5e202fd924982a728fe5a49c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 0
-  str: 0
-  speed: 0
-  sp: 0
-  id: 2
-  isNPC: 1
+  npc: {fileID: 11400000, guid: 7a3bb78272b76fa458198cdc9fcee3fe, type: 2}
 --- !u!1 &467506797
 GameObject:
   m_ObjectHideFlags: 0
@@ -5191,7 +5186,6 @@ GameObject:
   - component: {fileID: 823037297}
   - component: {fileID: 823037304}
   - component: {fileID: 823037303}
-  - component: {fileID: 823037300}
   - component: {fileID: 823037299}
   - component: {fileID: 823037301}
   - component: {fileID: 823037302}
@@ -5288,24 +5282,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &823037300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 823037296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed3f7b4fff92619488e39e69156a0368, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hp: 100
-  str: 0
-  speed: 40
-  sp: 100
-  dashConstant: 1
-  dashSpeed: 0.35
 --- !u!95 &823037301
 Animator:
   serializedVersion: 3
@@ -5387,6 +5363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subRigid: {fileID: 2102133563}
+  player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
 --- !u!1 &1110442194
 GameObject:
   m_ObjectHideFlags: 0
@@ -7950,15 +7927,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2135711974}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb21ba5318a9a9e4899a76d78119b3e9, type: 3}
+  m_Script: {fileID: 11500000, guid: c1a0dd5e202fd924982a728fe5a49c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 0
-  str: 0
-  speed: 0
-  sp: 0
-  id: 1
-  isNPC: 1
+  npc: {fileID: 11400000, guid: 3724cd3b6342ceb49ae38ab5c9f62dd4, type: 2}
 --- !u!61 &2135711979
 BoxCollider2D:
   m_ObjectHideFlags: 0

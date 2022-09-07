@@ -1,8 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC : ObjectManager
+public class NPC : MonoBehaviour
 {
-    public int id; // 고유 번호
-    public bool isNPC;
+    [SerializeField]
+    private NPCData npc;
+    public int getID()
+    {
+        return npc.Id;
+    }
 }

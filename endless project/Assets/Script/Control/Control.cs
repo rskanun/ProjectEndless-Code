@@ -9,6 +9,9 @@ public class Control : MonoBehaviour
 
     private bool noMoveKeyDown = false;
     private bool isDash = false;
+    private bool isTalking = false;
+
+    private bool dashing = false;
     private bool npcInArea = false;
 
     private Vector2 vec;
@@ -23,11 +26,10 @@ public class Control : MonoBehaviour
     private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
 
     private TextManager text;
-    private NPC npc;
+    private NPC npc; // 상호작용 할 npc
 
-    private float speed;
-    private float dashSpeed;
-    private float dashConstant;
+    [SerializeField]
+    private Player player;
 
     /************************************************************
      * [Key Value]
@@ -71,9 +73,6 @@ public class Control : MonoBehaviour
         animator        = GetComponent<Animator>();
         rigid           = GetComponent<Rigidbody2D>();
         text            = GetComponent<TextManager>();
-        speed           = GetComponent<Player>().speed;
-        dashConstant    = GetComponent<Player>().dashConstant;
-        dashSpeed       = GetComponent<Player>().dashSpeed;
     }
 
     private void Update()
@@ -81,8 +80,8 @@ public class Control : MonoBehaviour
         // 텍스트 상호작용 키 감지
         // 대화가능한 npc가 범위 내에 있다면 상호작용 키를,
         // 대화 도중이라면 액션키를 감지
-        if(npcInArea && Input.GetKeyDown(interact) || noMoveKeyDown && Input.GetKeyDown(action))
-            noMoveKeyDown = text.talk(npc);
+        if (npcInArea && Input.GetKeyDown(interact) || isTalking && Input.GetKeyDown(action))
+            moveBan(ref isTalking, text.talk(npc));
 
         // 움직임 키 감지
         if (!noMoveKeyDown)
@@ -137,13 +136,13 @@ public class Control : MonoBehaviour
     private void dashKey()
     {
         // 대쉬 중 움직임 금지
-        noMoveKeyDown = true;
+        moveBan(ref isDash, true);
 
         // 대쉬 이동을 위한 계산식
         getDashVector();
 
         // 대쉬 작동
-        isDash = true;
+        dashing = true;
     }
 
     private void getDashVector()
@@ -162,7 +161,7 @@ public class Control : MonoBehaviour
             * Mathf.Rad2Deg;
 
         // 이동 거리 계산
-        float distance = speed * dashConstant;
+        float distance = player.speed * player.DashConstant;
 
         dashVec.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
         dashVec.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
@@ -196,26 +195,26 @@ public class Control : MonoBehaviour
     private void FixedUpdate()
     {
         // 대쉬 발동에 따른 이동
-        if (isDash)
+        if (dashing)
         {
             // 캐릭터 및 서브 오브젝트 이동
-            rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, dashSpeed));
-            subEntity.position = Vector2.Lerp(subEntity.position, dashVec, dashSpeed);
+            rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, player.DashSpeed));
+            subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed);
 
             // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
             if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
             {
                 Debug.Log("ready");
-                isDash = false;
-                noMoveKeyDown = false;
+                dashing = false;
+                moveBan(ref isDash, false);
             }
         }
 
         // 방향키 이동에 따른(혹은 그에 준하는) 이동
-        rigid.velocity = vec.normalized * speed;
+        rigid.velocity = vec.normalized * player.speed;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         // 맞닿은 오브젝트가 NPC일 시
         if (collision.CompareTag("NPC"))
@@ -229,7 +228,7 @@ public class Control : MonoBehaviour
         }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         // 맞닿은 오브젝트가 NPC일 시
         if (collision.CompareTag("NPC"))
@@ -248,6 +247,15 @@ public class Control : MonoBehaviour
         // 마우스를 사용하지 않는 모드의 경우 wasd의 입력을 막는다.
         return Input.GetKey(up) || Input.GetKey(down)
             || Input.GetKey(left) || Input.GetKey(right);
+    }
+
+    private void moveBan(ref bool getNoMoveBool, bool isStop)
+    {
+        // 움직임 제어 bool 상태 변경
+        getNoMoveBool = isStop;
+
+        // 움직임을 제어하는 bool이 하나라도 존재한다면 움직임을 막음
+        noMoveKeyDown = isDash || isTalking;
     }
 
 }
