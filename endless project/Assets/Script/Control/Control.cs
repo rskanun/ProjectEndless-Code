@@ -8,11 +8,6 @@ public class Control : MonoBehaviour
     private const int ANIMATION_CONSTANT = 10;
 
     private bool noMoveKeyDown = false;
-    private bool isDash = false;
-    private bool isTalking = false;
-
-    private bool dashing = false;
-    private bool npcInArea = false;
 
     private Vector2 vec;
     private Vector2 dashVec;
@@ -26,6 +21,7 @@ public class Control : MonoBehaviour
     private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
 
     private TextManager text;
+    private TextUI textUI;
     private NPC npc; // 상호작용 할 npc
 
     [SerializeField]
@@ -80,16 +76,20 @@ public class Control : MonoBehaviour
         // 텍스트 상호작용 키 감지
         // 대화가능한 npc가 범위 내에 있다면 상호작용 키를,
         // 대화 도중이라면 액션키를 감지
-        if (npcInArea && Input.GetKeyDown(interact) || isTalking && Input.GetKeyDown(action))
-            moveBan(ref isTalking, text.talk(npc));
+        if (npc is null && Input.GetKeyDown(interact) || isTalking && Input.GetKeyDown(action))
+        {
+            talk();
+        }
 
         // 움직임 키 감지
         if (!noMoveKeyDown)
+        {
             moveKeyPress();
+        }
     }
 
     /************************************************************
-     * [키 제어]
+     * [움직임 제어]
      * 
      * 플레이어가 누르는 키(ex: 방향키)에 따른 움직임 제어
      ************************************************************/
@@ -132,7 +132,15 @@ public class Control : MonoBehaviour
         setAnimator(vec);
     }
 
-    // 마우스 방향으로 빠르게 이동하는 대쉬키
+    /************************************************************
+    * [대쉬 키]
+    * 
+    * 마우스 방향으로 플레이어가 빠르게 이동
+    ************************************************************/
+
+    private bool dashing = false; // true - 대쉬모드
+    private bool isDash = false; // 움직임 제어를 위한 boolean
+
     private void dashKey()
     {
         // 대쉬 중 움직임 금지
@@ -187,6 +195,120 @@ public class Control : MonoBehaviour
     }
 
     /************************************************************
+    * [대화 출력]
+    * 
+    * 인게임 화면의 대화 제어
+    ************************************************************/
+
+    private int textLineNum;
+    private int lineCnt;
+
+    private string[] lines;
+
+    private float typingSpeed;
+    private float setTypingSpeed;
+
+    private bool isTalking = false;
+
+    public bool talk()
+    {
+        // 대화 처음 시작 시 텍스트 창 활성화 및 대화 가져오기
+        if (!isTalking)
+        {
+            initTalk();
+        }
+
+        // 대화 진행
+        if (textLineNum <= (lines.Length - 1))
+        {
+            talking();
+            return true;
+        }
+
+        // 대화 종료 시 초기화 및 텍스트 창 비활성화
+        else
+        {
+            initTalk();
+            return false;
+        }
+
+    }
+
+    private void initTalk()
+    {
+        // 대화 시작 시
+        if (!isTalking)
+        {
+            // 텍스트 및 텍스트창 활성화
+            textLine.gameObject.SetActive(true);
+            textDialogue.gameObject.SetActive(true);
+
+            // 해당되는 대화목록 가져오기
+
+            lines = text.getText(npc.getID());
+
+            // 대화 진행상태로 변경
+            isTalking = true;
+        }
+
+        // 대화 종료 시
+        else
+        {
+            // 변수 초기화
+            textLineNum = 0;
+            lineCnt = 0;
+            textLine.text = "";
+
+            // 텍스트 및 텍스트창 비활성화
+            textLine.gameObject.SetActive(false);
+            textDialogue.gameObject.SetActive(false);
+
+            // 대화 종료상태로 변경
+            isTalking = false;
+        }
+    }
+
+    private void talking()
+    {
+        // 대화 목록 중 표시될 대화 가져오기
+        string str = lines[textLineNum];
+
+        // 한 글자도 출력이 안 됐을 경우
+        if (lineCnt == 0)
+        {
+            // 지정된 타이핑 속도로 출력
+            typingSpeed = setTypingSpeed;
+            textLine.text = "";
+            StartCoroutine(talkDelay(lines[textLineNum]));
+
+        }
+
+        // 대화 출력 도중이라면
+        else if (lineCnt < str.Length)
+        {
+            // 한 번에 출력
+            typingSpeed = 0;
+        }
+    }
+    IEnumerator talkDelay(string str)
+    {
+        // 대화 진행 도중일 경우
+        while (lineCnt < str.Length)
+        {
+            // 한 글자씩 대화를 출력
+            textLine.text = str.Substring(0, lineCnt + 1); // #substring 효율문제 질문
+            lineCnt++;
+
+            yield return new WaitForSeconds(typingSpeed);
+
+        }
+
+        // 모두 출력했다면 남은 글자수를 0으로 초기화 후 다음 라인으로 넘어가기
+        lineCnt = 0;
+        textLineNum++;
+    }
+
+    /************************************************************
     * [시스템]
     * 
     * 실제 게임 내의 캐릭터의 움직임이나 모션을 상황에 맞게 제어
@@ -197,21 +319,26 @@ public class Control : MonoBehaviour
         // 대쉬 발동에 따른 이동
         if (dashing)
         {
-            // 캐릭터 및 서브 오브젝트 이동
-            rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, player.DashSpeed));
-            subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed);
-
-            // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
-            if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
-            {
-                Debug.Log("ready");
-                dashing = false;
-                moveBan(ref isDash, false);
-            }
+            moveDash();
         }
 
         // 방향키 이동에 따른(혹은 그에 준하는) 이동
         rigid.velocity = vec.normalized * player.speed;
+    }
+
+    private void moveDash()
+    {
+        // 캐릭터 및 서브 오브젝트 이동
+        rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, player.DashSpeed));
+        subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed);
+
+        // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
+        if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
+        {
+            Debug.Log("ready");
+            dashing = false;
+            moveBan(ref isDash, false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -219,11 +346,8 @@ public class Control : MonoBehaviour
         // 맞닿은 오브젝트가 NPC일 시
         if (collision.CompareTag("NPC"))
         {
-            // 해당 NPC의 정보를 가져오고
+            // 해당 NPC의 정보를 가져오기
             npc = collision.gameObject.GetComponent<NPC>();
-
-            // npcInArea를 활성화
-            npcInArea = true;
             Debug.Log("keydown " + interact);
         }
     }
@@ -233,9 +357,8 @@ public class Control : MonoBehaviour
         // 맞닿은 오브젝트가 NPC일 시
         if (collision.CompareTag("NPC"))
         {
+            // NPC의 정보를 초기화
             npc = null;
-
-            npcInArea = false;
             Debug.Log("exit");
         }
     }
