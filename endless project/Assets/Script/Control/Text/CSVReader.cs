@@ -21,7 +21,9 @@ public class CSVReader : MonoBehaviour
     private void fileRead()
     {
         while (!reader.EndOfStream)
+        {
             lines.Add(reader.ReadLine());
+        }
     }
 
     public static List<string> getLines() { return lines; }

@@ -14,7 +14,17 @@ public abstract class ObjectData : ScriptableObject
     public int hp
     {
         get { return healthPoint; }
-        set { healthPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                healthPoint = 0;
+            // 입력값이 최대치를 초과한 경우
+            else if (value > maxHealthPoint)
+                healthPoint = maxHealthPoint;
+            else
+                healthPoint = value;
+        }
     }
 
     [SerializeField]
@@ -22,7 +32,14 @@ public abstract class ObjectData : ScriptableObject
     public int maxHp
     {
         get { return maxHealthPoint; }
-        set { maxHealthPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                maxHealthPoint = 0;
+            else
+                maxHealthPoint = value;
+        }
     }
 
     [SerializeField]
@@ -36,7 +53,14 @@ public abstract class ObjectData : ScriptableObject
     public int str
     {
         get { return strength; }
-        set { strength = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                strength = 0;
+            else
+                strength = value;
+        }
     }
 
     [SerializeField]
@@ -49,7 +73,14 @@ public abstract class ObjectData : ScriptableObject
     public int speed
     {
         get { return agility; }
-        set { agility = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                agility = 0;
+            else
+                agility = value;
+        }
     }
 
     [SerializeField]
@@ -63,6 +94,13 @@ public abstract class ObjectData : ScriptableObject
     public int def
     {
         get { return defensive; }
-        set { defensive = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                defensive = 0;
+            else
+                defensive = value;
+        }
     }
 }

@@ -26,7 +26,17 @@ public class Player : ObjectData
     public int ap
     {
         get { return awakenPoint; }
-        set { awakenPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                awakenPoint = manaPoint;
+            // 입력값이 최대치를 초과한 경우
+            else if (value + manaPoint > maxAwakenPoint)
+                awakenPoint = maxAwakenPoint;
+            else
+                awakenPoint = value;
+        }
     }
 
     [SerializeField]
@@ -34,7 +44,14 @@ public class Player : ObjectData
     public int maxAP
     {
         get { return maxAwakenPoint; }
-        set { maxAwakenPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                maxAwakenPoint = 0;
+            else
+                maxAwakenPoint = value;
+        }
     }
 
     [SerializeField]
@@ -49,7 +66,17 @@ public class Player : ObjectData
     public int sp
     {
         get { return staminaPoint; }
-        set { staminaPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                staminaPoint = 0;
+            // 입력값이 최대치를 초과한 경우
+            else if (value > maxStaminaPoint)
+                staminaPoint = maxStaminaPoint;
+            else
+                staminaPoint = value;
+        }
     }
 
     [SerializeField]
@@ -57,7 +84,14 @@ public class Player : ObjectData
     public int maxSP
     {
         get { return maxStaminaPoint; }
-        set { maxStaminaPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                maxStaminaPoint = 0;
+            else
+                maxStaminaPoint = value;
+        }
     }
 
     [SerializeField]
@@ -72,6 +106,13 @@ public class Player : ObjectData
     public int mp
     {
         get { return manaPoint; }
-        set { manaPoint = value; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                manaPoint = 0;
+            else
+                manaPoint = value;
+        }
     }
 }

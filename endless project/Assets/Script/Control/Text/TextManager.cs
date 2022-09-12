@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class TextManager : MonoBehaviour
@@ -10,15 +9,10 @@ public class TextManager : MonoBehaviour
 
     private void Start()
     {
-        // 타이핑 속도 가져오기
-        setTypingSpeed = Option.getTypingSpeed();
-
         // 텍스트 데이터 삽입
         textData = new Dictionary<int, string[]>();
         initText();
     }
-
-    
 
     private void initText()
     {

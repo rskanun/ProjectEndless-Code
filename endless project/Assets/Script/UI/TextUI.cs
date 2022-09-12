@@ -15,7 +15,7 @@ public class TextUI : MonoBehaviour
         textDialogue.gameObject.SetActive(false);
     }
 
-    public void dialogView(bool isView)
+    public void setDialogView(bool isView)
     {
         textLine.gameObject.SetActive(isView);
         textDialogue.gameObject.SetActive(isView);
