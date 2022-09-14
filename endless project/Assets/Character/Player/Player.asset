@@ -19,7 +19,7 @@ MonoBehaviour:
   defensive: 0
   dashConstant: 1
   dashSpeed: 0.35
-  awakenPoint: 5
+  awakenPoint: 15
   maxAwakenPoint: 100
   staminaPoint: 0
   maxStaminaPoint: 0

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Script.System.Menu;
+using System.Collections;
 using UnityEngine;
 
 public class Control : MonoBehaviour
@@ -18,7 +19,9 @@ public class Control : MonoBehaviour
     private Transform mainEntity; // 플레이어 캐릭터
     private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
 
+    // 참조 스크립트
     private EventManager command;
+    private MenuManager menuManager;
     private TextManager text;
     private TextUI textUI;
     private NPC npc; // 상호작용 할 npc
@@ -28,6 +31,9 @@ public class Control : MonoBehaviour
 
     [SerializeField]
     private GameObject dialog;
+
+    [SerializeField]
+    private GameObject menuUI;
 
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
@@ -62,6 +68,9 @@ public class Control : MonoBehaviour
     // 액션키
     private string action   = Option.getKey(Key.action);
 
+    // 옵션키
+    private string menu      = Option.getKey(Key.menu);
+
     private void Awake()
     {
         init();
@@ -87,10 +96,18 @@ public class Control : MonoBehaviour
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
         textUI      = dialog.GetComponent<TextUI>();
+
+        // UI Canvas -> Menu
+        menuManager = menuUI.GetComponent<MenuManager>();
     }
 
     private void Update()
     {
+        if(Input.GetKeyDown(menu))
+        {
+            menuManager.menuView();
+        }
+
         // 텍스트 상호작용 키 감지
         // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
         // 대화 도중 액션키와 상호작용 키만 인식

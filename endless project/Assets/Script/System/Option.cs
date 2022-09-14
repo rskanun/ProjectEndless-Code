@@ -4,7 +4,8 @@ using UnityEngine;
 public enum Key
 {
     up, down, right, left,
-    jump, action, dash, interact
+    jump, action, dash, interact,
+    menu
 }
 
 public class Option : MonoBehaviour
@@ -23,6 +24,9 @@ public class Option : MonoBehaviour
     private static string action    = "mouse 0";
     private static string dash      = "mouse 1";
     private static string interact  = "e";
+
+    // 옵션(ESC)키
+    private static string menu = "escape";
 
     // 스크립트 속도
     private static float typingSpeed = 0.025f;
@@ -67,6 +71,9 @@ public class Option : MonoBehaviour
 
             case Key.interact:
                 return interact;
+
+            case Key.menu:
+                return menu;
         }
 
         return null;
