@@ -1,29 +1,15 @@
 ﻿using Assets.Script.System.Menu;
+using Assets.Script.UI;
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Control : MonoBehaviour
 {
-    private const float STOP_DISTANCE = 0.05f;
-
-    private const int ANIMATION_CONSTANT = 10;
-
-    private Vector2 vec;
-    private Vector2 dashVec;
-
-    private Animator animator;
-
-    private Rigidbody2D rigid;
-    public GameObject subRigid;
-
-    private Transform mainEntity; // 플레이어 캐릭터
-    private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
-
     // 참조 스크립트
     private EventManager command;
     private MenuManager menuManager;
     private TextManager text;
-    private TextUI textUI;
     private NPC npc; // 상호작용 할 npc
 
     [SerializeField]
@@ -38,7 +24,7 @@ public class Control : MonoBehaviour
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
     {
-        get { return isTalking || isDashing; }
+        get { return isTalking || isDashing || isOpenMenu; }
     }
 
     // 옵션(ESC) 키 차단
@@ -95,7 +81,6 @@ public class Control : MonoBehaviour
 
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
-        textUI      = dialog.GetComponent<TextUI>();
 
         // UI Canvas -> Menu
         menuManager = menuUI.GetComponent<MenuManager>();
@@ -103,17 +88,12 @@ public class Control : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(menu))
-        {
-            menuManager.menuView();
-        }
+        menuKeyPress();
 
         // 텍스트 상호작용 키 감지
-        // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-        // 대화 도중 액션키와 상호작용 키만 인식
-        if (!(npc is null) && Input.GetKeyDown(interact) || isTalking && Input.GetKeyDown(action))
+        if(!isOpenMenu)
         {
-            talking();
+            talkingKeyPress();
         }
 
         // 움직임 키 감지
@@ -128,6 +108,15 @@ public class Control : MonoBehaviour
      * 
      * 플레이어가 누르는 키(ex: 방향키)에 따른 움직임 제어
      ************************************************************/
+
+    private const int ANIMATION_CONSTANT = 10;
+
+    private Vector2 vec;
+
+    private Animator animator;
+
+    private Rigidbody2D rigid;
+    public GameObject subRigid;
 
     // 키 입력에 따른 움직임 제어
     private void moveKeyPress()
@@ -173,7 +162,14 @@ public class Control : MonoBehaviour
     * 마우스 방향으로 플레이어가 빠르게 이동
     ************************************************************/
 
+    private const float STOP_DISTANCE = 0.05f;
+
     private bool isDashing = false;
+
+    private Vector2 dashVec;
+
+    private Transform mainEntity; // 플레이어 캐릭터
+    private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
 
     private void dashKey()
     {
@@ -240,25 +236,48 @@ public class Control : MonoBehaviour
 
     private bool isTalking = false;
 
-    public void talking()
+    private void talkingKeyPress()
     {
-        // 첫 대화의 시작일 경우
-        if (!isTalking)
+        // 대화의 첫 시작일 경우
+        if(!isTalking)
         {
-            // 현재 대사 번호 리셋
-            lineNum = 0;
-
-            // 대화 가능한 npc일 경우
-            if(npc.getID() != 0)
+            // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
+            if (npc is not null && Input.GetKeyDown(interact))
             {
-                // 대화 처음 시작 시 해당되는 대화목록 가져오기
-                lines = text.getText(npc.getID());
-
-                // 대화 진행상태로 변경
-                isTalking = true;
+                initTalk();
+                talking();
             }
         }
 
+        // 대화 도중일 경우
+        else
+        {
+            // 대화 도중 액션키만 인식
+            if (Input.GetKeyDown(action))
+            {
+                talking();
+            }
+        }
+    }
+
+    private void initTalk()
+    {
+        // 현재 대사 번호 리셋
+        lineNum = 0;
+
+        // 대화 가능한 npc일 경우
+        if (npc.getID() != 0)
+        {
+            // 대화 처음 시작 시 해당되는 대화목록 가져오기
+            lines = text.getText(npc.getID());
+
+            // 대화 진행상태로 변경
+            isTalking = true;
+        }
+    }
+
+    public void talking()
+    {
         // 한 대사를 모두 출력시 그 대사 종료
         if (lineCnt >= lines[lineNum].Length)
         {
@@ -266,7 +285,7 @@ public class Control : MonoBehaviour
             lineNum++;
 
             // 텍스트 창 비활성화
-            textUI.setDialogView(false);
+            text.setDialogView(false);
         }
 
         // 대화 진행
@@ -293,7 +312,7 @@ public class Control : MonoBehaviour
         else
         {
             // 텍스트 창 비활성화
-            textUI.setDialogView(false);
+            text.setDialogView(false);
 
             // 대화 종료상태로 변경
             isTalking = false;
@@ -305,7 +324,7 @@ public class Control : MonoBehaviour
         if (lineCnt == 0)
         {
             // 텍스트 창 활성화 및 타이핑 속도 리셋
-            textUI.setDialogView(true);
+            text.setDialogView(true);
             typingSpeed = Option.getTypingSpeed();
 
             // 지정된 타이핑 속도로 출력
@@ -326,7 +345,7 @@ public class Control : MonoBehaviour
         while (lineCnt < line.Length)
         {
             // 한 글자씩 대화를 출력
-            textUI.setText(splitString(line, lineCnt++));
+            text.setText(splitString(line, lineCnt++));
 
             yield return new WaitForSeconds(typingSpeed);
         }
@@ -343,6 +362,125 @@ public class Control : MonoBehaviour
         }
 
         return result;
+    }
+
+    /************************************************************
+    * [메뉴]
+    * 
+    * 메뉴 상태에서 커서 이동을 제어
+    ************************************************************/
+
+    private bool isOpenMenu = false;
+
+    private int menuNum = 0;
+
+    private void menuKeyPress()
+    {
+        // 메뉴키
+        if (Input.GetKeyDown(menu))
+        {
+            isOpenMenu = !isOpenMenu;
+            menuManager.menuViewSwitch(isOpenMenu);
+        }
+
+        // 메뉴 내 제어키
+        if (isOpenMenu)
+        {
+            // 선택
+            if(Input.GetKeyUp(action))
+            {
+                menuSelect();
+            }
+
+            // 커서 이동
+            moveSelectCursor(ref menuNum);
+
+            // 메뉴 갯수의 범위를 벗어나도 순환할 수 있도록 제어
+            if(menuNum < 0)
+            {
+                menuNum = 2;
+            }
+
+            else if(menuNum > 2)
+            {
+                menuNum = 0;
+            }
+
+            menuManager.selectIcon(menuNum);
+        }
+    }
+
+    private void menuSelect()
+    {
+        menuIcon select = (menuIcon)menuNum;
+
+        switch (select)
+        {
+            case menuIcon.load:
+                menuManager.load();
+                break;
+
+            case menuIcon.save:
+                menuManager.save();
+                break;
+
+            case menuIcon.title:
+                menuManager.toTitle();
+                break;
+        }
+    }
+
+    /************************************************************
+    * [커서 이동]
+    * 
+    * 메뉴창, 인벤토리 등의 상태에서 커서를 제어
+    ************************************************************/
+
+    private float MOVE_DELAY = 0.65f;
+
+    private float delayTime = 3.5f;
+    private float accumTime = 0;
+
+    private void moveSelectCursor(ref int num)
+    {
+        float v = Input.GetAxisRaw("Vertical");
+
+        // 조이스틱이나 방향키가 아래로 향할 때
+        if (v > 0)
+        {
+            pressMove(ref num, -1);
+        }
+
+        // 조이스틱이나 방향키가 위로 향할 때
+        else if (v < 0)
+        {
+            pressMove(ref num, +1);
+        }
+
+        // 중립상태
+        else
+        {
+            accumTime = 0;
+        }
+    }
+
+    private void pressMove(ref int num, int value)
+    {
+        // 일정시간동안 누른 키에 대해 한 번만 인식
+        if (accumTime <= 0)
+        {
+            num += value;
+        }
+
+        // 누르고 있는 시간을 측정
+        accumTime += Time.fixedDeltaTime;
+
+        // 일정시간 누르고 있으면 해당 방향으로 연속해서 이동
+        if (accumTime >= delayTime + MOVE_DELAY)
+        {
+            num += value;
+            accumTime = delayTime;
+        }
     }
 
     /************************************************************

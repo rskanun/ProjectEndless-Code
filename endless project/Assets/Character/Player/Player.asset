@@ -17,9 +17,7 @@ MonoBehaviour:
   strength: 0
   agility: 40
   defensive: 0
-  dashConstant: 1
-  dashSpeed: 0.35
-  awakenPoint: 15
+  awakenPoint: 5
   maxAwakenPoint: 100
   staminaPoint: 0
   maxStaminaPoint: 0

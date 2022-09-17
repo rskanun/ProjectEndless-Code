@@ -4,13 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
 public class Player : ObjectData
 {
-    [SerializeField]
-    private float dashConstant; // 대쉬 이동거리 계산에 쓰일 상수값
-    public float DashConstant { get { return dashConstant; } }
+    private const float DASH_CONSTANT = 1f; // 대쉬 이동거리 계산에 쓰일 상수값
+    public float DashConstant { get { return DASH_CONSTANT; } }
 
-    [SerializeField]
-    private float dashSpeed; // 대쉬 거리까지 이동하는 속도
-    public float DashSpeed { get { return dashSpeed; } }
+    private const float DASH_SPEED = 0.35f; // 대쉬 거리까지 이동하는 속도
+    public float DashSpeed { get { return DASH_SPEED; } }
 
     [SerializeField]
     private int awakenPoint;

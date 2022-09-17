@@ -6,11 +6,31 @@ public class TextManager : MonoBehaviour
 {
     // 텍스트 데이터 저장
     private Dictionary<int, string[]> textData;
+    private TextUI ui;
 
     private void Start()
     {
         // 텍스트 데이터 삽입
         textData = new Dictionary<int, string[]>();
+        init();
+    }
+
+    public void setDialogView(bool isView)
+    {
+        ui.setDialogView(isView);
+    }
+
+    public void setText(string text)
+    {
+        ui.setText(text);
+    }
+
+    private void init()
+    {
+        // UI init
+        ui = GetComponent<TextUI>();
+
+        // text input
         initText();
     }
 
