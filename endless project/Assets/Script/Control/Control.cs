@@ -373,7 +373,6 @@ public class Control : MonoBehaviour
     private bool isOpenMenu = false;
 
     private int menuNum = 0;
-    private int menuIndex = System.Enum.GetValues(typeof(Menu)).Length;
 
     private void menuKeyPress()
     {
@@ -394,7 +393,18 @@ public class Control : MonoBehaviour
             }
 
             // 커서 이동
-            moveSelectCursor(ref menuNum, menuIndex);
+            moveSelectCursor(ref menuNum);
+
+            // 메뉴 갯수의 범위를 벗어나도 순환할 수 있도록 제어
+            if(menuNum < 0)
+            {
+                menuNum = 2;
+            }
+
+            else if(menuNum > 2)
+            {
+                menuNum = 0;
+            }
 
             menuManager.selectIcon(menuNum);
         }
@@ -402,19 +412,19 @@ public class Control : MonoBehaviour
 
     private void menuSelect()
     {
-        Menu select = (Menu)menuNum;
+        menuIcon select = (menuIcon)menuNum;
 
         switch (select)
         {
-            case Menu.load:
+            case menuIcon.load:
                 menuManager.load();
                 break;
 
-            case Menu.save:
+            case menuIcon.save:
                 menuManager.save();
                 break;
 
-            case Menu.title:
+            case menuIcon.title:
                 menuManager.toTitle();
                 break;
         }
@@ -426,12 +436,12 @@ public class Control : MonoBehaviour
     * 메뉴창, 인벤토리 등의 상태에서 커서를 제어
     ************************************************************/
 
-    private const float MOVE_DELAY = 0.25f; // 연속으로 움직이는 딜레이
-    private const float DELAY_TIME_TO_MOVE = 2.4f; // 연속해서 이동하기까지 경과되는 시간
+    private float MOVE_DELAY = 0.65f;
 
-    private float accumTime = 0; // 버튼을 누르고 경과시간
+    private float delayTime = 3.5f;
+    private float accumTime = 0;
 
-    private void moveSelectCursor(ref int num, int index)
+    private void moveSelectCursor(ref int num)
     {
         float v = Input.GetAxisRaw("Vertical");
 
@@ -452,22 +462,6 @@ public class Control : MonoBehaviour
         {
             accumTime = 0;
         }
-
-        // 선택할 수 있는 창을 벗어나지 않고 순환하도록 보정
-        setCursorNum(ref num, index - 1);
-    }
-
-    private void setCursorNum(ref int num, int index)
-    {
-        if (num < 0)
-        {
-            num = index;
-        }
-
-        else if (num > index)
-        {
-            num = 0;
-        }
     }
 
     private void pressMove(ref int num, int value)
@@ -482,10 +476,10 @@ public class Control : MonoBehaviour
         accumTime += Time.fixedDeltaTime;
 
         // 일정시간 누르고 있으면 해당 방향으로 연속해서 이동
-        if (accumTime >= DELAY_TIME_TO_MOVE)
+        if (accumTime >= delayTime + MOVE_DELAY)
         {
             num += value;
-            accumTime = DELAY_TIME_TO_MOVE - MOVE_DELAY;
+            accumTime = delayTime;
         }
     }
 
