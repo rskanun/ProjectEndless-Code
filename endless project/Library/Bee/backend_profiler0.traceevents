@@ -1,5 +1,6 @@
 { "cat":"", "pid":12345, "tid":0, "ts":0, "ph":"M", "name":"process_name", "args": { "name":"bee_backend" } }
 <<<<<<< HEAD
+<<<<<<< HEAD
 ,{ "pid":12345, "tid":0, "ts":1664369840887934, "dur":1201, "ph":"X", "name": "DriverInitData",  "args": { "detail":"" }}
 ,{ "pid":12345, "tid":0, "ts":1664369840889141, "dur":488, "ph":"X", "name": "Tundra",  "args": { "detail":"RemoveStaleOutputs" }}
 ,{ "pid":12345, "tid":0, "ts":1664369840889730, "dur":49, "ph":"X", "name": "Tundra",  "args": { "detail":"PrepareNodes" }}
@@ -837,6 +838,8 @@
 ,{ "pid":12345, "tid":24, "ts":1664369841105756, "dur":2179, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
 ,{ "pid":12345, "tid":0, "ts":1664369841113458, "dur":1975, "ph":"X", "name": "ProfilerWriteOutput" }
 =======
+=======
+>>>>>>> parent of c7860f7e (9/28)
 ,{ "pid":12345, "tid":0, "ts":1663423850883051, "dur":1479, "ph":"X", "name": "DriverInitData",  "args": { "detail":"" }}
 ,{ "pid":12345, "tid":0, "ts":1663423850884537, "dur":501, "ph":"X", "name": "Tundra",  "args": { "detail":"RemoveStaleOutputs" }}
 ,{ "pid":12345, "tid":0, "ts":1663423850885169, "dur":47, "ph":"X", "name": "Tundra",  "args": { "detail":"PrepareNodes" }}
@@ -2364,5 +2367,8 @@
 ,{ "pid":12345, "tid":24, "ts":1663423850957084, "dur":201, "ph":"X", "name": "OutputFilesMissingFor",  "args": { "detail":"" }}
 ,{ "pid":12345, "tid":24, "ts":1663423850957286, "dur":436769, "ph":"X", "name": "WaitingForWork", "cname":"thread_state_sleeping",  "args": { "detail":"" }}
 ,{ "pid":12345, "tid":0, "ts":1663423851398111, "dur":3342, "ph":"X", "name": "ProfilerWriteOutput" }
+<<<<<<< HEAD
+>>>>>>> parent of c7860f7e (9/28)
+=======
 >>>>>>> parent of c7860f7e (9/28)
 ,
