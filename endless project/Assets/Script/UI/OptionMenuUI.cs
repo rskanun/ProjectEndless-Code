@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Script.UI
 {
-    public enum menuIcon
+    public enum Menu
     {
         load, save, title
     }
@@ -28,19 +28,19 @@ namespace Assets.Script.UI
             menu.gameObject.SetActive(isView);
         }
 
-        public void moveIcon(menuIcon selectIcon)
+        public void moveIcon(Menu selectIcon)
         {
             switch(selectIcon)
             {
-                case UI.menuIcon.load:
+                case UI.Menu.load:
                     setCursor(loadIcon);
                     break;
 
-                case UI.menuIcon.save:
+                case UI.Menu.save:
                     setCursor(saveIcon);
                     break;
 
-                case UI.menuIcon.title:
+                case UI.Menu.title:
                     setCursor(titleIcon);
                     break;
             }
