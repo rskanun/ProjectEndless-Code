@@ -32,7 +32,7 @@ namespace Assets.Script.System.Menu
 
         public void selectIcon(int num)
         {
-            ui.moveIcon((UI.Menu)num);
+            ui.moveIcon((menuIcon)num);
         }
 
         public void load()
