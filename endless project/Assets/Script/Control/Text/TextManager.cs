@@ -4,27 +4,9 @@ using UnityEngine;
 
 public class TextManager : MonoBehaviour
 {
-    // 참조 스크립트
-    private EventManager command;
-    private TextUI ui;
-
     // 텍스트 데이터 저장
     private Dictionary<int, string[]> textData;
-
-    // NPC 데이터
-
-    // 텍스트 현재 진행 상태
-    private bool isTalking = false;
-    public bool IsTalking { get { return isTalking; } }
-    private int lineNum;
-    private int lineCnt;
-
-    // 텍스트 저장 공간
-    private string[] lines;
-
-    // 출력 속도
-    private float typingSpeed;
-
+    private TextUI ui;
 
     private void Start()
     {
@@ -33,10 +15,19 @@ public class TextManager : MonoBehaviour
         init();
     }
 
+    public void setDialogView(bool isView)
+    {
+        ui.setDialogView(isView);
+    }
+
+    public void setText(string text)
+    {
+        ui.setText(text);
+    }
+
     private void init()
     {
-        // Component Init
-        command = GetComponent<EventManager>();
+        // UI init
         ui = GetComponent<TextUI>();
 
         // text input
@@ -87,131 +78,9 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    public void initTalk()
+    public string[] getText(int id)
     {
-        // 현재 대사 번호 리셋
-        lineNum = 0;
-
-        // 대화 가능한 npc일 경우
-        if (npc.getID() != 0)
-        {
-            // 대화 처음 시작 시 해당되는 대화목록 가져오기
-            lines = textData[npc.getID()];
-
-            // 대화 진행상태로 변경
-            isTalking = true;
-        }
-    }
-
-    public void talking()
-    {
-        // 한 대사를 모두 출력시 그 대사 종료
-        if (lineCnt >= lines[lineNum].Length)
-        {
-            lineCnt = 0;
-            lineNum++;
-
-            // 텍스트 창 비활성화
-            ui.setDialogView(false);
-        }
-
-        // 대화 진행
-        if (lineNum < lines.Length)
-        {
-            // 대사 가져오기
-            char[] line = lines[lineNum].ToCharArray();
-
-            // 그 대사가 커맨드일 경우 이벤트 출력
-            if (line[0] == '/')
-            {
-                command.getCommandEvent(lines[lineNum]);
-                lineNum++;
-
-                talking();
-            }
-
-            // 대사 출력
-            else
-                printText(line);
-        }
-
-        // 대화 종료
-        else
-        {
-            // 텍스트 창 비활성화
-            ui.setDialogView(false);
-
-            // 대화 종료상태로 변경
-            isTalking = false;
-        }
-    }
-    private void printText(char[] line)
-    {
-        // 한 글자도 출력이 안 됐을 경우
-        if (lineCnt == 0)
-        {
-            // 텍스트 창 활성화 및 타이핑 속도 리셋
-            ui.setDialogView(true);
-            typingSpeed = Option.getTypingSpeed();
-
-            // 지정된 타이핑 속도로 출력
-            StartCoroutine(talkDelay(line));
-        }
-
-        // 대화 출력 도중일 경우
-        else if (lineCnt < line.Length)
-        {
-            // 한 번에 출력
-            typingSpeed = 0;
-        }
-    }
-
-    IEnumerator talkDelay(char[] line)
-    {
-        // 대화 진행 도중일 경우
-        while (lineCnt < line.Length)
-        {
-            // 한 글자씩 대화를 출력
-            ui.setText(splitString(line, lineCnt++));
-
-            yield return new WaitForSeconds(typingSpeed);
-        }
-    }
-
-    // 길이만큼의 문자열 자르기
-    private string splitString(char[] chrs, int length)
-    {
-        string result = "";
-
-        for (int i = 0; i < length; i++)
-        {
-            result += chrs[i];
-        }
-
-        return result;
-    }
-
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // 해당 NPC의 정보를 가져오기
-            npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + interact);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // NPC의 정보를 초기화
-            npc = null;
-            Debug.Log("exit");
-        }
+        // 해당되는 대화 목록 가져오기
+        return textData[id];
     }
 }
