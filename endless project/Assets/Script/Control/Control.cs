@@ -7,7 +7,6 @@ using UnityEngine;
 public class Control : MonoBehaviour
 {
     // 참조 스크립트
-    private EventManager command;
     private MenuManager menuManager;
     private TextManager text;
     private NPC npc; // 상호작용 할 npc
@@ -24,13 +23,13 @@ public class Control : MonoBehaviour
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
     {
-        get { return isTalking || isDashing || isOpenMenu; }
+        get { return text.IsTalking || isDashing || isOpenMenu; }
     }
 
     // 옵션(ESC) 키 차단
     private bool noOptionKeyDown
     {
-        get { return isTalking; }
+        get { return text.IsTalking; }
     }
 
     /************************************************************
@@ -55,7 +54,10 @@ public class Control : MonoBehaviour
     private string action   = Option.getKey(Key.action);
 
     // 옵션키
-    private string menu      = Option.getKey(Key.menu);
+    private string menu     = Option.getKey(Key.menu);
+
+    // 선택키
+    private string select   = Option.getKey(Key.select);
 
     private void Awake()
     {
@@ -77,7 +79,6 @@ public class Control : MonoBehaviour
     {
         animator    = GetComponent<Animator>();
         rigid       = GetComponent<Rigidbody2D>();
-        command     = GetComponent<EventManager>();
 
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
@@ -227,25 +228,16 @@ public class Control : MonoBehaviour
     * 인게임 화면의 대화 제어
     ************************************************************/
 
-    private int lineNum;
-    private int lineCnt;
-
-    private string[] lines;
-
-    private float typingSpeed;
-
-    private bool isTalking = false;
-
     private void talkingKeyPress()
     {
         // 대화의 첫 시작일 경우
-        if(!isTalking)
+        if(!text.IsTalking)
         {
             // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
             if (npc is not null && Input.GetKeyDown(interact))
             {
-                initTalk();
-                talking();
+                text.initTalk(npc);
+                text.talking();
             }
         }
 
@@ -255,113 +247,9 @@ public class Control : MonoBehaviour
             // 대화 도중 액션키만 인식
             if (Input.GetKeyDown(action))
             {
-                talking();
+                text.talking();
             }
         }
-    }
-
-    private void initTalk()
-    {
-        // 현재 대사 번호 리셋
-        lineNum = 0;
-
-        // 대화 가능한 npc일 경우
-        if (npc.getID() != 0)
-        {
-            // 대화 처음 시작 시 해당되는 대화목록 가져오기
-            lines = text.getText(npc.getID());
-
-            // 대화 진행상태로 변경
-            isTalking = true;
-        }
-    }
-
-    public void talking()
-    {
-        // 한 대사를 모두 출력시 그 대사 종료
-        if (lineCnt >= lines[lineNum].Length)
-        {
-            lineCnt = 0;
-            lineNum++;
-
-            // 텍스트 창 비활성화
-            text.setDialogView(false);
-        }
-
-        // 대화 진행
-        if (lineNum < lines.Length)
-        {
-            // 대사 가져오기
-            char[] line = lines[lineNum].ToCharArray();
-
-            // 그 대사가 커맨드일 경우 이벤트 출력
-            if (line[0] == '/')
-            {
-                command.getCommandEvent(lines[lineNum]);
-                lineNum++;
-
-                talking();
-            }
-
-            // 대사 출력
-            else
-                printText(line);
-        }
-
-        // 대화 종료
-        else
-        {
-            // 텍스트 창 비활성화
-            text.setDialogView(false);
-
-            // 대화 종료상태로 변경
-            isTalking = false;
-        }
-    }
-    private void printText(char[] line)
-    {
-        // 한 글자도 출력이 안 됐을 경우
-        if (lineCnt == 0)
-        {
-            // 텍스트 창 활성화 및 타이핑 속도 리셋
-            text.setDialogView(true);
-            typingSpeed = Option.getTypingSpeed();
-
-            // 지정된 타이핑 속도로 출력
-            StartCoroutine(talkDelay(line));
-        }
-
-        // 대화 출력 도중일 경우
-        else if (lineCnt < line.Length)
-        {
-            // 한 번에 출력
-            typingSpeed = 0;
-        }
-    }
-
-    IEnumerator talkDelay(char[] line)
-    {
-        // 대화 진행 도중일 경우
-        while (lineCnt < line.Length)
-        {
-            // 한 글자씩 대화를 출력
-            text.setText(splitString(line, lineCnt++));
-
-            yield return new WaitForSeconds(typingSpeed);
-        }
-    }
-
-    // 길이만큼의 문자열 자르기
-    private string splitString(char[] chrs, int length)
-    {
-        string result = "";
-
-        for(int i = 0; i < length; i++)
-        {
-            result += chrs[i];
-        }
-
-        return result;
     }
 
     /************************************************************
@@ -369,9 +257,9 @@ public class Control : MonoBehaviour
     * 
     * 메뉴 상태에서 커서 이동을 제어
     ************************************************************/
+    const int MENU_INDEX = 3;
 
     private bool isOpenMenu = false;
-
     private int menuNum = 0;
 
     private void menuKeyPress()
@@ -384,10 +272,10 @@ public class Control : MonoBehaviour
         }
 
         // 메뉴 내 제어키
-        if (isOpenMenu)
+        else if (isOpenMenu)
         {
             // 선택
-            if(Input.GetKeyUp(action))
+            if(Input.GetKeyUp(select))
             {
                 menuSelect();
             }
@@ -398,10 +286,10 @@ public class Control : MonoBehaviour
             // 메뉴 갯수의 범위를 벗어나도 순환할 수 있도록 제어
             if(menuNum < 0)
             {
-                menuNum = 2;
+                menuNum = MENU_INDEX - 1;
             }
 
-            else if(menuNum > 2)
+            else if(menuNum >= MENU_INDEX)
             {
                 menuNum = 0;
             }
@@ -518,28 +406,6 @@ public class Control : MonoBehaviour
         {
             Debug.Log("ready");
             isDashing = false;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // 해당 NPC의 정보를 가져오기
-            npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + interact);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // NPC의 정보를 초기화
-            npc = null;
-            Debug.Log("exit");
         }
     }
 

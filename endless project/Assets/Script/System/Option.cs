@@ -5,7 +5,7 @@ public enum Key
 {
     up, down, right, left,
     jump, action, dash, interact,
-    menu
+    menu, select
 }
 
 public class Option : MonoBehaviour
@@ -24,6 +24,7 @@ public class Option : MonoBehaviour
     private static string action    = "mouse 0";
     private static string dash      = "mouse 1";
     private static string interact  = "e";
+    private static string select    = "enter";
 
     // ¿É¼Ç(ESC)Å°
     private static string menu = "escape";
@@ -74,6 +75,9 @@ public class Option : MonoBehaviour
 
             case Key.menu:
                 return menu;
+
+            case Key.select:
+                return select;
         }
 
         return null;
