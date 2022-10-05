@@ -8,7 +8,7 @@ namespace Assets.Script.UI
         load, save, title
     }
 
-    public class OptionMenuUI : MonoBehaviour
+    public class MenuUI : MonoBehaviour
     {
         public GameObject menu;
         public GameObject cursor;

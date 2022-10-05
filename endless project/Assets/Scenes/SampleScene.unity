@@ -756,6 +756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 910b371a17719254bb02ba5197ef2ddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 823037296}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -5643,8 +5644,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
-  dialog: {fileID: 515810827}
   menuUI: {fileID: 1647111975}
+  dialog: {fileID: 515810827}
   subRigid: {fileID: 2102133563}
 --- !u!1 &909616687
 GameObject:

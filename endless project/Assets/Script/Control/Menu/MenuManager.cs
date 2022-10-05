@@ -7,7 +7,7 @@ namespace Assets.Script.System.Menu
     public class MenuManager : MonoBehaviour
     {
         [SerializeField]
-        private OptionMenuUI ui;
+        private MenuUI ui;
 
         public void menuViewSwitch(bool isView)
         {

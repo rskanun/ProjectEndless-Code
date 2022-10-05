@@ -4,21 +4,21 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Control : MonoBehaviour
+public class ChrControl : MonoBehaviour
 {
     // 참조 스크립트
     private MenuManager menuManager;
     private TextManager text;
-    private NPC npc; // 상호작용 할 npc
 
     [SerializeField]
     private Player player;
 
     [SerializeField]
-    private GameObject dialog;
-
-    [SerializeField]
     private GameObject menuUI;
+
+    // Text Manager가 있는 오브젝트
+    [SerializeField]
+    private GameObject dialog;
 
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
@@ -92,6 +92,7 @@ public class Control : MonoBehaviour
         menuKeyPress();
 
         // 텍스트 상호작용 키 감지
+        // 자세한 코드는 Text -> TextManager
         if(!isOpenMenu)
         {
             talkingKeyPress();
@@ -101,6 +102,38 @@ public class Control : MonoBehaviour
         if (!noMoveKeyDown)
         {
             moveKeyPress();
+        }
+    }
+
+    /************************************************************
+    * [대화 출력]
+    * 
+    * 인게임 화면의 대화 제어
+    ************************************************************/
+
+    private NPC npc; // 상호작용 할 npc
+
+    public void talkingKeyPress()
+    {
+        // 대화의 첫 시작일 경우
+        if (!text.IsTalking)
+        {
+            // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
+            if (npc is not null && Input.GetKeyDown(interact))
+            {
+                text.initTalk(npc);
+                text.talking();
+            }
+        }
+
+        // 대화 도중일 경우
+        else
+        {
+            // 대화 도중 액션키만 인식
+            if (Input.GetKeyDown(action))
+            {
+                text.talking();
+            }
         }
     }
 
@@ -220,36 +253,6 @@ public class Control : MonoBehaviour
         animaVec.y = (-ANIMATION_CONSTANT <= tmpY && tmpY <= ANIMATION_CONSTANT) ? 0 : tmpY;
 
         setAnimator(animaVec);
-    }
-
-    /************************************************************
-    * [대화 출력]
-    * 
-    * 인게임 화면의 대화 제어
-    ************************************************************/
-
-    private void talkingKeyPress()
-    {
-        // 대화의 첫 시작일 경우
-        if(!text.IsTalking)
-        {
-            // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-            if (npc is not null && Input.GetKeyDown(interact))
-            {
-                text.initTalk(npc);
-                text.talking();
-            }
-        }
-
-        // 대화 도중일 경우
-        else
-        {
-            // 대화 도중 액션키만 인식
-            if (Input.GetKeyDown(action))
-            {
-                text.talking();
-            }
-        }
     }
 
     /************************************************************
@@ -406,6 +409,28 @@ public class Control : MonoBehaviour
         {
             Debug.Log("ready");
             isDashing = false;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 맞닿은 오브젝트가 NPC일 시
+        if (collision.CompareTag("NPC"))
+        {
+            // 해당 NPC의 정보를 가져오기
+            npc = collision.gameObject.GetComponent<NPC>();
+            Debug.Log("keydown " + Option.getKey(Key.interact));
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // 맞닿은 오브젝트가 NPC일 시
+        if (collision.CompareTag("NPC"))
+        {
+            // NPC의 정보를 초기화
+            npc = null;
+            Debug.Log("exit");
         }
     }
 

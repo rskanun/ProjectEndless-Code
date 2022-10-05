@@ -5,7 +5,7 @@ public enum Key
 {
     up, down, right, left,
     jump, action, dash, interact,
-    menu, select
+    menu, select, cancel
 }
 
 public class Option : MonoBehaviour
@@ -24,7 +24,12 @@ public class Option : MonoBehaviour
     private static string action    = "mouse 0";
     private static string dash      = "mouse 1";
     private static string interact  = "e";
+
+    // 선택키
     private static string select    = "enter";
+
+    // 취소 및 돌아가기 키
+    private static string cancel    = "escape";
 
     // 옵션(ESC)키
     private static string menu = "escape";
@@ -78,6 +83,9 @@ public class Option : MonoBehaviour
 
             case Key.select:
                 return select;
+
+            case Key.cancel:
+                return cancel;
         }
 
         return null;

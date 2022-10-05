@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,9 @@ public class TextManager : MonoBehaviour
     // 텍스트 데이터 저장
     private Dictionary<int, string[]> textData;
 
-    // NPC 데이터
+    // EventManager가 있는 오브젝트
+    [SerializeField]
+    private GameObject player;
 
     // 텍스트 현재 진행 상태
     private bool isTalking = false;
@@ -25,6 +28,11 @@ public class TextManager : MonoBehaviour
     // 출력 속도
     private float typingSpeed;
 
+    /************************************************************
+    * [초기 설정]
+    * 
+    * CSV 파일로부터 대사 가져오기 및 다른 스크립트 연결
+    ************************************************************/
 
     private void Start()
     {
@@ -36,7 +44,7 @@ public class TextManager : MonoBehaviour
     private void init()
     {
         // Component Init
-        command = GetComponent<EventManager>();
+        command = player.GetComponent<EventManager>();
         ui = GetComponent<TextUI>();
 
         // text input
@@ -87,7 +95,14 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    public void initTalk()
+    /************************************************************
+    * [대화 출력]
+    * 
+    * 인게임 화면의 대화 제어
+    ************************************************************/
+
+
+    public void initTalk(NPC npc)
     {
         // 현재 대사 번호 리셋
         lineNum = 0;
@@ -189,29 +204,5 @@ public class TextManager : MonoBehaviour
         }
 
         return result;
-    }
-
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // 해당 NPC의 정보를 가져오기
-            npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + interact);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // NPC의 정보를 초기화
-            npc = null;
-            Debug.Log("exit");
-        }
     }
 }
