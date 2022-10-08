@@ -6,15 +6,10 @@ using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
-    // 참조 스크립트
-    private MenuManager menuManager;
     private TextManager text;
 
     [SerializeField]
     private Player player;
-
-    [SerializeField]
-    private GameObject menuUI;
 
     // Text Manager가 있는 오브젝트
     [SerializeField]
@@ -82,9 +77,6 @@ public class ChrControl : MonoBehaviour
 
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
-
-        // UI Canvas -> Menu
-        menuManager = menuUI.GetComponent<MenuManager>();
     }
 
     private void Update()

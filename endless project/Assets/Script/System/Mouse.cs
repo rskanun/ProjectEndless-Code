@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cursor : MonoBehaviour
+public class Mouse : MonoBehaviour
 {
     public Texture2D icon;
 

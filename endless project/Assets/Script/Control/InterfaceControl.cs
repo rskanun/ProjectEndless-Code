@@ -1,10 +1,17 @@
-﻿using System.Collections;
+﻿using Assets.Script.System.Menu;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Script.Control
 {
     public class InterfaceControl : MonoBehaviour
     {
+        // 참조 스크립트
+        private MenuManager menuManager;
+
+        // 참조 스크립트가 존재하는 타 오브젝트
+        [SerializeField] private GameObject menuUI;
+
         // 현재 선택한 것에 대한 좌표
         private Vector2 select_point = Vector2.zero;
 
@@ -19,17 +26,55 @@ namespace Assets.Script.Control
         ************************************************************/
 
         // 선택키
-        private static string select = Option.getKey(Key.select);
+        private string select = Option.getKey(Key.select);
 
         // 취소키
-        private static string cancel = Option.getKey(Key.cancel);
+        private string cancel = Option.getKey(Key.cancel);
 
-        private void initInterface()
+        // 메뉴(ESC)키
+        private string menu = Option.getKey(Key.menu);
+
+        /************************************************************
+        * [Init]
+        * 
+        * 각종 초기 변수 및 함수 선언
+        ************************************************************/
+
+        private void Awake()
         {
-
+            initComponent(); 
         }
 
-        void Update()
+        private void initComponent()
+        {
+            // UI Canvas -> Menu
+            menuManager = menuUI.GetComponent<MenuManager>();
+        }
+
+        private void Update()
+        {
+            cursorMoveKeyPress();
+            menuKeyPress();
+        }
+
+        /************************************************************
+        * [메뉴]
+        * 
+        * 메뉴 상태에서 커서 이동을 제어
+        ************************************************************/
+
+        private void menuKeyPress()
+        {
+            // 메뉴키
+            if(Input.GetKeyDown(menu))
+            {
+                // bool switching
+                isInterface = !isInterface;
+                menuManager.menuViewSwitch(isInterface);
+            }
+        }
+
+        private void cursorMoveKeyPress()
         {
 
         }
