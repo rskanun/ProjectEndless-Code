@@ -5,7 +5,8 @@ namespace Assets.Script.UI
 {
     public enum menuIcon
     {
-        load, save, title
+        option, save, load,
+        title, call, message
     }
 
     public class MenuUI : MonoBehaviour
@@ -13,9 +14,12 @@ namespace Assets.Script.UI
         public GameObject menu;
         public GameObject cursor;
 
-        public GameObject loadIcon;
+        public GameObject optionIcon;
         public GameObject saveIcon;
+        public GameObject loadIcon;
         public GameObject titleIcon;
+        public GameObject callIcon;
+        public GameObject msgIcon;
 
         void Awake()
         {
@@ -23,28 +27,23 @@ namespace Assets.Script.UI
             menu.gameObject.SetActive(false);
         }
 
-        public void setMenuView(bool isView)
+        protected internal void setMenuView(bool isView)
         {
             menu.gameObject.SetActive(isView);
         }
 
-        public void moveIcon(menuIcon selectIcon)
-        {
-            switch(selectIcon)
-            {
-                case UI.menuIcon.load:
-                    setCursor(loadIcon);
-                    break;
+        /************************************************************
+        * [커서 이동]
+        * 
+        * 아이콘을 가리키는 커서 이동
+        ************************************************************/
 
-                case UI.menuIcon.save:
-                    setCursor(saveIcon);
-                    break;
-
-                case UI.menuIcon.title:
-                    setCursor(titleIcon);
-                    break;
-            }
-        }
+        protected internal void moveToOption() { setCursor(optionIcon); }
+        protected internal void moveToSave() { setCursor(saveIcon); }
+        protected internal void moveToLoad() { setCursor(loadIcon); }
+        protected internal void moveToTitle() { setCursor(titleIcon); }
+        protected internal void moveToCall() { setCursor(callIcon); }
+        protected internal void moveToMsg() { setCursor(msgIcon); }
 
         private void setCursor(GameObject select)
         {

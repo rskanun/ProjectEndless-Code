@@ -1,4 +1,5 @@
-﻿using Assets.Script.System.Menu;
+﻿using Assets.Script.Control;
+using Assets.Script.System.Menu;
 using Assets.Script.UI;
 using System;
 using System.Collections;
@@ -7,6 +8,7 @@ using UnityEngine;
 public class ChrControl : MonoBehaviour
 {
     private TextManager text;
+    private InterfaceControl interfaceCtr;
 
     [SerializeField]
     private Player player;
@@ -18,7 +20,7 @@ public class ChrControl : MonoBehaviour
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
     {
-        get { return text.IsTalking || isDashing || isOpenMenu; }
+        get { return text.IsTalking || isDashing || interfaceCtr.isInterface; }
     }
 
     // 옵션(ESC) 키 차단
@@ -75,17 +77,17 @@ public class ChrControl : MonoBehaviour
         animator    = GetComponent<Animator>();
         rigid       = GetComponent<Rigidbody2D>();
 
+        interfaceCtr = GetComponent<InterfaceControl>();
+
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
     }
 
     private void Update()
     {
-        menuKeyPress();
-
         // 텍스트 상호작용 키 감지
         // 자세한 코드는 Text -> TextManager
-        if(!isOpenMenu)
+        if(!interfaceCtr.isInterface)
         {
             talkingKeyPress();
         }
@@ -245,125 +247,6 @@ public class ChrControl : MonoBehaviour
         animaVec.y = (-ANIMATION_CONSTANT <= tmpY && tmpY <= ANIMATION_CONSTANT) ? 0 : tmpY;
 
         setAnimator(animaVec);
-    }
-
-    /************************************************************
-    * [메뉴]
-    * 
-    * 메뉴 상태에서 커서 이동을 제어
-    ************************************************************/
-    const int MENU_INDEX = 3;
-
-    private bool isOpenMenu = false;
-    private int menuNum = 0;
-
-    private void menuKeyPress()
-    {
-        // 메뉴키
-        if (Input.GetKeyDown(menu))
-        {
-            isOpenMenu = !isOpenMenu;
-            menuManager.menuViewSwitch(isOpenMenu);
-        }
-
-        // 메뉴 내 제어키
-        else if (isOpenMenu)
-        {
-            // 선택
-            if(Input.GetKeyUp(select))
-            {
-                menuSelect();
-            }
-
-            // 커서 이동
-            moveSelectCursor(ref menuNum);
-
-            // 메뉴 갯수의 범위를 벗어나도 순환할 수 있도록 제어
-            if(menuNum < 0)
-            {
-                menuNum = MENU_INDEX - 1;
-            }
-
-            else if(menuNum >= MENU_INDEX)
-            {
-                menuNum = 0;
-            }
-
-            menuManager.selectIcon(menuNum);
-        }
-    }
-
-    private void menuSelect()
-    {
-        menuIcon select = (menuIcon)menuNum;
-
-        switch (select)
-        {
-            case menuIcon.load:
-                menuManager.load();
-                break;
-
-            case menuIcon.save:
-                menuManager.save();
-                break;
-
-            case menuIcon.title:
-                menuManager.toTitle();
-                break;
-        }
-    }
-
-    /************************************************************
-    * [커서 이동]
-    * 
-    * 메뉴창, 인벤토리 등의 상태에서 커서를 제어
-    ************************************************************/
-
-    private float MOVE_DELAY = 0.65f;
-
-    private float delayTime = 3.5f;
-    private float accumTime = 0;
-
-    private void moveSelectCursor(ref int num)
-    {
-        float v = Input.GetAxisRaw("Vertical");
-
-        // 조이스틱이나 방향키가 아래로 향할 때
-        if (v > 0)
-        {
-            pressMove(ref num, -1);
-        }
-
-        // 조이스틱이나 방향키가 위로 향할 때
-        else if (v < 0)
-        {
-            pressMove(ref num, +1);
-        }
-
-        // 중립상태
-        else
-        {
-            accumTime = 0;
-        }
-    }
-
-    private void pressMove(ref int num, int value)
-    {
-        // 일정시간동안 누른 키에 대해 한 번만 인식
-        if (accumTime <= 0)
-        {
-            num += value;
-        }
-
-        // 누르고 있는 시간을 측정
-        accumTime += Time.fixedDeltaTime;
-
-        // 일정시간 누르고 있으면 해당 방향으로 연속해서 이동
-        if (accumTime >= delayTime + MOVE_DELAY)
-        {
-            num += value;
-            accumTime = delayTime;
-        }
     }
 
     /************************************************************

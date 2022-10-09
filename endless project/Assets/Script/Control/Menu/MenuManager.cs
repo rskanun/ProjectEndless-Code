@@ -9,45 +9,37 @@ namespace Assets.Script.System.Menu
         [SerializeField]
         private MenuUI ui;
 
-        public void menuViewSwitch(bool isView)
+        protected internal void menuViewOn()
         {
-            if (isView)
+            // UI on
+            ui.setMenuView(true);
+
+            // 오브젝트 시간 멈추기
+            Time.timeScale = 0;
+        }
+
+        protected internal void menuViewOff()
+        {
+            // UI off
+            ui.setMenuView(false);
+
+            // 오브젝트 시간 움직이기
+            Time.timeScale = 1;
+        }
+
+        public void moveSelectTo(int num)
+        {
+            menuIcon icon = (menuIcon)num;
+            switch(icon)
             {
-                // UI on
-                ui.setMenuView(true);
-
-                // 오브젝트 시간 멈추기
-                Time.timeScale = 1;
+                case menuIcon.option: ui.moveToOption(); break;
+                case menuIcon.save: ui.moveToSave(); break;
+                case menuIcon.load: ui.moveToLoad(); break;
+                case menuIcon.title: ui.moveToTitle(); break;
+                case menuIcon.call: ui.moveToCall(); break;
+                case menuIcon.message: ui.moveToMsg(); break;
+                default: break;
             }
-
-            else
-            {
-                // UI off
-                ui.setMenuView(false);
-
-                // 오브젝트 시간 움직이기
-                Time.timeScale = 1;
-            }
-        }
-
-        public void selectIcon(int num)
-        {
-            ui.moveIcon((menuIcon)num);
-        }
-
-        public void load()
-        {
-            Debug.Log("load");
-        }
-
-        public void save()
-        {
-            Debug.Log("save");
-        }
-
-        public void toTitle()
-        {
-            Debug.Log("toTitle");
         }
     }
 }

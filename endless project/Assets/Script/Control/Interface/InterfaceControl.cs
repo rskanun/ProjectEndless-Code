@@ -1,0 +1,153 @@
+﻿using Assets.Script.System.Menu;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections;
+using UnityEngine;
+
+namespace Assets.Script.Control
+{
+    public abstract class InterfaceControl : MonoBehaviour
+    {
+        // 선택 가능한 아이콘의 최대 좌표(x, y)
+        // ex) 2 x 2 -> (1, 1)
+        private Vector2 iconPoint;
+
+        // 현재 선택한 것에 대한 좌표
+        private Vector2 selectPoint = Vector2.zero;
+
+        // 현재 인터페이스 내에서 컨트롤을 하는 중인가
+        protected internal bool isInterface = false;
+
+
+        /************************************************************
+        * [Key Value]
+        * 
+        * 각종 키들의 string을 모아둔 변수
+        ************************************************************/
+
+        // 선택키
+        protected internal string select = Option.getKey(Key.select);
+
+        // 취소키
+        protected internal string cancel = Option.getKey(Key.cancel);
+
+        /************************************************************
+        * [Child Method]
+        * 
+        * 자식 클래스에서 쓰일 메소드
+        ************************************************************/
+
+        protected internal void setIconPoint(int x, int y)
+        {
+            iconPoint = new Vector2(x, y);
+        }
+
+        protected internal void valueReset()
+        {
+            selectPoint = Vector2.zero;
+            accumTime = 0;
+        }
+
+        protected internal void interfaceKeyPress()
+        {
+            cursorMoveKeyPress();
+            selectKeyPress();
+            cancelKeyPress();
+        }
+
+        /************************************************************
+        * [Key Press]
+        * 
+        * 특정 키를 눌렀을 때에 대한 이벤트
+        ************************************************************/
+
+        private void selectKeyPress()
+        {
+            if(Input.GetKeyDown(select))
+                iconSelect((int)selectPoint.x, (int)selectPoint.y);
+        }
+
+        private void cancelKeyPress()
+        {
+            if (Input.GetKeyDown(cancel)) iconCancel();
+        }
+
+        protected internal abstract void iconSelect(int x, int y);
+        protected internal abstract void iconCancel();
+        /************************************************************
+        * [커서 이동 제어]
+        * 
+        * 커서 이동을 제어
+        ************************************************************/
+
+        private const float MOVE_DELAY = 0.65f; // 다음 연속해서 움직이기까지 걸리는 시간
+        private const float DELAY_TIME = 3.5f; // 연속해서 움직이기까지 걸리는 시간
+
+        private float accumTime = 0; // 키를 누르고 있는 시간 측정
+
+        private void cursorMoveKeyPress()
+        {
+            float v = Input.GetAxisRaw("Vertical");
+            float h = Input.GetAxisRaw("Horizontal");
+
+            if(v != 0 || h != 0)
+            {
+                moveCursor(v, h);
+            }
+            else
+            {
+                // 키를 모두 땠다면 초기화
+                if (v == 0 && h == 0) accumTime = 0;
+            }
+
+            moveUI((int)selectPoint.x, (int)selectPoint.y);
+        }
+
+        private void moveCursor(float v, float h)
+        {
+            // 일정시간동안 누른 키에 대해 한 번만 인식
+            if (accumTime <= 0)
+                setCursor(v, h);
+
+            // 일정시간동안 누른 상태라면 연속 이동
+            pressMove(v, h);
+
+            // 현재 위치값이 아이콘 범위를 벗어나지 않게 보정
+            vecCorrect();
+        }
+
+        private void pressMove(float v, float h)
+        {
+            // 누르고 있는 시간을 측정
+            accumTime += Time.fixedDeltaTime;
+
+            // 일정시간 누르고 있으면 해당 방향으로 연속해서 이동
+            if (accumTime >= DELAY_TIME + MOVE_DELAY)
+            {
+                setCursor(v, h);
+                accumTime = DELAY_TIME;
+            }
+        }
+
+        private void vecCorrect()
+        {
+            // x값 보정
+            if (selectPoint.x > iconPoint.x) selectPoint.x = 0;
+            else if(selectPoint.x < 0) selectPoint.x = iconPoint.x;
+            
+            // y값 보정
+            if (selectPoint.y > iconPoint.y) selectPoint.y = 0;
+            else if (selectPoint.y < 0) selectPoint.y = iconPoint.y;
+        }
+
+        private void setCursor(float v, float h)
+        {
+            if (v > 0) selectPoint.y += 1;
+            else if (v < 0) selectPoint.y -= 1;
+            else if (h > 0) selectPoint.x += 1;
+            else if (h < 0) selectPoint.x -= 1;
+        }
+
+        protected internal abstract void moveUI(int x, int y);
+    }
+}
