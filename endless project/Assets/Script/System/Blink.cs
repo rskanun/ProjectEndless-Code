@@ -14,7 +14,10 @@ namespace Assets.Script.System
         private bool isback = false;
         private float accumTime = 0f;
 
-        private const float DELAY = 0.3f;
+        private const float DELAY = 0.75f;
+        private const float FRAME = 0.1f;
+        private const float MIN_A = 0.25f;
+        private const float MAX_A = 1.0f;
 
         void Update()
         {
@@ -30,10 +33,10 @@ namespace Assets.Script.System
         {
             color = image.color;
 
-            if (!isback) color.a -= 0.1f;
-            else if (isback) color.a += 0.1f;
+            if (!isback) color.a -= FRAME;
+            else if (isback) color.a += FRAME;
 
-            if (color.a <= 0 || color.a >= 1) isback = !isback;
+            if (color.a <= MIN_A || color.a >= MAX_A) isback = !isback;
 
             image.color = color;
         }

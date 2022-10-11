@@ -1,4 +1,5 @@
-﻿using Assets.Script.System.Menu;
+﻿using Assets.Script.System;
+using Assets.Script.System.Menu;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -93,14 +94,13 @@ namespace Assets.Script.Control
             if(v != 0 || h != 0)
             {
                 moveCursor(v, h);
+                moveUI((int)selectPoint.x, (int)selectPoint.y);
             }
             else
             {
                 // 키를 모두 땠다면 초기화
-                if (v == 0 && h == 0) accumTime = 0;
+                accumTime = 0;
             }
-
-            moveUI((int)selectPoint.x, (int)selectPoint.y);
         }
 
         private void moveCursor(float v, float h)

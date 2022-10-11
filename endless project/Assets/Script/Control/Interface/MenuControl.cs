@@ -1,4 +1,5 @@
-﻿using Assets.Script.System.Menu;
+﻿using Assets.Script.System;
+using Assets.Script.System.Menu;
 using System.Collections;
 using UnityEngine;
 
