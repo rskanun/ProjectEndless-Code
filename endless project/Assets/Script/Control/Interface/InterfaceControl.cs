@@ -14,7 +14,7 @@ namespace Assets.Script.Control
         private Vector2 iconPoint;
 
         // 현재 선택한 것에 대한 좌표
-        private Vector2 selectPoint = Vector2.zero;
+        protected internal Vector2 selectPoint = Vector2.zero;
 
         // 현재 인터페이스 내에서 컨트롤을 하는 중인가
         protected internal bool isInterface = false;

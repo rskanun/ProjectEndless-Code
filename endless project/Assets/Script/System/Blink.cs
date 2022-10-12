@@ -14,8 +14,8 @@ namespace Assets.Script.System
         private bool isback = false;
         private float accumTime = 0f;
 
-        private const float DELAY = 0.75f;
-        private const float FRAME = 0.1f;
+        private const float DELAY = 0.35f;
+        private const float FRAME = 0.05f;
         private const float MIN_A = 0.25f;
         private const float MAX_A = 1.0f;
 
@@ -39,6 +39,16 @@ namespace Assets.Script.System
             if (color.a <= MIN_A || color.a >= MAX_A) isback = !isback;
 
             image.color = color;
+        }
+
+        protected internal void resetA()
+        {
+            color = image.color;
+            color.a = MAX_A;
+            image.color = color;
+
+            accumTime = 0;
+            isback = false;
         }
     }
 }

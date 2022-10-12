@@ -7,15 +7,16 @@ using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
+    // 참조 스크립트
     private TextManager text;
     private InterfaceControl interfaceCtr;
 
     [SerializeField]
     private Player player;
 
-    // Text Manager가 있는 오브젝트
-    [SerializeField]
-    private GameObject dialog;
+    // 참조 오브젝트
+    [SerializeField] private GameObject dialog;
+    [SerializeField] private GameObject menuUI;
 
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
@@ -77,10 +78,11 @@ public class ChrControl : MonoBehaviour
         animator    = GetComponent<Animator>();
         rigid       = GetComponent<Rigidbody2D>();
 
-        interfaceCtr = GetComponent<InterfaceControl>();
-
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
+
+        // UI Canvas -> Menu
+        interfaceCtr = menuUI.GetComponent<InterfaceControl>();
     }
 
     private void Update()
