@@ -1,10 +1,11 @@
 ﻿using Assets.Script.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 namespace Assets.Script.System.Menu
 {
-    public class MenuButton : MonoBehaviour, IPointerEnterHandler
+    public class MenuButton : MonoBehaviour, IPointerMoveHandler, IPointerClickHandler
     {
         // 참조 스크립트가 있는 오브젝트
         [SerializeField]
@@ -23,16 +24,23 @@ namespace Assets.Script.System.Menu
             menuManager = menu.GetComponent<MenuManager>();
         }
 
-        public void onButton()
+        public void OnPointerMove(PointerEventData eventData)
         {
-            Debug.Log("click");
-            menuManager.iconSelect(thisIcon);
+            if(eventData.IsPointerMoving())
+            {
+                menuManager.moveSelectTo((int)thisIcon);
+                menuManager.setSelectPos(thisIcon);
+            }
+
+            else if(Input.GetMouseButtonDown(0))
+            {
+                menuManager.iconSelect(thisIcon);
+            }
         }
 
-        public void OnPointerEnter(PointerEventData eventdata)
+        public void OnPointerClick(PointerEventData eventData)
         {
-            menuManager.moveSelectTo((int)thisIcon);
-            menuManager.setSelectPos(thisIcon);
+            menuManager.iconSelect(thisIcon);
         }
     }
 }

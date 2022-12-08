@@ -40,7 +40,7 @@ namespace Assets.Script.Control
 
         protected internal void setIconPoint(int x, int y)
         {
-            iconPoint = new Vector2(x, y);
+            iconPoint = new Vector2(x - 1, y - 1);
         }
 
         protected internal void valueReset()
@@ -81,8 +81,8 @@ namespace Assets.Script.Control
         * 커서 이동을 제어
         ************************************************************/
 
-        private const float MOVE_DELAY = 0.65f; // 다음 연속해서 움직이기까지 걸리는 시간
-        private const float DELAY_TIME = 3.5f; // 연속해서 움직이기까지 걸리는 시간
+        private const float MOVE_DELAY = 0.0975f; // 다음 연속해서 움직이기까지 걸리는 시간
+        private const float DELAY_TIME = 0.35f; // 연속해서 움직이기까지 걸리는 시간
 
         private float accumTime = 0; // 키를 누르고 있는 시간 측정
 
@@ -119,7 +119,7 @@ namespace Assets.Script.Control
         private void pressMove(float v, float h)
         {
             // 누르고 있는 시간을 측정
-            accumTime += Time.fixedDeltaTime;
+            accumTime += Time.deltaTime;
 
             // 일정시간 누르고 있으면 해당 방향으로 연속해서 이동
             if (accumTime >= DELAY_TIME + MOVE_DELAY)

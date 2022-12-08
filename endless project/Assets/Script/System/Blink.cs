@@ -14,14 +14,14 @@ namespace Assets.Script.System
         private bool isback = false;
         private float accumTime = 0f;
 
-        private const float DELAY = 0.35f;
+        private const float DELAY = 0.05f;
         private const float FRAME = 0.05f;
         private const float MIN_A = 0.25f;
         private const float MAX_A = 1.0f;
 
         void Update()
         {
-            accumTime += Time.fixedDeltaTime;
+            accumTime += Time.deltaTime;
             if(accumTime >= DELAY)
             {
                 setA();

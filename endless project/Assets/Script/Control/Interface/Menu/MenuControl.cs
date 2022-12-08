@@ -35,7 +35,7 @@ namespace Assets.Script.Control
         {
             // init component
             menuManager = GetComponent<MenuManager>();
-            setIconPoint(X - 1, Y - 1);
+            setIconPoint(X, Y);
         }
 
         /************************************************************
@@ -48,8 +48,8 @@ namespace Assets.Script.Control
 
         private void Update()
         {
-            interfaceKeyPress();
             menuKeyPress();
+            interfaceKeyPress();
         }
 
         private void menuKeyPress()
@@ -57,8 +57,16 @@ namespace Assets.Script.Control
             // 메뉴키
             if(Input.GetKeyDown(menu))
             {
-                if (!isInterface) menuOn();
-                else menuOff();
+                if (!isInterface) // 메뉴가 켜져있지 않은 경우
+                {
+                    menuOn();
+                    openNum++;
+                }
+                else // 메뉴가 켜져있는 경우
+                {
+                    menuOff();
+                    openNum--;
+                }
             }
         }
 
@@ -85,7 +93,7 @@ namespace Assets.Script.Control
         protected internal override void iconCancel()
         {
             // 메뉴만 켜져있는 경우
-            if (openNum == 1)
+            if (openNum == 2)
             {
                 openNum--;
                 menuOff();
