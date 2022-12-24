@@ -111,7 +111,8 @@ namespace Assets.Script.Control
             int x = num % X;
             int y = num / X;
 
-            selectPoint = new Vector2(x, y);
+            selectPoint.x = x;
+            selectPoint.y = y;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Assets.Script.Control
     {
         // 선택 가능한 아이콘의 최대 좌표(x, y)
         // ex) 2 x 2 -> (1, 1)
-        private Vector2 iconPoint;
+        private Vector2 iconPoint = Vector2.zero;
 
         // 현재 선택한 것에 대한 좌표
         protected internal Vector2 selectPoint = Vector2.zero;
@@ -40,7 +40,8 @@ namespace Assets.Script.Control
 
         protected internal void setIconPoint(int x, int y)
         {
-            iconPoint = new Vector2(x - 1, y - 1);
+            iconPoint.x = x - 1;
+            iconPoint.y = y - 1;
         }
 
         protected internal void valueReset()
@@ -84,6 +85,8 @@ namespace Assets.Script.Control
         private const float MOVE_DELAY = 0.0975f; // 다음 연속해서 움직이기까지 걸리는 시간
         private const float DELAY_TIME = 0.35f; // 연속해서 움직이기까지 걸리는 시간
 
+        private bool isPushX = false;
+        private bool isPushY = false;
         private float accumTime = 0; // 키를 누르고 있는 시간 측정
 
         private void cursorMoveKeyPress()
@@ -91,32 +94,55 @@ namespace Assets.Script.Control
             float v = Input.GetAxisRaw("Vertical");
             float h = Input.GetAxisRaw("Horizontal");
 
-            if(v != 0 || h != 0)
+            // 일정시간동안 누른 키에 대해 한 번만 인식
+            if (pushX()) setCursor(0, h);
+            if (pushY()) setCursor(v, 0);
+
+            if (v != 0 || h != 0)
             {
                 moveCursor(v, h);
-                moveUI((int)selectPoint.x, (int)selectPoint.y);
             }
-            else
+
+            else if(accumTime != 0)
             {
                 // 키를 모두 땠다면 초기화
                 accumTime = 0;
             }
         }
 
-        private void moveCursor(float v, float h)
+        private bool pushX()
         {
-            // 일정시간동안 누른 키에 대해 한 번만 인식
-            if (accumTime <= 0)
-                setCursor(v, h);
+            if (!isPushX && Input.GetAxisRaw("Horizontal") != 0)
+            {
+                isPushX = true;
+                return true;
+            }
+            else if (isPushX && Input.GetAxisRaw("Horizontal") == 0)
+            {
+                isPushX = false;
+                return false;
+            }
 
-            // 일정시간동안 누른 상태라면 연속 이동
-            pressMove(v, h);
-
-            // 현재 위치값이 아이콘 범위를 벗어나지 않게 보정
-            vecCorrect();
+            return false;
         }
 
-        private void pressMove(float v, float h)
+        private bool pushY()
+        {
+            if (!isPushY && Input.GetAxisRaw("Vertical") != 0)
+            {
+                isPushY = true;
+                return true;
+            }
+            else if (isPushY && Input.GetAxisRaw("Vertical") == 0)
+            {
+                isPushY = false;
+                return false;
+            }
+
+            return false;
+        }
+
+        private void moveCursor(float v, float h)
         {
             // 누르고 있는 시간을 측정
             accumTime += Time.deltaTime;
@@ -129,23 +155,29 @@ namespace Assets.Script.Control
             }
         }
 
-        private void vecCorrect()
-        {
-            // x값 보정
-            if (selectPoint.x > iconPoint.x) selectPoint.x = 0;
-            else if(selectPoint.x < 0) selectPoint.x = iconPoint.x;
-            
-            // y값 보정
-            if (selectPoint.y > iconPoint.y) selectPoint.y = 0;
-            else if (selectPoint.y < 0) selectPoint.y = iconPoint.y;
-        }
-
         private void setCursor(float v, float h)
         {
             if (v > 0) selectPoint.y += 1;
             else if (v < 0) selectPoint.y -= 1;
             else if (h > 0) selectPoint.x += 1;
             else if (h < 0) selectPoint.x -= 1;
+
+            // 현재 위치값이 아이콘 범위를 벗어나지 않게 보정
+            vecCorrect();
+
+            // 현재 위치값에 따른 UI 이동
+            moveUI((int)selectPoint.x, (int)selectPoint.y);
+        }
+
+        private void vecCorrect()
+        {
+            // x값 보정
+            if (selectPoint.x > iconPoint.x) selectPoint.x = 0;
+            else if (selectPoint.x < 0) selectPoint.x = iconPoint.x;
+
+            // y값 보정
+            if (selectPoint.y > iconPoint.y) selectPoint.y = 0;
+            else if (selectPoint.y < 0) selectPoint.y = iconPoint.y;
         }
 
         protected internal abstract void moveUI(int x, int y);
