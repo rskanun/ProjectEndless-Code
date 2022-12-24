@@ -30,33 +30,6 @@ public class ChrControl : MonoBehaviour
         get { return text.IsTalking; }
     }
 
-    /************************************************************
-     * [Key Value]
-     * 
-     * 각종 키들의 string을 모아둔 변수
-     ************************************************************/
-
-    // 쓰지 않을 방향키
-    private string left     = Option.getKey(Key.left);
-    private string right    = Option.getKey(Key.right);
-    private string up       = Option.getKey(Key.up);
-    private string down     = Option.getKey(Key.down);
-
-    // 대쉬키
-    private string dash     = Option.getKey(Key.dash);
-
-    // 상호작용키
-    private string interact = Option.getKey(Key.interact);
-
-    // 액션키
-    private string action   = Option.getKey(Key.action);
-
-    // 옵션키
-    private string menu     = Option.getKey(Key.menu);
-
-    // 선택키
-    private string select   = Option.getKey(Key.select);
-
     private void Awake()
     {
         init();
@@ -115,7 +88,7 @@ public class ChrControl : MonoBehaviour
         if (!text.IsTalking)
         {
             // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-            if (npc is not null && Input.GetKeyDown(interact))
+            if (npc is not null && Input.GetKeyDown(Option.interact))
             {
                 text.initTalk(npc);
                 text.talking();
@@ -126,7 +99,7 @@ public class ChrControl : MonoBehaviour
         else
         {
             // 대화 도중 액션키만 인식
-            if (Input.GetKeyDown(action))
+            if (Input.GetKeyDown(Option.action))
             {
                 text.talking();
             }
@@ -158,7 +131,7 @@ public class ChrControl : MonoBehaviour
         }
 
         // 대쉬키
-        if (Input.GetKeyDown(dash))
+        if (Input.GetKeyDown(Option.dash))
         {
             dashKey();
         }
@@ -296,7 +269,7 @@ public class ChrControl : MonoBehaviour
         {
             // 해당 NPC의 정보를 가져오기
             npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + Option.getKey(Key.interact));
+            Debug.Log("keydown " + Option.interact.ToString());
         }
     }
 
@@ -316,7 +289,7 @@ public class ChrControl : MonoBehaviour
         // 키보드의 경우 wasd와 방향키가 모두 먹히게 되는데,
         // 마우스를 사용하는 모드의 경우 방향키를
         // 마우스를 사용하지 않는 모드의 경우 wasd의 입력을 막는다.
-        return Input.GetKey(up) || Input.GetKey(down)
-            || Input.GetKey(left) || Input.GetKey(right);
+        return Input.GetKey(Option.up) || Input.GetKey(Option.down)
+            || Input.GetKey(Option.left) || Input.GetKey(Option.right);
     }
 }

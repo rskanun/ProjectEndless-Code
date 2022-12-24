@@ -19,19 +19,6 @@ namespace Assets.Script.Control
         // 현재 인터페이스 내에서 컨트롤을 하는 중인가
         protected internal bool isInterface = false;
 
-
-        /************************************************************
-        * [Key Value]
-        * 
-        * 각종 키들의 string을 모아둔 변수
-        ************************************************************/
-
-        // 선택키
-        protected internal string select = Option.getKey(Key.select);
-
-        // 취소키
-        protected internal string cancel = Option.getKey(Key.cancel);
-
         /************************************************************
         * [Child Method]
         * 
@@ -65,13 +52,13 @@ namespace Assets.Script.Control
 
         private void selectKeyPress()
         {
-            if(Input.GetKeyDown(select))
+            if(Input.GetKeyDown(Option.select))
                 iconSelect((int)selectPoint.x, (int)selectPoint.y);
         }
 
         private void cancelKeyPress()
         {
-            if (Input.GetKeyDown(cancel)) iconCancel();
+            if (Input.GetKeyDown(Option.cancel)) iconCancel();
         }
 
         protected internal abstract void iconSelect(int x, int y);

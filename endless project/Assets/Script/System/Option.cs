@@ -1,13 +1,6 @@
 using System.IO;
 using UnityEngine;
 
-public enum Key
-{
-    up, down, right, left,
-    jump, action, dash, interact,
-    menu, select, cancel
-}
-
 public class Option : MonoBehaviour
 {
     // 저장 파일 위치
@@ -15,27 +8,27 @@ public class Option : MonoBehaviour
     private string file     = @"Assets\Resources\option.txt";
 
     // 컨트롤키
-    private static string left  = "left";
-    private static string right = "right";
-    private static string up    = "up";
-    private static string down  = "down";
+    public static KeyCode left  = KeyCode.LeftArrow;
+    public static KeyCode right = KeyCode.RightArrow;
+    public static KeyCode up    = KeyCode.UpArrow;
+    public static KeyCode down  = KeyCode.DownArrow;
 
     // 액션키
-    private static string action    = "mouse 0";
-    private static string dash      = "mouse 1";
-    private static string interact  = "e";
+    public static KeyCode action    = KeyCode.Mouse0;
+    public static KeyCode dash      = KeyCode.Mouse1;
+    public static KeyCode interact  = KeyCode.E;
 
     // 선택키
-    private static string select    = "enter";
+    public static KeyCode select    = KeyCode.Return;
 
     // 취소 및 돌아가기 키
-    private static string cancel    = "escape";
+    public static KeyCode cancel    = KeyCode.Escape;
 
     // 옵션(ESC)키
-    private static string menu = "escape";
+    public static KeyCode menu = KeyCode.Escape;
 
     // 스크립트 속도
-    private static float typingSpeed = 0.025f;
+    public static float typingSpeed = 0.025f;
 
     DirectoryInfo di;
 
@@ -53,44 +46,6 @@ public class Option : MonoBehaviour
         return typingSpeed;
     }
 
-    public static string getKey(Key key)
-    {
-        switch (key)
-        {
-            case Key.left:
-                return left;
-
-            case Key.right:
-                return right;
-
-            case Key.up:
-                return up;
-
-            case Key.down:
-                return down;
-
-            case Key.action:
-                return action;
-
-            case Key.dash:
-                return dash;
-
-            case Key.interact:
-                return interact;
-
-            case Key.menu:
-                return menu;
-
-            case Key.select:
-                return select;
-
-            case Key.cancel:
-                return cancel;
-        }
-
-        return null;
-    }
-
     private void loadOption()
     {
         if (!di.Exists)
@@ -101,30 +56,7 @@ public class Option : MonoBehaviour
 
         foreach (string s in File.ReadLines(file))
         {
-            setKey(s);
-        }
-    }
-
-    private void setKey(string s)
-    {
-        string[] str = s.Split(new string[] { ": " }, System.StringSplitOptions.None);
-
-        switch (str[0])
-        {
-            case "attack":
-                action = str[1];
-                break;
-
-            case "dash":
-                dash = str[1];
-                break;
-
-            case "interact":
-                interact = str[1];
-                break;
-
-            default:
-                break;
+            
         }
     }
 
@@ -134,10 +66,7 @@ public class Option : MonoBehaviour
             di.Create();
 
         StreamWriter textWriter = File.CreateText(file);
-        textWriter.WriteLine(
-            "action: " + action
-            + "\ndash: " + dash
-            + "\ninteract: " + interact);
+        textWriter.WriteLine();
 
         textWriter.Dispose();
     }

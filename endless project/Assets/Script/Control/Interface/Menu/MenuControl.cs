@@ -13,15 +13,6 @@ namespace Assets.Script.Control
         private MenuManager menuManager;
 
         /************************************************************
-        * [Key Value]
-        * 
-        * 각종 키들의 string을 모아둔 변수
-        ************************************************************/
-
-        // 메뉴(ESC)키
-        private string menu = Option.getKey(Key.menu);
-
-        /************************************************************
         * [Init]
         * 
         * 각종 초기 변수 및 함수 선언
@@ -55,7 +46,7 @@ namespace Assets.Script.Control
         private void menuKeyPress()
         {
             // 메뉴키
-            if(Input.GetKeyDown(menu))
+            if(Input.GetKeyDown(Option.menu))
             {
                 if (!isInterface) // 메뉴가 켜져있지 않은 경우
                 {
@@ -103,7 +94,7 @@ namespace Assets.Script.Control
         protected internal override void moveUI(int x, int y)
         {
             int index = (y * X) + x;
-            menuManager.moveSelectTo(index);
+            menuManager.moveSelectTo((menuIcon)index);
         }
 
         protected internal void setSelectPos(int num)

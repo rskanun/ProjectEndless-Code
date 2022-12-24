@@ -7,10 +7,9 @@ namespace Assets.Script.System.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        // 참조 스크립트
-        [SerializeField] private MenuUI ui;
+        public MenuUI ui;
+
         private MenuControl menuCtr;
-        private Blink blink;
 
         // 참조 스크립트가 존재하는 타 오브젝트
         [SerializeField] private GameObject selectIcon;
@@ -20,13 +19,23 @@ namespace Assets.Script.System.Menu
             // init component
             menuCtr = GetComponent<MenuControl>();
 
-            // UI Canvas -> Menu -> Phone -> Select
-            blink = selectIcon.GetComponent<Blink>();
+            setPhoneUI();
+        }
+
+        private void setPhoneUI()
+        {
+            ui.setService(true);
+            ui.setWiFi(true);
+
+            ui.setTime(3, 29);
         }
 
         protected internal void setSelectPos(menuIcon icon)
         {
-            menuCtr.setSelectPos((int)icon);
+            int iconNum = (int)icon;
+
+            menuCtr.setSelectPos(iconNum);
+            moveSelectTo(icon);
         }
 
         protected internal void menuView(bool isView)
@@ -34,9 +43,8 @@ namespace Assets.Script.System.Menu
             ui.setMenuView(isView);
         }
 
-        protected internal void moveSelectTo(int num)
+        protected internal void moveSelectTo(menuIcon icon)
         {
-            menuIcon icon = (menuIcon)num;
             switch(icon)
             {
                 case menuIcon.option:   ui.moveToOption(); break;
@@ -47,8 +55,6 @@ namespace Assets.Script.System.Menu
                 case menuIcon.message:  ui.moveToMsg(); break;
                 default: break;
             }
-
-            blink.resetA();
         }
 
         /************************************************************

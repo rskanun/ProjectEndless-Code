@@ -7968,6 +7968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0cacc2c66c3e943b0bf082bb1bc483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blink: {fileID: 780075398}
   menu: {fileID: 1605943745}
   cursor: {fileID: 780075394}
   optionIcon: {fileID: 1481124837}
@@ -7976,6 +7977,11 @@ MonoBehaviour:
   titleIcon: {fileID: 541918106}
   callIcon: {fileID: 673663296}
   msgIcon: {fileID: 175025294}
+  wifiOnIcon: {fileID: 771663053}
+  wifiOffIcon: {fileID: 974529649}
+  serviceIcon: {fileID: 749913963}
+  noServiceIcon: {fileID: 2096248053}
+  timeText: {fileID: 988437845}
 --- !u!114 &1647111979
 MonoBehaviour:
   m_ObjectHideFlags: 0

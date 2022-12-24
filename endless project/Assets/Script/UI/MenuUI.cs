@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using Assets.Script.System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
@@ -12,6 +12,8 @@ namespace Assets.Script.UI
 
     public class MenuUI : MonoBehaviour
     {
+        public Blink blink;
+
         public GameObject menu;
         public GameObject cursor;
 
@@ -27,7 +29,7 @@ namespace Assets.Script.UI
         public GameObject serviceIcon;
         public GameObject noServiceIcon;
 
-        public Text timeText;
+        public TextMeshProUGUI timeText;
 
         void Awake()
         {
@@ -55,7 +57,12 @@ namespace Assets.Script.UI
 
         private void setCursor(GameObject select)
         {
-            cursor.transform.localPosition = select.transform.localPosition;
+            if(cursor.transform.localPosition != select.transform.localPosition)
+            {
+                cursor.transform.localPosition = select.transform.localPosition;
+                blink.resetA();
+            }
+            
         }
 
         /************************************************************
