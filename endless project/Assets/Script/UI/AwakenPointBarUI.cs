@@ -6,37 +6,29 @@ namespace Assets.Script.UI
 {
     public class AwakenPointBarUI : MonoBehaviour
     {
-        [SerializeField]
-        private Player player;
-
         public Image apBar;
 
-        private float nowAP; // ao의 값이 변경되기 이전의 값
+        private float ticks = 10;
+        private float spf = 0.025f;
 
-        void Start()
+        public void setApBar(float value)
         {
-            nowAP = player.ap;
-            apBar.fillAmount = (float)player.ap / player.maxAP;
-        }
-        void Update()
-        {
-            if(nowAP != player.ap)
-            {
-                // 깎일 양의 Bar를 10틱으로 나눠 애니메이션의 형태로 보여주기
-                StartCoroutine(barAnimation(nowAP, player.ap));
-
-                nowAP = player.ap;
-            }
+            apBar.fillAmount= value;
         }
 
-        IEnumerator barAnimation(float before, float after)
+        public void barUpdate(float nowAP, Player player)
         {
-            float movePer = (before - after) / 10.0f;
+            StartCoroutine(barAnimation(nowAP, player.ap, player.maxAp));
+        }
+
+        IEnumerator barAnimation(float before, float after, float max)
+        {
+            float movePer = (before - after) / ticks;
             while (before != after)
             {
                 before -= movePer;
-                apBar.fillAmount -= movePer / player.maxAP;
-                yield return new WaitForSeconds(0.025f);
+                apBar.fillAmount -= movePer / max;
+                yield return new WaitForSeconds(spf);
             }
         }
     }

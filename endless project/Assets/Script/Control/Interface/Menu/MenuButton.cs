@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace Assets.Script.System.Menu
 {
-    public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
+    public class MenuButton : MonoBehaviour, IPointerMoveHandler, IPointerClickHandler
     {
         // 참조 스크립트가 있는 오브젝트
         [SerializeField]
@@ -24,7 +24,7 @@ namespace Assets.Script.System.Menu
             menuManager = menu.GetComponent<MenuManager>();
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public void OnPointerMove(PointerEventData eventData)
         {
             if(eventData.IsPointerMoving())
             {

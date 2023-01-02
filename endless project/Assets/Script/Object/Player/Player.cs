@@ -39,7 +39,7 @@ public class Player : ObjectData
 
     [SerializeField]
     private int maxAwakenPoint;
-    public int maxAP
+    public int maxAp
     {
         get { return maxAwakenPoint; }
         set

@@ -28,5 +28,5 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    void getDamage(int damage) { player.ap += damage; }
+    void getDamage(int damage) { player.hp -= damage; }
 }
