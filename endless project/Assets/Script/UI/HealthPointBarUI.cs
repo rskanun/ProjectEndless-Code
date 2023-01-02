@@ -9,14 +9,14 @@ namespace Assets.Script.UI
         public Image hpBar;
 
         private float ticks = 10;
-        private float spf = 0.025f;
+        private float spf = 0.025f; // second per frame
 
-        public void setHpBar(float value)
+        protected internal void setHPBar(float value)
         {
             hpBar.fillAmount = value;
         }
 
-        public void barUpdate(float nowHP, Player player)
+        protected internal void barUpdate(int nowHP, Player player)
         {
             StartCoroutine(barAnimation(nowHP, player.hp, player.maxHp));
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,29 +7,20 @@ namespace Assets.Script.UI
 {
     public class AwakenPointBarUI : MonoBehaviour
     {
-        public Image apBar;
+        private const int AP_COUNT = 5; // AP 갯수
+        private const int AP_MAX_STEP = 5; // AP 변화 단계
 
-        private float ticks = 10;
-        private float spf = 0.025f;
+        [SerializeField]
+        private GameObject[] APBar = new GameObject[AP_COUNT];
 
-        public void setApBar(float value)
+        protected internal void barUpdate(Player player)
         {
-            apBar.fillAmount= value;
-        }
+            int apPerValue = player.maxAp / AP_COUNT / (AP_MAX_STEP - 1); // AP의 이미지가 변하는 최소 단위
+            int ap = player.ap / apPerValue;
 
-        public void barUpdate(float nowAP, Player player)
-        {
-            StartCoroutine(barAnimation(nowAP, player.ap, player.maxAp));
-        }
-
-        IEnumerator barAnimation(float before, float after, float max)
-        {
-            float movePer = (before - after) / ticks;
-            while (before != after)
+            for(int i = 0; i < ap / AP_MAX_STEP; i++)
             {
-                before -= movePer;
-                apBar.fillAmount -= movePer / max;
-                yield return new WaitForSeconds(spf);
+                
             }
         }
     }
