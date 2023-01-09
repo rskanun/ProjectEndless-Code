@@ -13,6 +13,7 @@ namespace Assets.Script.System.Stat
         private AwakenPointBarUI apUI;
 
         private int hp; // hp의 값이 변경되기 이전의 값
+        private int ap; // ap의 값이 변경되기 이전의 값
 
         private void Start()
         {
@@ -21,19 +22,12 @@ namespace Assets.Script.System.Stat
             apUI= GetComponent<AwakenPointBarUI>();
 
             initHpBar();
-            initApBar();
         }
 
         private void initHpBar()
         {
             hp = player.hp;
             hpUI.setHPBar((float)player.hp / player.maxHp);
-        }
-
-        private void initApBar()
-        {
-            
-
         }
 
         private void Update()
@@ -44,6 +38,13 @@ namespace Assets.Script.System.Stat
                 hpUI.barUpdate(hp, player);
 
                 hp = player.hp;
+            }
+
+            if(ap != player.ap)
+            {
+                apUI.barUpdate(player);
+
+                ap = player.ap;
             }
         }
     }

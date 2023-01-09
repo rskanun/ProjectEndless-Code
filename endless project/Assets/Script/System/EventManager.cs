@@ -22,6 +22,14 @@ public class EventManager : MonoBehaviour
                 }
                 break;
 
+            case "/addAP":
+                // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 AP 증가
+                if (int.TryParse(commands[1], out int ap))
+                {
+                    addAP(ap);
+                }
+                break;
+
             default:
                 Debug.Log(command + " is an incorrect command!");
                 break;
@@ -29,4 +37,5 @@ public class EventManager : MonoBehaviour
     }
 
     void getDamage(int damage) { player.hp -= damage; }
+    void addAP(int ap) { player.ap += ap; }
 }
