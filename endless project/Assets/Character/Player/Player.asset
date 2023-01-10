@@ -17,7 +17,7 @@ MonoBehaviour:
   strength: 0
   agility: 40
   defensive: 0
-  awakenPoint: 35
+  awakenPoint: 0
   maxAwakenPoint: 100
   staminaPoint: 0
   maxStaminaPoint: 0

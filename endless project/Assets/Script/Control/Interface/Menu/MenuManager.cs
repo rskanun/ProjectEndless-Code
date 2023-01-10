@@ -24,6 +24,7 @@ namespace Assets.Script.System.Menu
 
         private void setPhoneUI()
         {
+            ui.setBackgroundMode(true);
             ui.setService(true);
             ui.setWiFi(true);
 
@@ -80,6 +81,7 @@ namespace Assets.Script.System.Menu
         private void option()
         {
             Debug.Log("option");
+            ui.changeScreen(false);
         }
 
         private void save()
