@@ -203,5 +203,16 @@ namespace Assets.Script.UI
 
             nowTime = timeText.text;
         }
+
+        public void UiReset()
+        {
+            icon.SetActive(false);
+            battery.SetActive(false);
+            wifiOnIcon.SetActive(false);
+            wifiOffIcon.SetActive(false);
+            serviceIcon.SetActive(false);
+            noServiceIcon.SetActive(false);
+            timeText.text = "";
+        }
     }
 }

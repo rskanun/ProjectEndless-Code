@@ -366,7 +366,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Script/Control/ChrControl.cs"
 "Assets/Script/Control/Interface/InterfaceControl.cs"
-"Assets/Script/Control/Interface/Menu/MenuButton.cs"
+"Assets/Script/Control/Interface/Menu/ButtonBlink.cs"
 "Assets/Script/Control/Interface/Menu/MenuControl.cs"
 "Assets/Script/Control/Interface/Menu/MenuManager.cs"
 "Assets/Script/Control/Text/CSVReader.cs"

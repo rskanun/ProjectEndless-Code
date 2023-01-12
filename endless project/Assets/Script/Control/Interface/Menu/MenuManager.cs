@@ -78,33 +78,33 @@ namespace Assets.Script.System.Menu
             }
         }
 
-        private void option()
+        public void option()
         {
             Debug.Log("option");
             ui.changeScreen(false);
         }
 
-        private void save()
+        public void save()
         {
             Debug.Log("save");
         }
 
-        private void load()
+        public void load()
         {
             Debug.Log("load");
         }
 
-        private void title()
+        public void title()
         {
             Debug.Log("title");
         }
 
-        private void call()
+        public void call()
         {
             Debug.Log("call");
         }
 
-        private void message()
+        public void message()
         {
             Debug.Log("message");
         }
