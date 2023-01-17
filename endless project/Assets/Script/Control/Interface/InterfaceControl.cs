@@ -16,9 +16,6 @@ namespace Assets.Script.Control
         // 현재 선택한 것에 대한 좌표
         protected internal Vector2 selectPoint = Vector2.zero;
 
-        // 현재 인터페이스 내에서 컨트롤을 하는 중인가
-        protected internal bool isInterface = false;
-
         /************************************************************
         * [Child Method]
         * 
@@ -62,7 +59,10 @@ namespace Assets.Script.Control
         }
 
         protected internal abstract void iconSelect(int x, int y);
-        protected internal abstract void iconCancel();
+        public virtual void iconCancel()
+        {
+            this.gameObject.SetActive(false);
+        }
         /************************************************************
         * [커서 이동 제어]
         * 

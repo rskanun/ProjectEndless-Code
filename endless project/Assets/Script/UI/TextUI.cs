@@ -8,13 +8,6 @@ public class TextUI : MonoBehaviour
     public Text textLine;
     public GameObject textDialogue;
 
-    void Awake ()
-    {
-        // 텍스트와 텍스트창 숨김
-        textLine.gameObject.SetActive(false);
-        textDialogue.gameObject.SetActive(false);
-    }
-
     public void setDialogView(bool isView)
     {
         textLine.gameObject.SetActive(isView);

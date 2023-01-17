@@ -13,8 +13,7 @@ public class TextManager : MonoBehaviour
     private Dictionary<int, string[]> textData;
 
     // EventManager가 있는 오브젝트
-    [SerializeField]
-    private GameObject player;
+    public GameObject gameManager;
 
     // 텍스트 현재 진행 상태
     private bool isTalking = false;
@@ -44,7 +43,7 @@ public class TextManager : MonoBehaviour
     private void init()
     {
         // Component Init
-        command = player.GetComponent<EventManager>();
+        command = gameManager.GetComponent<EventManager>();
         ui = GetComponent<TextUI>();
 
         // text input

@@ -2,13 +2,19 @@
 using Assets.Script.System.Menu;
 using Assets.Script.UI;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Schema;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 namespace Assets.Script.Control
 {
     public class MenuControl : InterfaceControl
     {
+        public GameObject menu;
+
+        public List<GameObject> windows = new List<GameObject>();
+
         // 참조 스크립트
         private MenuManager menuManager;
 
@@ -22,10 +28,13 @@ namespace Assets.Script.Control
         private const int X = 3;
         private const int Y = 2;
 
-        private void Awake()
+        private void Start()
         {
+            // init value
+            valueReset();
+
             // init component
-            menuManager = GetComponent<MenuManager>();
+            menuManager = menu.GetComponent<MenuManager>();
             setIconPoint(X, Y);
         }
 
@@ -35,8 +44,6 @@ namespace Assets.Script.Control
         * 메뉴 상태에서 커서 이동을 제어
         ************************************************************/
 
-        private int openNum = 0;
-
         private void Update()
         {
             menuKeyPress();
@@ -45,50 +52,26 @@ namespace Assets.Script.Control
 
         private void menuKeyPress()
         {
-            // 메뉴키
-            if(Input.GetKeyDown(Option.menu))
+            // 메뉴 활성화/비활성화
+            if (Input.GetKeyDown(Option.menu))
             {
-                if (!isInterface) // 메뉴가 켜져있지 않은 경우
+                if (menu.activeSelf == false) // 메뉴가 켜져있지 않은 경우
                 {
-                    menuOn();
-                    openNum++;
+                    menu.SetActive(true);
+                    windows.Add(menu);
+
                 }
-                else // 메뉴가 켜져있는 경우
+                else if (windows.Count <= 1) // 메뉴만 켜져있는 경우
                 {
-                    menuOff();
-                    openNum--;
+                    menu.SetActive(false);
                 }
             }
-        }
-
-        private void menuOn()
-        {
-            isInterface = true;
-            menuManager.menuView(true);
-        }
-
-        private void menuOff()
-        {
-            isInterface = false;
-
-            valueReset(); // 변수 리셋
-            menuManager.menuView(false);
         }
 
         protected internal override void iconSelect(int x, int y)
         {
             int index = (y * X) + x;
             menuManager.iconSelect((menuIcon)index);
-        }
-
-        protected internal override void iconCancel()
-        {
-            // 메뉴만 켜져있는 경우
-            if (openNum == 2)
-            {
-                openNum--;
-                menuOff();
-            }
         }
 
         protected internal override void moveUI(int x, int y)

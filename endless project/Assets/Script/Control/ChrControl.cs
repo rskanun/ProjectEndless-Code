@@ -21,7 +21,7 @@ public class ChrControl : MonoBehaviour
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
     {
-        get { return text.IsTalking || isDashing || interfaceCtr.isInterface; }
+        get { return text.IsTalking || isDashing || menuUI.activeSelf; }
     }
 
     // 옵션(ESC) 키 차단
@@ -62,7 +62,7 @@ public class ChrControl : MonoBehaviour
     {
         // 텍스트 상호작용 키 감지
         // 자세한 코드는 Text -> TextManager
-        if(!interfaceCtr.isInterface)
+        if(menuUI.activeSelf == false)
         {
             talkingKeyPress();
         }

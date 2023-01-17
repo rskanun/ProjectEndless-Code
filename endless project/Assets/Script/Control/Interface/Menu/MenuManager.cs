@@ -9,22 +9,23 @@ namespace Assets.Script.System.Menu
     {
         public MenuUI ui;
 
+        // 참조 스크립트
         private MenuControl menuCtr;
 
-        // 참조 스크립트가 존재하는 타 오브젝트
-        [SerializeField] private GameObject selectIcon;
+        // 참조 스크립트가 있는 오브젝트
+        public GameObject gameManager;
+
 
         private void Awake()
         {
             // init component
-            menuCtr = GetComponent<MenuControl>();
+            menuCtr = gameManager.GetComponent<MenuControl>();
 
             setPhoneUI();
         }
 
         private void setPhoneUI()
         {
-            ui.setBackgroundMode(true);
             ui.setService(true);
             ui.setWiFi(true);
 
@@ -37,11 +38,6 @@ namespace Assets.Script.System.Menu
 
             menuCtr.setSelectPos(iconNum);
             moveSelectTo(icon);
-        }
-
-        protected internal void menuView(bool isView)
-        {
-            ui.setMenuView(isView);
         }
 
         protected internal void moveSelectTo(menuIcon icon)
@@ -81,7 +77,6 @@ namespace Assets.Script.System.Menu
         public void option()
         {
             Debug.Log("option");
-            ui.changeScreen(false);
         }
 
         public void save()
