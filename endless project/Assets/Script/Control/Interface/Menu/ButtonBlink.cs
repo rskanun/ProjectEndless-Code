@@ -11,7 +11,7 @@ namespace Assets.Script.System.Menu
         public MenuManager menuManager;
 
         // 이 아이콘의 종류
-        public menuIcon thisIcon;
+        public MenuIcon thisIcon;
 
         public void OnPointerMove(PointerEventData eventData)
         {

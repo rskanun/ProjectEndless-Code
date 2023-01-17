@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Assets.Script.UI
 {
-    public enum menuIcon
+    public enum MenuIcon
     {
-        option, save, load,
-        title, call, message
+        Option, Save, Load,
+        Title, Call, Message
     }
 
     public class MenuUI : MonoBehaviour
@@ -40,12 +40,12 @@ namespace Assets.Script.UI
         * 아이콘을 가리키는 커서 이동
         ************************************************************/
 
-        protected internal void moveToOption() { setCursor(optionIcon); }
-        protected internal void moveToSave() { setCursor(saveIcon); }
-        protected internal void moveToLoad() { setCursor(loadIcon); }
-        protected internal void moveToTitle() { setCursor(titleIcon); }
-        protected internal void moveToCall() { setCursor(callIcon); }
-        protected internal void moveToMsg() { setCursor(msgIcon); }
+        public void moveToOption() { setCursor(optionIcon); }
+        public void moveToSave() { setCursor(saveIcon); }
+        public void moveToLoad() { setCursor(loadIcon); }
+        public void moveToTitle() { setCursor(titleIcon); }
+        public void moveToCall() { setCursor(callIcon); }
+        public void moveToMsg() { setCursor(msgIcon); }
 
         private void setCursor(GameObject select)
         {

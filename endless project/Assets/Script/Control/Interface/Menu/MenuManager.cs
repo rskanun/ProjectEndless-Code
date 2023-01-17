@@ -1,6 +1,7 @@
 ﻿using Assets.Script.Control;
 using Assets.Script.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Script.System.Menu
@@ -9,12 +10,15 @@ namespace Assets.Script.System.Menu
     {
         public MenuUI ui;
 
+        // 윈도우 오브젝트 리스트
+        public GameObject optionWindow;
+        public List<GameObject> subOptionWindows = new List<GameObject>();
+
         // 참조 스크립트
         private MenuControl menuCtr;
 
         // 참조 스크립트가 있는 오브젝트
         public GameObject gameManager;
-
 
         private void Awake()
         {
@@ -32,7 +36,7 @@ namespace Assets.Script.System.Menu
             ui.setTime(3, 29);
         }
 
-        protected internal void setSelectPos(menuIcon icon)
+        public void setSelectPos(MenuIcon icon)
         {
             int iconNum = (int)icon;
 
@@ -40,16 +44,16 @@ namespace Assets.Script.System.Menu
             moveSelectTo(icon);
         }
 
-        protected internal void moveSelectTo(menuIcon icon)
+        public void moveSelectTo(MenuIcon icon)
         {
             switch(icon)
             {
-                case menuIcon.option:   ui.moveToOption(); break;
-                case menuIcon.save:     ui.moveToSave(); break;
-                case menuIcon.load:     ui.moveToLoad(); break;
-                case menuIcon.title:    ui.moveToTitle(); break;
-                case menuIcon.call:     ui.moveToCall(); break;
-                case menuIcon.message:  ui.moveToMsg(); break;
+                case MenuIcon.Option:   ui.moveToOption(); break;
+                case MenuIcon.Save:     ui.moveToSave(); break;
+                case MenuIcon.Load:     ui.moveToLoad(); break;
+                case MenuIcon.Title:    ui.moveToTitle(); break;
+                case MenuIcon.Call:     ui.moveToCall(); break;
+                case MenuIcon.Message:  ui.moveToMsg(); break;
                 default: break;
             }
         }
@@ -60,23 +64,31 @@ namespace Assets.Script.System.Menu
         * 메뉴의 각 아이콘의 기능 수행
         ************************************************************/
 
-        protected internal void iconSelect(menuIcon icon)
+        public void iconSelect(MenuIcon icon)
         {
             switch(icon)
             {
-                case menuIcon.option:   option(); break;
-                case menuIcon.save:     save(); break;
-                case menuIcon.load:     load(); break;
-                case menuIcon.title:    title(); break;
-                case menuIcon.call:     call(); break;
-                case menuIcon.message:  message(); break;
+                case MenuIcon.Option:   option(); break;
+                case MenuIcon.Save:     save(); break;
+                case MenuIcon.Load:     load(); break;
+                case MenuIcon.Title:    title(); break;
+                case MenuIcon.Call:     call(); break;
+                case MenuIcon.Message:  message(); break;
                 default: break;
             }
         }
 
         public void option()
         {
-            Debug.Log("option");
+            menuCtr.openWindow(optionWindow);
+        }
+
+        public void openSubOption(int index)
+        {
+            if(0 <= index && index < subOptionWindows.Count)
+            {
+                menuCtr.openWindow(subOptionWindows[index]);
+            }
         }
 
         public void save()

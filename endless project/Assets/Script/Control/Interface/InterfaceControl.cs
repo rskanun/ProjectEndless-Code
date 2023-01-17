@@ -1,9 +1,4 @@
-﻿using Assets.Script.System;
-using Assets.Script.System.Menu;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Script.Control
 {
@@ -14,7 +9,10 @@ namespace Assets.Script.Control
         private Vector2 iconPoint = Vector2.zero;
 
         // 현재 선택한 것에 대한 좌표
-        protected internal Vector2 selectPoint = Vector2.zero;
+        private Vector2 selectPoint = Vector2.zero;
+
+        // 해당 인터페이스의 윈도우
+        public GameObject interfaceWindow;
 
         /************************************************************
         * [Child Method]
@@ -22,23 +20,29 @@ namespace Assets.Script.Control
         * 자식 클래스에서 쓰일 메소드
         ************************************************************/
 
-        protected internal void setIconPoint(int x, int y)
+        public void setIconPoint(int x, int y)
         {
             iconPoint.x = x - 1;
             iconPoint.y = y - 1;
         }
 
-        protected internal void valueReset()
+        public void valueReset()
         {
             selectPoint = Vector2.zero;
             accumTime = 0;
         }
 
-        protected internal void interfaceKeyPress()
+        public void interfaceKeyPress()
         {
             cursorMoveKeyPress();
             selectKeyPress();
             cancelKeyPress();
+        }
+
+        public void setSelectPoint(int x, int y)
+        {
+            selectPoint.x = x;
+            selectPoint.y = y;
         }
 
         /************************************************************
@@ -55,11 +59,14 @@ namespace Assets.Script.Control
 
         private void cancelKeyPress()
         {
-            if (Input.GetKeyDown(Option.cancel)) iconCancel();
+            if (Input.GetKeyDown(Option.cancel) && interfaceWindow.activeSelf == true)
+            {
+                cancel();
+            }
         }
 
         protected internal abstract void iconSelect(int x, int y);
-        public virtual void iconCancel()
+        public virtual void cancel()
         {
             this.gameObject.SetActive(false);
         }

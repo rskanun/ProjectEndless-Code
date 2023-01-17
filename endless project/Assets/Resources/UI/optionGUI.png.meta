@@ -108,7 +108,7 @@ TextureImporter:
       name: menu_frame
       rect:
         serializedVersion: 2
-        x: 80
+        x: 112
         y: 0
         width: 112
         height: 208
@@ -213,8 +213,8 @@ TextureImporter:
       name: call
       rect:
         serializedVersion: 2
-        x: 0
-        y: 176
+        x: 64
+        y: 192
         width: 16
         height: 16
       alignment: 0
@@ -234,8 +234,8 @@ TextureImporter:
       name: message
       rect:
         serializedVersion: 2
-        x: 16
-        y: 176
+        x: 80
+        y: 192
         width: 16
         height: 16
       alignment: 0
@@ -255,8 +255,8 @@ TextureImporter:
       name: select
       rect:
         serializedVersion: 2
-        x: 32
-        y: 176
+        x: 96
+        y: 192
         width: 16
         height: 16
       alignment: 0
@@ -277,7 +277,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 160
+        y: 176
         width: 4
         height: 5
       alignment: 0
@@ -298,7 +298,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5
-        y: 160
+        y: 176
         width: 4
         height: 5
       alignment: 0
@@ -319,7 +319,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 160
+        y: 176
         width: 6
         height: 6
       alignment: 0
@@ -340,7 +340,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 23
-        y: 160
+        y: 176
         width: 6
         height: 6
       alignment: 0
@@ -360,7 +360,7 @@ TextureImporter:
       name: portrait_mode
       rect:
         serializedVersion: 2
-        x: 192
+        x: 224
         y: 0
         width: 112
         height: 208
@@ -378,13 +378,55 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: landscape_mode
+      name: battery
       rect:
         serializedVersion: 2
-        x: 304
+        x: 32
+        y: 176
+        width: 3
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6b76dff1b400814a8b78ec3171eef4d
+      internalID: 1081617256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: list_button
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 0
-        width: 112
-        height: 208
+        width: 37
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e45c5744887c0f43b0c753c49e06ce3
+      internalID: -1985531063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: home_button
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 0
+        width: 38
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -392,8 +434,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ebcde27759661b4449651f82d4ea5dad
-      internalID: 344785514
+      spriteID: 0f3c7842229cf0e4981037b628448f30
+      internalID: -1549498107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: back_button
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 0
+        width: 37
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a14ff61c9e15fc4d8afc0e18f273ba0
+      internalID: -179662010
       vertices: []
       indices: 
       edges: []
@@ -409,16 +472,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      back_button: -179662010
       call: 1058399888
       menu_frame: -7132264
       spread_on: 867387410
+      home_button: -1549498107
       optionGUI_14: 1821159120
       message: 822154912
       spread_off: -36336203
       optionGUI_12: 1449279704
+      list_button: -1985531063
       wifi_on: -1371176707
       exit: -222913187
       landscape_mode: 344785514
+      battery: 1081617256
       option: 590721500
       save: 817963386
       load: -120440064

@@ -25,11 +25,5 @@ namespace Assets.Script.UI
             else if (toggle.name.Equals("Option3 Toggle")) selectText.text = "Select Option3";
             else selectText.text = "Select Option Name";
         }
-
-        public void openList()
-        {
-            optionList.SetActive(true);
-            onClick();
-        }
     }
 }
