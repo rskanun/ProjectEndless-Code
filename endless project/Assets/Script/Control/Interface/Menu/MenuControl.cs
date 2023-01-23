@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Script.Control
 {
@@ -71,12 +72,11 @@ namespace Assets.Script.Control
 
         public void allClose()
         {
-            if(windows.Count > 1) // 메뉴창은 남겨두기
+            GameObject window = null;
+            while(windows.Count > 1) // 메뉴창은 남겨두기
             {
-                for(GameObject window = windows.Pop(); windows.Count > 1; window = windows.Pop())
-                {
-                    window.SetActive(false);
-                }
+                window = windows.Pop();
+                window.SetActive(false);
             }
         }
 

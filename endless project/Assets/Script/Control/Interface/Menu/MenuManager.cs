@@ -33,7 +33,7 @@ namespace Assets.Script.System.Menu
             ui.setService(true);
             ui.setWiFi(true);
 
-            ui.setTime(3, 29);
+            ui.setTime(15, 29);
         }
 
         public void setSelectPos(MenuIcon icon)
@@ -80,6 +80,12 @@ namespace Assets.Script.System.Menu
 
         public void option()
         {
+            StartCoroutine(openOption());
+        }
+
+        public IEnumerator openOption()
+        {
+            yield return StartCoroutine(ui.openAppAnimation(optionWindow));
             menuCtr.openWindow(optionWindow);
         }
 

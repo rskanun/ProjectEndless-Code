@@ -18,7 +18,6 @@ public class Player : ObjectData
      * 플레이어만의 각성 수치로 시나리오에 벗어나는 행동을 할 시 올라간다.
      * 100%를 달성할 시 강제 루프를 진행한다.
      * 마력 수치에 따라 초기값이 달라진다.
-     * 시간의 경과에 따라 각성치가 초기값까지 떨어진다.
      ****************************************************************/
     public int ap
     {
@@ -48,46 +47,6 @@ public class Player : ObjectData
                 maxAwakenPoint = 0;
             else
                 maxAwakenPoint = value;
-        }
-    }
-
-    [SerializeField]
-    private int staminaPoint;
-    /***************************************************************
-     * [ 기력 (Stamina Point) ]
-     * 
-     * 플레이어의 기력 수치로 능력 사용에 영향을 끼친다.
-     * 일정 기력 수치를 사용하여 능력을 사용할 수 있다.
-     * 기력을 모두 소모하면 일정시간 동안 움직일 수 없다.
-     ****************************************************************/
-    public int sp
-    {
-        get { return staminaPoint; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                staminaPoint = 0;
-            // 입력값이 최대치를 초과한 경우
-            else if (value > maxStaminaPoint)
-                staminaPoint = maxStaminaPoint;
-            else
-                staminaPoint = value;
-        }
-    }
-
-    [SerializeField]
-    private int maxStaminaPoint;
-    public int maxSP
-    {
-        get { return maxStaminaPoint; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                maxStaminaPoint = 0;
-            else
-                maxStaminaPoint = value;
         }
     }
 

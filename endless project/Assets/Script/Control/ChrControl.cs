@@ -1,22 +1,16 @@
-﻿using Assets.Script.Control;
-using Assets.Script.System.Menu;
-using Assets.Script.UI;
-using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
     // 참조 스크립트
     private TextManager text;
-    private InterfaceControl interfaceCtr;
 
     [SerializeField]
     private Player player;
 
     // 참조 오브젝트
-    [SerializeField] private GameObject dialog;
-    [SerializeField] private GameObject menuUI;
+    public GameObject dialog;
+    public GameObject menuUI;
 
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
@@ -53,9 +47,6 @@ public class ChrControl : MonoBehaviour
 
         // UI Canvas -> Text Window
         text        = dialog.GetComponent<TextManager>();
-
-        // UI Canvas -> Menu
-        interfaceCtr = menuUI.GetComponent<InterfaceControl>();
     }
 
     private void Update()

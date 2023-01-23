@@ -357,7 +357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: portrait_mode
+      name: menu_background
       rect:
         serializedVersion: 2
         x: 224
@@ -428,7 +428,7 @@ TextureImporter:
         width: 38
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -449,7 +449,7 @@ TextureImporter:
         width: 37
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -480,6 +480,7 @@ TextureImporter:
       optionGUI_14: 1821159120
       message: 822154912
       spread_off: -36336203
+      menu_background: 1083138216
       optionGUI_12: 1449279704
       list_button: -1985531063
       wifi_on: -1371176707
@@ -490,7 +491,6 @@ TextureImporter:
       save: 817963386
       load: -120440064
       select: 1787207043
-      portrait_mode: 1083138216
       wifi_off: 31322874
   spritePackingTag: 
   pSDRemoveMatte: 0
