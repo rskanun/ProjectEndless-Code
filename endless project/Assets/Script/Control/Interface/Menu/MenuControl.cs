@@ -1,19 +1,16 @@
-﻿using Assets.Script.System.Menu;
+﻿using Assets.Script.Control.Interface.Menu.App;
+using Assets.Script.System.Menu;
 using Assets.Script.UI;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Script.Control
 {
     public class MenuControl : InterfaceControl
     {
-        public Stack<GameObject> windows = new Stack<GameObject>();
-
-        // 참조 스크립트
-        private MenuManager menuManager;
+        [Space]
+        [Header("참조 스크립트")]
+        public MenuManager menuManager;
+        public HomeScreen homeScreen;
 
         /************************************************************
         * [Init]
@@ -25,13 +22,15 @@ namespace Assets.Script.Control
         private const int X = 3;
         private const int Y = 2;
 
+        // 메뉴 창의 켜짐 여부
+        private bool isOpen = false;
+
         private void Start()
         {
             // init value
             valueReset();
 
             // init component
-            menuManager = interfaceWindow.GetComponent<MenuManager>();
             setIconPoint(X, Y);
         }
 
@@ -50,74 +49,46 @@ namespace Assets.Script.Control
         private void menuKeyPress()
         {
             // 메뉴 활성화/비활성화
-            if (Input.GetKeyDown(Option.menu))
+            if (Input.GetKeyDown(Option.menu) && homeScreen.isAppEmpty && homeScreen.playAnimation == false)
             {
-                // 메뉴가 닫혀있는 경우 열기
-                if(interfaceWindow.activeSelf == false)
-                {
-                    openWindow(interfaceWindow);
-                }
-                else if(windows.Count <= 1)
-                {
-                    closeWindow();
-                }
-                // 메뉴키를 눌렀을 경우 열려있는 모든 창 한 번에 닫으며 메뉴 비활성화(패드 전용)
-                else if(Option.menu != Option.cancel)
-                {
-                    allClose();
-                    closeWindow();
-                }
-            }
-        }
+                if(isOpen == false) homeScreen.open();
+                else homeScreen.close();
 
-        public void allClose()
-        {
-            GameObject window = null;
-            while(windows.Count > 1) // 메뉴창은 남겨두기
-            {
-                window = windows.Pop();
-                window.SetActive(false);
+                isOpen = !isOpen; // switching
             }
-        }
-
-        public void openWindow(GameObject window)
-        {
-            window.SetActive(true);
-            windows.Push(window);
         }
 
         public override void cancel()
         {
-            // 켜져있는 창이 하나 이상일 경우에만 작동
-            // * 메뉴키와 캔슬키가 같은 경우 메뉴키 관리 부분에서 따로 작동
-            if(windows.Count > 1 || Option.cancel != Option.menu && windows.Count == 1)
+            // 메인 화면에 앱이 켜져있는 경우 캔슬키로 작동
+            if(homeScreen.isAppEmpty == false)
             {
-                closeWindow();
+                homeScreen.cancel();
+            }
+            // 메뉴키와 캔슬키가 다를 경우
+            // 메인 화면에서 캔슬키 작동시 메뉴 닫힘
+            else if(Option.cancel != Option.menu && homeScreen.playAnimation == false)
+            {
+                homeScreen.close();
             }
         }
 
-        private void closeWindow()
-        {
-            GameObject closeWindow = windows.Pop();
-            closeWindow.SetActive(false);
-        }
-
-        protected internal override void iconSelect(int x, int y)
+        protected override void iconSelect(int x, int y)
         {
             int index = (y * X) + x;
             menuManager.iconSelect((MenuIcon)index);
         }
 
-        protected internal override void moveUI(int x, int y)
+        protected override void moveUI(int x, int y)
         {
             int index = (y * X) + x;
             menuManager.moveSelectTo((MenuIcon)index);
         }
 
-        protected internal void setSelectPos(int num)
+        public void setSelectPos(int index)
         {
-            int x = num % X;
-            int y = num / X;
+            int x = index % X;
+            int y = index / X;
 
             setSelectPoint(x, y);
         }

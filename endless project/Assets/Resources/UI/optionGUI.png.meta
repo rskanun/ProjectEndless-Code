@@ -108,10 +108,10 @@ TextureImporter:
       name: menu_frame
       rect:
         serializedVersion: 2
-        x: 112
+        x: 224
         y: 0
-        width: 112
-        height: 208
+        width: 205
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,7 +130,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -151,7 +151,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -172,7 +172,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -193,7 +193,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -214,7 +214,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -235,7 +235,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 80
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -256,7 +256,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 192
+        y: 240
         width: 16
         height: 16
       alignment: 0
@@ -277,7 +277,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 176
+        y: 224
         width: 4
         height: 5
       alignment: 0
@@ -298,7 +298,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5
-        y: 176
+        y: 224
         width: 4
         height: 5
       alignment: 0
@@ -319,7 +319,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 176
+        y: 224
         width: 6
         height: 6
       alignment: 0
@@ -340,7 +340,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 23
-        y: 176
+        y: 224
         width: 6
         height: 6
       alignment: 0
@@ -360,8 +360,8 @@ TextureImporter:
       name: menu_background
       rect:
         serializedVersion: 2
-        x: 224
-        y: 0
+        x: 112
+        y: 48
         width: 112
         height: 208
       alignment: 0
@@ -382,7 +382,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 176
+        y: 224
         width: 3
         height: 5
       alignment: 0
@@ -403,7 +403,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 209
         width: 37
         height: 15
       alignment: 0
@@ -424,7 +424,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 37
-        y: 0
+        y: 209
         width: 38
         height: 15
       alignment: 0
@@ -445,7 +445,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 75
-        y: 0
+        y: 209
         width: 37
         height: 15
       alignment: 0

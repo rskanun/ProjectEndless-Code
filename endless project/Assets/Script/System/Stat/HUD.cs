@@ -21,13 +21,18 @@ namespace Assets.Script.System.Stat
             hpUI = GetComponent<HealthPointBarUI>();
             apUI= GetComponent<AwakenPointBarUI>();
 
-            initHpBar();
+            initBar();
         }
 
-        private void initHpBar()
+        private void initBar()
         {
+            // hp
             hp = player.hp;
             hpUI.setHPBar((float)player.hp / player.maxHp);
+
+            // ap
+            ap = player.ap;
+            apUI.setAPBar(player);
         }
 
         private void Update()

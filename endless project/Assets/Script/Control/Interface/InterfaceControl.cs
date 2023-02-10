@@ -34,8 +34,8 @@ namespace Assets.Script.Control
 
         public void interfaceKeyPress()
         {
-            cursorMoveKeyPress();
-            selectKeyPress();
+            //cursorMoveKeyPress();
+            //selectKeyPress();
             cancelKeyPress();
         }
 
@@ -65,10 +65,10 @@ namespace Assets.Script.Control
             }
         }
 
-        protected internal abstract void iconSelect(int x, int y);
+        protected abstract void iconSelect(int x, int y);
         public virtual void cancel()
         {
-            this.gameObject.SetActive(false);
+            interfaceWindow.SetActive(false);
         }
         /************************************************************
         * [커서 이동 제어]
@@ -174,6 +174,6 @@ namespace Assets.Script.Control
             else if (selectPoint.y < 0) selectPoint.y = iconPoint.y;
         }
 
-        protected internal abstract void moveUI(int x, int y);
+        protected abstract void moveUI(int x, int y);
     }
 }

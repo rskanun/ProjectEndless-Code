@@ -182,15 +182,13 @@ public class TextManager : MonoBehaviour
 
     IEnumerator talkDelay(char[] line)
     {
-        WaitForSeconds wait = new WaitForSeconds(typingSpeed);
-
         // 대화 진행 도중일 경우
         while (lineCnt < line.Length)
         {
             // 한 글자씩 대화를 출력
             ui.setText(splitString(line, lineCnt++));
 
-            yield return wait;
+            yield return new WaitForSeconds(typingSpeed);
         }
     }
 

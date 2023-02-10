@@ -1,40 +1,19 @@
 ﻿using Assets.Script.Control;
+using Assets.Script.Control.Interface.Menu.App;
 using Assets.Script.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Script.System.Menu
 {
     public class MenuManager : MonoBehaviour
     {
+        [Header("메뉴 및 앱 리스트")]
+        public HomeScreen homeScreen;
+        public App optionApp;
+
+        [Header("참조 스크립트")]
+        public MenuControl menuCtr;
         public MenuUI ui;
-
-        // 윈도우 오브젝트 리스트
-        public GameObject optionWindow;
-        public List<GameObject> subOptionWindows = new List<GameObject>();
-
-        // 참조 스크립트
-        private MenuControl menuCtr;
-
-        // 참조 스크립트가 있는 오브젝트
-        public GameObject gameManager;
-
-        private void Awake()
-        {
-            // init component
-            menuCtr = gameManager.GetComponent<MenuControl>();
-
-            setPhoneUI();
-        }
-
-        private void setPhoneUI()
-        {
-            ui.setService(true);
-            ui.setWiFi(true);
-
-            ui.setTime(15, 29);
-        }
 
         public void setSelectPos(MenuIcon icon)
         {
@@ -46,16 +25,7 @@ namespace Assets.Script.System.Menu
 
         public void moveSelectTo(MenuIcon icon)
         {
-            switch(icon)
-            {
-                case MenuIcon.Option:   ui.moveToOption(); break;
-                case MenuIcon.Save:     ui.moveToSave(); break;
-                case MenuIcon.Load:     ui.moveToLoad(); break;
-                case MenuIcon.Title:    ui.moveToTitle(); break;
-                case MenuIcon.Call:     ui.moveToCall(); break;
-                case MenuIcon.Message:  ui.moveToMsg(); break;
-                default: break;
-            }
+            ui.setCursorPos((int)icon);
         }
 
         /************************************************************
@@ -68,32 +38,32 @@ namespace Assets.Script.System.Menu
         {
             switch(icon)
             {
-                case MenuIcon.Option:   option(); break;
-                case MenuIcon.Save:     save(); break;
-                case MenuIcon.Load:     load(); break;
-                case MenuIcon.Title:    title(); break;
-                case MenuIcon.Call:     call(); break;
-                case MenuIcon.Message:  message(); break;
-                default: break;
-            }
-        }
+                case MenuIcon.Option:
+                    homeScreen.appOpen(optionApp);
+                    break;
 
-        public void option()
-        {
-            StartCoroutine(openOption());
-        }
+                case MenuIcon.Save:
+                    save();
+                    break;
 
-        public IEnumerator openOption()
-        {
-            yield return StartCoroutine(ui.openAppAnimation(optionWindow));
-            menuCtr.openWindow(optionWindow);
-        }
+                case MenuIcon.Load:
+                    load();
+                    break;
 
-        public void openSubOption(int index)
-        {
-            if(0 <= index && index < subOptionWindows.Count)
-            {
-                menuCtr.openWindow(subOptionWindows[index]);
+                case MenuIcon.Title:
+                    title();
+                    break;
+
+                case MenuIcon.Call:
+                    call();
+                    break;
+
+                case MenuIcon.Message:
+                    message();
+                    break;
+
+                default:
+                    break;
             }
         }
 

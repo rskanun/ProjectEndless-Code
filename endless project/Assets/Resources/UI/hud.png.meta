@@ -129,10 +129,10 @@ TextureImporter:
       name: hp_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 60
-        width: 17
-        height: 25
+        x: 2
+        y: 54
+        width: 27
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: hp_1
       rect:
         serializedVersion: 2
-        x: 39
-        y: 60
-        width: 17
-        height: 25
+        x: 34
+        y: 54
+        width: 27
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: hp_2
       rect:
         serializedVersion: 2
-        x: 71
-        y: 60
-        width: 17
-        height: 25
+        x: 66
+        y: 54
+        width: 27
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -276,10 +276,10 @@ TextureImporter:
       name: hp_3
       rect:
         serializedVersion: 2
-        x: 103
-        y: 60
-        width: 17
-        height: 25
+        x: 98
+        y: 54
+        width: 27
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +297,10 @@ TextureImporter:
       name: hp_4
       rect:
         serializedVersion: 2
-        x: 135
-        y: 60
-        width: 17
-        height: 25
+        x: 130
+        y: 54
+        width: 27
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,10 +339,10 @@ TextureImporter:
       name: hud_frame
       rect:
         serializedVersion: 2
-        x: 53
-        y: 47
+        x: 48
+        y: 38
         width: 98
-        height: 5
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -352,27 +352,6 @@ TextureImporter:
       bones: []
       spriteID: a27878d0a13ca2c4888fa09a22f89894
       internalID: 207918642
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hud_bar
-      rect:
-        serializedVersion: 2
-        x: 54
-        y: 40
-        width: 96
-        height: 3
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d277d926ca0af0041b9e798bb9ab4260
-      internalID: -1732099253
       vertices: []
       indices: 
       edges: []

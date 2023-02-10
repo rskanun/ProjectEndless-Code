@@ -1,5 +1,4 @@
 ﻿using Assets.Script.UI;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,35 +7,39 @@ namespace Assets.Script.Control.Interface.Menu.App
     public class App : MonoBehaviour
     {
         public GameObject window;
-        public Stack<GameObject> subWindows = new Stack<GameObject>();
-
+        protected Stack<GameObject> subWindows = new Stack<GameObject>();
+        [Space]
         [Header("참조 스크립트")]
-        public MenuUI ui;
         public MenuControl menuCtr;
-        public CustomAnimation cusAnimation;
+        public AppAnimation appAnimation;
 
-        public void open()
+        public virtual void open()
         {
-            StartCoroutine(start());
+            appAnimation.openAppAnimation(window);
         }
 
-        public virtual IEnumerator start()
+        public virtual void subOpen(GameObject subWindow)
         {
-            window.SetActive(true);
-            yield return null;
+            subWindow.SetActive(true);
+            subWindows.Push(subWindow);
         }
 
-        public virtual void close()
+        public virtual bool close()
         {
-            if(subWindows.Count > 0)
+            if (subWindows.Count > 0)
             {
                 GameObject subWindow = subWindows.Pop();
-
                 subWindow.SetActive(false);
+
+                // 하위 서브 윈도우가 전부 안 닫힘
+                return false;
             }
             else
             {
-                window.SetActive(false);
+                appAnimation.closeAppAnimation(window);
+
+                // 해당 앱이 닫힘
+                return true;
             }
         }
     }
