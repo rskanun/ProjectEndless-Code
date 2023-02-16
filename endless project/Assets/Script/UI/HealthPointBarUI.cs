@@ -8,27 +8,45 @@ namespace Assets.Script.UI
     {
         public Image hpBar;
 
-        private float ticks = 10;
-        private float spf = 0.025f; // second per frame
+        private const float TICKS = 10;
+        private const float SPF = 0.025f; // second per frame
 
-        protected internal void setHPBar(float value)
+        private float hp;
+
+        public void setHPBar(float value)
         {
+            hp = value;
             hpBar.fillAmount = value;
         }
 
-        protected internal void barUpdate(int nowHP, Player player)
+        public void barUpdate(int nowHP, Player player)
         {
+            if(hp != player.hp)
+            {
+
+            }
             StartCoroutine(barAnimation(nowHP, player.hp, player.maxHp));
         }
 
         IEnumerator barAnimation(float before, float after, float max)
         {
-            float movePer = (before - after) / ticks;
+            float movePer = (before - after) / TICKS;
+            WaitForSeconds wait = new WaitForSeconds(SPF);
+
             while (before != after)
             {
-                before -= movePer;
-                hpBar.fillAmount -= movePer / max;
-                yield return new WaitForSeconds(spf);
+                // 본래 도달해야할 양을 초과했을 경우 or 스킵
+                if(movePer > 0 && after > before || movePer < 0 && after < before)
+                {
+                    before = after;
+                    hpBar.fillAmount = after / max;
+                }
+                else
+                {
+                    before -= movePer;
+                    hpBar.fillAmount -= movePer / max;
+                    yield return wait;
+                }
             }
         }
     }

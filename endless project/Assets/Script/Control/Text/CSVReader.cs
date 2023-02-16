@@ -9,8 +9,9 @@ public class CSVReader : MonoBehaviour
     private string file = @"Assets\Resources\dialogue.csv";
 
     // csv 파일을 줄별로 정리할 list
-    private static List<string> lines = new List<string>();
     private StreamReader reader;
+    private static List<string> lines = new List<string>();
+    public static List<string> Lines { get { return lines; } }
 
     void Awake()
     {
@@ -22,9 +23,12 @@ public class CSVReader : MonoBehaviour
     {
         while (!reader.EndOfStream)
         {
-            lines.Add(reader.ReadLine());
+            string str = reader.ReadLine();
+
+            if (str.ToCharArray()[0] != '#')
+            {
+                lines.Add(str);
+            }
         }
     }
-
-    public static List<string> getLines() { return lines; }
 }

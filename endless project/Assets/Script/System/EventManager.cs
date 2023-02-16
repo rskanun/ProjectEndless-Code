@@ -14,7 +14,7 @@ public class EventManager : MonoBehaviour
 
         switch (command)
         {
-            case "/getDamage":
+            case "getDamage":
                 // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 데미지
                 if (int.TryParse(commands[1], out int damage))
                 {
@@ -22,7 +22,7 @@ public class EventManager : MonoBehaviour
                 }
                 break;
 
-            case "/addAP":
+            case "addAP":
                 // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 AP 증가
                 if (int.TryParse(commands[1], out int ap))
                 {

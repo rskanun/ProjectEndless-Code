@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Script.Control.Text;
+using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
@@ -82,7 +83,6 @@ public class ChrControl : MonoBehaviour
             if (npc is not null && Input.GetKeyDown(Option.interact))
             {
                 text.initTalk(npc);
-                text.talking();
             }
         }
 

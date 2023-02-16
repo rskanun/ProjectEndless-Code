@@ -1,207 +1,219 @@
+using Assets.Script.Control.Text.Object;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TextManager : MonoBehaviour
+namespace Assets.Script.Control.Text
 {
-    // 참조 스크립트
-    private EventManager command;
-    private TextUI ui;
-
-    // 텍스트 데이터 저장
-    private Dictionary<int, string[]> textData;
-
-    // EventManager가 있는 오브젝트
-    public GameObject gameManager;
-
-    // 텍스트 현재 진행 상태
-    private bool isTalking = false;
-    public bool IsTalking { get { return isTalking; } }
-    private int lineNum;
-    private int lineCnt;
-
-    // 텍스트 저장 공간
-    private string[] lines;
-
-    // 출력 속도
-    private float typingSpeed;
-
-    /************************************************************
-    * [초기 설정]
-    * 
-    * CSV 파일로부터 대사 가져오기 및 다른 스크립트 연결
-    ************************************************************/
-
-    private void Start()
+    public enum Code
     {
-        // 텍스트 데이터 삽입
-        textData = new Dictionary<int, string[]>();
-        init();
+        Text,   // 대사출력                  -> 대사번호,코드(Text),이름,대사
+        Select, // 선택지                    -> 대사번호,코드(Select),선택1,선택2,...,선택n
+        Case,   // 선택지 선택에 따른 진행   -> 대사번호,코드(Case),선택지
+        End,    // 선택지 종료 선언          -> 대사번호,코드(End)
+        Event   // 이벤트(수치 조작 등) 발생 -> 대사번호,코드(Event),명령어
     }
 
-    private void init()
+    public class TextManager : MonoBehaviour
     {
-        // Component Init
-        command = gameManager.GetComponent<EventManager>();
-        ui = GetComponent<TextUI>();
+        // 참조 스크립트
+        public EventManager command;
+        public TextUI ui;
 
-        // text input
-        initText();
-    }
+        // 텍스트 데이터 저장
+        private Dictionary<int, List<Line>> lineData;
 
-    private void initText()
-    {
-        List<string> lines = CSVReader.getLines();
+        // 텍스트 현재 진행 상태
+        private bool readLock;
+        private bool isTalking = false;
+        public bool IsTalking { get { return isTalking; } }
+        private TextLine nowLine;
+        private int lineNum;
+        private int lineCnt;
 
-        // 텍스트를 정리할 dummy list
-        List<string> strs = new List<string>();
-        // 텍스트 코드를 기억할 dummy int
-        int beforeNum = 0;
+        // 텍스트 저장 공간
+        private List<Line> lines;
 
-        // 파일 끝까지 한 줄씩 읽기
-        foreach (string str in lines)
+        // 출력 속도
+        private float typingSpeed;
+
+        /************************************************************
+        * [초기 설정]
+        * 
+        * CSV 파일로부터 대사 가져오기 및 다른 스크립트 연결
+        ************************************************************/
+
+        private void Start()
         {
-            // 해당 줄의 스크립트와 코드 분리
-            string num = str.Split(',')[0];
-            string line = str.Split(',')[1];
+            // 텍스트 데이터 삽입
+            lineData = new Dictionary<int, List<Line>>();
+            initText();
+        }
 
-            // 새로운 넘버가 출현했을 경우
-            if (!string.IsNullOrEmpty(num))
+        private void initText()
+        {
+            // 텍스트 코드를 기억할 dummy int
+            int num = 0;
+
+            // 파일 끝까지 한 줄씩 읽기
+            foreach (string str in CSVReader.Lines)
             {
-                // 이전 넘버가 있다면
-                if (beforeNum != 0)
+                string[] strs = str.Split(",");
+
+                // 번호칸이 비어있다면 이전 번호 그대로 사용
+                if (string.IsNullOrEmpty(strs[0]) == false)
                 {
-                    // 이전 넘버 데이터에 텍스트가 정리된 list 추가
-                    textData.Add(beforeNum, strs.ToArray());
-                    strs.Clear();
+                    num = int.Parse(strs[0]);
+                    lineData[num] = new List<Line>();
                 }
 
-                beforeNum = int.Parse(num);
+                // 코드별로 분리
+                Code code = (Code)Enum.Parse(typeof(Code), strs[1]);
+
+                switch (code)
+                {
+                    case Code.Text:
+                        lineData[num].Add(new TextLine(strs[2], strs[3]));
+                        break;
+
+                    case Code.Select:
+                        lineData[num].Add(new Select(strs));
+                        break;
+
+                    case Code.Case:
+                        lineData[num].Add(new Case(strs[2]));
+                        break;
+
+                    case Code.End:
+                        lineData[num].Add(new Line(Code.End));
+                        break;
+
+                    case Code.Event:
+                        lineData[num].Add(new EventLine(strs[2]));
+                        break;
+
+                    default:
+                        break;
+                }
             }
-
-            // 줄바꿈 인식
-            line = line.Replace("\\r\\n", "\r\n");
-            // 앞에 넘버가 붙는 것에 관계없이 대사를 배열에 추가
-            strs.Add(line);
         }
 
-        // 아직 남은 대사가 배열안에 있을 경우 전부 대사 데이터에 저장
-        if(!(strs is null))
+        public void initTalk(NPC npc)
         {
-            textData.Add(beforeNum, strs.ToArray());
-            strs.Clear();
-        }
-    }
-
-    /************************************************************
-    * [대화 출력]
-    * 
-    * 인게임 화면의 대화 제어
-    ************************************************************/
-
-
-    public void initTalk(NPC npc)
-    {
-        // 현재 대사 번호 리셋
-        lineNum = 0;
-
-        // 대화 가능한 npc일 경우
-        if (npc.getID() != 0)
-        {
-            // 대화 처음 시작 시 해당되는 대화목록 가져오기
-            lines = textData[npc.getID()];
-
-            // 대화 진행상태로 변경
-            isTalking = true;
-        }
-    }
-
-    public void talking()
-    {
-        // 한 대사를 모두 출력시 그 대사 종료
-        if (lineCnt >= lines[lineNum].Length)
-        {
-            lineCnt = 0;
-            lineNum++;
-
-            // 텍스트 창 비활성화
-            ui.setDialogView(false);
-        }
-
-        // 대화 진행
-        if (lineNum < lines.Length)
-        {
-            // 대사 가져오기
-            char[] line = lines[lineNum].ToCharArray();
-
-            // 그 대사가 커맨드일 경우 이벤트 출력
-            if (line[0] == '/')
+            // 대화 가능한 npc일 경우
+            if (npc.getID() != 0)
             {
-                command.getCommandEvent(lines[lineNum]);
-                lineNum++;
+                // 대화 처음 시작 시 해당되는 대화목록 가져오기
+                lines = lineData[npc.getID()];
 
-                talking();
+                isTalking = true;
+            }
+        }
+
+        /************************************************************
+        * [대화 출력]
+        * 
+        * 인게임 화면의 대화 제어
+        ************************************************************/
+        private void Update()
+        {
+            if(isTalking && readLock == false)
+            {
+                readLine();
+            }
+        }
+
+        private void readLine()
+        {
+            if(lineNum < lines.Count)
+            {
+                Line line = lines[lineNum++];
+
+                switch(line.Code)
+                {
+                    case Code.Text:
+                        nowLine = (TextLine)line;
+                        talking();
+                        break;
+
+                    case Code.Select:
+                        //selectManager.openSelect((Select)line);
+                        break;
+
+                    case Code.Case:
+                        //selectCase(); // End까지 스킵
+                        break;
+
+                    case Code.Event:
+                        EventLine eventLine = (EventLine)line;
+                        command.getCommandEvent(eventLine.Command);
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
-            // 대사 출력
             else
-                printText(line);
+            {
+                lineNum = 0;
+                isTalking = false;
+            }
         }
 
-        // 대화 종료
-        else
+        public void talking()
         {
-            // 텍스트 창 비활성화
-            ui.setDialogView(false);
+            if(lineCnt >= nowLine.Text.Length)
+            {
+                lineCnt = 0;
 
-            // 대화 종료상태로 변경
-            isTalking = false;
+                ui.setDialogView(false);
+
+                readLock = false;
+            }
+
+            else
+            {
+                printText(nowLine.Text);
+
+                readLock = true;
+            }
         }
-    }
-    private void printText(char[] line)
-    {
-        // 한 글자도 출력이 안 됐을 경우
-        if (lineCnt == 0)
+
+        private void printText(string line)
         {
-            // 텍스트 창 활성화 및 타이핑 속도 리셋
-            ui.setDialogView(true);
-            typingSpeed = Option.getTypingSpeed();
+            // 한 글자도 출력이 안 됐을 경우
+            if (lineCnt == 0)
+            {
+                // 텍스트 창 활성화 및 타이핑 속도 리셋
+                ui.setDialogView(true);
+                typingSpeed = Option.getTypingSpeed();
 
-            // 지정된 타이핑 속도로 출력
-            StartCoroutine(talkDelay(line));
+                // 지정된 타이핑 속도로 출력
+                StartCoroutine(talkDelay(line));
+            }
+
+            // 대화 출력 도중일 경우
+            else if (lineCnt < line.Length)
+            {
+                // 한 번에 출력
+                typingSpeed = 0;
+            }
         }
 
-        // 대화 출력 도중일 경우
-        else if (lineCnt < line.Length)
+        IEnumerator talkDelay(string line)
         {
-            // 한 번에 출력
-            typingSpeed = 0;
+            string text = "";
+
+            // 대화 진행 도중일 경우
+            while (lineCnt < line.Length)
+            {
+                // 한 글자씩 대화를 출력
+                ui.setText(text += line[lineCnt++]);
+
+                yield return new WaitForSeconds(typingSpeed);
+            }
         }
-    }
-
-    IEnumerator talkDelay(char[] line)
-    {
-        // 대화 진행 도중일 경우
-        while (lineCnt < line.Length)
-        {
-            // 한 글자씩 대화를 출력
-            ui.setText(splitString(line, lineCnt++));
-
-            yield return new WaitForSeconds(typingSpeed);
-        }
-    }
-
-    // 길이만큼의 문자열 자르기
-    private string splitString(char[] chrs, int length)
-    {
-        string result = "";
-
-        for (int i = 0; i < length; i++)
-        {
-            result += chrs[i];
-        }
-
-        return result;
     }
 }
