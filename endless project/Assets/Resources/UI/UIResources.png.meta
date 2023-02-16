@@ -192,10 +192,10 @@ TextureImporter:
       name: bar
       rect:
         serializedVersion: 2
-        x: 1
-        y: 97
-        width: 98
-        height: 5
+        x: 2
+        y: 98
+        width: 96
+        height: 3
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

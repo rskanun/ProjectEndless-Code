@@ -2,13 +2,12 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
-endless project/[Ll]ibrary/
-endless project/[Tt]emp/
-endless project/[Oo]bj/
-endless project/[Bb]uild/
-endless project/[Bb]uilds/
-endless project/[Ll]ogs/
-endless project/[Uu]ser[Ss]ettings/
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -65,8 +64,8 @@ sysinfo.txt
 crashlytics-build.properties
 
 # Packed Addressables
-endless project/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+**/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 
 # Temporary auto-generated Android Assets
-endless project/[Aa]ssets/[Ss]treamingAssets/aa.meta
-endless project/[Aa]ssets/[Ss]treamingAssets/aa/*
+**/[Aa]ssets/[Ss]treamingAssets/aa.meta
+**/[Aa]ssets/[Ss]treamingAssets/aa/*

@@ -17,6 +17,6 @@ MonoBehaviour:
   strength: 0
   agility: 40
   defensive: 0
-  awakenPoint: 10
+  awakenPoint: 15
   maxAwakenPoint: 100
   manaPoint: 5

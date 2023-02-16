@@ -28,7 +28,7 @@ namespace Assets.Script.System.Stat
         {
             // hp
             hp = player.hp;
-            hpUI.setHPBar((float)player.hp / player.maxHp);
+            hpUI.setHPBar(player.hp, player.maxHP);
 
             // ap
             ap = player.ap;
@@ -40,7 +40,7 @@ namespace Assets.Script.System.Stat
             if (hp != player.hp)
             {
                 // 깎일 양의 Bar를 10틱으로 나눠 애니메이션의 형태로 보여주기
-                hpUI.barUpdate(hp, player);
+                hpUI.barUpdate(hp, player.hp, player.maxHP);
 
                 hp = player.hp;
             }

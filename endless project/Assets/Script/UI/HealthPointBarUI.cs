@@ -11,40 +11,42 @@ namespace Assets.Script.UI
         private const float TICKS = 10;
         private const float SPF = 0.025f; // second per frame
 
-        private float hp;
+        private float nowHP;
 
-        public void setHPBar(float value)
+        private Coroutine animationCoroutine;
+
+        public void setHPBar(int hp, int maxHp)
         {
-            hp = value;
-            hpBar.fillAmount = value;
+            nowHP = hp;
+            hpBar.fillAmount = (float)hp / maxHp;
         }
 
-        public void barUpdate(int nowHP, Player player)
+        public void barUpdate(int beforeHP, float setHP, float maxHP)
         {
-            if(hp != player.hp)
-            {
+            // 코루틴이 진행 도중이면 이전 코루틴 스탑
+            if (nowHP != beforeHP)
+                StopCoroutine(animationCoroutine);
 
-            }
-            StartCoroutine(barAnimation(nowHP, player.hp, player.maxHp));
+            animationCoroutine = StartCoroutine(barAnimation(setHP, maxHP));
         }
 
-        IEnumerator barAnimation(float before, float after, float max)
+        IEnumerator barAnimation(float setHP, float maxHP)
         {
-            float movePer = (before - after) / TICKS;
+            float movePer = (nowHP - setHP) / TICKS;
             WaitForSeconds wait = new WaitForSeconds(SPF);
 
-            while (before != after)
+            while (nowHP != setHP)
             {
-                // 본래 도달해야할 양을 초과했을 경우 or 스킵
-                if(movePer > 0 && after > before || movePer < 0 && after < before)
+                // 본래 도달해야할 양을 초과했을 경우
+                if(movePer > 0 && setHP > nowHP || movePer < 0 && setHP < nowHP)
                 {
-                    before = after;
-                    hpBar.fillAmount = after / max;
+                    nowHP = setHP;
+                    hpBar.fillAmount = setHP / maxHP;
                 }
                 else
                 {
-                    before -= movePer;
-                    hpBar.fillAmount -= movePer / max;
+                    nowHP -= movePer;
+                    hpBar.fillAmount -= movePer / maxHP;
                     yield return wait;
                 }
             }

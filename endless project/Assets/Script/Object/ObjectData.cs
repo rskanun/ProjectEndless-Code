@@ -29,7 +29,7 @@ public abstract class ObjectData : ScriptableObject
 
     [SerializeField]
     private int maxHealthPoint;
-    public int maxHp
+    public int maxHP
     {
         get { return maxHealthPoint; }
         set
