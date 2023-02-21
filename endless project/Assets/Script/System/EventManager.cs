@@ -36,6 +36,12 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    /************************************************************
+    * [커맨드 이벤트]
+    * 
+    * Text Manager를 통해 읽은 커맨드 이벤트 관리
+    ************************************************************/
+
     void getDamage(int damage) { player.hp -= damage; }
     void addAP(int ap) { player.ap += ap; }
 }

@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Data.SqlTypes;
-using UnityEngine;
+﻿using UnityEngine;
 using DG.Tweening;
-using UnityEditor.PackageManager.UI;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Assets.Script.UI
 {
