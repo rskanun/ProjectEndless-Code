@@ -53,13 +53,13 @@ namespace Assets.Script.Control
 
         private void selectKeyPress()
         {
-            if(Input.GetKeyDown(Option.select))
+            if(Input.GetKeyDown(OptionSetting.Instance.interact))
                 iconSelect((int)selectPoint.x, (int)selectPoint.y);
         }
 
         private void cancelKeyPress()
         {
-            if (Input.GetKeyDown(Option.cancel) && interfaceWindow.activeSelf == true)
+            if (Input.GetKeyDown(OptionSetting.Instance.cancel) && interfaceWindow.activeSelf == true)
             {
                 cancel();
             }

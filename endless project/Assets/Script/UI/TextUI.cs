@@ -33,9 +33,4 @@ public class TextUI : MonoBehaviour
     {
         nameText.text = name;
     }
-
-    public void textClear()
-    {
-        textLine.text = "";
-    }
 }

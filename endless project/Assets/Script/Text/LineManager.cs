@@ -19,12 +19,6 @@ namespace Assets.Script.Control.Text
 
     public class LineManager : MonoBehaviour
     {
-        // csv 파일 위치
-        private static string file = @"Assets\Resources\dialogue.csv";
-
-        // 텍스트 데이터 저장
-        private static Dictionary<int, List<Line>> lineData;
-
         // 참조 스크립트
         public TextManager textManager;
         public SelectManager selectManager;
@@ -32,84 +26,13 @@ namespace Assets.Script.Control.Text
 
         // 현재 라인 진행 상황
         private TextLine nowLine;
-        [SerializeField] private bool readLock;
-        [SerializeField] private bool isTalking = false;
+        private bool readLock;
+        private bool isTalking = false;
         public bool IsTalking { get { return isTalking; } }
-        [SerializeField] private int lineNum;
+        private int lineNum;
 
         // 텍스트 저장 공간
         private List<Line> lines;
-
-        private void Awake()
-        {
-            fileRead();
-        }
-
-        /************************************************************
-        * [초기 설정]
-        * 
-        * CSV 파일로부터 대사 가져오기 및 정리 데이터 객체 형태로 보관
-        ************************************************************/
-
-        public void fileRead()
-        {
-            lineData = new Dictionary<int, List<Line>>();
-            StreamReader reader = new StreamReader(File.OpenRead(file));
-
-            // 텍스트 코드를 기억할 dummy int
-            int num = 0;
-
-            while (!reader.EndOfStream)
-            {
-                string str = reader.ReadLine();
-
-                if (str.ToCharArray()[0] != '#')
-                {
-                    addLineData(ref num, str);
-                }
-            }
-        }
-
-        private void addLineData(ref int num, string str)
-        {
-            string[] strs = str.Split(",");
-
-            // 번호칸이 비어있다면 이전 번호 그대로 사용
-            if (string.IsNullOrEmpty(strs[0]) == false)
-            {
-                num = int.Parse(strs[0]);
-                lineData[num] = new List<Line>();
-            }
-
-            // 코드별로 분리
-            Code code = (Code)Enum.Parse(typeof(Code), strs[1]);
-
-            switch (code)
-            {
-                case Code.Text:
-                    lineData[num].Add(new TextLine(strs[2], strs[3]));
-                    break;
-
-                case Code.Select:
-                    lineData[num].Add(new Select(strs));
-                    break;
-
-                case Code.Case:
-                    lineData[num].Add(new Case(strs[2]));
-                    break;
-
-                case Code.End:
-                    lineData[num].Add(new Line(Code.End));
-                    break;
-
-                case Code.Event:
-                    lineData[num].Add(new EventLine(strs[2]));
-                    break;
-
-                default:
-                    break;
-            }
-        }
 
         /************************************************************
         * [대사 관리]
@@ -122,7 +45,7 @@ namespace Assets.Script.Control.Text
             if (npc.getID() != 0)
             {
                 // 대화 처음 시작 시 해당되는 대화목록 가져오기
-                lines = lineData[npc.getID()];
+                lines = npc.getLines();
 
                 isTalking = true;
 

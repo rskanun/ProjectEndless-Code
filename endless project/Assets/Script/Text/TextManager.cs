@@ -13,10 +13,13 @@ namespace Assets.Script.Control.Text
         public TextUI ui;
 
         // 텍스트 현재 진행 상태
-        [SerializeField]private int textCnt = 0;
+        private int textCnt = 0;
 
         // 출력 속도
         private float typingSpeed;
+
+        // 글자 타이핑 효과 코루틴
+        private Coroutine textTypingCoroutine;
 
         /************************************************************
         * [대화 출력]
@@ -27,7 +30,8 @@ namespace Assets.Script.Control.Text
         {
             if(textCnt >= line.Text.Length)
             {
-                clear();
+                textCnt = 0;
+                ui.setDialogView(false);
 
                 return true;
             }
@@ -42,21 +46,24 @@ namespace Assets.Script.Control.Text
         private void printText(string line)
         {
             // 한 글자도 출력이 안 됐을 경우
-            if (textCnt == 0)
+            if (ui.IsActive == false)
             {
                 // 텍스트 창 활성화 및 타이핑 속도 리셋
                 ui.setDialogView(true);
-                typingSpeed = Option.getTypingSpeed();
+                typingSpeed = OptionSetting.Instance.typingSpeed;
 
                 // 지정된 타이핑 속도로 출력
-                StartCoroutine(textDelayPrint(line));
+                textTypingCoroutine = StartCoroutine(textDelayPrint(line));
             }
 
             // 대화 출력 도중일 경우
-            else if (textCnt < line.Length)
+            else
             {
                 // 한 번에 출력
-                typingSpeed = 0;
+                StopCoroutine(textTypingCoroutine);
+                ui.setText(line);
+
+                textCnt = line.Length;
             }
         }
 
@@ -72,14 +79,8 @@ namespace Assets.Script.Control.Text
 
                 yield return new WaitForSeconds(typingSpeed);
             }
-        }
 
-        public void clear()
-        {
-            textCnt = 0;
-
-            ui.textClear();
-            ui.setDialogView(false);
+            textTypingCoroutine = null;
         }
     }
 }

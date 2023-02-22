@@ -1,0 +1,72 @@
+using System.IO;
+using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class OptionSetting : ScriptableObject
+{
+    // 저장 파일 위치
+    private const string FILE_DIRECTORY = "Assets/Resources/Option";
+    private const string FILE_PATH = "Assets/Resources/Option/OptionSetting.asset";
+
+    private const string SAVE_FILE_PATH = "Assets/Resources/option.txt";
+
+    private static OptionSetting _instance;
+    public static OptionSetting Instance
+    {
+        get
+        {
+            if (_instance != null) return _instance;
+
+            _instance = Resources.Load<OptionSetting>("OptionSetting");
+
+#if UNITY_EDITOR
+            if (_instance == null)
+            {
+                // 파일 경로가 없을 경우 폴더 생성
+                if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
+                {
+                    AssetDatabase.CreateFolder("Assets", "Resources");
+                    AssetDatabase.CreateFolder("Resources", "Option");
+                }
+
+                // Resource.Load가 실패했을 경우
+                _instance = AssetDatabase.LoadAssetAtPath<OptionSetting>(FILE_PATH);
+
+                if (_instance == null)
+                {
+                    _instance = CreateInstance<OptionSetting>();
+                    AssetDatabase.CreateAsset(_instance, FILE_PATH);
+                }
+            }
+#endif
+
+            return _instance;
+        }
+    }
+
+    // 컨트롤키
+    public KeyCode left  = KeyCode.LeftArrow;
+    public KeyCode right = KeyCode.RightArrow;
+    public KeyCode up    = KeyCode.UpArrow;
+    public KeyCode down  = KeyCode.DownArrow;
+
+    // 액션키
+    public KeyCode action    = KeyCode.Mouse0;
+    public KeyCode dash      = KeyCode.Mouse1;
+    public KeyCode interact  = KeyCode.E;
+
+    // 선택키
+    public KeyCode select    = KeyCode.Return;
+
+    // 취소 및 돌아가기 키
+    public KeyCode cancel    = KeyCode.Escape;
+
+    // 옵션(ESC)키
+    public KeyCode menu = KeyCode.Escape;
+
+    // 스크립트 속도
+    public float typingSpeed = 0.025f;
+}

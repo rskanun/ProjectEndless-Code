@@ -49,7 +49,7 @@ namespace Assets.Script.Control
         private void menuKeyPress()
         {
             // 메뉴 활성화/비활성화
-            if (Input.GetKeyDown(Option.menu) && homeScreen.isAppEmpty && homeScreen.playAnimation == false)
+            if (Input.GetKeyDown(OptionSetting.Instance.menu) && homeScreen.isAppEmpty && homeScreen.playAnimation == false)
             {
                 if(isOpen == false) homeScreen.open();
                 else homeScreen.close();
@@ -67,7 +67,7 @@ namespace Assets.Script.Control
             }
             // 메뉴키와 캔슬키가 다를 경우
             // 메인 화면에서 캔슬키 작동시 메뉴 닫힘
-            else if(Option.cancel != Option.menu && homeScreen.playAnimation == false)
+            else if(OptionSetting.Instance.cancel != OptionSetting.Instance.menu && homeScreen.playAnimation == false)
             {
                 homeScreen.close();
             }

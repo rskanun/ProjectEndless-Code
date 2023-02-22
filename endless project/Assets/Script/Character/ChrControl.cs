@@ -77,7 +77,7 @@ public class ChrControl : MonoBehaviour
         if (!lineManager.IsTalking)
         {
             // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-            if (npc is not null && Input.GetKeyDown(Option.interact))
+            if (npc is not null && Input.GetKeyDown(OptionSetting.Instance.interact))
             {
                 lineManager.initTalk(npc);
             }
@@ -109,7 +109,7 @@ public class ChrControl : MonoBehaviour
         }
 
         // 대쉬키
-        if (Input.GetKeyDown(Option.dash))
+        if (Input.GetKeyDown(OptionSetting.Instance.dash))
         {
             dashKey();
         }
@@ -247,7 +247,7 @@ public class ChrControl : MonoBehaviour
         {
             // 해당 NPC의 정보를 가져오기
             npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + Option.interact.ToString());
+            Debug.Log("keydown " + OptionSetting.Instance.interact.ToString());
         }
     }
 
@@ -267,7 +267,7 @@ public class ChrControl : MonoBehaviour
         // 키보드의 경우 wasd와 방향키가 모두 먹히게 되는데,
         // 마우스를 사용하는 모드의 경우 방향키를
         // 마우스를 사용하지 않는 모드의 경우 wasd의 입력을 막는다.
-        return Input.GetKey(Option.up) || Input.GetKey(Option.down)
-            || Input.GetKey(Option.left) || Input.GetKey(Option.right);
+        return Input.GetKey(OptionSetting.Instance.up) || Input.GetKey(OptionSetting.Instance.down)
+            || Input.GetKey(OptionSetting.Instance.left) || Input.GetKey(OptionSetting.Instance.right);
     }
 }
