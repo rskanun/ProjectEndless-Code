@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
@@ -28,13 +29,31 @@ namespace Assets.Script.UI
             closeMenuSeq(window, openRotate, closeRotate);
         }
 
+        public void openSimpleAppAnimation(GameObject window)
+        {
+            appOpenSeq()
+                .OnComplete(() => window.SetActive(true));
+        }
+
+        public void alertOnAnimation(GameObject alert)
+        {
+            float time = 0.15f;
+            fadeInSeq(alert, time);
+        }
+
+        public void alertOffAnimation(GameObject alert)
+        {
+            float time = 0.15f;
+            fadeOutSeq(alert, time);
+        }
+
         /************************************************************
         * [애니메이션]
         * 
         * DOTween을 이용한 각 애니메이션 동작 시퀀스 관리
         ************************************************************/
 
-        public Sequence appOpenSeq()
+        private Sequence appOpenSeq()
         {
             return DOTween.Sequence()
                 .OnStart(() => {
@@ -45,7 +64,7 @@ namespace Assets.Script.UI
                 .AppendInterval(0.12f);
         }
 
-        public Sequence windowOpenSeq(GameObject window)
+        private Sequence windowOpenSeq(GameObject window)
         {
             Vector2 loc = window.transform.localPosition;
             window.transform.localPosition = new Vector2(loc.x, loc.y - window.GetComponent<RectTransform>().rect.height / 4);
@@ -55,7 +74,7 @@ namespace Assets.Script.UI
                 .Append(window.transform.DOLocalMoveY(loc.y, 0.2f).SetEase(Ease.OutQuad));
         }
 
-        public Sequence appCloseSeq(GameObject window)
+        private Sequence appCloseSeq(GameObject window)
         {
             return DOTween.Sequence()
                 .Append(maskingImage.transform.DOScale(new Vector3(0.7f, 0.7f), 0.015f))
@@ -69,17 +88,18 @@ namespace Assets.Script.UI
                 });
         }
 
-        public Sequence openMenuSeq(GameObject window, float openRotate, float closeRotate)
+        private Sequence openMenuSeq(GameObject window, float openRotate, float closeRotate)
         {
             return DOTween.Sequence()
-                .OnStart(() => {
+                .OnStart(() =>
+                {
                     window.transform.localRotation = Quaternion.Euler(0, 0, closeRotate);
                     window.SetActive(true);
-                    })
+                })
                 .Append(window.transform.DORotate(new Vector3(0, 0, openRotate), 0.19f).SetEase(Ease.OutSine));
         }
 
-        public Sequence closeMenuSeq(GameObject window, float openRotate, float closeRotate)
+        private Sequence closeMenuSeq(GameObject window, float openRotate, float closeRotate)
         {
             return DOTween.Sequence()
                 .Append(window.transform.DORotate(new Vector3(0, 0, closeRotate), 0.19f).SetEase(Ease.InQuad))
@@ -87,6 +107,41 @@ namespace Assets.Script.UI
                     window.SetActive(false);
                     window.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
                     });
+        }
+
+        private Sequence fadeInSeq(GameObject obj, float time)
+        {
+            Image image = obj.GetComponent<Image>();
+            float origin = image.color.a;
+
+            return DOTween.Sequence()
+                .OnStart(() =>
+                {
+                    Color color = image.color;
+                    color.a = 0;
+
+                    image.color = color;
+
+                    obj.SetActive(true);
+                })
+                .Append(image.DOFade(origin, time));
+        }
+
+        private Sequence fadeOutSeq(GameObject obj, float time)
+        {
+            Image image = obj.GetComponent<Image>();
+
+            return DOTween.Sequence()
+                .Append(image.DOFade(0.0f, time))
+                .OnComplete(() =>
+                {
+                    obj.SetActive(false);
+
+                    Color color = image.color;
+                    color.a = 1;
+
+                    image.color = color;
+                });
         }
     }
 }

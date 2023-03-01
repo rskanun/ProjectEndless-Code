@@ -1,4 +1,4 @@
-﻿using Assets.Script.Control.Interface.Menu.App;
+﻿using Assets.Script.Interface.Menu.App;
 using Assets.Script.System.Menu;
 using Assets.Script.UI;
 using UnityEngine;

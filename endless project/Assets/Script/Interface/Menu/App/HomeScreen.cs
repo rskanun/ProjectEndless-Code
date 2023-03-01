@@ -1,7 +1,7 @@
 ﻿using Assets.Script.UI;
 using UnityEngine;
 
-namespace Assets.Script.Control.Interface.Menu.App
+namespace Assets.Script.Interface.Menu.App
 {
     public class HomeScreen : App
     {

@@ -1,5 +1,5 @@
 ﻿using Assets.Script.Control;
-using Assets.Script.Control.Interface.Menu.App;
+using Assets.Script.Interface.Menu.App;
 using Assets.Script.UI;
 using UnityEngine;
 
@@ -10,6 +10,7 @@ namespace Assets.Script.System.Menu
         [Header("메뉴 및 앱 리스트")]
         public HomeScreen homeScreen;
         public App optionApp;
+        public Messanger messangerApp;
 
         [Header("참조 스크립트")]
         public MenuControl menuCtr;
@@ -39,7 +40,7 @@ namespace Assets.Script.System.Menu
             switch(icon)
             {
                 case MenuIcon.Option:
-                    homeScreen.appOpen(optionApp);
+                    option();
                     break;
 
                 case MenuIcon.Save:
@@ -59,12 +60,17 @@ namespace Assets.Script.System.Menu
                     break;
 
                 case MenuIcon.Message:
-                    message();
+                    homeScreen.appOpen(messangerApp);
                     break;
 
                 default:
                     break;
             }
+        }
+
+        public void option()
+        {
+            homeScreen.appOpen(optionApp);
         }
 
         public void save()
@@ -89,7 +95,7 @@ namespace Assets.Script.System.Menu
 
         public void message()
         {
-            Debug.Log("message");
+            homeScreen.appOpen(messangerApp);
         }
     }
 }

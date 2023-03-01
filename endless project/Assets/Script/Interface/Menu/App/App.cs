@@ -1,8 +1,9 @@
-﻿using Assets.Script.UI;
+﻿using Assets.Script.Control;
+using Assets.Script.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Control.Interface.Menu.App
+namespace Assets.Script.Interface.Menu.App
 {
     public class App : MonoBehaviour
     {

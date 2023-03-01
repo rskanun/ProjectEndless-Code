@@ -45,11 +45,17 @@ namespace Assets.Script.UI
         [Header("스크립트")]
         public Blink blink;
 
+        private bool wifi = false;
+        public bool IsWifiActive { get { return wifi; } }
+
+        private bool service = true;
+        public bool IsServiceActive { get { return service; } }
+
         private void Start()
         {
             // init phone UI;
-            setService(true);
-            setWiFi(true);
+            setService(service);
+            setWiFi(wifi);
 
             setTime(15, 29);
         }
@@ -79,30 +85,18 @@ namespace Assets.Script.UI
 
         public void setWiFi(bool isHaving)
         {
-            if(isHaving) // 와이파이가 터지게 설정
-            {
-                wifiOffIcon.SetActive(false);
-                wifiOnIcon.SetActive(true);
-            }
-            else // 와이파이가 안 터지게 설정
-            {
-                wifiOnIcon.SetActive(false);
-                wifiOffIcon.SetActive(true);
-            }
+            wifi = isHaving;
+
+            wifiOffIcon.SetActive(!wifi);
+            wifiOnIcon.SetActive(wifi);
         }
 
         public void setService(bool isService)
         {
-            if(isService) // 휴대폰 신호가 터지게 설정
-            {
-                serviceIcon.SetActive(true);
-                noServiceIcon.SetActive(false);
-            }
-            else // 휴대폰 신호가 안 터지게 설정
-            {
-                serviceIcon.SetActive(false);
-                noServiceIcon.SetActive(true);
-            }
+            service = isService;
+
+            serviceIcon.SetActive(service);
+            noServiceIcon.SetActive(!service);
         }
 
         public void setTime(int hour, int minute)
