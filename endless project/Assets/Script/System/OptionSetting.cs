@@ -48,25 +48,36 @@ public class OptionSetting : ScriptableObject
     }
 
     // 컨트롤키
-    public KeyCode left  = KeyCode.LeftArrow;
-    public KeyCode right = KeyCode.RightArrow;
-    public KeyCode up    = KeyCode.UpArrow;
-    public KeyCode down  = KeyCode.DownArrow;
+    public KeyCode Left { get { return left; } }
+    private KeyCode left  = KeyCode.LeftArrow;
+    public KeyCode Right { get { return right; } }
+    private KeyCode right = KeyCode.RightArrow;
+    public KeyCode Up { get { return up; } }
+    private KeyCode up    = KeyCode.UpArrow;
+    public KeyCode Down { get { return down; } }
+    private KeyCode down  = KeyCode.DownArrow;
 
     // 액션키
-    public KeyCode action    = KeyCode.Mouse0;
-    public KeyCode dash      = KeyCode.Mouse1;
-    public KeyCode interact  = KeyCode.E;
+    public KeyCode Action { get { return action; } }
+    private KeyCode action    = KeyCode.Mouse0;
+    public KeyCode Dash { get { return dash; } }
+    private KeyCode dash      = KeyCode.Mouse1;
+    public KeyCode Interact { get { return interact; } }
+    private KeyCode interact  = KeyCode.E;
 
     // 선택키
-    public KeyCode select    = KeyCode.Return;
+    public KeyCode Select { get { return select; } }
+    private KeyCode select    = KeyCode.Return;
 
     // 취소 및 돌아가기 키
-    public KeyCode cancel    = KeyCode.Escape;
+    public KeyCode Cancel { get { return cancel; } }
+    private KeyCode cancel    = KeyCode.Escape;
 
     // 옵션(ESC)키
-    public KeyCode menu = KeyCode.Escape;
+    public KeyCode Menu { get { return menu; } }
+    private KeyCode menu = KeyCode.Escape;
 
     // 스크립트 속도
-    public float typingSpeed = 0.025f;
+    public float TypingSpeed { get { return typingSpeed; } }
+    private float typingSpeed = 0.025f;
 }

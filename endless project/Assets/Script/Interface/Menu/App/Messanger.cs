@@ -12,37 +12,42 @@ namespace Assets.Script.Interface.Menu.App
         [Header("경고창 오브젝트")]
         public GameObject alert;
 
-        private Coroutine wifiCheck;
+        private Coroutine networkChecking;
 
         public override void open()
         {
             appAnimation.openSimpleAppAnimation(window);
 
-            if(wifiCheck != null)
-                StopCoroutine(wifiCheck);
+            if(networkChecking != null)
+                StopCoroutine(networkChecking);
 
-            wifiCheck = StartCoroutine(checkingWifi());
+            networkChecking = StartCoroutine(checkingNetwork());
         }
 
-        IEnumerator checkingWifi()
+        IEnumerator checkingNetwork()
         {
             // 로딩 시간
             yield return new WaitForSeconds(1f);
 
             WaitForSeconds wait = new WaitForSeconds(0.5f);
 
-            while(ui.IsWifiActive == false)
+            while(ui.IsNetworkActive == false)
             {
                 if (!alert.activeSelf)
                     appAnimation.alertOnAnimation(alert);
 
-                // 홈화면 열기
+                openHomeScreen();
 
                 yield return wait;
             }
 
             appAnimation.alertOffAnimation(alert);
-            wifiCheck = null;
+            networkChecking = null;
+        }
+
+        private void openHomeScreen()
+        {
+            // 홈 화면 출력
         }
 
         public override bool close()
@@ -50,8 +55,8 @@ namespace Assets.Script.Interface.Menu.App
             if(alert.activeSelf) 
                 alert.SetActive(false);
             
-            if(wifiCheck != null)
-                StopCoroutine(wifiCheck);
+            if(networkChecking != null)
+                StopCoroutine(networkChecking);
 
             return base.close();
         }

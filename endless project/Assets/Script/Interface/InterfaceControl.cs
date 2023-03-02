@@ -14,6 +14,8 @@ namespace Assets.Script.Control
         // 해당 인터페이스의 윈도우
         public GameObject interfaceWindow;
 
+        protected OptionSetting option;
+
         /************************************************************
         * [Child Method]
         * 
@@ -53,13 +55,13 @@ namespace Assets.Script.Control
 
         private void selectKeyPress()
         {
-            if(Input.GetKeyDown(OptionSetting.Instance.interact))
+            if(Input.GetKeyDown(option.Interact))
                 iconSelect((int)selectPoint.x, (int)selectPoint.y);
         }
 
         private void cancelKeyPress()
         {
-            if (Input.GetKeyDown(OptionSetting.Instance.cancel) && interfaceWindow.activeSelf == true)
+            if (Input.GetKeyDown(option.Cancel) && interfaceWindow.activeSelf == true)
             {
                 cancel();
             }

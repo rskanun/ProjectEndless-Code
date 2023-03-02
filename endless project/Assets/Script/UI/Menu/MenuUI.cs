@@ -45,8 +45,8 @@ namespace Assets.Script.UI
         [Header("스크립트")]
         public Blink blink;
 
-        private bool wifi = false;
-        public bool IsWifiActive { get { return wifi; } }
+        private bool network = false;
+        public bool IsNetworkActive { get { return network; } }
 
         private bool service = true;
         public bool IsServiceActive { get { return service; } }
@@ -55,7 +55,7 @@ namespace Assets.Script.UI
         {
             // init phone UI;
             setService(service);
-            setWiFi(wifi);
+            setWiFi(network);
 
             setTime(15, 29);
         }
@@ -85,10 +85,10 @@ namespace Assets.Script.UI
 
         public void setWiFi(bool isHaving)
         {
-            wifi = isHaving;
+            network = isHaving;
 
-            wifiOffIcon.SetActive(!wifi);
-            wifiOnIcon.SetActive(wifi);
+            wifiOffIcon.SetActive(!network);
+            wifiOnIcon.SetActive(network);
         }
 
         public void setService(bool isService)

@@ -13,6 +13,8 @@ public class ChrControl : MonoBehaviour
     [Header("참조 오브젝트")]
     public GameObject menuUI;
 
+    private OptionSetting option;
+
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
     {
@@ -27,6 +29,8 @@ public class ChrControl : MonoBehaviour
 
     private void Awake()
     {
+        option = OptionSetting.Instance;
+
         init();
     }
 
@@ -77,7 +81,7 @@ public class ChrControl : MonoBehaviour
         if (!lineManager.IsTalking)
         {
             // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-            if (npc is not null && Input.GetKeyDown(OptionSetting.Instance.interact))
+            if (npc is not null && Input.GetKeyDown(option.Interact))
             {
                 lineManager.initTalk(npc);
             }
@@ -109,7 +113,7 @@ public class ChrControl : MonoBehaviour
         }
 
         // 대쉬키
-        if (Input.GetKeyDown(OptionSetting.Instance.dash))
+        if (Input.GetKeyDown(option.Dash))
         {
             dashKey();
         }
@@ -177,7 +181,7 @@ public class ChrControl : MonoBehaviour
             * Mathf.Rad2Deg;
 
         // 이동 거리 계산
-        float distance = player.speed * player.DashConstant;
+        float distance = player.speed;
 
         dashVec.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
         dashVec.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
@@ -247,7 +251,7 @@ public class ChrControl : MonoBehaviour
         {
             // 해당 NPC의 정보를 가져오기
             npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + OptionSetting.Instance.interact.ToString());
+            Debug.Log("keydown " + option.Interact.ToString());
         }
     }
 
@@ -267,7 +271,7 @@ public class ChrControl : MonoBehaviour
         // 키보드의 경우 wasd와 방향키가 모두 먹히게 되는데,
         // 마우스를 사용하는 모드의 경우 방향키를
         // 마우스를 사용하지 않는 모드의 경우 wasd의 입력을 막는다.
-        return Input.GetKey(OptionSetting.Instance.up) || Input.GetKey(OptionSetting.Instance.down)
-            || Input.GetKey(OptionSetting.Instance.left) || Input.GetKey(OptionSetting.Instance.right);
+        return Input.GetKey(option.Up) || Input.GetKey(option.Down)
+            || Input.GetKey(option.Left) || Input.GetKey(option.Right);
     }
 }

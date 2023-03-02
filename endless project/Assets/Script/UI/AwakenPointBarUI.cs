@@ -18,27 +18,27 @@ namespace Assets.Script.UI
         [Header("글리치 이펙트")]
         public GameObject glitch;
 
-        public void setAPBar(Player player)
+        public void setAPBar(int ap, int maxAP)
         {
-            int apPerValue = player.maxAp / AP_COUNT / (AP_MAX_STEP - 1); // AP의 이미지가 변하는 최소 단위
-            int ap = player.ap / apPerValue;
+            int apPerValue = maxAP / AP_COUNT / (AP_MAX_STEP - 1); // AP의 이미지가 변하는 최소 단위
+            int perAP =  ap / apPerValue;
 
             for (int i = 0; i < AP_COUNT; i++)
             {
                 // 이미지 변환
-                if (ap >= (AP_MAX_STEP - 1) * (i + 1)) // 해당 자리에서 최대보다 클 경우 MAX값 변환
+                if (perAP >= (AP_MAX_STEP - 1) * (i + 1)) // 해당 자리에서 최대보다 클 경우 MAX값 변환
                     apBar[i].sprite = apSteps[AP_MAX_STEP - 1];
-                else if (ap < (AP_MAX_STEP - 1) * i) // 해당 자리에서 최저보다 작을 경우 default값 변환
+                else if (perAP < (AP_MAX_STEP - 1) * i) // 해당 자리에서 최저보다 작을 경우 default값 변환
                     apBar[i].sprite = apSteps[0];
                 else
-                    apBar[i].sprite = apSteps[ap % (AP_MAX_STEP - 1)];
+                    apBar[i].sprite = apSteps[perAP % (AP_MAX_STEP - 1)];
             }
         }
 
-        public void barUpdate(Player player)
+        public void barUpdate(int ap, int maxAP)
         {
             StartCoroutine(glitchEffect());
-            setAPBar(player);
+            setAPBar(ap, maxAP);
         }
 
         IEnumerator glitchEffect()

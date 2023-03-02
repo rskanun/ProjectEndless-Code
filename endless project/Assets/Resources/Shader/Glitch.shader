@@ -53,8 +53,8 @@ Shader "Ageia/ImageEffect/Glitch" {
 				half3 screenUV = IN.screenPos.xyz / IN.screenPos.w;
 
 				//half Test = IN.uv_MainTex;
-
-				half GlitchUV = tex2D(_GlitchTex, half2(IN.uv_GlitchTex.x * _GlitchCutAmountX + (_Time.y * 100), IN.uv_GlitchTex.y * _GlitchCutAmountY + sin(_Time.y * 100)));
+				half2 glitchUV = half2(IN.uv_GlitchTex.x * _GlitchCutAmountX + (_Time.y * 100), IN.uv_GlitchTex.y * _GlitchCutAmountY + sin(_Time.y * 100));
+				half GlitchUV = tex2D(_GlitchTex, glitchUV).r * _GlitchAmount;
 				half UV = GlitchUV * _GlitchAmount;
 				half GlitchAmountFinal = saturate(_GlitchAmount * 10);
 

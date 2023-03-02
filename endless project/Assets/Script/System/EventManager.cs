@@ -1,3 +1,4 @@
+using Assets.Script.System.Stat;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,10 @@ public class EventManager : MonoBehaviour
 {
     [SerializeField]
     private Player player;
+
+    [Space]
+    [Header("참조 스크립트")]
+    public HUD hud;
 
     public void getCommandEvent(string str)
     {
@@ -42,6 +47,6 @@ public class EventManager : MonoBehaviour
     * Text Manager를 통해 읽은 커맨드 이벤트 관리
     ************************************************************/
 
-    void getDamage(int damage) { player.hp -= damage; }
-    void addAP(int ap) { player.ap += ap; }
+    void getDamage(int damage) { hud.HP -= damage; }
+    void addAP(int ap) { hud.AP += ap; }
 }

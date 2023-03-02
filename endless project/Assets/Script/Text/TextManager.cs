@@ -50,7 +50,7 @@ namespace Assets.Script.Control.Text
             {
                 // 텍스트 창 활성화 및 타이핑 속도 리셋
                 ui.setDialogView(true);
-                typingSpeed = OptionSetting.Instance.typingSpeed;
+                typingSpeed = OptionSetting.Instance.TypingSpeed;
 
                 // 지정된 타이핑 속도로 출력
                 textTypingCoroutine = StartCoroutine(textDelayPrint(line));
