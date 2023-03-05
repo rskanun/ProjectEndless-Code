@@ -95,7 +95,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\Script\Text\LineObject\EventLine.cs" />
-    <Compile Include="Assets\Script\System\Blink.cs" />
+    <Compile Include="Assets\Script\Interface\Menu\PhoneOptionSetting.cs" />
     <Compile Include="Assets\Script\UI\AwakenPointBarUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Script\UI\SelectUI.cs" />
@@ -123,7 +123,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\Script\Interface\Menu\App\HomeScreen.cs" />
-    <Compile Include="Assets\Script\Interface\Menu\ButtonBlink.cs" />
     <Compile Include="Assets\Script\Character\ChrControl.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />

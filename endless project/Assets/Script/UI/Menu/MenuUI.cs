@@ -1,4 +1,5 @@
-﻿using Assets.Script.System;
+﻿using Assets.Script.Interface.Menu;
+using Assets.Script.System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -21,60 +22,32 @@ namespace Assets.Script.UI
 
     public class MenuUI : MonoBehaviour
     {
-        public GameObject cursor;
-
-        [Space]
-        [Header("아이콘")]
-        public List<GameObject> icon = new List<GameObject>();
-
-        [Space]
         [Header("WiFi")]
         public GameObject wifiOnIcon;
         public GameObject wifiOffIcon;
+        public bool IsNetworkActive { get { return option.Network; } }
 
         [Space]
         [Header("전파")]
         public GameObject serviceIcon;
         public GameObject noServiceIcon;
+        public bool IsServiceActive { get { return option.Service; } }
 
         [Space]
         public GameObject battery;
         public TextMeshProUGUI timeText;
 
-        [Space]
-        [Header("스크립트")]
-        public Blink blink;
+        private PhoneOptionSetting option;
 
-        private bool network = false;
-        public bool IsNetworkActive { get { return network; } }
-
-        private bool service = true;
-        public bool IsServiceActive { get { return service; } }
-
-        private void Start()
+        private void Awake()
         {
+            option = PhoneOptionSetting.Instance;
+
             // init phone UI;
-            setService(service);
-            setWiFi(network);
+            setService(option.Service);
+            setWiFi(option.Network);
 
-            setTime(15, 29);
-        }
-
-        /************************************************************
-        * [커서 이동]
-        * 
-        * 아이콘을 가리키는 커서 이동
-        ************************************************************/
-
-        public void setCursorPos(int index)
-        {
-            GameObject select = icon[index];
-
-            if (cursor.transform.localPosition != select.transform.localPosition)
-            {
-                cursor.transform.localPosition = select.transform.localPosition;
-                blink.resetA();
-            }
+            timeUpdate();
         }
 
         /************************************************************
@@ -85,29 +58,23 @@ namespace Assets.Script.UI
 
         public void setWiFi(bool isHaving)
         {
-            network = isHaving;
+            option.Network = isHaving;
 
-            wifiOffIcon.SetActive(!network);
-            wifiOnIcon.SetActive(network);
+            wifiOffIcon.SetActive(!isHaving);
+            wifiOnIcon.SetActive(isHaving);
         }
 
         public void setService(bool isService)
         {
-            service = isService;
+            option.Service = isService;
 
-            serviceIcon.SetActive(service);
-            noServiceIcon.SetActive(!service);
+            serviceIcon.SetActive(isService);
+            noServiceIcon.SetActive(!isService);
         }
 
-        public void setTime(int hour, int minute)
+        public void timeUpdate()
         {
-            string time;
-
-            if (hour >= 12) time = "PM " + (hour - 12);
-            else time = "AM " + hour;
-
-            time += ":" + minute;
-            timeText.text = time;
+            timeText.text = option.Time;
         }
     }
 }

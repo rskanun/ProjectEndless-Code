@@ -16,19 +16,6 @@ namespace Assets.Script.System.Menu
         public MenuControl menuCtr;
         public MenuUI ui;
 
-        public void setSelectPos(MenuIcon icon)
-        {
-            int iconNum = (int)icon;
-
-            menuCtr.setSelectPos(iconNum);
-            moveSelectTo(icon);
-        }
-
-        public void moveSelectTo(MenuIcon icon)
-        {
-            ui.setCursorPos((int)icon);
-        }
-
         /************************************************************
         * [아이콘]
         * 

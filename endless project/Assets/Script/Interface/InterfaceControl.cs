@@ -160,9 +160,6 @@ namespace Assets.Script.Control
 
             // 현재 위치값이 아이콘 범위를 벗어나지 않게 보정
             vecCorrect();
-
-            // 현재 위치값에 따른 UI 이동
-            moveUI((int)selectPoint.x, (int)selectPoint.y);
         }
 
         private void vecCorrect()
@@ -175,7 +172,5 @@ namespace Assets.Script.Control
             if (selectPoint.y > iconPoint.y) selectPoint.y = 0;
             else if (selectPoint.y < 0) selectPoint.y = iconPoint.y;
         }
-
-        protected abstract void moveUI(int x, int y);
     }
 }

@@ -80,19 +80,5 @@ namespace Assets.Script.Control
             int index = (y * X) + x;
             menuManager.iconSelect((MenuIcon)index);
         }
-
-        protected override void moveUI(int x, int y)
-        {
-            int index = (y * X) + x;
-            menuManager.moveSelectTo((MenuIcon)index);
-        }
-
-        public void setSelectPos(int index)
-        {
-            int x = index % X;
-            int y = index / X;
-
-            setSelectPoint(x, y);
-        }
     }
 }
