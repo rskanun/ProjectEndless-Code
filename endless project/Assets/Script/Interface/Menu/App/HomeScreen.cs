@@ -26,7 +26,7 @@ namespace Assets.Script.Interface.Menu.App
 
         public override void open()
         {
-            appAnimation.openMenuAnimation(window, OPEN_ROTATE, CLOSE_ROTATE);
+            ui.openMenu(window, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         public void appOpen(App app)
@@ -52,7 +52,7 @@ namespace Assets.Script.Interface.Menu.App
 
         public override bool close()
         {
-            appAnimation.closeMenuAnimation(window, OPEN_ROTATE, CLOSE_ROTATE);
+            ui.closeMenu(window, OPEN_ROTATE, CLOSE_ROTATE);
 
             return true;
         }

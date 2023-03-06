@@ -12,6 +12,11 @@ namespace Assets.Script.UI
         private bool isActive = false;
         public bool IsActive { get { return isActive; } }
 
+        // 변수
+        private float size = 112f;
+        private float distance = 10f;
+        private float posY = -11f;
+
         [Header("Game Object")]
         public GameObject darkPanel;
         public GameObject selectionWindow;
@@ -19,7 +24,6 @@ namespace Assets.Script.UI
         [Space]
         [Header("참조 스크립트")]
         public LineManager lineManager;
-        public SelectionAnimation selectionAnim;
 
         private List<GameObject> options = new List<GameObject>();
 
@@ -31,10 +35,7 @@ namespace Assets.Script.UI
         public void createSelection(List<string> options)
         {
             isActive = true;
-
-            float size = 112;
-            float distance = 10 + selectPrefab.GetComponent<RectTransform>().rect.height;
-            float posY = -11;
+            distance += selectPrefab.GetComponent<RectTransform>().rect.height;
 
             int count = options.Count;
             if (count > 0)
@@ -48,7 +49,7 @@ namespace Assets.Script.UI
                 }
 
                 float height = size + (count - 1) * distance;
-                selectionAnim.openSelectionAnimation(selectionWindow, this.options, height);
+                SelectionAnimation.openSelectionAnimation(selectionWindow, this.options, height);
             }
         }
 

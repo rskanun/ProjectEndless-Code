@@ -11,7 +11,7 @@ public abstract class ObjectData : ScriptableObject
      * 
      * 오브젝트의 생명력 수치로 0이하로 떨어지면 죽는다.
      ***************************************************************/
-    public int hp
+    public int HP
     {
         get { return healthPoint; }
         set
@@ -29,7 +29,7 @@ public abstract class ObjectData : ScriptableObject
 
     [SerializeField]
     private int maxHealthPoint;
-    public int maxHP
+    public int MaxHP
     {
         get { return maxHealthPoint; }
         set
@@ -50,7 +50,7 @@ public abstract class ObjectData : ScriptableObject
     * 오브젝트의 근력 수치로 물리 공격력에 영향을 끼친다.
     * 근력 1당 1의 데미지를 준다.
     ****************************************************************/
-    public int str
+    public int STR
     {
         get { return strength; }
         set
@@ -70,7 +70,7 @@ public abstract class ObjectData : ScriptableObject
     * 
     * 오브젝트의 민첩 수치로 이동속도에 영향을 끼친다.
     ****************************************************************/
-    public int speed
+    public int Speed
     {
         get { return agility; }
         set
@@ -91,7 +91,7 @@ public abstract class ObjectData : ScriptableObject
     * 오브젝트의 방어력 수치로 받는 데미지에 영향을 끼친다.
     * 방어력 1당 1의 데미지를 줄인다.
     ****************************************************************/
-    public int def
+    public int DEF
     {
         get { return defensive; }
         set

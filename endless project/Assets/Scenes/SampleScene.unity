@@ -3201,7 +3201,6 @@ GameObject:
   - component: {fileID: 650115008}
   - component: {fileID: 650115005}
   - component: {fileID: 650115006}
-  - component: {fileID: 650115007}
   m_Layer: 5
   m_Name: Selection
   m_TagString: Untagged
@@ -3238,19 +3237,6 @@ MonoBehaviour:
   selectionWindow: {fileID: 330478548}
   selectPrefab: {fileID: 3772542291738372582, guid: 693b967593e707a4ab1b96d9e2385b60, type: 3}
   lineManager: {fileID: 1540840968}
-  selectionAnim: {fileID: 650115007}
---- !u!114 &650115007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650115004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94ec76a6b6451584c9af4d7c9ffa9dd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &650115008
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8019,8 +8005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   window: {fileID: 1794556687}
   menuCtr: {fileID: 1540840965}
-  appAnimation: {fileID: 1540840966}
-  ui: {fileID: 1647111978}
+  ui: {fileID: 0}
   alert: {fileID: 72858306}
 --- !u!114 &716323808
 MonoBehaviour:
@@ -12759,7 +12744,6 @@ GameObject:
   - component: {fileID: 1540840962}
   - component: {fileID: 1540840964}
   - component: {fileID: 1540840965}
-  - component: {fileID: 1540840966}
   - component: {fileID: 1540840967}
   - component: {fileID: 1540840968}
   m_Layer: 0
@@ -12813,19 +12797,6 @@ MonoBehaviour:
   interfaceWindow: {fileID: 1647111975}
   menuManager: {fileID: 1647111977}
   homeScreen: {fileID: 1540840967}
---- !u!114 &1540840966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1540840961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a97c8f02ecb637641bf0c3251636c35b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maskingImage: {fileID: 2003212980}
 --- !u!114 &1540840967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12840,7 +12811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   window: {fileID: 1647111975}
   menuCtr: {fileID: 1540840965}
-  appAnimation: {fileID: 1540840966}
+  ui: {fileID: 1647111979}
 --- !u!114 &1540840968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13293,6 +13264,7 @@ GameObject:
   - component: {fileID: 1647111976}
   - component: {fileID: 1647111978}
   - component: {fileID: 1647111977}
+  - component: {fileID: 1647111979}
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
@@ -13365,6 +13337,20 @@ MonoBehaviour:
   noServiceIcon: {fileID: 2096248053}
   battery: {fileID: 655121184}
   timeText: {fileID: 988437845}
+  appBackgroundImage: {fileID: 0}
+--- !u!114 &1647111979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647111975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860a0496ae7b56241a8731efa69a5de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AppBackground: {fileID: 2003212980}
 --- !u!1 &1669836885
 GameObject:
   m_ObjectHideFlags: 0
@@ -15769,7 +15755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   window: {fileID: 2092943304}
   menuCtr: {fileID: 1540840965}
-  appAnimation: {fileID: 1540840966}
+  ui: {fileID: 0}
 --- !u!114 &2055385877
 MonoBehaviour:
   m_ObjectHideFlags: 0

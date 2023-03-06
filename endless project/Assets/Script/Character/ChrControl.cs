@@ -181,7 +181,7 @@ public class ChrControl : MonoBehaviour
             * Mathf.Rad2Deg;
 
         // 이동 거리 계산
-        float distance = player.speed;
+        float distance = player.Speed;
 
         dashVec.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
         dashVec.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
@@ -227,7 +227,7 @@ public class ChrControl : MonoBehaviour
         }
         // 방향키 이동에 따른(혹은 그에 준하는) 이동
         else
-            rigid.velocity = vec.normalized * player.speed;
+            rigid.velocity = vec.normalized * player.Speed;
     }
 
     private void moveDash()

@@ -22,31 +22,31 @@ namespace Assets.Script.System.Menu
         * 메뉴의 각 아이콘의 기능 수행
         ************************************************************/
 
-        public void iconSelect(MenuIcon icon)
+        public void iconSelect(UI.MenuApp icon)
         {
             switch(icon)
             {
-                case MenuIcon.Option:
+                case UI.MenuApp.Option:
                     option();
                     break;
 
-                case MenuIcon.Save:
+                case UI.MenuApp.Save:
                     save();
                     break;
 
-                case MenuIcon.Load:
+                case UI.MenuApp.Load:
                     load();
                     break;
 
-                case MenuIcon.Title:
+                case UI.MenuApp.Title:
                     title();
                     break;
 
-                case MenuIcon.Call:
+                case UI.MenuApp.Call:
                     call();
                     break;
 
-                case MenuIcon.Message:
+                case UI.MenuApp.Message:
                     homeScreen.appOpen(messangerApp);
                     break;
 

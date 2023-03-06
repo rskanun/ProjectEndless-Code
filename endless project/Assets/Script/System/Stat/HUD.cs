@@ -23,8 +23,8 @@ namespace Assets.Script.System.Stat
                 // 체크 코루틴과 겹침 방지
                 StopCoroutine(hpCoroutine);
 
-                player.hp = value;
-                hpUI.barUpdate(nowHP, player.hp, player.maxHP);
+                player.HP = value;
+                hpUI.barUpdate(nowHP, player.HP, player.MaxHP);
 
                 nowHP = value;
 
@@ -40,8 +40,8 @@ namespace Assets.Script.System.Stat
                 // 체크 코루틴과 겹침 방지
                 StopCoroutine(apCoroutine);
 
-                player.ap = value;
-                apUI.barUpdate(player.ap, player.maxAP);
+                player.AP = value;
+                apUI.barUpdate(player.AP, player.MaxAP);
 
                 nowAP = value;
 
@@ -65,12 +65,12 @@ namespace Assets.Script.System.Stat
         private void initBar()
         {
             // hp
-            nowHP = player.hp;
-            hpUI.setHPBar(player.hp, player.maxHP);
+            nowHP = player.HP;
+            hpUI.setHPBar(player.HP, player.MaxHP);
 
             // ap
-            nowAP = player.ap;
-            apUI.setAPBar(player.ap, player.maxAP);
+            nowAP = player.AP;
+            apUI.setAPBar(player.AP, player.MaxAP);
         }
 
         /***************************************************************
@@ -85,9 +85,9 @@ namespace Assets.Script.System.Stat
 
             while(true)
             {
-                if (nowHP != player.hp)
+                if (nowHP != player.HP)
                 {
-                    HP = player.hp;
+                    HP = player.HP;
                 }
 
                 yield return wait;
@@ -100,9 +100,9 @@ namespace Assets.Script.System.Stat
 
             while(true)
             {
-                if(nowAP != player.ap)
+                if(nowAP != player.AP)
                 {
-                    AP = player.ap;
+                    AP = player.AP;
                 }
 
                 yield return wait;

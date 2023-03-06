@@ -4,44 +4,42 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class AppAnimation : MonoBehaviour
+    public class AppAnimation
     {
-        public GameObject maskingImage;
-
-        public void openAppAnimation(GameObject window)
+        public static void openAppAnimation(GameObject window, GameObject background)
         {
-            appOpenSeq()
+            appOpenSeq(background)
                 .Append(windowOpenSeq(window));
         }
 
-        public void closeAppAnimation(GameObject window)
+        public static void closeAppAnimation(GameObject window, GameObject background)
         {
-            appCloseSeq(window);
+            appCloseSeq(window, background);
         }
 
-        public void openMenuAnimation(GameObject window, float openRotate, float closeRotate)
+        public static void openMenuAnimation(GameObject window, float openRotate, float closeRotate)
         {
             openMenuSeq(window, openRotate, closeRotate);
         }
 
-        public void closeMenuAnimation(GameObject window, float openRotate, float closeRotate)
+        public static void closeMenuAnimation(GameObject window, float openRotate, float closeRotate)
         {
             closeMenuSeq(window, openRotate, closeRotate);
         }
 
-        public void openSimpleAppAnimation(GameObject window)
+        public static void openSimpleAppAnimation(GameObject window, GameObject background)
         {
-            appOpenSeq()
+            appOpenSeq(background)
                 .OnComplete(() => window.SetActive(true));
         }
 
-        public void alertOnAnimation(GameObject alert)
+        public static void alertOnAnimation(GameObject alert)
         {
             float time = 0.15f;
             fadeInSeq(alert, time);
         }
 
-        public void alertOffAnimation(GameObject alert)
+        public static void alertOffAnimation(GameObject alert)
         {
             float time = 0.15f;
             fadeOutSeq(alert, time);
@@ -53,7 +51,7 @@ namespace Assets.Script.UI
         * DOTween을 이용한 각 애니메이션 동작 시퀀스 관리
         ************************************************************/
 
-        private Sequence appOpenSeq()
+        private static Sequence appOpenSeq(GameObject maskingImage)
         {
             return DOTween.Sequence()
                 .OnStart(() => {
@@ -64,7 +62,7 @@ namespace Assets.Script.UI
                 .AppendInterval(0.12f);
         }
 
-        private Sequence windowOpenSeq(GameObject window)
+        private static Sequence windowOpenSeq(GameObject window)
         {
             Vector2 loc = window.transform.localPosition;
             window.transform.localPosition = new Vector2(loc.x, loc.y - window.GetComponent<RectTransform>().rect.height / 4);
@@ -74,7 +72,7 @@ namespace Assets.Script.UI
                 .Append(window.transform.DOLocalMoveY(loc.y, 0.2f).SetEase(Ease.OutQuad));
         }
 
-        private Sequence appCloseSeq(GameObject window)
+        private static Sequence appCloseSeq(GameObject window, GameObject maskingImage)
         {
             return DOTween.Sequence()
                 .Append(maskingImage.transform.DOScale(new Vector3(0.7f, 0.7f), 0.015f))
@@ -88,7 +86,7 @@ namespace Assets.Script.UI
                 });
         }
 
-        private Sequence openMenuSeq(GameObject window, float openRotate, float closeRotate)
+        private static Sequence openMenuSeq(GameObject window, float openRotate, float closeRotate)
         {
             return DOTween.Sequence()
                 .OnStart(() =>
@@ -99,7 +97,7 @@ namespace Assets.Script.UI
                 .Append(window.transform.DORotate(new Vector3(0, 0, openRotate), 0.19f).SetEase(Ease.OutSine));
         }
 
-        private Sequence closeMenuSeq(GameObject window, float openRotate, float closeRotate)
+        private static Sequence closeMenuSeq(GameObject window, float openRotate, float closeRotate)
         {
             return DOTween.Sequence()
                 .Append(window.transform.DORotate(new Vector3(0, 0, closeRotate), 0.19f).SetEase(Ease.InQuad))
@@ -109,7 +107,7 @@ namespace Assets.Script.UI
                     });
         }
 
-        private Sequence fadeInSeq(GameObject obj, float time)
+        private static Sequence fadeInSeq(GameObject obj, float time)
         {
             Image image = obj.GetComponent<Image>();
             float origin = image.color.a;
@@ -127,7 +125,7 @@ namespace Assets.Script.UI
                 .Append(image.DOFade(origin, time));
         }
 
-        private Sequence fadeOutSeq(GameObject obj, float time)
+        private static Sequence fadeOutSeq(GameObject obj, float time)
         {
             Image image = obj.GetComponent<Image>();
 

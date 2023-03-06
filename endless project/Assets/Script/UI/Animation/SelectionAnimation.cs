@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Assets.Script.UI.Animation
 {
-    public class SelectionAnimation : MonoBehaviour
+    public class SelectionAnimation
     {
-        public void openSelectionAnimation(GameObject window, List<GameObject> options, float height)
+        public static void openSelectionAnimation(GameObject window, List<GameObject> options, float height)
         {
             float h = 104;
             float sec = 0.25f;
@@ -15,7 +15,7 @@ namespace Assets.Script.UI.Animation
             openSelectionSeq(window, options, height, h, sec);
         }
 
-        private Sequence openSelectionSeq(GameObject window, List<GameObject> options, float height, float minH, float sec)
+        private static Sequence openSelectionSeq(GameObject window, List<GameObject> options, float height, float minH, float sec)
         {
             RectTransform rect = window.GetComponent<RectTransform>();
 

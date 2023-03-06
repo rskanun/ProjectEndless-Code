@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public enum MenuIcon
+    public enum MenuApp
     {
         Option = 0,
         Save = 1,
@@ -25,21 +25,20 @@ namespace Assets.Script.UI
         [Header("WiFi")]
         public GameObject wifiOnIcon;
         public GameObject wifiOffIcon;
-        public bool IsNetworkActive { get { return option.Network; } }
 
         [Space]
         [Header("전파")]
         public GameObject serviceIcon;
         public GameObject noServiceIcon;
-        public bool IsServiceActive { get { return option.Service; } }
 
         [Space]
         public GameObject battery;
         public TextMeshProUGUI timeText;
+        public GameObject appBackgroundImage;
 
         private PhoneOptionSetting option;
 
-        private void Awake()
+        private void Start()
         {
             option = PhoneOptionSetting.Instance;
 

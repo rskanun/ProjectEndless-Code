@@ -6,17 +6,21 @@ namespace Assets.Script.Interface.Menu.App
 {
     public class Messanger : App
     {
-        public MenuUI ui;
-
         [Space]
         [Header("경고창 오브젝트")]
         public GameObject alert;
 
+        private PhoneOptionSetting setting;
         private Coroutine networkChecking;
+
+        private void Start()
+        {
+            setting = PhoneOptionSetting.Instance;
+        }
 
         public override void open()
         {
-            appAnimation.openSimpleAppAnimation(window);
+            ui.openAppSimple(window);
 
             if(networkChecking != null)
                 StopCoroutine(networkChecking);
@@ -31,17 +35,17 @@ namespace Assets.Script.Interface.Menu.App
 
             WaitForSeconds wait = new WaitForSeconds(0.5f);
 
-            while(ui.IsNetworkActive == false)
+            while(setting.Network == false)
             {
                 if (!alert.activeSelf)
-                    appAnimation.alertOnAnimation(alert);
+                    ui.alertOn(alert);
 
                 openHomeScreen();
 
                 yield return wait;
             }
 
-            appAnimation.alertOffAnimation(alert);
+            ui.alertOff(alert);
             networkChecking = null;
         }
 

@@ -15,7 +15,7 @@ public class Player : ObjectData
      * 100%를 달성할 시 강제 루프를 진행한다.
      * 마력 수치에 따라 초기값이 달라진다.
      ****************************************************************/
-    public int ap
+    public int AP
     {
         get { return awakenPoint; }
         set
@@ -33,7 +33,7 @@ public class Player : ObjectData
 
     [SerializeField]
     private int maxAwakenPoint;
-    public int maxAP
+    public int MaxAP
     {
         get { return maxAwakenPoint; }
         set
@@ -52,10 +52,10 @@ public class Player : ObjectData
      * [ 마력 (Mana Point) ]
      * 
      * 플레이어의 마력 사용 수치로 능력에 영향을 끼친다.
-     * 마력이 증가할 수록, 능력의 데미지 또한 증가한다.
+     * 마력이 증가할수록, 능력의 데미지 또한 증가한다.
      * 마력의 수치에 따라 각성치 초기값이 달라진다.
      ****************************************************************/
-    public int mp
+    public int MP
     {
         get { return manaPoint; }
         set
@@ -65,6 +65,28 @@ public class Player : ObjectData
                 manaPoint = 0;
             else
                 manaPoint = value;
+        }
+    }
+
+    [SerializeField]
+    private int armorPen;
+    /***************************************************************
+     * [ 방어력 관통 (Armor Penetration) ]
+     * 
+     * 플레이어만 가지는 옵션으로 적의 방어력을 일부 무시하는 수치다.
+     * 방어력 관통 1당 방어력 1을 무시한다.
+     * 마력의 수치에 따라 방어력 관통 수치가 달라진다.
+     ****************************************************************/
+    public int ArmorPenetration
+    {
+        get { return armorPen; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                armorPen = 0;
+            else
+                armorPen = value;
         }
     }
 }

@@ -12,11 +12,11 @@ namespace Assets.Script.Interface.Menu.App
         [Space]
         [Header("참조 스크립트")]
         public MenuControl menuCtr;
-        public AppAnimation appAnimation;
+        public AppUI ui;
 
         public virtual void open()
         {
-            appAnimation.openAppAnimation(window);
+            ui.openApp(window);
         }
 
         public virtual void subOpen(GameObject subWindow)
@@ -37,7 +37,7 @@ namespace Assets.Script.Interface.Menu.App
             }
             else
             {
-                appAnimation.closeAppAnimation(window);
+                ui.openApp(window);
 
                 // 해당 앱이 닫힘
                 return true;

@@ -78,7 +78,7 @@ namespace Assets.Script.Control
         protected override void iconSelect(int x, int y)
         {
             int index = (y * X) + x;
-            menuManager.iconSelect((MenuIcon)index);
+            menuManager.iconSelect((MenuApp)index);
         }
     }
 }
