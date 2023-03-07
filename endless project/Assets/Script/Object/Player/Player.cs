@@ -22,9 +22,9 @@ public class Player : ObjectData
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                awakenPoint = manaPoint;
+                awakenPoint = MP;
             // 입력값이 최대치를 초과한 경우
-            else if (value + manaPoint > maxAwakenPoint)
+            else if (value + MP > maxAwakenPoint)
                 awakenPoint = maxAwakenPoint;
             else
                 awakenPoint = value;
@@ -43,28 +43,6 @@ public class Player : ObjectData
                 maxAwakenPoint = 0;
             else
                 maxAwakenPoint = value;
-        }
-    }
-
-    [SerializeField]
-    private int manaPoint;
-    /***************************************************************
-     * [ 마력 (Mana Point) ]
-     * 
-     * 플레이어의 마력 사용 수치로 능력에 영향을 끼친다.
-     * 마력이 증가할수록, 능력의 데미지 또한 증가한다.
-     * 마력의 수치에 따라 각성치 초기값이 달라진다.
-     ****************************************************************/
-    public int MP
-    {
-        get { return manaPoint; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                manaPoint = 0;
-            else
-                manaPoint = value;
         }
     }
 

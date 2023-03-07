@@ -103,4 +103,27 @@ public abstract class ObjectData : ScriptableObject
                 defensive = value;
         }
     }
+
+    [SerializeField]
+    private int manaPoint;
+    /***************************************************************
+     * [ 마력 (Mana Point) ]
+     * 
+     * 오브젝트의 마력 수치로 마력과 관련된 데미지와 방어력에 영향을 끼친다.
+     * 마력 수치가 높아질수록 마력을 사용한 공격의 데미지가 올라간다.
+     * 마력 수치가 높아질수록 마력 공격의 데미지를 줄여 받는다.
+     * 플레이어의 경우 마력의 수치에 따라 각성치 초기값이 달라진다.
+     ****************************************************************/
+    public int MP
+    {
+        get { return manaPoint; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                manaPoint = 0;
+            else
+                manaPoint = value;
+        }
+    }
 }
