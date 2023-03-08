@@ -37,7 +37,7 @@ namespace Assets.Script.Interface.Menu.App
             }
             else
             {
-                ui.openApp(window);
+                ui.closeApp(window);
 
                 // 해당 앱이 닫힘
                 return true;

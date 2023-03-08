@@ -15,39 +15,40 @@ public class ChrControl : MonoBehaviour
 
     private OptionSetting option;
 
+    private const int ANIMATION_CONSTANT = 10; // 플레이어의 마우스 위치에 따른 시선 변경 보정 상수
+    private const float STOP_DISTANCE = 0.05f;
+
+    private Vector2 playerVec;
+    private Vector2 dashVec;
+
+    private Animator moveAnimator;
+    private Rigidbody2D rigid;
+    private Transform mainEntity; // 플레이어 캐릭터
+    public Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
+
+    // 상호작용 할 npc
+    private NPC npc;
+
+    private bool isDashing = false;
+
     // 캐릭터를 움직이는 모든 키 차단
     private bool noMoveKeyDown
     {
         get { return lineManager.IsTalking || isDashing || menuUI.activeSelf; }
     }
 
-    // 옵션(ESC) 키 차단
-    private bool noOptionKeyDown
-    {
-        get { return lineManager.IsTalking; }
-    }
-
     private void Awake()
     {
         option = OptionSetting.Instance;
 
-        init();
-    }
+        mainEntity = this.gameObject.transform;
 
-    private void init()
-    {
         initComponent();
-
-        // 그래픽 회전 방지
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        mainEntity  = this.gameObject.transform;
-        subEntity   = subRigid.transform;
     }
 
     private void initComponent()
     {
-        animator    = GetComponent<Animator>();
+        moveAnimator    = GetComponent<Animator>();
         rigid       = GetComponent<Rigidbody2D>();
     }
 
@@ -73,8 +74,6 @@ public class ChrControl : MonoBehaviour
     * 인게임 화면의 대화 제어
     ************************************************************/
 
-    private NPC npc; // 상호작용 할 npc
-
     public void talkingKeyPress()
     {
         // 대화의 첫 시작일 경우
@@ -91,17 +90,8 @@ public class ChrControl : MonoBehaviour
     /************************************************************
      * [움직임 제어]
      * 
-     * 플레이어가 누르는 키(ex: 방향키)에 따른 움직임 제어
+     * 방향키에 따른 움직임 제어
      ************************************************************/
-
-    private const int ANIMATION_CONSTANT = 10;
-
-    private Vector2 vec;
-
-    private Animator animator;
-
-    private Rigidbody2D rigid;
-    public GameObject subRigid;
 
     // 키 입력에 따른 움직임 제어
     private void moveKeyPress()
@@ -119,6 +109,17 @@ public class ChrControl : MonoBehaviour
         }
     }
 
+    // 방향키 입력
+    private void moveKey()
+    {
+        // 패드 및 키보드의 움직임(패드의 경우 경도)에 따른 백터 변화
+        playerVec.x = Input.GetAxisRaw("Horizontal");
+        playerVec.y = Input.GetAxisRaw("Vertical");
+
+        // 키보드 누른 방향으로 애니메이션 움직임 제어
+        setAnimator(playerVec);
+    }
+
     private void setAnimator(Vector2 vec)
     {
         // 올림 보정
@@ -126,19 +127,8 @@ public class ChrControl : MonoBehaviour
         int y = Mathf.CeilToInt(vec.y);
 
         // 애니메이션 움직임 제어
-        animator.SetInteger("axisH", x);
-        animator.SetInteger("axisV", y);
-    }
-
-    // 방향키 입력
-    private void moveKey()
-    {
-        // 패드 및 키보드의 움직임(패드의 경우 경도)에 따른 백터 변화
-        vec.x = Input.GetAxisRaw("Horizontal");
-        vec.y = Input.GetAxisRaw("Vertical");
-
-        // 키보드 누른 방향으로 애니메이션 움직임 제어
-        setAnimator(vec);
+        moveAnimator.SetInteger("axisH", x);
+        moveAnimator.SetInteger("axisV", y);
     }
 
     /************************************************************
@@ -146,15 +136,6 @@ public class ChrControl : MonoBehaviour
     * 
     * 마우스 방향으로 플레이어가 빠르게 이동
     ************************************************************/
-
-    private const float STOP_DISTANCE = 0.05f;
-
-    private bool isDashing = false;
-
-    private Vector2 dashVec;
-
-    private Transform mainEntity; // 플레이어 캐릭터
-    private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
 
     private void dashKey()
     {
@@ -227,7 +208,7 @@ public class ChrControl : MonoBehaviour
         }
         // 방향키 이동에 따른(혹은 그에 준하는) 이동
         else
-            rigid.velocity = vec.normalized * player.Speed;
+            rigid.velocity = playerVec.normalized * player.Speed;
     }
 
     private void moveDash()

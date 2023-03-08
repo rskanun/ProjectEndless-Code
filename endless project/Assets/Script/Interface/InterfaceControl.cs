@@ -4,6 +4,13 @@ namespace Assets.Script.Control
 {
     public abstract class InterfaceControl : MonoBehaviour
     {
+        private const float MOVE_DELAY = 0.0975f; // 다음 연속해서 움직이기까지 걸리는 시간
+        private const float DELAY_TIME = 0.35f; // 연속해서 움직이기까지 걸리는 시간
+
+        private bool isPushX = false;
+        private bool isPushY = false;
+        private float accumTime = 0; // 키를 누르고 있는 시간 측정
+
         // 선택 가능한 아이콘의 최대 좌표(x, y)
         // ex) 2 x 2 -> (1, 1)
         private Vector2 iconPoint = Vector2.zero;
@@ -34,13 +41,6 @@ namespace Assets.Script.Control
             accumTime = 0;
         }
 
-        public void interfaceKeyPress()
-        {
-            //cursorMoveKeyPress();
-            //selectKeyPress();
-            cancelKeyPress();
-        }
-
         public void setSelectPoint(int x, int y)
         {
             selectPoint.x = x;
@@ -52,6 +52,33 @@ namespace Assets.Script.Control
         * 
         * 특정 키를 눌렀을 때에 대한 이벤트
         ************************************************************/
+
+        protected void interfaceKeyPress()
+        {
+            //cursorMoveKeyPress();
+            //selectKeyPress();
+            cancelKeyPress();
+        }
+        private void cursorMoveKeyPress()
+        {
+            float v = Input.GetAxisRaw("Vertical");
+            float h = Input.GetAxisRaw("Horizontal");
+
+            // 일정시간동안 누른 키에 대해 한 번만 인식
+            if (pushX()) setCursor(0, h);
+            if (pushY()) setCursor(v, 0);
+
+            if (v != 0 || h != 0)
+            {
+                moveCursor(v, h);
+            }
+
+            else if (accumTime != 0)
+            {
+                // 키를 모두 땠다면 초기화
+                accumTime = 0;
+            }
+        }
 
         private void selectKeyPress()
         {
@@ -77,34 +104,6 @@ namespace Assets.Script.Control
         * 
         * 커서 이동을 제어
         ************************************************************/
-
-        private const float MOVE_DELAY = 0.0975f; // 다음 연속해서 움직이기까지 걸리는 시간
-        private const float DELAY_TIME = 0.35f; // 연속해서 움직이기까지 걸리는 시간
-
-        private bool isPushX = false;
-        private bool isPushY = false;
-        private float accumTime = 0; // 키를 누르고 있는 시간 측정
-
-        private void cursorMoveKeyPress()
-        {
-            float v = Input.GetAxisRaw("Vertical");
-            float h = Input.GetAxisRaw("Horizontal");
-
-            // 일정시간동안 누른 키에 대해 한 번만 인식
-            if (pushX()) setCursor(0, h);
-            if (pushY()) setCursor(v, 0);
-
-            if (v != 0 || h != 0)
-            {
-                moveCursor(v, h);
-            }
-
-            else if(accumTime != 0)
-            {
-                // 키를 모두 땠다면 초기화
-                accumTime = 0;
-            }
-        }
 
         private bool pushX()
         {

@@ -34,7 +34,6 @@ namespace Assets.Script.UI
         [Space]
         public GameObject battery;
         public TextMeshProUGUI timeText;
-        public GameObject appBackgroundImage;
 
         private PhoneOptionSetting option;
 

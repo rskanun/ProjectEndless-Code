@@ -26,7 +26,7 @@ public class TextUI : MonoBehaviour
 
     public void setText(string text)
     {
-        textLine.text = text;
+        textLine.text = "> " + text;
     }
 
     public void setName(string name)

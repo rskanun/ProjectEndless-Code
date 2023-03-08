@@ -12,11 +12,6 @@ namespace Assets.Script.UI
         private bool isActive = false;
         public bool IsActive { get { return isActive; } }
 
-        // 변수
-        private float size = 112f;
-        private float distance = 10f;
-        private float posY = -11f;
-
         [Header("Game Object")]
         public GameObject darkPanel;
         public GameObject selectionWindow;
@@ -35,7 +30,10 @@ namespace Assets.Script.UI
         public void createSelection(List<string> options)
         {
             isActive = true;
-            distance += selectPrefab.GetComponent<RectTransform>().rect.height;
+
+            float size = 127f;
+            float distance = 10f + selectPrefab.GetComponent<RectTransform>().rect.height;
+            float posY = selectPrefab.transform.position.y;
 
             int count = options.Count;
             if (count > 0)
