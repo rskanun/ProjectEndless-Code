@@ -20,7 +20,6 @@ namespace Assets.Script.Control.Text
 
         // 글자 타이핑 효과 코루틴
         private Coroutine textTypingCoroutine;
-        private Coroutine endLineCheckCoroutine;
 
         /************************************************************
         * [대화 출력]
@@ -32,7 +31,6 @@ namespace Assets.Script.Control.Text
             if(textCnt >= line.Text.Length)
             {
                 textCnt = 0;
-                StopCoroutine(endLineCheckCoroutine);
                 ui.setDialogView(false);
 
                 return true;
@@ -66,8 +64,6 @@ namespace Assets.Script.Control.Text
                 ui.setText(line);
 
                 textCnt = line.Length;
-
-                endLineCheckCoroutine = StartCoroutine(endLineBlink(line));
             }
         }
 
@@ -85,21 +81,6 @@ namespace Assets.Script.Control.Text
             }
 
             textTypingCoroutine = null;
-            endLineCheckCoroutine = StartCoroutine(endLineBlink(line));
-        }
-
-        IEnumerator endLineBlink(string line)
-        {
-            WaitForSeconds wait = new WaitForSeconds(0.5f);
-
-            while(textCnt >= line.Length)
-            {
-                ui.setText(line + "_");
-                yield return wait;
-
-                ui.setText(line);
-                yield return wait;
-            }
         }
     }
 }
