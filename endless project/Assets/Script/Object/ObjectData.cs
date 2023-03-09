@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using UnityEditor.Experimental;
 using UnityEngine;
 
-public abstract class ObjectData : ScriptableObject
+public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
 {
     [SerializeField]
     private int healthPoint;
@@ -16,14 +18,20 @@ public abstract class ObjectData : ScriptableObject
         get { return healthPoint; }
         set
         {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                healthPoint = 0;
-            // 입력값이 최대치를 초과한 경우
-            else if (value > maxHealthPoint)
-                healthPoint = maxHealthPoint;
-            else
-                healthPoint = value;
+            if(healthPoint != value)
+            {
+                // 입력값이 음수일 경우
+                if (value < 0)
+                    healthPoint = 0;
+                // 입력값이 최대치를 초과한 경우
+                else if (value > maxHealthPoint)
+                    healthPoint = maxHealthPoint;
+                else
+                    healthPoint = value;
+
+                OnPropertyChanged("HP");
+            }
+
         }
     }
 
@@ -124,6 +132,16 @@ public abstract class ObjectData : ScriptableObject
                 manaPoint = 0;
             else
                 manaPoint = value;
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        if (PropertyChanged != null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

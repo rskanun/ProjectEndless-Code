@@ -1,4 +1,5 @@
 ﻿using Assets.Script.Control.Text.Object;
+using Assets.Script.System;
 using Assets.Script.Text;
 using System;
 using System.Collections;
@@ -27,12 +28,17 @@ namespace Assets.Script.Control.Text
         // 현재 라인 진행 상황
         private TextLine nowLine;
         private bool readLock;
-        private bool isTalking = false;
-        public bool IsTalking { get { return isTalking; } }
         private int lineNum;
 
         // 텍스트 저장 공간
         private List<Line> lines;
+
+        private NoKeyDown noKeyDown;
+
+        private void Start()
+        {
+            noKeyDown = NoKeyDown.Instance;
+        }
 
         /************************************************************
         * [대사 관리]
@@ -47,7 +53,7 @@ namespace Assets.Script.Control.Text
                 // 대화 처음 시작 시 해당되는 대화목록 가져오기
                 lines = npc.getLines();
 
-                isTalking = true;
+                noKeyDown.IsTalking = true;
 
                 StartCoroutine(readLines());
             }
@@ -55,7 +61,7 @@ namespace Assets.Script.Control.Text
 
         IEnumerator readLines()
         {
-            while(isTalking)
+            while(noKeyDown.IsTalking)
             {
                 if (readLock == false) readLine();
                 yield return null;
@@ -97,7 +103,7 @@ namespace Assets.Script.Control.Text
             else
             {
                 lineNum = 0;
-                isTalking = false;
+                noKeyDown.IsTalking = false;
             }
         }
 

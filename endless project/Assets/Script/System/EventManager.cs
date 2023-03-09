@@ -6,7 +6,7 @@ using UnityEngine;
 public class EventManager : MonoBehaviour
 {
     [SerializeField]
-    private Player player;
+    private PlayerData player;
 
     [Space]
     [Header("참조 스크립트")]

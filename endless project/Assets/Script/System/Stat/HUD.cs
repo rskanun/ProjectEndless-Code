@@ -1,5 +1,6 @@
 ﻿using Assets.Script.UI;
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace Assets.Script.System.Stat
@@ -7,28 +8,20 @@ namespace Assets.Script.System.Stat
     public class HUD : MonoBehaviour
     {
         [SerializeField]
-        private Player player;
+        private PlayerData player;
 
         private HealthPointBarUI hpUI;
         private AwakenPointBarUI apUI;
-
-        private Coroutine hpCoroutine;
-        private Coroutine apCoroutine;
 
         private int nowHP; // hp의 값이 변경되기 이전의 값
         public int HP
         {
             set
             {
-                // 체크 코루틴과 겹침 방지
-                StopCoroutine(hpCoroutine);
-
                 player.HP = value;
                 hpUI.barUpdate(nowHP, player.HP, player.MaxHP);
 
                 nowHP = value;
-
-                hpCoroutine = StartCoroutine(checkingHP());
             }
             get { return nowHP; }
         }
@@ -37,15 +30,10 @@ namespace Assets.Script.System.Stat
         {
             set
             {
-                // 체크 코루틴과 겹침 방지
-                StopCoroutine(apCoroutine);
-
                 player.AP = value;
                 apUI.barUpdate(player.AP, player.MaxAP);
 
                 nowAP = value;
-
-                apCoroutine = StartCoroutine(checkingAP());
             }
             get { return nowAP; }
         }
@@ -57,9 +45,6 @@ namespace Assets.Script.System.Stat
             apUI= GetComponent<AwakenPointBarUI>();
 
             initBar();
-
-            hpCoroutine = StartCoroutine(checkingHP());
-            apCoroutine = StartCoroutine(checkingAP());
         }
 
         private void initBar()
@@ -79,33 +64,26 @@ namespace Assets.Script.System.Stat
         * 플레이어의 hp와 ap의 애니메이션이 제대로 실행되지 않았는지 체크
         ***************************************************************/
 
-        IEnumerator checkingHP()
+        private void OnEnable()
         {
-            WaitForSeconds wait = new WaitForSeconds(0.1f);
-
-            while(true)
-            {
-                if (nowHP != player.HP)
-                {
-                    HP = player.HP;
-                }
-
-                yield return wait;
-            }
+            player.PropertyChanged += OnPropertyChanged;
         }
 
-        IEnumerator checkingAP()
+        private void OnDisable()
         {
-            WaitForSeconds wait = new WaitForSeconds(0.1f);
+            player.PropertyChanged -= OnPropertyChanged;
+        }
 
-            while(true)
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "HP")
             {
-                if(nowAP != player.AP)
-                {
-                    AP = player.AP;
-                }
+                HP = player.HP;
+            }
 
-                yield return wait;
+            if (e.PropertyName == "AP")
+            {
+                AP = player.AP;
             }
         }
     }

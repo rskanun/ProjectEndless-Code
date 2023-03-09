@@ -1231,12 +1231,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 1350600185}
+    m_SelectOnDown: {fileID: 1350600185}
+    m_SelectOnLeft: {fileID: 594174163}
+    m_SelectOnRight: {fileID: 688097746}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -2993,12 +2993,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 1846163226}
+    m_SelectOnDown: {fileID: 1846163226}
+    m_SelectOnLeft: {fileID: 688097746}
+    m_SelectOnRight: {fileID: 175025300}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -7868,12 +7868,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 1015339996}
+    m_SelectOnDown: {fileID: 1015339996}
+    m_SelectOnLeft: {fileID: 175025300}
+    m_SelectOnRight: {fileID: 594174163}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -8605,7 +8605,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
   lineManager: {fileID: 1540840968}
-  menuUI: {fileID: 1647111975}
   subEntity: {fileID: 2102133564}
 --- !u!1 &835427939
 GameObject:
@@ -9404,12 +9403,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 688097746}
+    m_SelectOnDown: {fileID: 688097746}
+    m_SelectOnLeft: {fileID: 1350600185}
+    m_SelectOnRight: {fileID: 1846163226}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -11326,12 +11325,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 175025300}
+    m_SelectOnDown: {fileID: 175025300}
+    m_SelectOnLeft: {fileID: 1846163226}
+    m_SelectOnRight: {fileID: 1015339996}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
@@ -11561,7 +11560,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1363184305
 RectTransform:
@@ -12661,7 +12660,6 @@ MonoBehaviour:
   interfaceWindow: {fileID: 1647111975}
   menuManager: {fileID: 1647111977}
   homeScreen: {fileID: 1540840967}
-  lineManager: {fileID: 1540840968}
 --- !u!114 &1540840967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14307,12 +14305,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 594174163}
+    m_SelectOnDown: {fileID: 594174163}
+    m_SelectOnLeft: {fileID: 1015339996}
+    m_SelectOnRight: {fileID: 1350600185}
   m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}

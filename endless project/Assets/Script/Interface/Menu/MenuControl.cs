@@ -1,5 +1,6 @@
 ﻿using Assets.Script.Control.Text;
 using Assets.Script.Interface.Menu.App;
+using Assets.Script.System;
 using Assets.Script.System.Menu;
 using Assets.Script.UI;
 using UnityEngine;
@@ -12,13 +13,8 @@ namespace Assets.Script.Control
         [Header("참조 스크립트")]
         public MenuManager menuManager;
         public HomeScreen homeScreen;
-        public LineManager lineManager;
 
-        // 옵션(ESC) 키 차단
-        private bool noOptionKeyDown
-        {
-            get { return lineManager.IsTalking; }
-        }
+        private NoKeyDown noKeyDown;
 
         /************************************************************
         * [Init]
@@ -30,12 +26,10 @@ namespace Assets.Script.Control
         private const int X = 3;
         private const int Y = 2;
 
-        // 메뉴 창의 켜짐 여부
-        private bool isOpen = false;
-
         private void Start()
         {
             option = OptionSetting.Instance;
+            noKeyDown = NoKeyDown.Instance;
 
             // init value
             valueReset();
@@ -60,12 +54,12 @@ namespace Assets.Script.Control
         {
             // 메뉴 활성화/비활성화
             if (Input.GetKeyDown(option.Menu) && homeScreen.isAppEmpty &&
-                !homeScreen.playAnimation && !noOptionKeyDown)
+                !homeScreen.playAnimation && noKeyDown.IsMenuOpenable)
             {
-                if(isOpen == false) homeScreen.open();
+                if(noKeyDown.IsMenuActive == false) homeScreen.open();
                 else homeScreen.close();
 
-                isOpen = !isOpen; // switching
+                noKeyDown.IsMenuActive = !noKeyDown.IsMenuActive; // switching
             }
         }
 

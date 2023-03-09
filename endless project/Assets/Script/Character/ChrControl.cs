@@ -1,19 +1,17 @@
 ﻿using Assets.Script.Control.Text;
+using Assets.Script.System;
 using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
     [SerializeField]
-    private Player player;
+    private PlayerData player;
 
     [Header("참조 스크립트")]
     public LineManager lineManager;
 
-    [Space]
-    [Header("참조 오브젝트")]
-    public GameObject menuUI;
-
     private OptionSetting option;
+    private NoKeyDown noKeyDown;
 
     private const int ANIMATION_CONSTANT = 10; // 플레이어의 마우스 위치에 따른 시선 변경 보정 상수
     private const float STOP_DISTANCE = 0.05f;
@@ -29,17 +27,10 @@ public class ChrControl : MonoBehaviour
     // 상호작용 할 npc
     private NPC npc;
 
-    private bool isDashing = false;
-
-    // 캐릭터를 움직이는 모든 키 차단
-    private bool noMoveKeyDown
-    {
-        get { return lineManager.IsTalking || isDashing || menuUI.activeSelf; }
-    }
-
     private void Awake()
     {
         option = OptionSetting.Instance;
+        noKeyDown = NoKeyDown.Instance;
 
         mainEntity = this.gameObject.transform;
 
@@ -56,13 +47,13 @@ public class ChrControl : MonoBehaviour
     {
         // 텍스트 상호작용 키 감지
         // 자세한 코드는 Text -> TextManager
-        if(menuUI.activeSelf == false)
+        if(noKeyDown.IsMenuActive == false)
         {
             talkingKeyPress();
         }
 
         // 움직임 키 감지
-        if (!noMoveKeyDown)
+        if (noKeyDown.IsPlayerControllable)
         {
             moveKeyPress();
         }
@@ -77,7 +68,7 @@ public class ChrControl : MonoBehaviour
     public void talkingKeyPress()
     {
         // 대화의 첫 시작일 경우
-        if (!lineManager.IsTalking)
+        if (noKeyDown.IsTalking == false)
         {
             // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
             if (npc is not null && Input.GetKeyDown(option.Interact))
@@ -143,7 +134,7 @@ public class ChrControl : MonoBehaviour
         getDashVector();
 
         // 대쉬 작동
-        isDashing = true;
+        noKeyDown.IsDashing = true;
     }
 
     private void getDashVector()
@@ -196,13 +187,13 @@ public class ChrControl : MonoBehaviour
     private void FixedUpdate()
     {
         // 대쉬 발동에 따른 이동
-        if (isDashing)
+        if (noKeyDown.IsDashing)
         {
             moveDash();
         }
 
         // 움직일 수 없는 상태이면 이동을 멈춤
-        if(noMoveKeyDown)
+        if(noKeyDown.IsPlayerControllable == false)
         {
             rigid.velocity = new Vector2(0, 0);
         }
@@ -221,7 +212,7 @@ public class ChrControl : MonoBehaviour
         if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
         {
             Debug.Log("ready");
-            isDashing = false;
+            noKeyDown.IsDashing = false;
         }
     }
 
