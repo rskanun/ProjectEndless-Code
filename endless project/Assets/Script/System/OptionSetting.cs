@@ -47,6 +47,13 @@ public class OptionSetting : ScriptableObject
         }
     }
 
+    private bool isController = false;
+    public bool IsController
+    {
+        get { return isController; }
+        set { isController = value; }
+    }
+
     // 컨트롤키
     public KeyCode Left { get { return left; } }
     private KeyCode left  = KeyCode.LeftArrow;
