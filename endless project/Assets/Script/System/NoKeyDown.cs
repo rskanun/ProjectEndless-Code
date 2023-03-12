@@ -46,7 +46,7 @@ namespace Assets.Script.System
         }
 
         // 플레이어가 현재 대시를 하고 있는 상태인지 여부
-        private bool isDashing = false;
+        private bool isDashing;
         public bool IsDashing
         {
             get { return isDashing; }
@@ -54,7 +54,7 @@ namespace Assets.Script.System
         }
 
         // 현재 플레이어가 NPC와 대화를 진행중인 상태인지 여부
-        private bool isTalking = false;
+        private bool isTalking;
         public bool IsTalking
         {
             get { return isTalking; }
@@ -62,7 +62,7 @@ namespace Assets.Script.System
         }
 
         // 메뉴 화면이 현재 켜져있는지 여부
-        private bool isMenuActive = false;
+        private bool isMenuActive;
         public bool IsMenuActive
         {
             get { return isMenuActive; }
@@ -70,7 +70,7 @@ namespace Assets.Script.System
         }
 
         // 플레이어를 조종할 수 있는지 여부
-        private bool isPlayerControllable = true;
+        private bool isPlayerControllable;
         public bool IsPlayerControllable
         {
             get
@@ -84,7 +84,7 @@ namespace Assets.Script.System
             set { isPlayerControllable = value; }
         }
 
-        private bool isMenuOpenable = true;
+        private bool isMenuOpenable;
         public bool IsMenuOpenable
         {
             get
@@ -96,6 +96,17 @@ namespace Assets.Script.System
             }
 
             set { isMenuOpenable = value; }
+        }
+
+        public void initialize()
+        {
+            // init value
+            isDashing = false;
+            isTalking = false;
+            isMenuActive = false;
+
+            isPlayerControllable = true;
+            isMenuOpenable = true;
         }
     }
 }

@@ -10,8 +10,14 @@ namespace Assets.Script.System
         private void Awake()
         {
             optionSetting = OptionSetting.Instance;
+            NoKeyDown.Instance.initialize();
 
             StartCoroutine(checkForControllers());
+        }
+
+        private void OnApplicationQuit()
+        {
+            NoKeyDown.Instance.initialize();
         }
 
         private IEnumerator checkForControllers()

@@ -6,10 +6,10 @@ namespace Assets.Script.UI.Menu
 {
     public class AutoSelectButton : MonoBehaviour
     {
+        public Button button;
+
         private void OnEnable()
         {
-            Button button = GetComponent<Button>();
-
             button.Select();
         }
     }

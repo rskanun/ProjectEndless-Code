@@ -12,41 +12,37 @@ namespace Assets.Script.System.Menu
         public App optionApp;
         public Messanger messangerApp;
 
-        [Header("참조 스크립트")]
-        public MenuControl menuCtr;
-        public MenuUI ui;
-
         /************************************************************
         * [아이콘]
         * 
         * 메뉴의 각 아이콘의 기능 수행
         ************************************************************/
 
-        public void iconSelect(UI.MenuApp icon)
+        public void iconSelect(MenuApp icon)
         {
             switch(icon)
             {
-                case UI.MenuApp.Option:
+                case MenuApp.Option:
                     option();
                     break;
 
-                case UI.MenuApp.Save:
+                case MenuApp.Save:
                     save();
                     break;
 
-                case UI.MenuApp.Load:
+                case MenuApp.Load:
                     load();
                     break;
 
-                case UI.MenuApp.Title:
+                case MenuApp.Title:
                     title();
                     break;
 
-                case UI.MenuApp.Call:
+                case MenuApp.Call:
                     call();
                     break;
 
-                case UI.MenuApp.Message:
+                case MenuApp.Message:
                     homeScreen.appOpen(messangerApp);
                     break;
 

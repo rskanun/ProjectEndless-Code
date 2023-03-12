@@ -7,35 +7,21 @@ using UnityEngine;
 
 namespace Assets.Script.Control
 {
-    public class MenuControl : InterfaceControl
+    public class MenuControl : MonoBehaviour
     {
+        public GameObject menu;
         [Space]
         [Header("참조 스크립트")]
         public MenuManager menuManager;
         public HomeScreen homeScreen;
 
+        private OptionSetting option;
         private NoKeyDown noKeyDown;
-
-        /************************************************************
-        * [Init]
-        * 
-        * 각종 초기 변수 및 함수 선언
-        ************************************************************/
-
-        // 선택 가능한 아이콘의 가로 세로 갯수
-        private const int X = 3;
-        private const int Y = 2;
 
         private void Start()
         {
             option = OptionSetting.Instance;
             noKeyDown = NoKeyDown.Instance;
-
-            // init value
-            valueReset();
-
-            // init component
-            setIconPoint(X, Y);
         }
 
         /************************************************************
@@ -47,7 +33,7 @@ namespace Assets.Script.Control
         private void Update()
         {
             menuKeyPress();
-            interfaceKeyPress();
+            cancelKeyPress();
         }
 
         private void menuKeyPress()
@@ -63,25 +49,22 @@ namespace Assets.Script.Control
             }
         }
 
-        public override void cancel()
+        public void cancelKeyPress()
         {
-            // 메인 화면에 앱이 켜져있는 경우 캔슬키로 작동
-            if(homeScreen.isAppEmpty == false)
+            if (Input.GetKeyDown(option.Cancel) && menu.activeSelf == true)
             {
-                homeScreen.cancel();
+                // 메인 화면에 앱이 켜져있는 경우 캔슬키로 작동
+                if (homeScreen.isAppEmpty == false)
+                {
+                    homeScreen.cancel();
+                }
+                // 메뉴키와 캔슬키가 다를 경우
+                // 메인 화면에서 캔슬키 작동시 메뉴 닫힘
+                else if (option.Cancel != option.Menu && homeScreen.playAnimation == false)
+                {
+                    homeScreen.close();
+                }
             }
-            // 메뉴키와 캔슬키가 다를 경우
-            // 메인 화면에서 캔슬키 작동시 메뉴 닫힘
-            else if(option.Cancel != option.Menu && homeScreen.playAnimation == false)
-            {
-                homeScreen.close();
-            }
-        }
-
-        protected override void iconSelect(int x, int y)
-        {
-            int index = (y * X) + x;
-            menuManager.iconSelect((MenuApp)index);
         }
     }
 }

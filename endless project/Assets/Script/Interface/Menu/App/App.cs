@@ -11,7 +11,6 @@ namespace Assets.Script.Interface.Menu.App
         protected Stack<GameObject> subWindows = new Stack<GameObject>();
         [Space]
         [Header("참조 스크립트")]
-        public MenuControl menuCtr;
         public AppUI ui;
 
         public virtual void open()
