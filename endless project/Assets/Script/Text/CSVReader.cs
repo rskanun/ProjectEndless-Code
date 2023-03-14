@@ -11,10 +11,11 @@ using UnityEditor;
 
 public class CSVReader : ScriptableObject
 {
-    private const string CSV_FILE_PATH = "Assets/Resources/Dialog/dialogue.csv";
-
+    private const string DIALOG_FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_DIRECTORY = "Assets/Resources/Dialog";
     private const string FILE_PATH = "Assets/Resources/Dialog/CSVReader.asset";
+
+    private const string CSV_FILE_PATH = "Assets/Resources/Dialog/dialogue.csv";
 
     private static CSVReader _instance;
     public static CSVReader Instance
@@ -23,7 +24,7 @@ public class CSVReader : ScriptableObject
         {
             if(_instance != null) return _instance;
 
-            _instance = Resources.Load<CSVReader>("CSVReader");
+            _instance = Resources.Load<CSVReader>("Dialog/CSVReader");
 
 #if UNITY_EDITOR
             if(_instance == null)
@@ -31,8 +32,13 @@ public class CSVReader : ScriptableObject
                 // 파일 경로가 없을 경우 폴더 생성
                 if(!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
-                    AssetDatabase.CreateFolder("Assets", "Resources");
-                    AssetDatabase.CreateFolder("Resources", "Dialog");
+                    Debug.Log("!");
+                    if(!AssetDatabase.IsValidFolder(DIALOG_FILE_DIRECTORY))
+                    {
+                        AssetDatabase.CreateFolder("Assets", "Resources");
+                    }
+
+                    AssetDatabase.CreateFolder("Assets/Resources", "Dialog");
                 }
 
                 // Resource.Load가 실패했을 경우

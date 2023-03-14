@@ -8,6 +8,7 @@ using UnityEditor;
 public class OptionSetting : ScriptableObject
 {
     // 저장 파일 위치
+    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/OptionSetting.asset";
 
@@ -20,7 +21,7 @@ public class OptionSetting : ScriptableObject
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<OptionSetting>("OptionSetting");
+            _instance = Resources.Load<OptionSetting>("Option/OptionSetting");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -28,8 +29,12 @@ public class OptionSetting : ScriptableObject
                 // 파일 경로가 없을 경우 폴더 생성
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
-                    AssetDatabase.CreateFolder("Assets", "Resources");
-                    AssetDatabase.CreateFolder("Resources", "Option");
+                    if(!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
+                    {
+                        AssetDatabase.CreateFolder("Assets", "Resources");
+                    }
+
+                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
                 }
 
                 // Resource.Load가 실패했을 경우

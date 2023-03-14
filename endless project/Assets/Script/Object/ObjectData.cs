@@ -68,6 +68,8 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
                 strength = 0;
             else
                 strength = value;
+
+            OnPropertyChanged("STR");
         }
     }
 
@@ -109,6 +111,8 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
                 defensive = 0;
             else
                 defensive = value;
+
+            OnPropertyChanged("DEF");
         }
     }
 

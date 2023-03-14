@@ -8,6 +8,7 @@ namespace Assets.Script.System
 {
     public class NoKeyDown : ScriptableObject
     {
+        private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
         private const string FILE_DIRECTORY = "Assets/Resources/Option";
         private const string FILE_PATH = "Assets/Resources/Option/NoKeyDown.asset";
 
@@ -18,7 +19,7 @@ namespace Assets.Script.System
             {
                 if (_instance != null) return _instance;
 
-                _instance = Resources.Load<NoKeyDown>("NoKeyDown");
+                _instance = Resources.Load<NoKeyDown>("Option/NoKeyDown");
 
 #if UNITY_EDITOR
                 if (_instance == null)
@@ -26,8 +27,12 @@ namespace Assets.Script.System
                     // 파일 경로가 없을 경우 폴더 생성
                     if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                     {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                        AssetDatabase.CreateFolder("Resources", "Option");
+                        if(!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
+                        {
+                            AssetDatabase.CreateFolder("Assets", "Resources");
+                        }
+
+                        AssetDatabase.CreateFolder("Assets/Resources", "Option");
                     }
 
                     // Resource.Load가 실패했을 경우
@@ -40,6 +45,7 @@ namespace Assets.Script.System
                     }
                 }
 #endif
+                _instance.initialize();
 
                 return _instance;
             }
