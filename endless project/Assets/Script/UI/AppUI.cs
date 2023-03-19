@@ -1,11 +1,21 @@
-﻿using System.Collections;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Assets.Script.UI
 {
     public class AppUI : MonoBehaviour
     {
-        public GameObject AppBackground;
+        public GameObject appBackground;
+        public GameObject homeScreen;
+        [Header("알림창")]
+        public GameObject alertMsg;
+        public TextMeshProUGUI alertTxt;
+
+        public void alert(string msg)
+        {
+            alertTxt.text = msg;
+            AppAnimation.alertOnAnimation(alertMsg);
+        }    
 
         /************************************************************
         * [앱 애니메이션]
@@ -15,37 +25,20 @@ namespace Assets.Script.UI
 
         public void openApp(GameObject window)
         {
-            AppAnimation.openAppAnimation(window, AppBackground);
+            homeScreen.SetActive(false);
+            AppAnimation.openAppAnimation(window, appBackground, homeScreen);
         }
 
         public void closeApp(GameObject window)
         {
-            AppAnimation.closeAppAnimation(window, AppBackground);
+            homeScreen.SetActive(true);
+            AppAnimation.closeAppAnimation(window, appBackground, homeScreen);
         }
 
         public void openAppSimple(GameObject window)
         {
-            AppAnimation.openSimpleAppAnimation(window, AppBackground);
-        }
-
-        public void openMenu(GameObject window, float openRotate, float closeRotate)
-        {
-            AppAnimation.openMenuAnimation(window, openRotate, closeRotate);
-        }
-
-        public void closeMenu(GameObject window, float openRotate, float closeRotate)
-        {
-            AppAnimation.closeMenuAnimation(window, openRotate, closeRotate);
-        }
-
-        public void alertOn(GameObject alert)
-        {
-            AppAnimation.alertOnAnimation(alert);
-        }
-
-        public void alertOff(GameObject alert)
-        {
-            AppAnimation.alertOffAnimation(alert);
+            homeScreen.SetActive(false);
+            AppAnimation.openSimpleAppAnimation(window, appBackground, homeScreen);
         }
     }
 }

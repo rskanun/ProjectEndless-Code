@@ -1,4 +1,5 @@
 ﻿using Assets.Script.UI;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Script.Interface.Menu.App
@@ -6,12 +7,12 @@ namespace Assets.Script.Interface.Menu.App
     public class HomeScreen : App
     {
         private const float CLOSE_ROTATE = 70, OPEN_ROTATE = 0;
-        public bool playAnimation
+        public bool IsPlayingAnimation
         {
             get
             {
                 Quaternion rotate = window.transform.rotation;
-                return rotate.z != 0 && rotate.z != 70;
+                return rotate.z != OPEN_ROTATE && rotate.z != CLOSE_ROTATE;
             }
         }
 
@@ -19,14 +20,14 @@ namespace Assets.Script.Interface.Menu.App
         private App nowApp = null;
         private bool isAppClose = true;
 
-        public bool isAppEmpty
+        public bool IsAppEmpty
         {
             get { return nowApp == null && isAppClose == true; }
         }
 
         public override void open()
         {
-            ui.openMenu(window, OPEN_ROTATE, CLOSE_ROTATE);
+            AppAnimation.openMenuAnimation(window, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         public void appOpen(App app)
@@ -52,7 +53,7 @@ namespace Assets.Script.Interface.Menu.App
 
         public override bool close()
         {
-            ui.closeMenu(window, OPEN_ROTATE, CLOSE_ROTATE);
+            AppAnimation.closeMenuAnimation(window, OPEN_ROTATE, CLOSE_ROTATE);
 
             return true;
         }

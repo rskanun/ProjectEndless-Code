@@ -1,5 +1,6 @@
 ﻿using Assets.Script.Control.Text;
 using Assets.Script.System;
+using System.Collections;
 using UnityEngine;
 
 public class ChrControl : MonoBehaviour

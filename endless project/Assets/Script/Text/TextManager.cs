@@ -70,6 +70,7 @@ namespace Assets.Script.Control.Text
         IEnumerator textDelayPrint(string line)
         {
             string text = "";
+            WaitForSeconds wait = new WaitForSeconds(typingSpeed);
 
             // 대화 진행 도중일 경우
             while (textCnt < line.Length)
@@ -77,7 +78,7 @@ namespace Assets.Script.Control.Text
                 // 한 글자씩 대화를 출력
                 ui.setText(text += line[textCnt++]);
 
-                yield return new WaitForSeconds(typingSpeed);
+                yield return wait;
             }
 
             textTypingCoroutine = null;

@@ -6,10 +6,6 @@ namespace Assets.Script.Interface.Menu.App
 {
     public class Messanger : App
     {
-        [Space]
-        [Header("경고창 오브젝트")]
-        public GameObject alert;
-
         private PhoneOptionSetting setting;
         private Coroutine networkChecking;
 
@@ -37,28 +33,24 @@ namespace Assets.Script.Interface.Menu.App
 
             while(setting.Network == false)
             {
-                if (!alert.activeSelf)
-                    ui.alertOn(alert);
-
-                openHomeScreen();
+                Debug.Log("1");
+                ui.alert("ㅆㅃ");
 
                 yield return wait;
             }
 
-            ui.alertOff(alert);
             networkChecking = null;
+
+            openMainScreen();
         }
 
-        private void openHomeScreen()
+        private void openMainScreen()
         {
             // 홈 화면 출력
         }
 
         public override bool close()
-        {
-            if(alert.activeSelf) 
-                alert.SetActive(false);
-            
+        {   
             if(networkChecking != null)
                 StopCoroutine(networkChecking);
 

@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using Assets.Script.Interface.Menu.App;
 
 namespace Assets.Script.UI
 {
     public class AppAnimation
     {
-        public static void openAppAnimation(GameObject window, GameObject background)
+        public static void openAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            appOpenSeq(background)
-                .Append(windowOpenSeq(window));
+            biggerSeq(background, 0.1f, 0.08f)
+                    .AppendInterval(0.12f)
+                    .Append(windowToastSeq(window, 0.2f));
         }
 
-        public static void closeAppAnimation(GameObject window, GameObject background)
+        public static void closeAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            appCloseSeq(window, background);
+            smallerSeq(window, 0.1f, 0.08f)
+                .Join(smallerSeq(background, 0.1f, 0.08f));
         }
 
         public static void openMenuAnimation(GameObject window, float openRotate, float closeRotate)
@@ -27,10 +30,10 @@ namespace Assets.Script.UI
             closeMenuSeq(window, openRotate, closeRotate);
         }
 
-        public static void openSimpleAppAnimation(GameObject window, GameObject background)
+        public static void openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            appOpenSeq(background)
-                .OnComplete(() => window.SetActive(true));
+            biggerSeq(background, 0.1f, 0.08f)
+                    .OnComplete(() => window.SetActive(true));
         }
 
         public static void alertOnAnimation(GameObject alert)
@@ -45,45 +48,30 @@ namespace Assets.Script.UI
             fadeOutSeq(alert, time);
         }
 
+        public static void showHomeScreenAnimation(GameObject homeScreen)
+        {
+            biggerSeq(homeScreen, 0.5f, 0.15f);
+        }
+
+        public static void hideHomeScreenAnimation(GameObject homeScreen)
+        {
+            smallerSeq(homeScreen, 0.5f, 0.15f);
+        }
+
         /************************************************************
         * [애니메이션]
         * 
         * DOTween을 이용한 각 애니메이션 동작 시퀀스 관리
         ************************************************************/
 
-        private static Sequence appOpenSeq(GameObject maskingImage)
-        {
-            return DOTween.Sequence()
-                .OnStart(() => {
-                    maskingImage.transform.localScale = new Vector3(0.1f, 0.1f);
-                    maskingImage.SetActive(true);
-                    })
-                .Append(maskingImage.transform.DOScale(new Vector3(1, 1), 0.08f))
-                .AppendInterval(0.12f);
-        }
-
-        private static Sequence windowOpenSeq(GameObject window)
+        private static Sequence windowToastSeq(GameObject window, float t)
         {
             Vector2 loc = window.transform.localPosition;
             window.transform.localPosition = new Vector2(loc.x, loc.y - window.GetComponent<RectTransform>().rect.height / 4);
 
             return DOTween.Sequence()
                 .OnStart(() => window.SetActive(true))
-                .Append(window.transform.DOLocalMoveY(loc.y, 0.2f).SetEase(Ease.OutQuad));
-        }
-
-        private static Sequence appCloseSeq(GameObject window, GameObject maskingImage)
-        {
-            return DOTween.Sequence()
-                .Append(maskingImage.transform.DOScale(new Vector3(0.7f, 0.7f), 0.015f))
-                .Append(DOTween.Sequence()
-                    .OnStart(() => window.SetActive(false))
-                    .Append(maskingImage.transform.DOScale(new Vector3(0.1f, 0.1f), 0.065f)))
-                .OnComplete(() =>
-                {
-                    maskingImage.transform.localScale = new Vector3(1, 1);
-                    maskingImage.SetActive(false);
-                });
+                .Append(window.transform.DOLocalMoveY(loc.y, t).SetEase(Ease.OutQuad));
         }
 
         private static Sequence openMenuSeq(GameObject window, float openRotate, float closeRotate)
@@ -139,6 +127,28 @@ namespace Assets.Script.UI
                     color.a = 1;
 
                     image.color = color;
+                });
+        }
+
+        private static Sequence biggerSeq(GameObject window, float startSize, float t)
+        {
+            return DOTween.Sequence()
+                .OnStart(() =>
+                {
+                    window.transform.localScale = new Vector3(startSize, startSize);
+                    window.SetActive(true);
+                })
+                .Append(window.transform.DOScale(new Vector3(1, 1), t));
+        }
+
+        private static Sequence smallerSeq(GameObject window, float size, float t)
+        {
+            return DOTween.Sequence()
+                .Append(window.transform.DOScale(new Vector3(size, size), t))
+                .OnComplete(() =>
+                {
+                    window.SetActive(false);
+                    window.transform.localScale = new Vector3(1, 1);
                 });
         }
     }
