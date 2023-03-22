@@ -29,12 +29,11 @@ namespace Assets.Script.Interface.Menu.App
             // 로딩 시간
             yield return new WaitForSeconds(1f);
 
-            WaitForSeconds wait = new WaitForSeconds(0.5f);
+            WaitForSeconds wait = new WaitForSeconds(1.5f);
 
             while(setting.Network == false)
             {
-                Debug.Log("1");
-                ui.alert("ㅆㅃ");
+                ui.alert("네트워크 상태가 원활하지 않습니다.");
 
                 yield return wait;
             }
@@ -50,9 +49,11 @@ namespace Assets.Script.Interface.Menu.App
         }
 
         public override bool close()
-        {   
+        {
             if(networkChecking != null)
                 StopCoroutine(networkChecking);
+
+            ui.alertStop();
 
             return base.close();
         }

@@ -2,84 +2,82 @@
 using Assets.Script.Interface.Menu.App;
 using Assets.Script.UI;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Script.System.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        [Header("메뉴 및 앱 리스트")]
-        public HomeScreen homeScreen;
-        public App optionApp;
-        public Messanger messangerApp;
+        [Header("참조 스크립트")]
+        public MenuControl menuCtr;
+        public MenuUI ui;
+
+        private NoKeyDown noKeyDown;
+
+        // 메뉴 앱 관련 변수
+        private App nowApp = null;
+        private bool isAppClose = true;
+        public bool IsAppEmpty
+        {
+            get { return nowApp == null && isAppClose == true; }
+        }
+        public bool IsMenuControlable
+        {
+            get { return IsAppEmpty && !ui.IsPlayingAnimation && noKeyDown.IsMenuOpenable; }
+        }
+
+        private void Start()
+        {
+            noKeyDown = NoKeyDown.Instance;
+        }
+
+        public void menuOpen()
+        {
+            ui.menuOpen();
+            noKeyDown.IsMenuActive = true;
+        }
+
+        public void menuClose()
+        {
+            ui.menuClose();
+            noKeyDown.IsMenuActive = false;
+        }
 
         /************************************************************
-        * [아이콘]
+        * [앱 제어]
         * 
-        * 메뉴의 각 아이콘의 기능 수행
+        * 메뉴에 존재하는 앱들을 제어
         ************************************************************/
 
-        public void iconSelect(MenuApp icon)
+        private void appOpen(App app)
         {
-            switch(icon)
+            nowApp = app;
+            nowApp.open();
+
+            isAppClose = false;
+        }
+
+        public void appClose()
+        {
+            if (isAppClose == false)
             {
-                case MenuApp.Option:
-                    option();
-                    break;
+                isAppClose = nowApp.close();
 
-                case MenuApp.Save:
-                    save();
-                    break;
-
-                case MenuApp.Load:
-                    load();
-                    break;
-
-                case MenuApp.Title:
-                    title();
-                    break;
-
-                case MenuApp.Call:
-                    call();
-                    break;
-
-                case MenuApp.Message:
-                    homeScreen.appOpen(messangerApp);
-                    break;
-
-                default:
-                    break;
+                if (isAppClose)
+                {
+                    nowApp = null;
+                }
             }
         }
 
-        public void option()
+        public void closeAllApps()
         {
-            homeScreen.appOpen(optionApp);
+            while (isAppClose == false)
+            {
+                appClose();
+            }
         }
 
-        public void save()
-        {
-            Debug.Log("save");
-        }
-
-        public void load()
-        {
-            Debug.Log("load");
-        }
-
-        public void title()
-        {
-            Debug.Log("title");
-        }
-
-        public void call()
-        {
-            Debug.Log("call");
-        }
-
-        public void message()
-        {
-            homeScreen.appOpen(messangerApp);
-        }
     }
 }

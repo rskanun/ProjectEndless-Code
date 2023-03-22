@@ -22,6 +22,8 @@ namespace Assets.Script.UI
 
     public class MenuUI : MonoBehaviour
     {
+        public GameObject menu;
+
         [Header("WiFi")]
         public GameObject wifiOnIcon;
         public GameObject wifiOffIcon;
@@ -37,6 +39,17 @@ namespace Assets.Script.UI
 
         private PhoneOptionSetting option;
 
+        // 메뉴 열리고 닫히는 각도
+        private const float CLOSE_ROTATE = 70, OPEN_ROTATE = 0;
+        public bool IsPlayingAnimation
+        {
+            get
+            {
+                Quaternion rotate = menu.transform.rotation;
+                return rotate.z != OPEN_ROTATE && rotate.z != CLOSE_ROTATE;
+            }
+        }
+
         private void Start()
         {
             option = PhoneOptionSetting.Instance;
@@ -46,6 +59,16 @@ namespace Assets.Script.UI
             setWiFi(option.Network);
 
             timeUpdate();
+        }
+
+        public void menuOpen()
+        {
+            AppAnimation.openMenuAnimation(menu, OPEN_ROTATE, CLOSE_ROTATE);
+        }
+
+        public void menuClose()
+        {
+            AppAnimation.closeMenuAnimation(menu, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         /************************************************************

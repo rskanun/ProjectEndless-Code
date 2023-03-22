@@ -9,15 +9,15 @@ namespace Assets.Script.UI
     {
         public static void openAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            biggerSeq(background, 0.1f, 0.08f)
+            biggerOpenSeq(background, 0.1f, 0.08f)
                     .AppendInterval(0.12f)
                     .Append(windowToastSeq(window, 0.2f));
         }
 
         public static void closeAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            smallerSeq(window, 0.1f, 0.08f)
-                .Join(smallerSeq(background, 0.1f, 0.08f));
+            smallerCloseSeq(window, 0.1f, 0.08f)
+                .Join(smallerCloseSeq(background, 0.1f, 0.08f));
         }
 
         public static void openMenuAnimation(GameObject window, float openRotate, float closeRotate)
@@ -32,20 +32,15 @@ namespace Assets.Script.UI
 
         public static void openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            biggerSeq(background, 0.1f, 0.08f)
+            biggerOpenSeq(background, 0.1f, 0.08f)
                     .OnComplete(() => window.SetActive(true));
         }
 
-        public static void alertOnAnimation(GameObject alert)
+        public static void alertAnimation(GameObject alert, float fadeTime ,float delay)
         {
-            float time = 0.15f;
-            fadeInSeq(alert, time);
-        }
-
-        public static void alertOffAnimation(GameObject alert)
-        {
-            float time = 0.15f;
-            fadeOutSeq(alert, time);
+            fadeInSeq(alert, fadeTime)
+                .AppendInterval(delay)
+                .Append(fadeOutSeq(alert, fadeTime));
         }
 
         public static void showHomeScreenAnimation(GameObject homeScreen)
@@ -115,19 +110,24 @@ namespace Assets.Script.UI
 
         private static Sequence fadeOutSeq(GameObject obj, float time)
         {
-            Image image = obj.GetComponent<Image>();
+            if(obj.activeSelf == true)
+            {
+                Image image = obj.GetComponent<Image>();
 
-            return DOTween.Sequence()
-                .Append(image.DOFade(0.0f, time))
-                .OnComplete(() =>
-                {
-                    obj.SetActive(false);
+                return DOTween.Sequence()
+                    .Append(image.DOFade(0.0f, time))
+                    .OnComplete(() =>
+                    {
+                        obj.SetActive(false);
 
-                    Color color = image.color;
-                    color.a = 1;
+                        Color color = image.color;
+                        color.a = 1;
 
-                    image.color = color;
-                });
+                        image.color = color;
+                    });
+            }
+
+            return null;
         }
 
         private static Sequence biggerSeq(GameObject window, float startSize, float t)
@@ -136,9 +136,15 @@ namespace Assets.Script.UI
                 .OnStart(() =>
                 {
                     window.transform.localScale = new Vector3(startSize, startSize);
-                    window.SetActive(true);
                 })
                 .Append(window.transform.DOScale(new Vector3(1, 1), t));
+        }
+
+        private static Sequence biggerOpenSeq(GameObject window, float startSize, float t)
+        {
+            window.SetActive(true);
+            return biggerSeq(window, startSize, t);
+
         }
 
         private static Sequence smallerSeq(GameObject window, float size, float t)
@@ -147,8 +153,17 @@ namespace Assets.Script.UI
                 .Append(window.transform.DOScale(new Vector3(size, size), t))
                 .OnComplete(() =>
                 {
-                    window.SetActive(false);
                     window.transform.localScale = new Vector3(1, 1);
+                });
+        }
+
+        private static Sequence smallerCloseSeq(GameObject window, float size, float t)
+        {
+            return smallerSeq(window, size, t)
+                .OnComplete(() =>
+                {
+                    window.transform.localScale = new Vector3(1, 1);
+                    window.SetActive(false);
                 });
         }
     }

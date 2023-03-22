@@ -10,12 +10,27 @@ namespace Assets.Script.UI
         [Header("알림창")]
         public GameObject alertMsg;
         public TextMeshProUGUI alertTxt;
+        [Header("앱 버튼")]
+        public GameObject optionButton;
+        public GameObject saveButton;
+        public GameObject loadButton;
+        public GameObject titleButton;
+        public GameObject callButton;
+        public GameObject messageButton;
 
         public void alert(string msg)
         {
             alertTxt.text = msg;
-            AppAnimation.alertOnAnimation(alertMsg);
-        }    
+            AppAnimation.alertAnimation(alertMsg, 0.15f, 1.5f);
+        }
+
+        public void alertStop()
+        {
+            if(alertMsg.activeSelf == true)
+            {
+                alertMsg.SetActive(false);
+            }
+        }
 
         /************************************************************
         * [앱 애니메이션]
@@ -25,20 +40,33 @@ namespace Assets.Script.UI
 
         public void openApp(GameObject window)
         {
-            homeScreen.SetActive(false);
+            setAllAppButton(false);
+            AppAnimation.hideHomeScreenAnimation(homeScreen);
             AppAnimation.openAppAnimation(window, appBackground, homeScreen);
         }
 
         public void closeApp(GameObject window)
         {
-            homeScreen.SetActive(true);
+            setAllAppButton(true);
+            AppAnimation.showHomeScreenAnimation(homeScreen);
             AppAnimation.closeAppAnimation(window, appBackground, homeScreen);
         }
 
         public void openAppSimple(GameObject window)
         {
-            homeScreen.SetActive(false);
+            setAllAppButton(false);
+            AppAnimation.hideHomeScreenAnimation(homeScreen);
             AppAnimation.openSimpleAppAnimation(window, appBackground, homeScreen);
+        }
+
+        private void setAllAppButton(bool isActive)
+        {
+            optionButton.SetActive(isActive);
+            saveButton.SetActive(isActive);
+            loadButton.SetActive(isActive);
+            titleButton.SetActive(isActive);
+            callButton.SetActive(isActive);
+            messageButton.SetActive(isActive);
         }
     }
 }
