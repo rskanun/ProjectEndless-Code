@@ -20,6 +20,9 @@ namespace Assets.Script.UI
 
         public void alert(string msg)
         {
+            if(alertMsg.activeSelf == true)
+                alertMsg.SetActive(false);
+
             alertTxt.text = msg;
             AppAnimation.alertAnimation(alertMsg, 0.15f, 1.5f);
         }

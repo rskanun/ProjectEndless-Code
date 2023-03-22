@@ -127,7 +127,7 @@ namespace Assets.Script.UI
                     });
             }
 
-            return null;
+            return DOTween.Sequence();
         }
 
         private static Sequence biggerSeq(GameObject window, float startSize, float t)
