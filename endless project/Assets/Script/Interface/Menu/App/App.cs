@@ -22,6 +22,8 @@ namespace Assets.Script.Interface.Menu.App
         {
             subWindow.SetActive(true);
             subWindows.Push(subWindow);
+
+            ui.setCancelPanel(true);
         }
 
         public virtual bool close()
@@ -30,6 +32,9 @@ namespace Assets.Script.Interface.Menu.App
             {
                 GameObject subWindow = subWindows.Pop();
                 subWindow.SetActive(false);
+
+                if (subWindows.Count <= 0)
+                    ui.setCancelPanel(false);
 
                 // 하위 서브 윈도우가 전부 안 닫힘
                 return false;

@@ -1,12 +1,8 @@
-﻿using Assets.Script.Interface.Menu;
-using Assets.Script.System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using Assets.Script.System.Option;
 using TMPro;
-using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.UI;
+using Time = Assets.Script.System.Option.Time;
 
 namespace Assets.Script.UI
 {
@@ -37,7 +33,8 @@ namespace Assets.Script.UI
         public GameObject battery;
         public TextMeshProUGUI timeText;
 
-        private PhoneOptionSetting option;
+        private PhoneOptionSetting menuOption;
+        private OptionSetting option;
 
         // 메뉴 열리고 닫히는 각도
         private const float CLOSE_ROTATE = 70, OPEN_ROTATE = 0;
@@ -52,17 +49,17 @@ namespace Assets.Script.UI
 
         private void Start()
         {
-            option = PhoneOptionSetting.Instance;
+            menuOption = PhoneOptionSetting.Instance;
+            option = OptionSetting.Instance;
 
             // init phone UI;
-            setService(option.Service);
-            setWiFi(option.Network);
-
-            timeUpdate();
+            setService(menuOption.Service);
+            setWiFi(menuOption.Network);
         }
 
         public void menuOpen()
         {
+            timeUpdate();
             AppAnimation.openMenuAnimation(menu, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
@@ -79,7 +76,7 @@ namespace Assets.Script.UI
 
         public void setWiFi(bool isHaving)
         {
-            option.Network = isHaving;
+            menuOption.Network = isHaving;
 
             wifiOffIcon.SetActive(!isHaving);
             wifiOnIcon.SetActive(isHaving);
@@ -87,7 +84,7 @@ namespace Assets.Script.UI
 
         public void setService(bool isService)
         {
-            option.Service = isService;
+            menuOption.Service = isService;
 
             serviceIcon.SetActive(isService);
             noServiceIcon.SetActive(!isService);
@@ -95,7 +92,18 @@ namespace Assets.Script.UI
 
         public void timeUpdate()
         {
-            timeText.text = option.Time;
+            Time time = option.TimeSetting;
+
+            int hour = time.Hour;
+            int min = time.Minute;
+
+            string timeTxt = (hour < 12) ? "AM" : "PM";
+            timeTxt += " ";
+            timeTxt += (hour > 12) ? (hour - 12) : hour;
+            timeTxt += ":";
+            timeTxt += (min < 10) ? "0" + min : min;
+
+            timeText.text = timeTxt;
         }
     }
 }

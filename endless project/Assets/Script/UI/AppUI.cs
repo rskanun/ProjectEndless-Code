@@ -10,6 +10,8 @@ namespace Assets.Script.UI
         [Header("알림창")]
         public GameObject alertMsg;
         public TextMeshProUGUI alertTxt;
+        [Header("알림창")]
+        public GameObject cancelPanel;
         [Header("앱 버튼")]
         public GameObject optionButton;
         public GameObject saveButton;
@@ -33,6 +35,11 @@ namespace Assets.Script.UI
             {
                 alertMsg.SetActive(false);
             }
+        }
+
+        public void setCancelPanel(bool isVeiw)
+        {
+            cancelPanel.SetActive(isVeiw);
         }
 
         /************************************************************

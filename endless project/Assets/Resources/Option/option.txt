@@ -1,5 +1,1 @@
-up: w
-down: s
-left: a
-right: d
-attack: z
+time:82347

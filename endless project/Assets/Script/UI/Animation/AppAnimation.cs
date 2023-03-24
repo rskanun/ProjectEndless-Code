@@ -33,7 +33,8 @@ namespace Assets.Script.UI
         public static void openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
             biggerOpenSeq(background, 0.1f, 0.08f)
-                    .OnComplete(() => window.SetActive(true));
+                    .AppendInterval(0.12f)
+                    .Append(fadeInSeq(window, 0.2f));
         }
 
         public static void alertAnimation(GameObject alert, float fadeTime ,float delay)

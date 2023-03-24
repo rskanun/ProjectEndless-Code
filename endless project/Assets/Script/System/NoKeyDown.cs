@@ -46,7 +46,6 @@ namespace Assets.Script.System
                 }
 #endif
                 _instance.initialize();
-
                 return _instance;
             }
         }

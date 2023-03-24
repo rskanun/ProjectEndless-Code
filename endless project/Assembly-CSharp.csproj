@@ -85,7 +85,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
     <Compile Include="Assets\Script\Object\Player\Player.cs" />
-    <Compile Include="Assets\Script\System\OptionSetting.cs" />
+    <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Script\Text\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\Text\LineObject\Select.cs" />
@@ -98,11 +98,11 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\Script\Text\LineObject\EventLine.cs" />
-    <Compile Include="Assets\Script\Interface\Menu\PhoneOptionSetting.cs" />
+    <Compile Include="Assets\Script\System\Option\PhoneOptionSetting.cs" />
     <Compile Include="Assets\Script\UI\AwakenPointBarUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Script\UI\SelectUI.cs" />
-    <Compile Include="Assets\Script\System\Option.cs" />
+    <Compile Include="Assets\Script\System\Option\Option.cs" />
     <Compile Include="Assets\Script\UI\Menu\Option\ToggleGroupUI.cs" />
     <Compile Include="Assets\Script\Text\TextManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
@@ -133,6 +133,8 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\Script\System\Option\Time.cs" />
+    <Compile Include="Assets\Script\UI\OptionUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -143,6 +145,7 @@
     <None Include="Assets\Resources\Option\option.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+    <None Include="Assets\Resources\Shader\Blur.shader" />
     <None Include="Assets\Resources\Shader\Glitch.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
