@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
-using Assets.Script.Interface.Menu.App;
 
 namespace Assets.Script.UI
 {

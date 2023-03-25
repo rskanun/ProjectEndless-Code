@@ -5,6 +5,7 @@ namespace Assets.Script.System.Option
     public class Time
     {
         private int time;
+        private const int MAX_TIME = 86400;
 
         private int hour;
         public int Hour { get { return hour; } }
@@ -26,7 +27,8 @@ namespace Assets.Script.System.Option
 
         public static Time operator --(Time t)
         {
-            return new Time(t.time - 1);
+            if (t.time <= 0) return new Time(t.time = MAX_TIME);
+            return new Time(t.time = t.time - 1);
         }
     }
 }

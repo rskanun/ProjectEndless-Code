@@ -111,6 +111,7 @@ public class OptionSetting : ScriptableObject
             fileRead();
             return timeSetting;
         }
+        set { timeSetting = value; }
     }
 
     /************************************************************
