@@ -1,6 +1,5 @@
 using System.IO;
 using UnityEngine;
-using Time = Assets.Script.System.Option.Time;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -48,7 +47,7 @@ public class OptionSetting : ScriptableObject
                 }
             }
 #endif
-            _instance.timeSetting = _instance.fileRead();
+            _instance.fileRead();
             return _instance;
         }
     }
@@ -101,17 +100,37 @@ public class OptionSetting : ScriptableObject
     * 
     * ■■ 횟수 관련 변수
     ************************************************************/
-    private Time timeSetting;
-    public Time TimeSetting
+    private int time;
+    private const int MAX_TIME = 86400;
+    private int Time
     {
-        get
+        set
         {
-            if(timeSetting != null) return timeSetting;
+            if (value < 0) time = MAX_TIME;
+            else time = value;
 
-            fileRead();
-            return timeSetting;
+            hour = time / 60 / 60;
+            minute = time / 60 % 60;
+            second = time % 60;
         }
-        set { timeSetting = value; }
+    }
+
+    private int hour;
+    public int Hour
+    {
+        get { return hour; }
+    }
+
+    private int minute;
+    public int Minute
+    {
+        get { return minute; }
+    }
+
+    private int second;
+    public int Second
+    {
+        get { return second; }
     }
 
     /************************************************************
@@ -130,8 +149,14 @@ public class OptionSetting : ScriptableObject
     * 변수 관련 함수 모음
     ************************************************************/
 
-    private Time fileRead()
+    private void fileRead()
     {
-        return new Time(30227);
+        Time = 30227;
+        //Time = 40271;
+    }
+
+    public void timeSub()
+    {
+        Time = time - 1;
     }
 }

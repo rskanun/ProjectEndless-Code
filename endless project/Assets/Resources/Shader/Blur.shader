@@ -2,7 +2,7 @@ Shader "Unlit/BlurShader"
 {
     Properties
     {
-        _Radius("Radius", Range(1, 255)) = 1
+        _Radius("Radius", Range(0, 255)) = 1
     }
 
         Category

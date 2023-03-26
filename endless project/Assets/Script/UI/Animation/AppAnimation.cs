@@ -19,14 +19,14 @@ namespace Assets.Script.UI
                 .Join(smallerCloseSeq(background, 0.1f, 0.08f));
         }
 
-        public static void openMenuAnimation(GameObject window, float openRotate, float closeRotate)
+        public static void openMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
         {
-            openMenuSeq(window, openRotate, closeRotate);
+            openMenuSeq(phone, window, displayUI, openRotate, closeRotate);
         }
 
-        public static void closeMenuAnimation(GameObject window, float openRotate, float closeRotate)
+        public static void closeMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
         {
-            closeMenuSeq(window, openRotate, closeRotate);
+            closeMenuSeq(phone, window, displayUI, openRotate, closeRotate);
         }
 
         public static void openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
@@ -45,12 +45,12 @@ namespace Assets.Script.UI
 
         public static void showHomeScreenAnimation(GameObject homeScreen)
         {
-            biggerSeq(homeScreen, 0.5f, 0.15f);
+            biggerSeq(homeScreen, 0.5f, 1f, 0.15f);
         }
 
         public static void hideHomeScreenAnimation(GameObject homeScreen)
         {
-            smallerSeq(homeScreen, 0.5f, 0.15f);
+            smallerSeq(homeScreen, 1f, 0.5f, 0.15f);
         }
 
         /************************************************************
@@ -69,25 +69,41 @@ namespace Assets.Script.UI
                 .Append(window.transform.DOLocalMoveY(loc.y, t).SetEase(Ease.OutQuad));
         }
 
-        private static Sequence openMenuSeq(GameObject window, float openRotate, float closeRotate)
+        private static Sequence openMenuSeq(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
         {
+            float delay = 0.15f;
+
             return DOTween.Sequence()
                 .OnStart(() =>
                 {
-                    window.transform.localRotation = Quaternion.Euler(0, 0, closeRotate);
-                    window.SetActive(true);
+                    phone.transform.localRotation = Quaternion.Euler(0, 0, closeRotate);
+                    phone.SetActive(true);
                 })
-                .Append(window.transform.DORotate(new Vector3(0, 0, openRotate), 0.19f).SetEase(Ease.OutSine));
+                .Append(phone.transform.DORotate(new Vector3(0, 0, openRotate), 0.19f).SetEase(Ease.OutSine))
+                .AppendInterval(delay)
+                .OnComplete(() =>
+                {
+                    window.SetActive(true);
+                    displayUI.SetActive(true);
+                });
         }
 
-        private static Sequence closeMenuSeq(GameObject window, float openRotate, float closeRotate)
+        private static Sequence closeMenuSeq(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
         {
+            float delay = 0.15f;
+
             return DOTween.Sequence()
-                .Append(window.transform.DORotate(new Vector3(0, 0, closeRotate), 0.19f).SetEase(Ease.InQuad))
-                .OnComplete(() => {
+                .OnStart(() =>
+                {
                     window.SetActive(false);
-                    window.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
-                    });
+                    displayUI.SetActive(false);
+                })
+                .AppendInterval(delay)
+                .Append(phone.transform.DORotate(new Vector3(0, 0, closeRotate), 0.19f).SetEase(Ease.InQuad))
+                .OnComplete(() => {
+                    phone.SetActive(false);
+                    phone.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
+                });
         }
 
         private static Sequence fadeInSeq(GameObject obj, float time)
@@ -130,36 +146,36 @@ namespace Assets.Script.UI
             return DOTween.Sequence();
         }
 
-        private static Sequence biggerSeq(GameObject window, float startSize, float t)
+        private static Sequence biggerSeq(GameObject window, float startSize, float resultSize, float t)
         {
             return DOTween.Sequence()
                 .OnStart(() =>
                 {
                     window.transform.localScale = new Vector3(startSize, startSize);
                 })
-                .Append(window.transform.DOScale(new Vector3(1, 1), t));
+                .Append(window.transform.DOScale(new Vector3(resultSize, resultSize), t));
         }
 
         private static Sequence biggerOpenSeq(GameObject window, float startSize, float t)
         {
             window.SetActive(true);
-            return biggerSeq(window, startSize, t);
+            return biggerSeq(window, startSize, 1f, t);
 
         }
 
-        private static Sequence smallerSeq(GameObject window, float size, float t)
+        private static Sequence smallerSeq(GameObject window, float startSize, float resultSize, float t)
         {
             return DOTween.Sequence()
-                .Append(window.transform.DOScale(new Vector3(size, size), t))
-                .OnComplete(() =>
+                .OnStart(() =>
                 {
-                    window.transform.localScale = new Vector3(1, 1);
-                });
+                    window.transform.localScale = new Vector3(startSize, startSize);
+                })
+                .Append(window.transform.DOScale(new Vector3(resultSize, resultSize), t));
         }
 
         private static Sequence smallerCloseSeq(GameObject window, float size, float t)
         {
-            return smallerSeq(window, size, t)
+            return smallerSeq(window, 1f, size, t)
                 .OnComplete(() =>
                 {
                     window.transform.localScale = new Vector3(1, 1);

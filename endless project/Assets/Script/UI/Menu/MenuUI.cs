@@ -2,7 +2,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Time = Assets.Script.System.Option.Time;
 
 namespace Assets.Script.UI
 {
@@ -18,20 +17,24 @@ namespace Assets.Script.UI
 
     public class MenuUI : MonoBehaviour
     {
-        public GameObject menu;
+        [Space]
+        [Header("메뉴")]
+        [SerializeField] private GameObject menu;
+        [SerializeField] private GameObject window;
+        [SerializeField] private GameObject displayUI;
 
         [Header("WiFi")]
-        public GameObject wifiOnIcon;
-        public GameObject wifiOffIcon;
+        [SerializeField] private GameObject wifiOnIcon;
+        [SerializeField] private GameObject wifiOffIcon;
 
         [Space]
         [Header("전파")]
-        public GameObject serviceIcon;
-        public GameObject noServiceIcon;
+        [SerializeField] private GameObject serviceIcon;
+        [SerializeField] private GameObject noServiceIcon;
 
         [Space]
-        public GameObject battery;
-        public TextMeshProUGUI timeText;
+        [SerializeField] private GameObject battery;
+        [SerializeField] private TextMeshProUGUI timeText;
 
         private PhoneOptionSetting menuOption;
         private OptionSetting option;
@@ -60,12 +63,12 @@ namespace Assets.Script.UI
         public void menuOpen()
         {
             timeUpdate();
-            AppAnimation.openMenuAnimation(menu, OPEN_ROTATE, CLOSE_ROTATE);
+            AppAnimation.openMenuAnimation(menu, window, displayUI, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         public void menuClose()
         {
-            AppAnimation.closeMenuAnimation(menu, OPEN_ROTATE, CLOSE_ROTATE);
+            AppAnimation.closeMenuAnimation(menu, window, displayUI, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         /************************************************************
@@ -92,10 +95,8 @@ namespace Assets.Script.UI
 
         public void timeUpdate()
         {
-            Time time = option.TimeSetting;
-
-            int hour = time.Hour;
-            int min = time.Minute;
+            int hour = option.Hour;
+            int min = option.Minute;
 
             string timeTxt = (hour < 12) ? "AM" : "PM";
             timeTxt += " ";

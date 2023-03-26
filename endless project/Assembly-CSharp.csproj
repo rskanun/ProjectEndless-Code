@@ -86,6 +86,7 @@
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
     <Compile Include="Assets\Script\Object\Player\Player.cs" />
     <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
+    <Compile Include="Assets\Script\UI\Effects\EffectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Script\Text\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\Text\LineObject\Select.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Assets\Script\UI\Menu\MenuUI.cs" />
     <Compile Include="Assets\Script\Text\SelectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
-    <Compile Include="Assets\Script\System\Option\Time.cs" />
     <Compile Include="Assets\Script\System\Mouse.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Assets\Script\Object\NPC\NPCData.cs" />
     <Compile Include="Assets\Script\Item\Armor.cs" />
     <Compile Include="Assets\Script\UI\Animation\AppAnimation.cs" />
+    <Compile Include="Assets\Script\UI\Directing\SecretEffects.cs" />
     <Compile Include="Assets\Script\Item\Item.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Script\System\NoKeyDown.cs" />
@@ -135,7 +136,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
-    <Compile Include="Assets\Script\UI\Effects\SecretEffects.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Script.System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,8 +16,8 @@ namespace Assets.Script.UI
         public Sprite[] apSteps = new Sprite[AP_MAX_STEP]; // 각각의 변화 단계 이미지
 
         [Space]
-        [Header("글리치 이펙트")]
-        public GameObject glitch;
+        [Header("참조 스크립트")]
+        [SerializeField] private EffectManager effect;
 
         public void setAPBar(int ap, int maxAP)
         {
@@ -37,15 +38,8 @@ namespace Assets.Script.UI
 
         public void barUpdate(int ap, int maxAP)
         {
-            StartCoroutine(glitchEffect());
+            effect.glitchEffect(0.4f);
             setAPBar(ap, maxAP);
-        }
-
-        IEnumerator glitchEffect()
-        {
-            glitch.SetActive(true);
-            yield return new WaitForSeconds(0.4f);
-            glitch.SetActive(false);
         }
     }
 }
