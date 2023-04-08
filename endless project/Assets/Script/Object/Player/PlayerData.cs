@@ -1,10 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
 public class PlayerData : ObjectData
 {
     private const float DASH_SPEED = 0.35f; // 대쉬 거리까지 이동하는 속도
     public float DashSpeed { get { return DASH_SPEED; } }
+
+    public override int HP
+    {
+        get { return base.HP; }
+        set
+        {
+            base.HP = value;
+            OnPropertyChanged("HP");
+        }
+    }
 
     [SerializeField]
     private int awakenPoint;

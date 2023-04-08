@@ -41,14 +41,6 @@ namespace Assets.Script.UI
 
         // 메뉴 열리고 닫히는 각도
         private const float CLOSE_ROTATE = 70, OPEN_ROTATE = 0;
-        public bool IsPlayingAnimation
-        {
-            get
-            {
-                Quaternion rotate = menu.transform.rotation;
-                return rotate.z != OPEN_ROTATE && rotate.z != CLOSE_ROTATE;
-            }
-        }
 
         private void Start()
         {

@@ -13,7 +13,7 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
      * 
      * 오브젝트의 생명력 수치로 0이하로 떨어지면 죽는다.
      ***************************************************************/
-    public int HP
+    public virtual int HP
     {
         get { return healthPoint; }
         set
@@ -28,10 +28,7 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
                     healthPoint = maxHealthPoint;
                 else
                     healthPoint = value;
-
-                OnPropertyChanged("HP");
             }
-
         }
     }
 

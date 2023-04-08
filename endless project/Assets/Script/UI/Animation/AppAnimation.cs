@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Net.NetworkInformation;
 
 namespace Assets.Script.UI
 {
@@ -71,7 +72,14 @@ namespace Assets.Script.UI
 
         private static Sequence openMenuSeq(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
         {
-            float delay = 0.15f;
+            NoKeyDown.Instance.IsMenuOpenable = false;
+
+            float delay = 0.08f;
+            float menuOpenDelay = 0.19f;
+            float screenOpenDelay = 0.1f;
+            float startScale = 10f, resultScale = 1f;
+
+            CanvasGroup canvasGroup = window.GetComponent<CanvasGroup>();
 
             return DOTween.Sequence()
                 .OnStart(() =>
@@ -79,17 +87,32 @@ namespace Assets.Script.UI
                     phone.transform.localRotation = Quaternion.Euler(0, 0, closeRotate);
                     phone.SetActive(true);
                 })
-                .Append(phone.transform.DORotate(new Vector3(0, 0, openRotate), 0.19f).SetEase(Ease.OutSine))
+                .Append(phone.transform.DORotate(new Vector3(0, 0, openRotate), menuOpenDelay).SetEase(Ease.OutSine))
                 .AppendInterval(delay)
                 .OnComplete(() =>
                 {
-                    window.SetActive(true);
                     displayUI.SetActive(true);
+
+                    // screen open animation
+                    DOTween.Sequence()
+                        .OnStart(() =>
+                        {
+                            window.transform.localScale = new Vector3(startScale, startScale);
+                            window.SetActive(true);
+
+                            canvasGroup.alpha = 0f;
+                        })
+                        .AppendInterval(delay)
+                        .Append(canvasGroup.DOFade(1f, screenOpenDelay - 0.05f))
+                        .Append(window.transform.DOScale(new Vector3(resultScale, resultScale), screenOpenDelay).SetEase(Ease.OutSine))
+                        .OnComplete(() => NoKeyDown.Instance.IsMenuOpenable = true);
                 });
         }
 
         private static Sequence closeMenuSeq(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
         {
+            NoKeyDown.Instance.IsMenuOpenable = false;
+
             float delay = 0.15f;
 
             return DOTween.Sequence()
@@ -103,6 +126,7 @@ namespace Assets.Script.UI
                 .OnComplete(() => {
                     phone.SetActive(false);
                     phone.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
+                    NoKeyDown.Instance.IsMenuOpenable = true;
                 });
         }
 
@@ -170,7 +194,7 @@ namespace Assets.Script.UI
                 {
                     window.transform.localScale = new Vector3(startSize, startSize);
                 })
-                .Append(window.transform.DOScale(new Vector3(resultSize, resultSize), t));
+                .Append(window.transform.DOScale(new Vector3(resultSize, resultSize), t).SetEase(Ease.OutCubic));
         }
 
         private static Sequence smallerCloseSeq(GameObject window, float size, float t)
