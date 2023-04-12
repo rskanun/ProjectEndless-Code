@@ -20,14 +20,14 @@ namespace Assets.Script.UI
                 .Join(smallerCloseSeq(background, 0.1f, 0.08f));
         }
 
-        public static void openMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
+        public static void openMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            openMenuSeq(phone, window, displayUI, openRotate, closeRotate);
+            openMenuSeq(phone, window, displayUI, face, openRotate, closeRotate);
         }
 
-        public static void closeMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
+        public static void closeMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            closeMenuSeq(phone, window, displayUI, openRotate, closeRotate);
+            closeMenuSeq(phone, window, displayUI, face, openRotate, closeRotate);
         }
 
         public static void openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
@@ -70,7 +70,7 @@ namespace Assets.Script.UI
                 .Append(window.transform.DOLocalMoveY(loc.y, t).SetEase(Ease.OutQuad));
         }
 
-        private static Sequence openMenuSeq(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
+        private static Sequence openMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
             NoKeyDown.Instance.IsMenuOpenable = false;
 
@@ -79,15 +79,21 @@ namespace Assets.Script.UI
             float screenOpenDelay = 0.1f;
             float startScale = 10f, resultScale = 1f;
 
+            Vector2 oriPos = face.transform.position;
+            Vector3 oriRotate = face.transform.rotation.eulerAngles;
+
             CanvasGroup canvasGroup = window.GetComponent<CanvasGroup>();
 
             return DOTween.Sequence()
                 .OnStart(() =>
                 {
+                    face.transform.localRotation = Quaternion.Euler(0, 0, -closeRotate);
                     phone.transform.localRotation = Quaternion.Euler(0, 0, closeRotate);
                     phone.SetActive(true);
+
                 })
                 .Append(phone.transform.DORotate(new Vector3(0, 0, openRotate), menuOpenDelay).SetEase(Ease.OutSine))
+                .Join(test(face, oriPos, oriRotate, menuOpenDelay))
                 .AppendInterval(delay)
                 .OnComplete(() =>
                 {
@@ -109,11 +115,15 @@ namespace Assets.Script.UI
                 });
         }
 
-        private static Sequence closeMenuSeq(GameObject phone, GameObject window, GameObject displayUI, float openRotate, float closeRotate)
+        private static Sequence closeMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
             NoKeyDown.Instance.IsMenuOpenable = false;
 
             float delay = 0.15f;
+            float menuCloseDelay = 0.19f;
+
+            Vector2 oriPos = face.transform.position;
+            Vector3 oriRotate = face.transform.rotation.eulerAngles;
 
             return DOTween.Sequence()
                 .OnStart(() =>
@@ -122,12 +132,24 @@ namespace Assets.Script.UI
                     displayUI.SetActive(false);
                 })
                 .AppendInterval(delay)
-                .Append(phone.transform.DORotate(new Vector3(0, 0, closeRotate), 0.19f).SetEase(Ease.InQuad))
+                .Append(phone.transform.DORotate(new Vector3(0, 0, closeRotate), menuCloseDelay).SetEase(Ease.InQuad))
+                .Join(test(face, oriPos, oriRotate, menuCloseDelay))
                 .OnComplete(() => {
                     phone.SetActive(false);
                     phone.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
+                    face.transform.position = oriPos;
+                    face.transform.rotation = Quaternion.Euler(oriRotate);
                     NoKeyDown.Instance.IsMenuOpenable = true;
                 });
+        }
+
+        private static Tweener test(GameObject face, Vector2 oriPos, Vector3 oriRotate, float delay)
+        {
+            return DOTween.To(() => 0, x =>
+            {
+                face.transform.position = oriPos;
+                face.transform.rotation = Quaternion.Euler(oriRotate);
+            }, 0, delay);
         }
 
         private static Sequence fadeInSeq(GameObject obj, float time)

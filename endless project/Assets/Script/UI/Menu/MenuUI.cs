@@ -17,6 +17,7 @@ namespace Assets.Script.UI
 
     public class MenuUI : MonoBehaviour
     {
+        public GameObject face;
         [Space]
         [Header("메뉴")]
         [SerializeField] private GameObject menu;
@@ -55,12 +56,12 @@ namespace Assets.Script.UI
         public void menuOpen()
         {
             timeUpdate();
-            AppAnimation.openMenuAnimation(menu, window, displayUI, OPEN_ROTATE, CLOSE_ROTATE);
+            AppAnimation.openMenuAnimation(menu, window, displayUI, face, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         public void menuClose()
         {
-            AppAnimation.closeMenuAnimation(menu, window, displayUI, OPEN_ROTATE, CLOSE_ROTATE);
+            AppAnimation.closeMenuAnimation(menu, window, displayUI, face, OPEN_ROTATE, CLOSE_ROTATE);
         }
 
         /************************************************************

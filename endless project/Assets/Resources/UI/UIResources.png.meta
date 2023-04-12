@@ -251,6 +251,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Plus_Icon
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 098502d040d91a04d9f236bb4d274ee6
+      internalID: -1591489199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -268,6 +289,7 @@ TextureImporter:
       checkbox_off: 253966202
       bar: -18925764
       arrow_left: 1461064254
+      Plus_Icon: -1591489199
       handler: 962506393
   spritePackingTag: 
   pSDRemoveMatte: 0
