@@ -37,11 +37,11 @@ namespace Assets.Script.UI
                     .Append(fadeInSeq(window, 0.2f));
         }
 
-        public static void alertAnimation(GameObject alert, float fadeTime ,float delay)
+        public static void toastAnimation(GameObject window, float fadeTime ,float delay)
         {
-            fadeInSeq(alert, fadeTime)
+            fadeInSeq(window, fadeTime)
                 .AppendInterval(delay)
-                .Append(fadeOutSeq(alert, fadeTime));
+                .Append(fadeOutSeq(window, fadeTime));
         }
 
         public static void showHomeScreenAnimation(GameObject homeScreen)
@@ -52,6 +52,16 @@ namespace Assets.Script.UI
         public static void hideHomeScreenAnimation(GameObject homeScreen)
         {
             smallerSeq(homeScreen, 1f, 0.5f, 0.15f);
+        }
+
+        public static void popupOpenAnimation(GameObject window)
+        {
+            fadeInSeq(window, 0.1f);
+        }
+
+        public static void popupCloseAnimation(GameObject window)
+        {
+            fadeOutSeq(window, 0.1f);
         }
 
         /************************************************************

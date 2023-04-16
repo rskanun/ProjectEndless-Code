@@ -5,16 +5,6 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public enum MenuApp
-    {
-        Option = 0,
-        Save = 1,
-        Load = 2,
-        Title = 3,
-        Call = 4,
-        Message = 5
-    }
-
     public class MenuUI : MonoBehaviour
     {
         public GameObject face;

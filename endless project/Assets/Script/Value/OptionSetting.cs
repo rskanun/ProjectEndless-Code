@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,8 +12,6 @@ public class OptionSetting : ScriptableObject
     private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/OptionSetting.asset";
-
-    private const string SAVE_FILE_PATH = "Assets/Resources/option.txt";
 
     private static OptionSetting _instance;
     public static OptionSetting Instance
@@ -47,7 +46,6 @@ public class OptionSetting : ScriptableObject
                 }
             }
 #endif
-            _instance.fileRead();
             return _instance;
         }
     }
@@ -67,13 +65,13 @@ public class OptionSetting : ScriptableObject
 
     // 컨트롤키
     public KeyCode Left { get { return left; } }
-    private KeyCode left  = KeyCode.LeftArrow;
+    private KeyCode left  = KeyCode.A;
     public KeyCode Right { get { return right; } }
-    private KeyCode right = KeyCode.RightArrow;
+    private KeyCode right = KeyCode.D;
     public KeyCode Up { get { return up; } }
-    private KeyCode up    = KeyCode.UpArrow;
+    private KeyCode up    = KeyCode.W;
     public KeyCode Down { get { return down; } }
-    private KeyCode down  = KeyCode.DownArrow;
+    private KeyCode down  = KeyCode.S;
 
     // 액션키
     public KeyCode Action { get { return action; } }
@@ -100,37 +98,35 @@ public class OptionSetting : ScriptableObject
     * 
     * ■■ 횟수 관련 변수
     ************************************************************/
-    private int time;
-    private const int MAX_TIME = 86400;
+    private const int MAX_TIME = 24 * 60 * 60;
+    private int _time = 30227;
     private int Time
     {
         set
         {
-            if (value < 0) time = MAX_TIME;
-            else time = value;
-
-            hour = time / 60 / 60;
-            minute = time / 60 % 60;
-            second = time % 60;
+            if (value < 0) _time = MAX_TIME;
+            else _time = value;
         }
     }
 
-    private int hour;
     public int Hour
     {
-        get { return hour; }
+        get { return _time / 60 / 60; }
     }
 
-    private int minute;
     public int Minute
     {
-        get { return minute; }
+        get { return _time / 60 % 60; }
     }
 
-    private int second;
     public int Second
     {
-        get { return second; }
+        get { return _time % 60; }
+    }
+
+    public void timeSub()
+    {
+        _time -= 1;
     }
 
     /************************************************************
@@ -140,23 +136,24 @@ public class OptionSetting : ScriptableObject
     ************************************************************/
 
     // 스크립트 속도
-    public float TypingSpeed { get { return typingSpeed; } }
-    private float typingSpeed = 0.025f;
+    public float TypingSpeed { get { return _typingSpeed; } }
+    private float _typingSpeed = 0.025f;
 
     /************************************************************
-    * [함수]
+    * [세이브 로드]
     * 
-    * 변수 관련 함수 모음
+    * 옵션 변수 세이브 로드 관련 함수
     ************************************************************/
 
-    private void fileRead()
+    public void save()
     {
-        Time = 30227;
-        //Time = 40271;
+        PlayerPrefs.SetInt("time", _time);
+        PlayerPrefs.SetFloat("typing speed", _typingSpeed);
     }
 
-    public void timeSub()
+    public void load()
     {
-        Time = time - 1;
+        _time = PlayerPrefs.GetInt("time");
+        _typingSpeed = PlayerPrefs.GetFloat("typing speed");
     }
 }

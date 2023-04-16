@@ -3,42 +3,19 @@ using UnityEngine;
 
 namespace Assets.Script.System.Option
 {
-    public class Option : MonoBehaviour
+    public enum OptionType
     {
-        private OptionSetting optionSetting;
+        Slider, Toggle, List
+    }
 
-        private void Awake()
-        {
-            optionSetting = OptionSetting.Instance;
-            NoKeyDown.Instance.initialize();
+    public class Option : ScriptableObject
+    {
+        [SerializeField]
+        private string _title;
+        public string Title { get { return _title; } }
 
-            StartCoroutine(checkForControllers());
-        }
-
-        private void OnApplicationQuit()
-        {
-            NoKeyDown.Instance.initialize();
-        }
-
-        private IEnumerator checkForControllers()
-        {
-            WaitForSeconds wait = new WaitForSeconds(1f);
-
-            while(true)
-            {
-                var controllers = Input.GetJoystickNames();
-
-                if (optionSetting.IsController == false && controllers.Length > 0)
-                {
-                    optionSetting.IsController = true;
-                }
-                else if (optionSetting.IsController && controllers.Length == 0)
-                {
-                    optionSetting.IsController = false;
-                }
-
-                yield return wait;
-            }
-        }
+        [SerializeField]
+        private OptionType _type;
+        public OptionType Type { get { return _type; } }
     }
 }

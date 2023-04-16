@@ -12,14 +12,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c18866df9c5a1e41a60913847da049a, type: 3}
   m_Name: OptionSetting
   m_EditorClassIdentifier: 
-  left: 276
-  right: 275
-  up: 273
-  down: 274
-  action: 323
-  dash: 324
-  interact: 101
-  select: 13
-  cancel: 27
-  menu: 27
-  typingSpeed: 0.025

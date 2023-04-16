@@ -64,14 +64,15 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
     <Compile Include="Assets\Script\Object\LineObject\Case.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
+    <Compile Include="Assets\Script\UI\Menu\Popup\ConfirmUI.cs" />
     <Compile Include="Assets\Script\Object\LineObject\Line.cs" />
     <Compile Include="Assets\Script\System\EventManager.cs" />
     <Compile Include="Assets\Script\UI\HealthPointBarUI.cs" />
-    <Compile Include="Assets\Script\System\Interface\Menu\App\App.cs" />
+    <Compile Include="Assets\Script\System\Menu\App\App.cs" />
     <Compile Include="Assets\Script\UI\Animation\SelectionAnimation.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
-    <Compile Include="Assets\Script\System\Interface\Menu\MenuControl.cs" />
-    <Compile Include="Assets\Script\UI\AppUI.cs" />
+    <Compile Include="Assets\Script\System\Menu\MenuControl.cs" />
+    <Compile Include="Assets\Script\UI\Menu\AppUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Script\UI\Menu\Option\ToggleUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
@@ -80,8 +81,10 @@
     <Compile Include="Assets\Script\System\Stat\HUD.cs" />
     <Compile Include="Assets\Script\UI\Menu\Option\SliderUI.cs" />
     <Compile Include="Assets\Script\Object\Player\PlayerData.cs" />
+    <Compile Include="Assets\Script\System\GameManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
-    <Compile Include="Assets\Script\System\Interface\Menu\App\Messanger.cs" />
+    <Compile Include="Assets\Script\System\Menu\App\Messanger.cs" />
+    <Compile Include="Assets\Script\System\Option\SliderOption.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
     <Compile Include="Assets\Script\Object\Player\Player.cs" />
@@ -90,9 +93,11 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Script\Object\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\Object\LineObject\Select.cs" />
+    <Compile Include="Assets\Script\System\Option\Option.cs" />
     <Compile Include="Assets\Script\Object\ObjectData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
     <Compile Include="Assets\Script\UI\Menu\MenuUI.cs" />
+    <Compile Include="Assets\Script\System\Menu\App\SaveApp.cs" />
     <Compile Include="Assets\Script\System\Text\SelectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Script\System\Mouse.cs" />
@@ -103,16 +108,17 @@
     <Compile Include="Assets\Script\UI\AwakenPointBarUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Script\UI\SelectUI.cs" />
-    <Compile Include="Assets\Script\System\Option\Option.cs" />
+    <Compile Include="Assets\Script\System\Option\OptionManager.cs" />
     <Compile Include="Assets\Script\UI\Menu\Option\ToggleGroupUI.cs" />
     <Compile Include="Assets\Script\System\Text\TextManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\Script\UI\TextUI.cs" />
     <Compile Include="Assets\Script\System\Text\LineManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+    <Compile Include="Assets\Script\System\Option\ToggleOption.cs" />
     <Compile Include="Assets\Script\UI\OptionUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
-    <Compile Include="Assets\Script\System\Interface\Menu\MenuManager.cs" />
+    <Compile Include="Assets\Script\System\Menu\MenuManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Script\Item\Weapon.cs" />
     <Compile Include="Assets\Script\System\SetRatio.cs" />
@@ -122,6 +128,7 @@
     <Compile Include="Assets\Script\UI\Directing\SecretEffects.cs" />
     <Compile Include="Assets\Script\Item\Item.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Script\UI\Menu\ToastUI.cs" />
     <Compile Include="Assets\Script\Value\NoKeyDown.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
@@ -132,10 +139,14 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
-    <Compile Include="Assets\Script\Character\ChrControl.cs" />
+    <Compile Include="Assets\Script\System\Character\ChrControl.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\Script\System\Option\ListOption.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\Script\System\Save\SaveManager.cs" />
+    <Compile Include="Assets\Script\UI\Menu\Popup\AlertUI.cs" />
+    <Compile Include="Assets\Script\UI\Menu\SaveUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -143,7 +154,6 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
-    <None Include="Assets\Resources\Option\option.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\Resources\Shader\Blur.shader" />
