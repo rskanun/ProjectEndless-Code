@@ -31,7 +31,21 @@ public class SaveData
 public class SaveManager : MonoBehaviour
 {
     private string fileExtension = ".dat";
-    private string path;
+    private string path
+    {
+        get
+        {
+            string _path = Path.Combine(Application.persistentDataPath, "SaveFile");
+
+            // 경로상 파일 검사
+            if (!Directory.Exists(_path))
+            {
+                Directory.CreateDirectory(_path);
+            }
+
+            return _path;
+        }
+    }
 
     [Header("저장 데이터")]
     [SerializeField] private GameObject player;
@@ -42,8 +56,6 @@ public class SaveManager : MonoBehaviour
 
     private void OnEnable()
     {
-        path = Path.Combine(Application.persistentDataPath, "SaveFile");
-
         // 세이브 파일 오브젝트 초기 설정
         initSaveFileObj();
     }
@@ -67,12 +79,6 @@ public class SaveManager : MonoBehaviour
     public void saveData(int index)
     {
         string fileName = index + "_DiaryPage" + fileExtension;
-
-        // 경로상 파일 검사
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
 
         // 데이터 json 변환
         string filePath = Path.Combine(path, fileName);
