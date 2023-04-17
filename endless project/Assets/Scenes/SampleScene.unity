@@ -18261,7 +18261,6 @@ GameObject:
   - component: {fileID: 1951036191}
   - component: {fileID: 1951036190}
   - component: {fileID: 1951036192}
-  - component: {fileID: 1951036193}
   m_Layer: 5
   m_Name: Save
   m_TagString: Untagged
@@ -18344,22 +18343,7 @@ MonoBehaviour:
   _window: {fileID: 2023944205}
   _ui: {fileID: 778642735}
   confirm: {fileID: 995826199}
-  saveManager: {fileID: 1951036193}
---- !u!114 &1951036193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951036188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87dc9331a7f330440a927bd8421cbc3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 823037296}
-  playerData: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
-  alert: {fileID: 995826200}
+  saveManager: {fileID: 2023944209}
 --- !u!1 &1971767465
 GameObject:
   m_ObjectHideFlags: 0
@@ -18735,6 +18719,7 @@ GameObject:
   - component: {fileID: 2023944206}
   - component: {fileID: 2023944208}
   - component: {fileID: 2023944207}
+  - component: {fileID: 2023944209}
   m_Layer: 5
   m_Name: Save Window
   m_TagString: Untagged
@@ -18802,6 +18787,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023944205}
   m_CullTransparentMesh: 1
+--- !u!114 &2023944209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023944205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87dc9331a7f330440a927bd8421cbc3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 823037296}
+  playerData: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
+  alert: {fileID: 995826200}
+  ui: {fileID: 0}
 --- !u!1 &2055385874
 GameObject:
   m_ObjectHideFlags: 0
