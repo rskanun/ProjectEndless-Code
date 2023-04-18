@@ -24,6 +24,17 @@ namespace Assets.Script.UI.Menu
 
         private void OnDisable()
         {
+            // 세이브 파일 추가 오브젝트 위치 초기로 설정
+            if(saveFiles.Count > 0)
+                saveAddObj.transform.localPosition = saveFiles[0].transform.localPosition;
+
+            // 프리팹 파괴
+            foreach(GameObject saveFile in saveFiles)
+            {
+                Destroy(saveFile);
+            }
+
+            saveFiles.Clear();
         }
 
         public void setSaveFileObj(Dictionary<string, SaveData> datas)
@@ -39,7 +50,8 @@ namespace Assets.Script.UI.Menu
                 SaveData data = datas[key];
                 float posY = initPos.y - index * (interval + height);
 
-                createSaveFile(index++, new Vector2(initPos.x, posY), data.date, data.location, data.quest);
+                GameObject SaveFile = createSaveFile(index++, new Vector2(initPos.x, posY), data.date, data.location, data.quest);
+                saveFiles.Add(SaveFile);
             }
 
             // 세이프 파일 추가 오브젝트 위치 설정
@@ -47,7 +59,7 @@ namespace Assets.Script.UI.Menu
             saveAddObj.transform.localPosition = new Vector2(initPos.x, y);
         }
 
-        private void createSaveFile(int index, Vector2 pos, int date, string location, string quest)
+        private GameObject createSaveFile(int index, Vector2 pos, int date, string location, string quest)
         {
             // 세이브 파일 오브젝트 추가
             GameObject saveFile = Instantiate(saveFilePrifab, prifabParentTransform);
@@ -59,6 +71,8 @@ namespace Assets.Script.UI.Menu
             // OnClick 추가
             Button button = saveFile.GetComponent<Button>();
             button.onClick.AddListener(() => app.rewriteSave(index));
+
+            return saveFile;
         }
     }
 }
