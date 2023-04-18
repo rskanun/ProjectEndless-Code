@@ -39,9 +39,9 @@ namespace Assets.Script.UI
 
         public static void toastAnimation(GameObject window, float fadeTime ,float delay)
         {
-            fadeInSeq(window, fadeTime)
+            canvasGroupFadeInSeq(window, fadeTime)
                 .AppendInterval(delay)
-                .Append(fadeOutSeq(window, fadeTime));
+                .Append(canvasGroupFadeOutSeq(window, fadeTime));
         }
 
         public static void showHomeScreenAnimation(GameObject homeScreen)
@@ -56,12 +56,12 @@ namespace Assets.Script.UI
 
         public static void popupOpenAnimation(GameObject window)
         {
-            fadeInSeq(window, 0.1f);
+            canvasGroupFadeInSeq(window, 0.1f);
         }
 
         public static void popupCloseAnimation(GameObject window)
         {
-            fadeOutSeq(window, 0.1f);
+            canvasGroupFadeOutSeq(window, 0.1f);
         }
 
         /************************************************************
@@ -180,11 +180,27 @@ namespace Assets.Script.UI
                 .Append(image.DOFade(origin, time));
         }
 
+        private static Sequence canvasGroupFadeInSeq(GameObject obj, float time)
+        {
+            CanvasGroup group = obj.GetComponent<CanvasGroup>();
+            float origin = group.alpha;
+
+            return DOTween.Sequence()
+                .OnStart(() =>
+                {
+                    group.alpha = 0;
+
+                    obj.SetActive(true);
+                })
+                .Append(group.DOFade(origin, time));
+        }
+
         private static Sequence fadeOutSeq(GameObject obj, float time)
         {
             if(obj.activeSelf == true)
             {
                 Image image = obj.GetComponent<Image>();
+                float origin = image.color.a;
 
                 return DOTween.Sequence()
                     .Append(image.DOFade(0.0f, time))
@@ -193,13 +209,28 @@ namespace Assets.Script.UI
                         obj.SetActive(false);
 
                         Color color = image.color;
-                        color.a = 1;
+                        color.a = origin;
 
                         image.color = color;
                     });
             }
 
             return DOTween.Sequence();
+        }
+
+        private static Sequence canvasGroupFadeOutSeq(GameObject obj, float time)
+        {
+            CanvasGroup group = obj.GetComponent<CanvasGroup>();
+            float origin = group.alpha;
+
+            return DOTween.Sequence()
+                .Append(group.DOFade(0.0f, time))
+                .OnComplete(() =>
+                {
+                    obj.SetActive(false);
+
+                    group.alpha = origin;
+                });
         }
 
         private static Sequence biggerSeq(GameObject window, float startSize, float resultSize, float t)

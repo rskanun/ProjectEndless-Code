@@ -8,6 +8,9 @@ namespace Assets.Script.UI.Menu
     {
         [SerializeField] private GameObject toastMsg;
         [SerializeField] private TextMeshProUGUI contents;
+
+        private float openDelay = 0.15f;
+        private float closeDelay = 0.15f;
         
         public void makeMsg(string msg)
         {
@@ -15,7 +18,7 @@ namespace Assets.Script.UI.Menu
                 setActive(false);
 
             contents.text = msg;
-            AppAnimation.toastAnimation(toastMsg, 0.15f, 1.5f);
+            AppAnimation.toastAnimation(toastMsg, openDelay, closeDelay);
         }
 
         public void setActive(bool isActive)

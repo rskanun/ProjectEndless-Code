@@ -11,6 +11,7 @@ namespace Assets.Script.System.Interface.Menu.App
         public void addSave(int index)
         {
             saveManager.saveData(index);
+            saveManager.initSaveFileObj();
         }
 
         public void rewriteSave(int index)

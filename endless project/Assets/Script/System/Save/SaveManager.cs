@@ -60,7 +60,7 @@ public class SaveManager : MonoBehaviour
         initSaveFileObj();
     }
 
-    private void initSaveFileObj()
+    public void initSaveFileObj()
     {
         Dictionary<string, SaveData> saveDic = new Dictionary<string, SaveData>();
 
