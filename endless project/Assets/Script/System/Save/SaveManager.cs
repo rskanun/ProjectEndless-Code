@@ -73,10 +73,24 @@ public class SaveManager : MonoBehaviour
             saveDic[file.Name] = data;
         }
 
-        ui.setSaveFileObj(saveDic);
+        ui.initSaveFileObj(saveDic);
     }
 
-    public void saveData(int index)
+    public void addSaveData()
+    {
+        string fileName = ui.saveFileCount + "_DiaryPage" + fileExtension;
+
+        // 데이터 json 변환
+        string filePath = Path.Combine(path, fileName);
+        SaveData data = savePlayerData(filePath);
+
+        ui.addSaveFileObj(data);
+
+        alert.setAlert("데이터 기록이 완료되었습니다!");
+        alert.setActive(true);
+    }
+
+    public void rewriteSaveData(int index)
     {
         string fileName = index + "_DiaryPage" + fileExtension;
 
@@ -88,7 +102,7 @@ public class SaveManager : MonoBehaviour
         alert.setActive(true);
     }
 
-    private void savePlayerData(string filePath)
+    private SaveData savePlayerData(string filePath)
     {
         SaveData saveData = new SaveData();
 
@@ -105,6 +119,8 @@ public class SaveManager : MonoBehaviour
 
         string jsonData = JsonUtility.ToJson(saveData);
         File.WriteAllText(filePath, jsonData);
+
+        return saveData;
     }
 
     public void loadData(int index)

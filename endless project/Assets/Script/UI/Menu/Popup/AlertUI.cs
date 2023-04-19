@@ -27,7 +27,7 @@ namespace Assets.Script.UI.Menu.Popup
 
         public void onClick()
         {
-            popup.SetActive(false);
+            setActive(false);
         }
     }
 }

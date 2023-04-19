@@ -9803,7 +9803,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 283.54}
+  m_SizeDelta: {x: 0, y: 69.74}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &797758915
 GameObject:
@@ -13136,7 +13136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 106.9}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -40, y: 61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1336938858
@@ -13225,7 +13225,7 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Assets.Script.System.Interface.Menu.App.SaveApp,
           Assembly-CSharp
         m_MethodName: addSave
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -18470,6 +18470,7 @@ MonoBehaviour:
   saveFilePrifab: {fileID: 8016489898399556364, guid: 72a5e774ee75c4f43b1788691bc7379c, type: 3}
   prifabParentTransform: {fileID: 779821857}
   saveAddObj: {fileID: 1336938856}
+  viewer: {fileID: 779821856}
   app: {fileID: 1951036192}
 --- !u!1 &2055385874
 GameObject:
