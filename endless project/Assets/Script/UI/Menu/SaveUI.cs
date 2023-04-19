@@ -23,17 +23,6 @@ namespace Assets.Script.UI.Menu
         private List<GameObject> saveFiles = new List<GameObject>();
         public int saveFileCount { get { return saveFiles.Count; } }
 
-        // 세이브 파일 오브젝트 생성 변수
-        private float interval = 7.4f;
-        private float height;
-        private Vector2 initPos;
-
-        private void OnEnable()
-        {
-            height = saveAddObj.GetComponent<RectTransform>().rect.height;
-            initPos = saveAddObj.transform.position;
-        }
-
         private void OnDisable()
         {
             // 세이브 파일 추가 오브젝트 위치 초기로 설정
@@ -57,45 +46,31 @@ namespace Assets.Script.UI.Menu
             {
                 SaveData data = datas[key];
 
-                GameObject SaveFile = createSaveFile(index, getPos(index), data.date, data.location, data.quest);
+                GameObject SaveFile = createSaveFile(index, data.date, data.location, data.quest);
                 saveFiles.Add(SaveFile);
 
                 index++;
             }
 
-            // 세이프 파일 추가 오브젝트 위치 설정 및 뷰어 높이 설정
-            setSaveAddObj();
+            // 뷰어 높이 설정
             setViewrSize();
         }
 
         public void addSaveFileObj(SaveData data)
         {
             int index = saveFileCount;
-            GameObject saveFile = createSaveFile(index, getPos(index), data.date, data.location, data.quest);
+            GameObject saveFile = createSaveFile(index, data.date, data.location, data.quest);
 
             saveFiles.Add(saveFile);
 
-            // 세이프 파일 추가 오브젝트 위치 설정 및 뷰어 높이 설정
-            setSaveAddObj();
+            // 뷰어 높이 설정
             setViewrSize();
         }
 
-        private Vector2 getPos(int index)
-        {
-            // index번째의 세이브 파일 오브젝트 생성 좌표
-            float x = initPos.x;
-            float y = initPos.y - index * (interval + height);
-
-            return new Vector2(x, y);
-        }
-
-        private GameObject createSaveFile(int index, Vector2 pos, int date, string location, string quest)
+        private GameObject createSaveFile(int index, int date, string location, string quest)
         {
             // 세이브 파일 오브젝트 추가
             GameObject saveFile = Instantiate(saveFilePrifab, prifabParentTransform);
-            saveFile.transform.position = pos;
-
-            // 세이브 파일 오브젝트 내용 추가
             saveFile.GetComponent<SaveFileUI>().setSaveFile(date, location, quest);
 
             // OnClick 추가
@@ -105,15 +80,22 @@ namespace Assets.Script.UI.Menu
             return saveFile;
         }
 
-        private void setSaveAddObj()
-        {
-            saveAddObj.transform.position = getPos(saveFileCount);
-        }
-
         private void setViewrSize()
         {
+            VerticalLayoutGroup component = viewer.GetComponent<VerticalLayoutGroup>();
+            float top = component.padding.top;
+            float bottom = component.padding.bottom;
+            float spacing = component.spacing;
+
+            // 오브젝트 높이
+            float objHeight = saveAddObj.GetComponent<RectTransform>().rect.height;
+
+            // 총 길이
+            // (세이브 추가 오브젝트 높이 = 세이브 파일 오브젝트 높이 가정)
+            float height = top + bottom + spacing * saveFileCount + objHeight * (saveFileCount + 1);
+
             RectTransform rect = viewer.GetComponent<RectTransform>();
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rect.rect.height * (saveFileCount + 1));
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         }
     }
 }
