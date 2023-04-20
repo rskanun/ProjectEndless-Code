@@ -24,6 +24,21 @@ namespace Assets.Script.UI.Menu.Popup
             else AppAnimation.popupCloseAnimation(popup);
         }
 
+        public void setContents(string msg)
+        {
+            contents.text = msg;
+        }
+
+        public void setYesText(string yesText)
+        {
+            yesTxt.text = yesText;
+        }
+
+        public void setNoText(string noText)
+        {
+            noTxt.text = noText;
+        }
+
         public void setConfirm(string msg, string yesText = "네", string noText = "아니요")
         {
             contents.text = msg;
