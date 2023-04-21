@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -16,10 +17,11 @@ namespace Assets.Script.UI.Menu.Popup
             darkPanel.SetActive(isActive);
 
             if (isActive) AppAnimation.popupOpenAnimation(popup);
-            else AppAnimation.popupCloseAnimation(popup);
+            else AppAnimation.popupCloseAnimation(popup)
+                    .OnComplete(() => Destroy(gameObject));
         }
 
-        public void setAlert(string msg, string okText = "확인")
+        public void setAlert(string msg, string okText)
         {
             contents.text = msg;
             okTxt.text = okText;

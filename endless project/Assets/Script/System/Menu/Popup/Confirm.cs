@@ -1,24 +1,38 @@
+using Assets.Script.System.Menu.Popup;
 using Assets.Script.UI.Menu.Popup;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Confirm : MonoBehaviour
+public class Confirm
 {
-    [SerializeField] private GameObject confirmPrefab;
-    [SerializeField] private Transform confirmParent;
+    private GameObject _confirmObj;
+    private ConfirmUI _ui;
 
-    private List<GameObject> confirmList = new List<GameObject>();
-
-    public void makeMsg(string msg, string yesText = "네", string noText = "아니요")
+    public Confirm()
     {
-        GameObject confirm = Instantiate(confirmPrefab);
+        _confirmObj = ConfirmManager.Instance.Confirm;
+        _ui = _confirmObj.GetComponent<ConfirmUI>();
+    }
 
-        ConfirmUI ui = confirm.GetComponent<ConfirmUI>();
-        ui.setContents(msg);
-        ui.setYesText(yesText);
-        ui.setNoText(noText);
+    public static Confirm makeMsg(string msg, string yesText = "네", string noText = "아니요.")
+    {
+        Confirm confirm = new Confirm();
+        confirm._ui.setConfirm(msg, yesText, noText);
 
-        confirmList.Add(confirm);
+        return confirm;
+    }
+
+    public void setYesCallBack(ConfirmUI.PopupCallBack listener)
+    {
+        _ui.setYesCallBack(listener);
+    }
+
+    public void setNoCallBack(ConfirmUI.PopupCallBack listener)
+    {
+        _ui.setNoCallBack(listener);
+    }
+
+    public void show()
+    {
+        _ui.setActive(true);
     }
 }

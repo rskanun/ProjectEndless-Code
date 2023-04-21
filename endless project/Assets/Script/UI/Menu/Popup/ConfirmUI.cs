@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Script.UI.Menu.Popup
 {
@@ -9,49 +11,41 @@ namespace Assets.Script.UI.Menu.Popup
         [SerializeField] private GameObject popup;
         [SerializeField] private GameObject darkPanel;
         [SerializeField] private TextMeshProUGUI contents;
+        [Space]
+        [Header("확인 버튼")]
+        [SerializeField] private Button yesBtn;
         [SerializeField] private TextMeshProUGUI yesTxt;
+        [Space]
+        [Header("취소 버튼")]
+        [SerializeField] private Button noBtn;
         [SerializeField] private TextMeshProUGUI noTxt;
 
-        public delegate void popupCallBack();
-        private event popupCallBack yesCallBack;
-        private event popupCallBack noCallBack;
+        public delegate void PopupCallBack();
+        private event PopupCallBack yesCallBack;
+        private event PopupCallBack noCallBack;
 
         public void setActive(bool isActive)
         {
             darkPanel.SetActive(isActive);
 
             if (isActive) AppAnimation.popupOpenAnimation(popup);
-            else AppAnimation.popupCloseAnimation(popup);
+            else AppAnimation.popupCloseAnimation(popup)
+                    .OnComplete(() => Destroy(gameObject));
         }
 
-        public void setContents(string msg)
-        {
-            contents.text = msg;
-        }
-
-        public void setYesText(string yesText)
-        {
-            yesTxt.text = yesText;
-        }
-
-        public void setNoText(string noText)
-        {
-            noTxt.text = noText;
-        }
-
-        public void setConfirm(string msg, string yesText = "네", string noText = "아니요")
+        public void setConfirm(string msg, string yesText, string noText)
         {
             contents.text = msg;
             yesTxt.text = yesText;
             noTxt.text = noText;
         }
 
-        public void setYesCallBack(popupCallBack listener)
+        public void setYesCallBack(PopupCallBack listener)
         {
             yesCallBack += listener;
         }
 
-        public void setNoCallBack(popupCallBack listener)
+        public void setNoCallBack(PopupCallBack listener)
         {
             noCallBack += listener;
         }
@@ -59,11 +53,13 @@ namespace Assets.Script.UI.Menu.Popup
         public void onYes()
         {
             yesCallBack?.Invoke();
+            setActive(false);
         }
 
         public void onNo()
         {
             noCallBack?.Invoke();
+            setActive(false);
         }
     }
 }

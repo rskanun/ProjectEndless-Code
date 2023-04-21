@@ -51,7 +51,6 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerData playerData;
     [Header("참조 스크립트")]
-    [SerializeField] private AlertUI alert;
     [SerializeField] private SaveUI ui;
 
     private void OnEnable()
@@ -86,8 +85,7 @@ public class SaveManager : MonoBehaviour
 
         ui.addSaveFileObj(data);
 
-        alert.setAlert("데이터 기록이 완료되었습니다!");
-        alert.setActive(true);
+        Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
 
     public void rewriteSaveData(int index)
@@ -98,8 +96,7 @@ public class SaveManager : MonoBehaviour
         string filePath = Path.Combine(path, fileName);
         savePlayerData(filePath);
 
-        alert.setAlert("데이터 기록이 완료되었습니다!");
-        alert.setActive(true);
+        Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
 
     private SaveData savePlayerData(string filePath)

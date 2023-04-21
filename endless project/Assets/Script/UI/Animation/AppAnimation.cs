@@ -54,14 +54,14 @@ namespace Assets.Script.UI
             smallerSeq(homeScreen, 1f, 0.5f, 0.15f);
         }
 
-        public static void popupOpenAnimation(GameObject window)
+        public static Sequence popupOpenAnimation(GameObject window)
         {
-            canvasGroupFadeInSeq(window, 0.1f);
+            return canvasGroupFadeInSeq(window, 0.1f);
         }
 
-        public static void popupCloseAnimation(GameObject window)
+        public static Sequence popupCloseAnimation(GameObject window)
         {
-            canvasGroupFadeOutSeq(window, 0.1f);
+            return canvasGroupFadeOutSeq(window, 0.1f);
         }
 
         /************************************************************
