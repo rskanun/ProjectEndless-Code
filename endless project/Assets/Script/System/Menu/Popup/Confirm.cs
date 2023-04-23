@@ -1,38 +1,51 @@
 using Assets.Script.System.Menu.Popup;
 using Assets.Script.UI.Menu.Popup;
+using DG.Tweening;
 using UnityEngine;
 
-public class Confirm
+public class Confirm : Popup
 {
-    private GameObject _confirmObj;
-    private ConfirmUI _ui;
+    private GameObject confirmObj;
+    private ConfirmUI ui;
 
     public Confirm()
     {
-        _confirmObj = ConfirmManager.Instance.Confirm;
-        _ui = _confirmObj.GetComponent<ConfirmUI>();
+        confirmObj = ConfirmManager.Instance.Confirm;
+        ui = confirmObj.GetComponent<ConfirmUI>();
     }
 
     public static Confirm makeMsg(string msg, string yesText = "네", string noText = "아니요.")
     {
         Confirm confirm = new Confirm();
-        confirm._ui.setConfirm(msg, yesText, noText);
+
+        confirm.ui.setConfirm(msg, yesText, noText);
+
+        confirm.setNoCallBack(null);
+        confirm.setYesCallBack(null);
 
         return confirm;
     }
 
     public void setYesCallBack(ConfirmUI.PopupCallBack listener)
     {
-        _ui.setYesCallBack(listener);
+        listener += () => PopupManager.Instance.destroyPopup(this); ;
+        ui.setYesCallBack(listener);
     }
 
     public void setNoCallBack(ConfirmUI.PopupCallBack listener)
     {
-        _ui.setNoCallBack(listener);
+        listener += () => PopupManager.Instance.destroyPopup(this);
+        ui.setNoCallBack(listener);
     }
 
-    public void show()
+    public override void show()
     {
-        _ui.setActive(true);
+        ui.show();
+    }
+
+    public override void destroy()
+    {
+        ui.hide()
+            .OnComplete(() => Object.Destroy(confirmObj));
     }
 }

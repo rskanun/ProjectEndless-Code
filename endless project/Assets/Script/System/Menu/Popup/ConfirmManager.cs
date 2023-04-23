@@ -1,17 +1,19 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Script.System.Menu.Popup
 {
     public class ConfirmManager : MonoBehaviour
     {
-        [SerializeField] private GameObject _confirmPrefab;
-        [SerializeField] private Transform _confirmParent;
+        [SerializeField] private GameObject confirmPrefab;
+        [SerializeField] private Transform confirmParent;
+
         public GameObject Confirm
         {
             get
             {
-                return Instantiate(_confirmPrefab, _confirmParent);
+                return Instantiate(confirmPrefab, confirmParent);
             }
         }
 
@@ -28,5 +30,6 @@ namespace Assets.Script.System.Menu.Popup
         {
             _instance = this;
         }
+
     }
 }

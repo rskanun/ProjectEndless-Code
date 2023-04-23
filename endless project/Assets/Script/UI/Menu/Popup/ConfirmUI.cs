@@ -24,15 +24,6 @@ namespace Assets.Script.UI.Menu.Popup
         private event PopupCallBack yesCallBack;
         private event PopupCallBack noCallBack;
 
-        public void setActive(bool isActive)
-        {
-            darkPanel.SetActive(isActive);
-
-            if (isActive) AppAnimation.popupOpenAnimation(popup);
-            else AppAnimation.popupCloseAnimation(popup)
-                    .OnComplete(() => Destroy(gameObject));
-        }
-
         public void setConfirm(string msg, string yesText, string noText)
         {
             contents.text = msg;
@@ -42,24 +33,36 @@ namespace Assets.Script.UI.Menu.Popup
 
         public void setYesCallBack(PopupCallBack listener)
         {
-            yesCallBack += listener;
+            yesCallBack = listener;
         }
 
         public void setNoCallBack(PopupCallBack listener)
         {
-            noCallBack += listener;
+            noCallBack = listener;
         }
 
         public void onYes()
         {
             yesCallBack?.Invoke();
-            setActive(false);
         }
 
         public void onNo()
         {
             noCallBack?.Invoke();
-            setActive(false);
+        }
+
+        public Sequence show()
+        {
+            darkPanel.SetActive(true);
+
+            return AppAnimation.popupOpenAnimation(popup);
+        }
+
+        public Sequence hide()
+        {
+            darkPanel.SetActive(false);
+            
+            return AppAnimation.popupCloseAnimation(popup);
         }
     }
 }

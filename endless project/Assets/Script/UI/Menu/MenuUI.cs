@@ -33,6 +33,14 @@ namespace Assets.Script.UI
         // 메뉴 열리고 닫히는 각도
         private const float CLOSE_ROTATE = 70, OPEN_ROTATE = 0;
 
+        private static MenuUI _instance;
+        public static MenuUI Instance { get { return _instance; } }
+
+        private void Awake()
+        {
+            _instance = this;
+        }
+
         private void Start()
         {
             menuOption = PhoneOptionSetting.Instance;

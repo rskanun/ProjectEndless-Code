@@ -1,29 +1,44 @@
 ﻿using Assets.Script.System.Menu.Popup;
 using Assets.Script.UI.Menu.Popup;
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
-public class Alert
+public class Alert : Popup
 {
-    private GameObject _alertObj;
-    private AlertUI _ui;
+    private GameObject alertObj;
+    private AlertUI ui;
 
     public Alert()
     {
-        _alertObj = AlertManager.Instance.Alert;
-        _ui = _alertObj.GetComponent<AlertUI>();
+        alertObj = AlertManager.Instance.Alert;
+        ui = alertObj.GetComponent<AlertUI>();
     }
 
     public static Alert makeMsg(string msg, string okText = "확인")
     {
         Alert alert = new Alert();
-        alert._ui.setAlert(msg, okText);
+        alert.ui.setAlert(msg, okText);
+
+        alert.setOkCallBack(null);
 
         return alert;
     }
 
-    public void show()
+    public void setOkCallBack(AlertUI.PopupCallBack listener)
     {
-        _ui.setActive(true);
+        listener += () => PopupManager.Instance.destroyPopup(this);
+        ui.setOkCallBack(listener);
+    }
+
+    public override void show()
+    {
+        ui.show();
+    }
+
+    public override void destroy()
+    {
+        ui.hide()
+            .OnComplete(() => Object.Destroy(alertObj));
     }
 }

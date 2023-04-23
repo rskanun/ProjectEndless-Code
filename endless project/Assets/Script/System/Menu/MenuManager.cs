@@ -9,10 +9,7 @@ namespace Assets.Script.System.Menu
 {
     public class MenuManager : MonoBehaviour
     {
-        [Header("참조 스크립트")]
-        public MenuControl menuCtr;
-        public MenuUI ui;
-
+        private MenuUI ui;
         private NoKeyDown noKeyDown;
 
         // 메뉴 앱 관련 변수
@@ -24,12 +21,21 @@ namespace Assets.Script.System.Menu
         }
         public bool IsMenuControlable
         {
-            get { return IsAppEmpty && noKeyDown.IsMenuOpenable; }
+            get { return IsAppEmpty && noKeyDown.AllowMenuKey; }
+        }
+
+        private static MenuManager _instance;
+        public static MenuManager Instance { get { return _instance; } }
+
+        private void Awake()
+        {
+            _instance = this;
         }
 
         private void Start()
         {
             noKeyDown = NoKeyDown.Instance;
+            ui = MenuUI.Instance;
         }
 
         public void menuOpen()

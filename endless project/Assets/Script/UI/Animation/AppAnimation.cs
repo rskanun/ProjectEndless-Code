@@ -7,51 +7,51 @@ namespace Assets.Script.UI
 {
     public class AppAnimation
     {
-        public static void openAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
+        public static Sequence openAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            biggerOpenSeq(background, 0.1f, 0.08f)
+            return biggerOpenSeq(background, 0.1f, 0.08f)
                     .AppendInterval(0.12f)
                     .Append(windowToastSeq(window, 0.2f));
         }
 
-        public static void closeAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
+        public static Sequence closeAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            smallerCloseSeq(window, 0.1f, 0.08f)
+            return smallerCloseSeq(window, 0.1f, 0.08f)
                 .Join(smallerCloseSeq(background, 0.1f, 0.08f));
         }
 
-        public static void openMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
+        public static Sequence openMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            openMenuSeq(phone, window, displayUI, face, openRotate, closeRotate);
+            return openMenuSeq(phone, window, displayUI, face, openRotate, closeRotate);
         }
 
-        public static void closeMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
+        public static Sequence closeMenuAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            closeMenuSeq(phone, window, displayUI, face, openRotate, closeRotate);
+            return closeMenuSeq(phone, window, displayUI, face, openRotate, closeRotate);
         }
 
-        public static void openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
+        public static Sequence openSimpleAppAnimation(GameObject window, GameObject background, GameObject homeScreen)
         {
-            biggerOpenSeq(background, 0.1f, 0.08f)
+            return biggerOpenSeq(background, 0.1f, 0.08f)
                     .AppendInterval(0.12f)
                     .Append(fadeInSeq(window, 0.2f));
         }
 
-        public static void toastAnimation(GameObject window, float fadeTime ,float delay)
+        public static Sequence toastAnimation(GameObject window, float fadeTime ,float delay)
         {
-            canvasGroupFadeInSeq(window, fadeTime)
+            return canvasGroupFadeInSeq(window, fadeTime)
                 .AppendInterval(delay)
                 .Append(canvasGroupFadeOutSeq(window, fadeTime));
         }
 
-        public static void showHomeScreenAnimation(GameObject homeScreen)
+        public static Sequence showHomeScreenAnimation(GameObject homeScreen)
         {
-            biggerSeq(homeScreen, 0.5f, 1f, 0.15f);
+            return biggerSeq(homeScreen, 0.5f, 1f, 0.15f);
         }
 
-        public static void hideHomeScreenAnimation(GameObject homeScreen)
+        public static Sequence hideHomeScreenAnimation(GameObject homeScreen)
         {
-            smallerSeq(homeScreen, 1f, 0.5f, 0.15f);
+            return smallerSeq(homeScreen, 1f, 0.5f, 0.15f);
         }
 
         public static Sequence popupOpenAnimation(GameObject window)
@@ -82,7 +82,7 @@ namespace Assets.Script.UI
 
         private static Sequence openMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            NoKeyDown.Instance.IsMenuOpenable = false;
+            NoKeyDown.Instance.AllowMenuKey = false;
 
             float delay = 0.08f;
             float menuOpenDelay = 0.19f;
@@ -121,13 +121,13 @@ namespace Assets.Script.UI
                         .AppendInterval(delay)
                         .Append(canvasGroup.DOFade(1f, screenOpenDelay - 0.05f))
                         .Append(window.transform.DOScale(new Vector3(resultScale, resultScale), screenOpenDelay).SetEase(Ease.OutSine))
-                        .OnComplete(() => NoKeyDown.Instance.IsMenuOpenable = true);
+                        .OnComplete(() => NoKeyDown.Instance.AllowMenuKey = true);
                 });
         }
 
         private static Sequence closeMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            NoKeyDown.Instance.IsMenuOpenable = false;
+            NoKeyDown.Instance.AllowMenuKey = false;
 
             float delay = 0.15f;
             float menuCloseDelay = 0.19f;
@@ -149,7 +149,7 @@ namespace Assets.Script.UI
                     phone.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
                     face.transform.position = oriPos;
                     face.transform.rotation = Quaternion.Euler(oriRotate);
-                    NoKeyDown.Instance.IsMenuOpenable = true;
+                    NoKeyDown.Instance.AllowMenuKey = true;
                 });
         }
 

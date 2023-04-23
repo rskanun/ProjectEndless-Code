@@ -49,66 +49,81 @@ public class NoKeyDown : ScriptableObject
     }
 
     // 플레이어가 현재 대시를 하고 있는 상태인지 여부
-    private bool isDashing;
+    private bool _isDashing;
     public bool IsDashing
     {
-        get { return isDashing; }
-        set { isDashing = value; }
+        get { return _isDashing; }
+        set { _isDashing = value; }
     }
 
     // 현재 플레이어가 NPC와 대화를 진행중인 상태인지 여부
-    private bool isTalking;
+    private bool _isTalking;
     public bool IsTalking
     {
-        get { return isTalking; }
-        set { isTalking = value; }
+        get { return _isTalking; }
+        set { _isTalking = value; }
     }
 
     // 메뉴 화면이 현재 켜져있는지 여부
-    private bool isMenuActive;
+    private bool _isMenuActive;
     public bool IsMenuActive
     {
-        get { return isMenuActive; }
-        set { isMenuActive = value; }
+        get { return _isMenuActive; }
+        set { _isMenuActive = value; }
     }
 
     // 플레이어를 조종할 수 있는지 여부
-    private bool isPlayerControllable;
+    private bool _isPlayerControllable;
     public bool IsPlayerControllable
     {
         get
         {
-            if (isPlayerControllable)
-                return isDashing == false && isTalking == false && isMenuActive == false;
+            if (_isPlayerControllable)
+                return _isDashing == false && _isTalking == false && _isMenuActive == false;
             else
-                return isPlayerControllable;
+                return _isPlayerControllable;
         }
 
-        set { isPlayerControllable = value; }
+        set { _isPlayerControllable = value; }
     }
 
-    private bool isMenuOpenable;
-    public bool IsMenuOpenable
+    // 메뉴키를 누를 수 있는지 여부
+    private bool _allowMenuKey;
+    public bool AllowMenuKey
     {
         get
         {
-            if (isMenuOpenable)
-                return isTalking == false;
+            if (_allowMenuKey)
+                return _isTalking == false;
             else
                 return false;
         }
 
-        set { isMenuOpenable = value; }
+        set { _allowMenuKey = value; }
+    }
+
+    private bool _allowCancelKey;
+    public bool AllowCancelKey
+    {
+        get
+        {
+            if (_isMenuActive)
+                return _allowMenuKey;
+
+            return _allowCancelKey;
+        }
+
+        set { _allowCancelKey = value; }
     }
 
     public void initialize()
     {
         // init value
-        isDashing = false;
-        isTalking = false;
-        isMenuActive = false;
+        _isDashing = false;
+        _isTalking = false;
+        _isMenuActive = false;
 
-        isPlayerControllable = true;
-        isMenuOpenable = true;
+        _isPlayerControllable = true;
+        _allowMenuKey = true;
     }
 }

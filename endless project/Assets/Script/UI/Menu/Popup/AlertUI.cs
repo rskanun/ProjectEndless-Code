@@ -12,14 +12,8 @@ namespace Assets.Script.UI.Menu.Popup
         [SerializeField] private TextMeshProUGUI contents;
         [SerializeField] private TextMeshProUGUI okTxt;
 
-        public void setActive(bool isActive)
-        {
-            darkPanel.SetActive(isActive);
-
-            if (isActive) AppAnimation.popupOpenAnimation(popup);
-            else AppAnimation.popupCloseAnimation(popup)
-                    .OnComplete(() => Destroy(gameObject));
-        }
+        public delegate void PopupCallBack();
+        private event PopupCallBack okCallBack;
 
         public void setAlert(string msg, string okText)
         {
@@ -27,9 +21,28 @@ namespace Assets.Script.UI.Menu.Popup
             okTxt.text = okText;
         }
 
+        public void setOkCallBack(PopupCallBack listener)
+        {
+            okCallBack = listener;
+        }
+
         public void onClick()
         {
-            setActive(false);
+            okCallBack?.Invoke();
+        }
+
+        public Sequence show()
+        {
+            darkPanel.SetActive(true);
+
+            return AppAnimation.popupOpenAnimation(popup);
+        }
+
+        public Sequence hide()
+        {
+            darkPanel.SetActive(false);
+
+            return AppAnimation.popupCloseAnimation(popup);
         }
     }
 }

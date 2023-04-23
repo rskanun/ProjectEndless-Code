@@ -1,22 +1,25 @@
-﻿using Assets.Script.Control.Text;
-using Assets.Script.System;
-using Assets.Script.System.Menu;
-using Assets.Script.UI;
-using UnityEditor.PackageManager.UI;
+﻿using Assets.Script.System.Menu;
+using Assets.Script.System.Menu.Popup;
 using UnityEngine;
 
 namespace Assets.Script.Control
 {
     public class MenuControl : MonoBehaviour
     {
-        [Header("참조 스크립트")]
-        public MenuManager menuManager;
-
+        [SerializeField]
+        private Transform popup;
+        
+        // 참조 스크립트
+        private MenuManager menuManager;
+        
+        // 참조 스크립터블 오브젝트
         private OptionSetting option;
         private NoKeyDown noKeyDown;
 
         private void Start()
         {
+            menuManager = MenuManager.Instance;
+
             option = OptionSetting.Instance;
             noKeyDown = NoKeyDown.Instance;
         }
@@ -45,12 +48,12 @@ namespace Assets.Script.Control
 
         public void cancelKeyPress()
         {
-            if (Input.GetKeyDown(option.Cancel) && noKeyDown.IsMenuActive == true)
+            if (Input.GetKeyDown(option.Cancel) && noKeyDown.AllowCancelKey == true)
             {
                 // 메인 화면에 앱이 켜져있는 경우 캔슬키로 작동
-                if (menuManager.IsAppEmpty == false)
+                if (menuManager.IsAppEmpty == false || PopupManager.Instance.noMorePopup == false)
                 {
-                    menuManager.appClose();
+                    cancel();
                 }
                 // 메뉴키와 캔슬키가 다를 경우
                 // 메인 화면에서 캔슬키 작동시 메뉴 닫힘
@@ -60,6 +63,16 @@ namespace Assets.Script.Control
                     noKeyDown.IsMenuActive = false;
                 }
             }
+        }
+
+        private void cancel()
+        {
+            // 팝업창 우선 제거
+            if (PopupManager.Instance.noMorePopup == false)
+            {
+                PopupManager.Instance.destroyPopup();
+            }
+            else menuManager.appClose();
         }
     }
 }
