@@ -1,11 +1,13 @@
-﻿using Assets.Script.UI.Menu;
-using Assets.Script.UI.Menu.Popup;
-using System.Collections;
+﻿using Assets.Script.System.Menu.Save;
+using Assets.Script.UI.Menu;
+using Assets.Script.UI.Menu.Save;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class SaveData
 {
     // Player Data
@@ -21,7 +23,7 @@ public class SaveData
     public int armorPen;
 
     // Date
-    public int date = 0417;
+    public string date = DateTime.Now.ToString("MMdd");
 
     // Quest
     public string location = "테스트 월드";
@@ -31,6 +33,7 @@ public class SaveData
 public class SaveManager : MonoBehaviour
 {
     private string fileExtension = ".dat";
+    private string fileName = "_DiaryPage";
     private string path
     {
         get
@@ -47,6 +50,9 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    private int maxFileNum = 0;
+    private List<SaveFile> saveFiles;
+
     [Header("저장 데이터")]
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerData playerData;
@@ -55,45 +61,65 @@ public class SaveManager : MonoBehaviour
 
     private void OnEnable()
     {
+        saveFiles = new List<SaveFile>();
+
         // 세이브 파일 오브젝트 초기 설정
         initSaveFileObj();
     }
 
+    private void OnDisable()
+    {
+        foreach(SaveFile file in saveFiles)
+        {
+            file.DestroyObject();
+        }
+
+        saveFiles = null;
+    }
+
     public void initSaveFileObj()
     {
-        Dictionary<string, SaveData> saveDic = new Dictionary<string, SaveData>();
-
         DirectoryInfo di = new DirectoryInfo(path);
         foreach (FileInfo file in di.GetFiles())
         {
+            string fileNumStr = file.Name.Split('_')[0];
+            int fileNum = int.Parse(fileNumStr);
+
+            // 최신 파일 넘버 수정
+            if(maxFileNum < fileNum)
+            {
+                maxFileNum = fileNum;
+            }
+
             string str = File.ReadAllText(file.ToString());
             SaveData data = JsonUtility.FromJson<SaveData>(str);
 
-            saveDic[file.Name] = data;
+            saveFiles.Add(new SaveFile(data, fileNum));
         }
 
-        ui.initSaveFileObj(saveDic);
+        ui.initSaveFileObj(saveFiles);
     }
 
     public void addSaveData()
     {
-        string fileName = ui.saveFileCount + "_DiaryPage" + fileExtension;
+        string name = (++maxFileNum) + fileName + fileExtension;
 
         // 데이터 json 변환
-        string filePath = Path.Combine(path, fileName);
+        string filePath = Path.Combine(path, name);
         SaveData data = savePlayerData(filePath);
+        SaveFile saveFile = new SaveFile(data, maxFileNum);
 
-        ui.addSaveFileObj(data);
+        ui.addSaveFileObj(saveFile);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
 
     public void rewriteSaveData(int index)
     {
-        string fileName = index + "_DiaryPage" + fileExtension;
+        string name = index + fileName + fileExtension;
 
         // 데이터 json 변환
-        string filePath = Path.Combine(path, fileName);
+        string filePath = Path.Combine(path, name);
         savePlayerData(filePath);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();

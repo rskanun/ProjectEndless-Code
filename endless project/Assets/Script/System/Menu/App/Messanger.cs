@@ -1,8 +1,11 @@
-﻿using Assets.Script.System.Option;
+﻿using Assets.Script.Control;
+using Assets.Script.System.Menu;
+using Assets.Script.System.Option;
 using Assets.Script.UI;
 using Assets.Script.UI.Menu;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Assets.Script.System.Interface.Menu.App
 {
@@ -31,20 +34,19 @@ namespace Assets.Script.System.Interface.Menu.App
         IEnumerator checkingNetwork()
         {
             // 로딩 시간
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.0f);
 
-            WaitForSeconds wait = new WaitForSeconds(1.5f);
-
-            while(setting.Network == false)
+            if(setting.Network == false)
             {
-                toast.makeMsg("네트워크 상태가 원활하지 않습니다.");
-
-                yield return wait;
+                Alert.makeMsg("네트워크 상태가 원활하지 않습니다. 네트워크를 연결한 후 다시 접속해주세요.")
+                .setOkCallBack(() =>
+                {
+                    MenuManager.Instance.appClose();
+                }).show();
             }
+            else openMainScreen();
 
             networkChecking = null;
-
-            openMainScreen();
         }
 
         private void openMainScreen()

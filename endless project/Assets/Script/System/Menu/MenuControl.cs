@@ -6,9 +6,6 @@ namespace Assets.Script.Control
 {
     public class MenuControl : MonoBehaviour
     {
-        [SerializeField]
-        private Transform popup;
-        
         // 참조 스크립트
         private MenuManager menuManager;
         
@@ -70,7 +67,7 @@ namespace Assets.Script.Control
             // 팝업창 우선 제거
             if (PopupManager.Instance.noMorePopup == false)
             {
-                PopupManager.Instance.destroyPopup();
+                PopupManager.Instance.popupClose();
             }
             else menuManager.appClose();
         }

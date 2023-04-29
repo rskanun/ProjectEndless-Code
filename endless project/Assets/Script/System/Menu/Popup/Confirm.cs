@@ -8,34 +8,36 @@ public class Confirm : Popup
     private GameObject confirmObj;
     private ConfirmUI ui;
 
-    public Confirm()
+    public Confirm(string msg, string yesText, string noText)
     {
         confirmObj = ConfirmManager.Instance.Confirm;
         ui = confirmObj.GetComponent<ConfirmUI>();
+
+        ui.setConfirm(msg, yesText, noText);
+
+        setNoCallBack(null);
+        setYesCallBack(null);
     }
 
-    public static Confirm makeMsg(string msg, string yesText = "네", string noText = "아니요.")
+    public static Confirm makeMsg(string msg, string yesText = "네", string noText = "아니요")
     {
-        Confirm confirm = new Confirm();
-
-        confirm.ui.setConfirm(msg, yesText, noText);
-
-        confirm.setNoCallBack(null);
-        confirm.setYesCallBack(null);
-
-        return confirm;
+        return new Confirm(msg, yesText, noText);
     }
 
-    public void setYesCallBack(ConfirmUI.PopupCallBack listener)
+    public Confirm setYesCallBack(ConfirmUI.PopupCallBack listener)
     {
-        listener += () => PopupManager.Instance.destroyPopup(this); ;
+        listener += () => PopupManager.Instance.popupDestroy(this); ;
         ui.setYesCallBack(listener);
+
+        return this;
     }
 
-    public void setNoCallBack(ConfirmUI.PopupCallBack listener)
+    public Confirm setNoCallBack(ConfirmUI.PopupCallBack listener)
     {
-        listener += () => PopupManager.Instance.destroyPopup(this);
+        listener += () => PopupManager.Instance.popupDestroy(this);
         ui.setNoCallBack(listener);
+
+        return this;
     }
 
     public override void show()
@@ -47,5 +49,10 @@ public class Confirm : Popup
     {
         ui.hide()
             .OnComplete(() => Object.Destroy(confirmObj));
+    }
+
+    public override void close()
+    {
+        ui.onNo();
     }
 }

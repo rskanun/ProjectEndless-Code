@@ -9,26 +9,27 @@ public class Alert : Popup
     private GameObject alertObj;
     private AlertUI ui;
 
-    public Alert()
+    public Alert(string msg, string okText)
     {
         alertObj = AlertManager.Instance.Alert;
         ui = alertObj.GetComponent<AlertUI>();
+
+        ui.setAlert(msg, okText);
+
+        setOkCallBack(null);
     }
 
     public static Alert makeMsg(string msg, string okText = "확인")
     {
-        Alert alert = new Alert();
-        alert.ui.setAlert(msg, okText);
-
-        alert.setOkCallBack(null);
-
-        return alert;
+        return new Alert(msg, okText);
     }
 
-    public void setOkCallBack(AlertUI.PopupCallBack listener)
+    public Alert setOkCallBack(AlertUI.PopupCallBack listener)
     {
-        listener += () => PopupManager.Instance.destroyPopup(this);
+        listener += () => PopupManager.Instance.popupDestroy(this);
         ui.setOkCallBack(listener);
+
+        return this;
     }
 
     public override void show()
@@ -40,5 +41,10 @@ public class Alert : Popup
     {
         ui.hide()
             .OnComplete(() => Object.Destroy(alertObj));
+    }
+
+    public override void close()
+    {
+        ui.onClick();
     }
 }

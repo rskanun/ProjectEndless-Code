@@ -17,30 +17,23 @@ namespace Assets.Script.System.Menu.Popup
             _instance = this;
         }
 
-        public void addPopup(Popup popup)
+        public void popupAdd(Popup popup)
         {
             popupList.Add(popup);
         }
 
-        public void destroyPopup(Popup popup)
+        public void popupDestroy(Popup popup)
         {
-            int index = popupList.IndexOf(popup);
-            if (index != -1)
-            {
-                popupList.RemoveAt(index);
-                popup.destroy();
-            }
-            else Debug.Log(popup);
+            popupList.Remove(popup);
+            popup.destroy();
         }
 
-        public void destroyPopup()
+        public void popupClose()
         {
             if (popupList.Count > 0)
             {
                 int index = popupList.Count - 1;
-                popupList[index].destroy();
-
-                popupList.RemoveAt(index);
+                popupList[index].close();
             }
         }
     }

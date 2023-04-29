@@ -8,10 +8,11 @@ namespace Assets.Script.System.Menu.Popup
     {
         public Popup()
         {
-            PopupManager.Instance.addPopup(this);
+            PopupManager.Instance.popupAdd(this);
         }
 
         public abstract void show();
         public abstract void destroy();
+        public abstract void close();
     }
 }

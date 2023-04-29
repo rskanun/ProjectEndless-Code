@@ -15,13 +15,11 @@ namespace Assets.Script.System.Interface.Menu.App
 
         public void rewriteSave(int index)
         {
-            Confirm confirm = Confirm.makeMsg("이미 저장된 내용이 있는 파일입니다. 그래도 덮어 씌우시겠습니까?", "계속", "취소");
-
-            confirm.setYesCallBack(() =>
+            Confirm.makeMsg("이미 저장된 내용이 있는 파일입니다. 그래도 덮어 씌우시겠습니까?", "계속", "취소")
+            .setYesCallBack(() =>
             {
                 saveManager.rewriteSaveData(index);
-            });
-            confirm.show();
+            }).show();
         }
     }
 }
