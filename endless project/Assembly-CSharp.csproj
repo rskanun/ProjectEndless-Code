@@ -84,7 +84,8 @@
     <Compile Include="Assets\Script\Object\Player\PlayerData.cs" />
     <Compile Include="Assets\Script\System\GameManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
-    <Compile Include="Assets\Script\System\Menu\App\Messanger.cs" />
+    <Compile Include="Assets\Script\UI\Menu\Save\SaveFileUI.cs" />
+    <Compile Include="Assets\Script\System\Menu\App\MessangerApp.cs" />
     <Compile Include="Assets\Script\System\Option\SliderOption.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\Select.cs" />
+    <Compile Include="Assets\Script\UI\Menu\Save\SaveUI.cs" />
     <Compile Include="Assets\Script\System\Option\Option.cs" />
     <Compile Include="Assets\Script\Object\ObjectData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
@@ -152,9 +154,8 @@
     <Compile Include="Assets\Script\System\Menu\Popup\AlertManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
-    <Compile Include="Assets\Script\UI\Menu\Save\SaveFileUI.cs" />
-    <Compile Include="Assets\Script\UI\Menu\Save\SaveUI.cs" />
-    <Compile Include="Assets\Script\System\Menu\Save\SaveFile.cs" />
+    <Compile Include="Assets\Script\System\Menu\Save\SaveFileData.cs" />
+    <Compile Include="Assets\Script\System\Menu\Save\SaveFileManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

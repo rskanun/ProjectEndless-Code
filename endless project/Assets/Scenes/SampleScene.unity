@@ -18055,7 +18055,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2023944205}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92c85b9150f807b4d9497ff6f8ad9fa7, type: 3}
+  m_Script: {fileID: 11500000, guid: a25aa1c48fc0e224e8f15258da12d537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   saveFilePrifab: {fileID: 8016489898399556364, guid: 72a5e774ee75c4f43b1788691bc7379c, type: 3}
@@ -18063,7 +18063,6 @@ MonoBehaviour:
   saveAddObj: {fileID: 1336938856}
   viewer: {fileID: 779821856}
   app: {fileID: 1951036192}
-  saveFiles: []
 --- !u!1 &2055385874
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,16 +18,19 @@ namespace Assets.Script.UI.Menu.Save
         [Header("참조 스크립트")]
         [SerializeField] private SaveApp app;
 
-        private int fileCount = 0;
+        private Dictionary<int, GameObject> saveFileObjDic = new Dictionary<int, GameObject>();
 
         private void OnDisable()
         {
-            fileCount = 0;
+            saveFileObjDic.Clear();
         }
 
-        public void initSaveFileObj(List<SaveFile> saveFiles)
+        public void initSaveFileObj(List<SaveFileData> saveFiles)
         {
-            foreach(SaveFile saveFile in saveFiles)
+            // id 값에 따른 오름차순 정렬
+            saveFiles.Sort((a, b) => a.Id.CompareTo(b.Id));
+
+            foreach(SaveFileData saveFile in saveFiles)
             {
                 saveFileObjAdd(saveFile);
             }
@@ -36,7 +39,7 @@ namespace Assets.Script.UI.Menu.Save
             setViewrSize();
         }
 
-        public void addSaveFileObj(SaveFile saveFile)
+        public void addSaveFileObj(SaveFileData saveFile)
         {
             saveFileObjAdd(saveFile);
 
@@ -44,20 +47,23 @@ namespace Assets.Script.UI.Menu.Save
             setViewrSize();
         }
 
-        private void saveFileObjAdd(SaveFile saveFile)
+        private void saveFileObjAdd(SaveFileData saveFile)
         {
             GameObject saveFileObj = Instantiate(saveFilePrifab, prifabParentTransform);
+            SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
 
-            // init save file
-            saveFile.setObject(saveFileObj);
-            saveFile.setCallBack(() => app.rewriteSave(saveFile.Id));
+            manager.setData(saveFile);
+            manager.setCallBack(() => app.rewriteSave(saveFile.Id));
 
-            fileCount++;
+            saveFileObjDic[saveFile.Id] = saveFileObj;
         }
 
-        public void reloadSaveFileObj(int index, SaveData data)
+        public void reloadSaveFileObj(SaveFileData saveFile)
         {
-            
+            GameObject saveFileObj = saveFileObjDic[saveFile.Id];
+            SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
+
+            manager.setData(saveFile);
         }
 
         private void setViewrSize()
@@ -72,7 +78,8 @@ namespace Assets.Script.UI.Menu.Save
 
             // 총 길이
             // (세이브 추가 오브젝트 높이 = 세이브 파일 오브젝트 높이 가정)
-            float height = top + bottom + spacing * fileCount + objHeight * (fileCount + 1);
+            int count = saveFileObjDic.Count;
+            float height = top + bottom + spacing * count + objHeight * (count + 1);
 
             RectTransform rect = viewer.GetComponent<RectTransform>();
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);

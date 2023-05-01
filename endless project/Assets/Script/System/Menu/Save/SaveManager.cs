@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
     }
 
     private int maxFileNum = 0;
-    private List<SaveFile> saveFiles;
+    private List<SaveFileData> saveFiles;
 
     [Header("저장 데이터")]
     [SerializeField] private GameObject player;
@@ -61,7 +61,7 @@ public class SaveManager : MonoBehaviour
 
     private void OnEnable()
     {
-        saveFiles = new List<SaveFile>();
+        saveFiles = new List<SaveFileData>();
 
         // 세이브 파일 오브젝트 초기 설정
         initSaveFileObj();
@@ -69,11 +69,6 @@ public class SaveManager : MonoBehaviour
 
     private void OnDisable()
     {
-        foreach(SaveFile file in saveFiles)
-        {
-            file.DestroyObject();
-        }
-
         saveFiles = null;
     }
 
@@ -94,7 +89,7 @@ public class SaveManager : MonoBehaviour
             string str = File.ReadAllText(file.ToString());
             SaveData data = JsonUtility.FromJson<SaveData>(str);
 
-            saveFiles.Add(new SaveFile(data, fileNum));
+            saveFiles.Add(createSaveFileData(data, fileNum));
         }
 
         ui.initSaveFileObj(saveFiles);
@@ -107,9 +102,10 @@ public class SaveManager : MonoBehaviour
         // 데이터 json 변환
         string filePath = Path.Combine(path, name);
         SaveData data = savePlayerData(filePath);
-        SaveFile saveFile = new SaveFile(data, maxFileNum);
 
-        ui.addSaveFileObj(saveFile);
+        SaveFileData saveFileData = createSaveFileData(data, maxFileNum);
+        saveFiles.Add(saveFileData);
+        ui.addSaveFileObj(saveFileData);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
@@ -120,7 +116,11 @@ public class SaveManager : MonoBehaviour
 
         // 데이터 json 변환
         string filePath = Path.Combine(path, name);
-        savePlayerData(filePath);
+        SaveData data = savePlayerData(filePath);
+
+        SaveFileData saveFileData = createSaveFileData(data, index);
+        saveFiles.Add(saveFileData);
+        ui.reloadSaveFileObj(saveFileData);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
@@ -144,6 +144,15 @@ public class SaveManager : MonoBehaviour
         File.WriteAllText(filePath, jsonData);
 
         return saveData;
+    }
+
+    private SaveFileData createSaveFileData(SaveData data, int id)
+    {
+        SaveFileData saveFileData = new SaveFileData();
+        saveFileData.Data = data;
+        saveFileData.Id = id;
+
+        return saveFileData;
     }
 
     public void loadData(int index)
