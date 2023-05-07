@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -126,18 +127,33 @@ public class OptionSetting : ScriptableObject
 
     public void timeSub()
     {
-        _time -= 1;
+        Time = _time - 1;
     }
 
     /************************************************************
-    * [기타]
+    * [세이브 파일 미포함 함수]
     * 
-    * 기타 옵션 관련 변수
+    * 세이브 파일에 포함되지 않는 함수 목록
     ************************************************************/
 
     // 스크립트 속도
-    public float TypingSpeed { get { return _typingSpeed; } }
     private float _typingSpeed = 0.025f;
+    public float TypingSpeed { get { return _typingSpeed; } }
+
+
+    /************************************************************
+    * [세이브 파일 포함 함수]
+    * 
+    * 세이브 파일에 포함되는 함수 목록
+    ************************************************************/
+
+    // 현재 날짜
+    private DateTime _date = new DateTime(2024, 11, 29);
+    public DateTime Date
+    {
+        get { return _date; }
+        set { _date = value; }
+    }
 
     /************************************************************
     * [세이브 로드]

@@ -13,14 +13,14 @@ namespace Assets.Script.System.Menu.Save
         private SaveFileUI ui;
 
         // 데이터 파일
-        private SaveFileData data;
+        private SaveData data;
 
         private void OnDisable()
         {
             Destroy(saveFile);
         }
 
-        public void setData(SaveFileData data)
+        public void setData(SaveData data)
         {
             this.data = data;
 
@@ -35,9 +35,7 @@ namespace Assets.Script.System.Menu.Save
 
         private void initObject()
         {
-            SaveData saveData = data.Data;
-
-            ui.setSaveFile(saveData.date, saveData.location, saveData.quest);
+            ui.setSaveFile(data.date, data.location, data.quest);
         }
     }
 }

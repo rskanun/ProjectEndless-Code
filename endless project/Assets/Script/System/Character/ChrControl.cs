@@ -42,7 +42,7 @@ public class ChrControl : MonoBehaviour
         option = OptionSetting.Instance;
         noKeyDown = NoKeyDown.Instance;
 
-        mainEntity = this.gameObject.transform;
+        mainEntity = gameObject.transform;
 
         initComponent();
     }
@@ -98,10 +98,7 @@ public class ChrControl : MonoBehaviour
     private void moveKeyPress()
     {
         // 방향키
-        if (isMoveKey)
-        {
-            moveKey();
-        }
+        moveActionKey();
 
         // 대쉬키
         if (Input.GetKeyDown(option.Dash))
@@ -111,7 +108,7 @@ public class ChrControl : MonoBehaviour
     }
 
     // 방향키 입력
-    private void moveKey()
+    private void moveActionKey()
     {
         // 패드 및 키보드의 움직임(패드의 경우 경도)에 따른 백터 변화
         playerVec.x = Input.GetAxisRaw("Horizontal");

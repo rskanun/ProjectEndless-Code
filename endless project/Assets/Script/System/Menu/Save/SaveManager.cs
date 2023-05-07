@@ -1,9 +1,8 @@
-﻿using Assets.Script.System.Menu.Save;
-using Assets.Script.UI.Menu;
+﻿using Assets.Script.UI.Menu.App.Save;
 using Assets.Script.UI.Menu.Save;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using UnityEngine;
 
@@ -23,58 +22,76 @@ public class SaveData
     public int armorPen;
 
     // Date
-    public string date = DateTime.Now.ToString("MMdd");
+    public string date;
 
     // Quest
     public string location = "테스트 월드";
     public string quest = "게임 완성";
 }
 
+[Serializable]
+public class Date
+{
+    public int year;
+    public int month;
+
+}
+
 public class SaveManager : MonoBehaviour
 {
     private string fileExtension = ".dat";
     private string fileName = "_DiaryPage";
-    private string path
+
+    private string _path;
+    private string Path
     {
         get
         {
-            string _path = Path.Combine(Application.persistentDataPath, "SaveFile");
-
-            // 경로상 파일 검사
-            if (!Directory.Exists(_path))
+            if(_path == null)
             {
-                Directory.CreateDirectory(_path);
+                _path = System.IO.Path.Combine(Application.persistentDataPath, "SaveFile");
+
+                // 경로상 파일 검사
+                if (!Directory.Exists(_path))
+                {
+                    Directory.CreateDirectory(_path);
+                }
             }
 
             return _path;
         }
     }
 
+    // 파일 함수
     private int maxFileNum = 0;
-    private List<SaveFileData> saveFiles;
+    private Dictionary<int, SaveData> saveFiles = new Dictionary<int, SaveData>();
 
     [Header("저장 데이터")]
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerData playerData;
     [Header("참조 스크립트")]
-    [SerializeField] private SaveUI ui;
+    [SerializeField] private SaveUI saveUI;
+    [SerializeField] private LoadUI loadUI;
 
-    private void OnEnable()
+    public void initSave()
     {
-        saveFiles = new List<SaveFileData>();
-
         // 세이브 파일 오브젝트 초기 설정
-        initSaveFileObj();
+        initSaveFile();
+
+        saveUI.initSaveFileObj(saveFiles);
     }
 
-    private void OnDisable()
+    public void initLoad()
     {
-        saveFiles = null;
+        // 세이브 파일 오브젝트 초기 설정
+        initSaveFile();
+
+        loadUI.initSaveFileObj(saveFiles);
     }
 
-    public void initSaveFileObj()
+    private void initSaveFile()
     {
-        DirectoryInfo di = new DirectoryInfo(path);
+        DirectoryInfo di = new DirectoryInfo(Path);
         foreach (FileInfo file in di.GetFiles())
         {
             string fileNumStr = file.Name.Split('_')[0];
@@ -89,46 +106,75 @@ public class SaveManager : MonoBehaviour
             string str = File.ReadAllText(file.ToString());
             SaveData data = JsonUtility.FromJson<SaveData>(str);
 
-            saveFiles.Add(createSaveFileData(data, fileNum));
+            saveFiles[fileNum] = data;
         }
-
-        ui.initSaveFileObj(saveFiles);
     }
+
+    private void OnDisable()
+    {
+        saveFiles.Clear();
+        maxFileNum = 0;
+    }
+
+    /************************************************************
+    * [세이브]
+    * 
+    * 현재 진행 상황을 저장
+    ************************************************************/
 
     public void addSaveData()
     {
         string name = (++maxFileNum) + fileName + fileExtension;
 
         // 데이터 json 변환
-        string filePath = Path.Combine(path, name);
-        SaveData data = savePlayerData(filePath);
+        string filePath = System.IO.Path.Combine(Path, name);
+        SaveData data = saveData(filePath);
 
-        SaveFileData saveFileData = createSaveFileData(data, maxFileNum);
-        saveFiles.Add(saveFileData);
-        ui.addSaveFileObj(saveFileData);
+        saveFiles[maxFileNum] = data;
+        saveUI.addSaveFileObj(maxFileNum, data);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
 
-    public void rewriteSaveData(int index)
+    public void rewriteSave(int id)
     {
-        string name = index + fileName + fileExtension;
+        Confirm.makeMsg("이미 저장된 내용이 있는 파일입니다. 그래도 덮어 씌우시겠습니까?", "계속", "취소")
+        .setYesCallBack(() =>
+        {
+            rewriteSaveData(id);
+        }).show();
+    }
+
+    private void rewriteSaveData(int id)
+    {
+        string name = id + fileName + fileExtension;
 
         // 데이터 json 변환
-        string filePath = Path.Combine(path, name);
-        SaveData data = savePlayerData(filePath);
+        string filePath = System.IO.Path.Combine(Path, name);
+        SaveData data = saveData(filePath);
 
-        SaveFileData saveFileData = createSaveFileData(data, index);
-        saveFiles.Add(saveFileData);
-        ui.reloadSaveFileObj(saveFileData);
+        saveFiles[maxFileNum] = data;
+        saveUI.reloadSaveFileObj(maxFileNum, data);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
 
-    private SaveData savePlayerData(string filePath)
+    private SaveData saveData(string filePath)
     {
         SaveData saveData = new SaveData();
 
+        savePlayerData(saveData);
+        saveOptionDate(saveData);
+
+        // Data to Json
+        string jsonData = JsonUtility.ToJson(saveData);
+        File.WriteAllText(filePath, jsonData);
+
+        return saveData;
+    }
+
+    private void savePlayerData(SaveData saveData)
+    {
         saveData.pos = player.transform.position;
         saveData.hp = playerData.HP;
         saveData.maxHP = playerData.MaxHP;
@@ -139,24 +185,43 @@ public class SaveManager : MonoBehaviour
         saveData.def = playerData.DEF;
         saveData.mp = playerData.MP;
         saveData.armorPen = playerData.ArmorPenetration;
-
-        string jsonData = JsonUtility.ToJson(saveData);
-        File.WriteAllText(filePath, jsonData);
-
-        return saveData;
     }
 
-    private SaveFileData createSaveFileData(SaveData data, int id)
+    private void saveOptionDate(SaveData saveData)
     {
-        SaveFileData saveFileData = new SaveFileData();
-        saveFileData.Data = data;
-        saveFileData.Id = id;
-
-        return saveFileData;
+        saveData.date = OptionSetting.Instance.Date.ToString("O");
     }
 
-    public void loadData(int index)
+    /************************************************************
+    * [로드]
+    * 
+    * 현재 진행 상황에 세이브 데이터를 불러오기
+    ************************************************************/
+
+    public void loadData(int id)
     {
+        SaveData data = saveFiles[id];
 
+        loadPlayerData(data);
+        loadOptionDate(data);
     }
+
+    private void loadPlayerData(SaveData data)
+    {
+        player.transform.position = data.pos;
+        playerData.HP = data.hp;
+        playerData.MaxHP = data.maxHP;
+        playerData.AP = data.ap;
+        playerData.MaxAP = data.maxAP;
+        playerData.STR = data.str;
+        playerData.Speed = data.agi;
+        playerData.DEF = data.def;
+        playerData.MP = data.mp;
+        playerData.ArmorPenetration = data.armorPen;
+    }
+
+    private void loadOptionDate(SaveData data)
+    {
+        OptionSetting.Instance.Date = DateTime.Parse(data.date);
+    }    
 }

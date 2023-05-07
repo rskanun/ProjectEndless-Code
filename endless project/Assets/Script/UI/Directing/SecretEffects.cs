@@ -1,5 +1,4 @@
 ﻿using Assets.Script.System;
-using JetBrains.Annotations;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -33,18 +32,18 @@ namespace Assets.Script.UI.Effects
             }
         }
 
-        private void Awake()
+        private static SecretEffects _instance;
+        public static SecretEffects Instance
         {
-            noKeyDown = NoKeyDown.Instance;
-            option = OptionSetting.Instance;
+            get { return _instance; }
         }
 
-        private void Update()
+        private void Awake()
         {
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                play();
-            }
+            _instance = this;
+
+            noKeyDown = NoKeyDown.Instance;
+            option = OptionSetting.Instance;
         }
 
         /************************************************************

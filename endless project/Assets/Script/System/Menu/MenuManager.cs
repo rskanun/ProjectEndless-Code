@@ -47,6 +47,7 @@ namespace Assets.Script.System.Menu
         public void menuClose()
         {
             noKeyDown.IsMenuActive = false;
+            closeAllApps();
             ui.menuClose();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Assets.Script.UI;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
@@ -14,29 +15,7 @@ namespace Assets.Script.System.Stat
         private AwakenPointBarUI apUI;
 
         private int nowHP; // hp의 값이 변경되기 이전의 값
-        public int HP
-        {
-            set
-            {
-                player.HP = value;
-                hpUI.barUpdate(nowHP, player.HP, player.MaxHP);
-
-                nowHP = value;
-            }
-            get { return nowHP; }
-        }
         private int nowAP; // ap의 값이 변경되기 이전의 값
-        public int AP
-        {
-            set
-            {
-                player.AP = value;
-                apUI.barUpdate(player.AP, player.MaxAP);
-
-                nowAP = value;
-            }
-            get { return nowAP; }
-        }
 
         private void Start()
         {
@@ -59,9 +38,9 @@ namespace Assets.Script.System.Stat
         }
 
         /***************************************************************
-        * [ 변수 체크 ]
+        * [ 변수 변화 체크 ]
         * 
-        * 플레이어의 hp와 ap의 애니메이션이 제대로 실행되지 않았는지 체크
+        * 플레이어의 hp와 ap의 변화에 따른 애니메이션 실행
         ***************************************************************/
 
         private void OnEnable()
@@ -76,15 +55,31 @@ namespace Assets.Script.System.Stat
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // hp 변화
             if (e.PropertyName == "HP")
             {
-                HP = player.HP;
+                onHpChanged();
             }
 
+            // ap 변화
             if (e.PropertyName == "AP")
             {
-                AP = player.AP;
+                onApChanged();
             }
+        }
+
+        private void onHpChanged()
+        {
+            hpUI.barUpdate(nowHP, player.HP, player.MaxHP);
+
+            nowHP = player.HP;
+        }
+
+        private void onApChanged()
+        {
+            apUI.barUpdate(player.AP, player.MaxAP);
+
+            nowAP = player.AP;
         }
     }
 }

@@ -8,10 +8,6 @@ public class EventManager : MonoBehaviour
     [SerializeField]
     private PlayerData player;
 
-    [Space]
-    [Header("참조 스크립트")]
-    public HUD hud;
-
     public void getCommandEvent(string str)
     {
         string[] commands = str.Split(' ');
@@ -47,6 +43,6 @@ public class EventManager : MonoBehaviour
     * Text Manager를 통해 읽은 커맨드 이벤트 관리
     ************************************************************/
 
-    void getDamage(int damage) { hud.HP -= damage; }
-    void addAP(int ap) { hud.AP += ap; }
+    void getDamage(int damage) { player.HP -= damage; }
+    void addAP(int ap) { player.AP += ap; }
 }

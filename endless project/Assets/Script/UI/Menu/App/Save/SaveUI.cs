@@ -1,7 +1,6 @@
 ﻿using Assets.Script.System.Interface.Menu.App;
 using Assets.Script.System.Menu.Save;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +15,7 @@ namespace Assets.Script.UI.Menu.Save
         [SerializeField] private GameObject saveAddObj;
         [SerializeField] private GameObject viewer;
         [Header("참조 스크립트")]
-        [SerializeField] private SaveApp app;
+        [SerializeField] private SaveManager saveManager;
 
         private Dictionary<int, GameObject> saveFileObjDic = new Dictionary<int, GameObject>();
         private const int MAX_FILE = 10;
@@ -26,56 +25,66 @@ namespace Assets.Script.UI.Menu.Save
             saveFileObjDic.Clear();
         }
 
-        public void initSaveFileObj(List<SaveFileData> saveFiles)
+        /************************************************************
+        * [세이브 파일 추가]
+        * 
+        * 현재 날짜와 장소, 퀘스트가 담긴 세이브 파일 생성
+        ************************************************************/
+
+        public void initSaveFileObj(Dictionary<int, SaveData> saveFiles)
         {
             // id 값에 따른 오름차순 정렬
-            saveFiles.Sort((a, b) => a.Id.CompareTo(b.Id));
+            List<int> keys = new List<int>(saveFiles.Keys);
+            keys.Sort();
 
-            foreach(SaveFileData saveFile in saveFiles)
+            foreach(int id in keys)
             {
-                saveFileObjAdd(saveFile);
+                SaveData data = saveFiles[id];
+
+                saveFileObjAdd(id, data);
             }
 
+            // 세이브 추가 버튼 설정
+            initSaveAddObj();
+
             // 뷰어 높이 설정
             setViewrSize();
         }
 
-        public void addSaveFileObj(SaveFileData saveFile)
+        public void addSaveFileObj(int id, SaveData saveData)
         {
-            saveFileObjAdd(saveFile);
+            saveFileObjAdd(id, saveData);
+
+            // 세이브 추가 버튼 설정
+            initSaveAddObj();
 
             // 뷰어 높이 설정
             setViewrSize();
         }
 
-        private void saveFileObjAdd(SaveFileData saveFile)
+        private void saveFileObjAdd(int id, SaveData saveData)
         {
             GameObject saveFileObj = Instantiate(saveFilePrifab, prifabParentTransform);
             SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
 
-            manager.setData(saveFile);
-            manager.setCallBack(() => app.rewriteSave(saveFile.Id));
+            manager.setData(saveData);
+            manager.setCallBack(() => saveManager.rewriteSave(id));
 
-            saveFileObjDic[saveFile.Id] = saveFileObj;
+            saveFileObjDic[id] = saveFileObj;
+        }
 
+        private void initSaveAddObj()
+        {
             // 최대 개수 달성 시 세이브 파일 추가 버튼 삭제
-            if(saveFileObjDic.Count >= MAX_FILE)
+            if (saveFileObjDic.Count >= MAX_FILE)
             {
                 saveAddObj.SetActive(false);
             }
             // 최대 개수 이하로 내려오면 다시 세이브 파일 추가 버튼 생성
-            else if(saveAddObj.activeSelf == false)
+            else if (saveAddObj.activeSelf == false)
             {
                 saveAddObj.SetActive(true);
             }
-        }
-
-        public void reloadSaveFileObj(SaveFileData saveFile)
-        {
-            GameObject saveFileObj = saveFileObjDic[saveFile.Id];
-            SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
-
-            manager.setData(saveFile);
         }
 
         private void setViewrSize()
@@ -86,7 +95,7 @@ namespace Assets.Script.UI.Menu.Save
             float spacing = component.spacing;
 
             // 오브젝트 높이
-            float objHeight = saveAddObj.GetComponent<RectTransform>().rect.height;
+            float objHeight = saveFilePrifab.GetComponent<RectTransform>().rect.height;
 
             // 총 길이
             // (세이브 추가 오브젝트 높이 = 세이브 파일 오브젝트 높이 가정)
@@ -95,6 +104,20 @@ namespace Assets.Script.UI.Menu.Save
 
             RectTransform rect = viewer.GetComponent<RectTransform>();
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        }
+
+        /************************************************************
+        * [세이브 파일 재설정]
+        * 
+        * 저장된 세이브 파일의 데이터 갱신
+        ************************************************************/
+
+        public void reloadSaveFileObj(int id, SaveData saveData)
+        {
+            GameObject saveFileObj = saveFileObjDic[id];
+            SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
+
+            manager.setData(saveData);
         }
     }
 }

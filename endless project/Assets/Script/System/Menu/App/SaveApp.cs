@@ -1,25 +1,17 @@
-﻿using Assets.Script.UI.Menu.Popup;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Script.System.Interface.Menu.App
 {
     public class SaveApp : App
     {
-        [SerializeField] private ConfirmUI confirm;
-        [SerializeField] private SaveManager saveManager;
+        [SerializeField]
+        private SaveManager saveManager;
 
-        public void addSave()
+        public override void open()
         {
-            saveManager.addSaveData();
-        }
+            base.open();
 
-        public void rewriteSave(int index)
-        {
-            Confirm.makeMsg("이미 저장된 내용이 있는 파일입니다. 그래도 덮어 씌우시겠습니까?", "계속", "취소")
-            .setYesCallBack(() =>
-            {
-                saveManager.rewriteSaveData(index);
-            }).show();
+            saveManager.initSave();
         }
     }
 }
