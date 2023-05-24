@@ -23,7 +23,7 @@ public class ChrControl : MonoBehaviour
     private Vector2 playerVec;
     private Vector2 dashVec;
 
-    private Animator moveAnimator;
+    private Animator playerAnimator;
     private Rigidbody2D rigid;
     private Transform mainEntity; // 플레이어 캐릭터
     public Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
@@ -44,13 +44,15 @@ public class ChrControl : MonoBehaviour
 
         mainEntity = gameObject.transform;
 
+        player.OnPlayerAngleChanged.AddListener(OnPlayerAngleChanged);
+
         initComponent();
     }
 
     private void initComponent()
     {
-        moveAnimator    = GetComponent<Animator>();
-        rigid       = GetComponent<Rigidbody2D>();
+        playerAnimator      = GetComponent<Animator>();
+        rigid               = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -115,18 +117,18 @@ public class ChrControl : MonoBehaviour
         playerVec.y = Input.GetAxisRaw("Vertical");
 
         // 키보드 누른 방향으로 애니메이션 움직임 제어
-        setAnimator(playerVec);
+        player.Angle = playerVec;
     }
 
-    private void setAnimator(Vector2 vec)
+    private void OnPlayerAngleChanged(Vector2 angle)
     {
         // 올림 보정
-        int x = Mathf.CeilToInt(vec.x);
-        int y = Mathf.CeilToInt(vec.y);
+        int x = Mathf.CeilToInt(angle.x);
+        int y = Mathf.CeilToInt(angle.y);
 
         // 애니메이션 움직임 제어
-        moveAnimator.SetInteger("axisH", x);
-        moveAnimator.SetInteger("axisV", y);
+        playerAnimator.SetInteger("axisH", x);
+        playerAnimator.SetInteger("axisV", y);
     }
 
     /************************************************************
@@ -182,7 +184,7 @@ public class ChrControl : MonoBehaviour
         animaVec.x = (-ANIMATION_CONSTANT <= tmpX && tmpX <= ANIMATION_CONSTANT) ? 0 : tmpX;
         animaVec.y = (-ANIMATION_CONSTANT <= tmpY && tmpY <= ANIMATION_CONSTANT) ? 0 : tmpY;
 
-        setAnimator(animaVec);
+        player.Angle = animaVec;
     }
 
     /************************************************************

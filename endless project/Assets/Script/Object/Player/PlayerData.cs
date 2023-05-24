@@ -1,9 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
 public class PlayerData : ObjectData
 {
+    private UnityEvent<Vector2> _onPlayerAngleChanged = new UnityEvent<Vector2>();
+    public UnityEvent<Vector2> OnPlayerAngleChanged { get { return _onPlayerAngleChanged; } }
+
     private const float DASH_SPEED = 0.35f; // 대쉬 거리까지 이동하는 속도
     public float DashSpeed { get { return DASH_SPEED; } }
 
@@ -18,7 +22,7 @@ public class PlayerData : ObjectData
     }
 
     [SerializeField]
-    private int awakenPoint;
+    private int _awakenPoint;
     /***************************************************************
      * [ 각성치 (Awaken Point) ]
      * 
@@ -28,19 +32,19 @@ public class PlayerData : ObjectData
      ****************************************************************/
     public int AP
     {
-        get { return awakenPoint; }
+        get { return _awakenPoint; }
         set
         {
-            if(awakenPoint != value)
+            if(_awakenPoint != value)
             {
                 // 입력값이 음수일 경우
                 if (value < 0)
-                    awakenPoint = MP;
+                    _awakenPoint = MP;
                 // 입력값이 최대치를 초과한 경우
-                else if (value + MP > maxAwakenPoint)
-                    awakenPoint = maxAwakenPoint;
+                else if (value + MP > _maxAwakenPoint)
+                    _awakenPoint = _maxAwakenPoint;
                 else
-                    awakenPoint = value;
+                    _awakenPoint = value;
 
                 OnPropertyChanged("AP");
             }
@@ -48,22 +52,22 @@ public class PlayerData : ObjectData
     }
 
     [SerializeField]
-    private int maxAwakenPoint;
+    private int _maxAwakenPoint;
     public int MaxAP
     {
-        get { return maxAwakenPoint; }
+        get { return _maxAwakenPoint; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                maxAwakenPoint = 0;
+                _maxAwakenPoint = 0;
             else
-                maxAwakenPoint = value;
+                _maxAwakenPoint = value;
         }
     }
 
     [SerializeField]
-    private int armorPen;
+    private int _armorPen;
     /***************************************************************
      * [ 방어력 관통 (Armor Penetration) ]
      * 
@@ -73,14 +77,31 @@ public class PlayerData : ObjectData
      ****************************************************************/
     public int ArmorPenetration
     {
-        get { return armorPen; }
+        get { return _armorPen; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                armorPen = 0;
+                _armorPen = 0;
             else
-                armorPen = value;
+                _armorPen = value;
+        }
+    }
+
+    [SerializeField]
+    private Vector2 _angle; // 플레이어 시선 각도
+    public Vector2 Angle
+    {
+        get { return _angle; }
+        set
+        {
+            if (_angle != value && value != Vector2.zero)
+            {
+                _angle = value;
+                OnPlayerAngleChanged.Invoke(_angle);
+
+                Debug.Log(_angle);
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ public class SaveData
 {
     // Player Data
     public Vector2 pos;
+    public Vector2 angle;
     public int hp;
     public int maxHP;
     public int ap;
@@ -138,6 +139,7 @@ public class SaveManager : MonoBehaviour
 
     public void rewriteSave(int id)
     {
+        Debug.Log(id);
         Confirm.makeMsg("이미 저장된 내용이 있는 파일입니다. 그래도 덮어 씌우시겠습니까?", "계속", "취소")
         .setYesCallBack(() =>
         {
@@ -154,7 +156,7 @@ public class SaveManager : MonoBehaviour
         SaveData data = saveData(filePath);
 
         saveFiles[maxFileNum] = data;
-        saveUI.reloadSaveFileObj(maxFileNum, data);
+        saveUI.reloadSaveFileObj(id, data);
 
         Alert.makeMsg("데이터 기록이 완료되었습니다!").show();
     }
@@ -176,6 +178,7 @@ public class SaveManager : MonoBehaviour
     private void savePlayerData(SaveData saveData)
     {
         saveData.pos = player.transform.position;
+        saveData.angle = playerData.Angle;
         saveData.hp = playerData.HP;
         saveData.maxHP = playerData.MaxHP;
         saveData.ap = playerData.AP;
@@ -209,6 +212,7 @@ public class SaveManager : MonoBehaviour
     private void loadPlayerData(SaveData data)
     {
         player.transform.position = data.pos;
+        playerData.Angle = data.angle;
         playerData.HP = data.hp;
         playerData.MaxHP = data.maxHP;
         playerData.AP = data.ap;
