@@ -108,31 +108,10 @@ TextureImporter:
       name: ap_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 98
-        width: 18
-        height: 45
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a82e6dae6c095e944aa6cca01f0dc5e5
-      internalID: 196636129
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hp_0
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 54
-        width: 27
-        height: 37
+        x: 0
+        y: 48
+        width: 32
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,94 +129,10 @@ TextureImporter:
       name: ap_1
       rect:
         serializedVersion: 2
-        x: 39
-        y: 98
-        width: 18
-        height: 45
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4a009419cf5ae624ca01a8da6c07db97
-      internalID: -1988674030
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ap_2
-      rect:
-        serializedVersion: 2
-        x: 71
-        y: 98
-        width: 18
-        height: 45
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6c9d11d4df896904c90a3620d57115c9
-      internalID: 1261755154
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ap_3
-      rect:
-        serializedVersion: 2
-        x: 103
-        y: 98
-        width: 18
-        height: 45
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e1f37182eb883714f9cb4312383a5857
-      internalID: -358532456
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ap_4
-      rect:
-        serializedVersion: 2
-        x: 135
-        y: 98
-        width: 18
-        height: 45
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6959da8621046664da839623544a85f6
-      internalID: 1301038136
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hp_1
-      rect:
-        serializedVersion: 2
-        x: 34
-        y: 54
-        width: 27
-        height: 37
+        x: 32
+        y: 48
+        width: 32
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -252,13 +147,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: hp_2
+      name: ap_2
       rect:
         serializedVersion: 2
-        x: 66
-        y: 54
-        width: 27
-        height: 37
+        x: 64
+        y: 48
+        width: 32
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -273,13 +168,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: hp_3
+      name: ap_3
       rect:
         serializedVersion: 2
-        x: 98
-        y: 54
-        width: 27
-        height: 37
+        x: 96
+        y: 48
+        width: 32
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,13 +189,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: hp_4
+      name: ap_4
       rect:
         serializedVersion: 2
-        x: 130
-        y: 54
-        width: 27
-        height: 37
+        x: 128
+        y: 48
+        width: 32
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -367,19 +262,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      hp_2: -984609626
-      ap_4: 1301038136
-      hp_3: -2041787196
-      hp_0: -2122643307
+      ap_4: -692955738
       hud_frame: 207918642
       hud_bar: -1732099253
-      ap_2: 1261755154
-      ap_3: -358532456
-      ap_1: -1988674030
-      ap_0: 196636129
-      hp_1: -655853779
+      ap_2: -984609626
+      ap_3: -2041787196
+      ap_1: -655853779
+      ap_0: -2122643307
       frame: 1042631607
-      hp_4: -692955738
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

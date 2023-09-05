@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Assets.Script.Object.Player
 {
+    // 물리 데미지 = (자신의 마력 - 상대 마력)[최소 0] / 자신의 마력 * 근력 * 무기 공격력 증가율
+    // 마력 데미지 = (자신의 마력 - 상대 마력)[최소 0] / 자신의 마력 * 각 능력에 대한 데미지
+    // 피해량 = 데미지 - (상대 방어력 - 플레이어의 방어력 관통력)[최소 0]
+
     public class Player : MonoBehaviour
     {
         [SerializeField]

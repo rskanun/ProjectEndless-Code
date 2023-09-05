@@ -28,6 +28,7 @@ namespace Assets.Script.Control.Text
         // 현재 라인 진행 상황
         private TextLine nowLine;
         private bool readLock;
+        private bool coroutineLock;
         private int lineNum;
 
         // 텍스트 저장 공간
@@ -63,7 +64,11 @@ namespace Assets.Script.Control.Text
         {
             while(noKeyDown.IsTalking)
             {
-                if (readLock == false) readLine();
+                if (readLock == false && coroutineLock == false)
+                {
+                    coroutineLock = true;
+                    readLine();
+                }
                 yield return null;
             }
         }
@@ -105,6 +110,8 @@ namespace Assets.Script.Control.Text
                 lineNum = 0;
                 noKeyDown.IsTalking = false;
             }
+
+            coroutineLock = false;
         }
 
         public void nextText()
