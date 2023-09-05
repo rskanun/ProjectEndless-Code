@@ -14,7 +14,7 @@ namespace Assets.Script.UI.Effects
         [Header("참조 스크립트")]
         [SerializeField] private EffectManager effect;
 
-        private NoKeyDown noKeyDown;
+        private PlayerState playerState;
         private OptionSetting option;
 
         private string originTime
@@ -42,7 +42,7 @@ namespace Assets.Script.UI.Effects
         {
             _instance = this;
 
-            noKeyDown = NoKeyDown.Instance;
+            playerState = PlayerState.Instance;
             option = OptionSetting.Instance;
         }
 
@@ -97,7 +97,7 @@ namespace Assets.Script.UI.Effects
 
         private void timePanelActive(bool isActive)
         {
-            noKeyDown.IsPlayerControllable = !isActive;
+            playerState.IsPlayerControllable = !isActive;
 
             timeText.gameObject.SetActive(isActive);
             timePanel.SetActive(isActive);

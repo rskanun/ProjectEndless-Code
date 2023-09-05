@@ -122,7 +122,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\Script\System\Menu\Save\SaveFileManager.cs" />
     <Compile Include="Assets\Script\UI\TextUI.cs" />
-    <Compile Include="Assets\Script\System\Text\LineManager.cs" />
+    <Compile Include="Assets\Script\System\Text\TalkManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Script\System\Option\ToggleOption.cs" />
     <Compile Include="Assets\Script\UI\OptionUI.cs" />
@@ -140,7 +140,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Script\UI\Menu\ToastUI.cs" />
     <Compile Include="Assets\Script\System\Menu\Save\SaveManager.cs" />
-    <Compile Include="Assets\Script\System\NoKeyDown.cs" />
+    <Compile Include="Assets\Script\System\PlayerState.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\Popup.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />

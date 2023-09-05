@@ -10,7 +10,7 @@ namespace Assets.Script.System.Menu
     public class MenuManager : MonoBehaviour
     {
         private MenuUI ui;
-        private NoKeyDown noKeyDown;
+        private PlayerState playerState;
 
         // 메뉴 앱 관련 변수
         private App nowApp = null;
@@ -21,7 +21,7 @@ namespace Assets.Script.System.Menu
         }
         public bool IsMenuControlable
         {
-            get { return IsAppEmpty && noKeyDown.AllowMenuKey; }
+            get { return IsAppEmpty && playerState.AllowMenuKey; }
         }
 
         private static MenuManager _instance;
@@ -34,19 +34,19 @@ namespace Assets.Script.System.Menu
 
         private void Start()
         {
-            noKeyDown = NoKeyDown.Instance;
+            playerState = PlayerState.Instance;
             ui = MenuUI.Instance;
         }
 
         public void menuOpen()
         {
-            noKeyDown.IsMenuActive = true;
+            playerState.IsMenuActive = true;
             ui.menuOpen();
         }
 
         public void menuClose()
         {
-            noKeyDown.IsMenuActive = false;
+            playerState.IsMenuActive = false;
             closeAllApps();
             ui.menuClose();
         }

@@ -11,14 +11,14 @@ namespace Assets.Script.Control
         
         // 참조 스크립터블 오브젝트
         private OptionSetting option;
-        private NoKeyDown noKeyDown;
+        private PlayerState playerState;
 
         private void Start()
         {
             menuManager = MenuManager.Instance;
 
             option = OptionSetting.Instance;
-            noKeyDown = NoKeyDown.Instance;
+            playerState = PlayerState.Instance;
         }
 
         /************************************************************
@@ -38,14 +38,14 @@ namespace Assets.Script.Control
             // 메뉴 활성화/비활성화
             if (Input.GetKeyDown(option.Menu) && menuManager.IsMenuControlable)
             {
-                if (noKeyDown.IsMenuActive == false) menuManager.menuOpen();
+                if (playerState.IsMenuActive == false) menuManager.menuOpen();
                 else menuManager.menuClose();
             }
         }
 
         public void cancelKeyPress()
         {
-            if (Input.GetKeyDown(option.Cancel) && noKeyDown.AllowCancelKey == true)
+            if (Input.GetKeyDown(option.Cancel) && playerState.AllowCancelKey == true)
             {
                 // 메인 화면에 앱이 켜져있는 경우 캔슬키로 작동
                 if (menuManager.IsAppEmpty == false || PopupManager.Instance.noMorePopup == false)
@@ -57,7 +57,7 @@ namespace Assets.Script.Control
                 else if (option.Cancel != option.Menu && menuManager.IsMenuControlable)
                 {
                     menuManager.menuClose();
-                    noKeyDown.IsMenuActive = false;
+                    playerState.IsMenuActive = false;
                 }
             }
         }

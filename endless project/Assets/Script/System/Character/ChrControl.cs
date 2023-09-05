@@ -5,18 +5,6 @@ using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
-    // 상호작용 할 npc
-    private NPC npc;
-
-    [SerializeField]
-    private PlayerData player;
-
-    [Header("참조 스크립트")]
-    public LineManager lineManager;
-
-    private OptionSetting option;
-    private NoKeyDown noKeyDown;
-
     private const int ANIMATION_CONSTANT = 10; // 플레이어의 마우스 위치에 따른 시선 변경 보정 상수
     private const float STOP_DISTANCE = 0.05f;
 
@@ -28,19 +16,21 @@ public class ChrControl : MonoBehaviour
     private Transform mainEntity; // 플레이어 캐릭터
     public Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
 
-    private bool isMoveKey
-    {
-        get
-        {
-            return Input.GetKey(option.Up) || Input.GetKey(option.Down)
-            || Input.GetKey(option.Left) || Input.GetKey(option.Right);
-        }
-    }
+    [Header("플레이어 데이터")]
+    [SerializeField]
+    private PlayerData player;
+
+    [Header("참조 스크립트")]
+    [SerializeField]
+    private TalkManager talkManager;
+
+    private OptionSetting option;
+    private PlayerState playerState;
 
     private void Awake()
     {
         option = OptionSetting.Instance;
-        noKeyDown = NoKeyDown.Instance;
+        playerState = PlayerState.Instance;
 
         mainEntity = gameObject.transform;
 
@@ -57,38 +47,13 @@ public class ChrControl : MonoBehaviour
 
     private void Update()
     {
-        // 텍스트 상호작용 키 감지
-        // 자세한 코드는 Text -> TextManager
-        if(noKeyDown.IsMenuActive == false)
-        {
-            talkingKeyPress();
-        }
-
         // 움직임 키 감지
-        if (noKeyDown.IsPlayerControllable)
+        if (playerState.IsPlayerControllable)
         {
             moveKeyPress();
         }
     }
 
-    /************************************************************
-    * [대화 출력]
-    * 
-    * 인게임 화면의 대화 제어
-    ************************************************************/
-
-    public void talkingKeyPress()
-    {
-        // 대화의 첫 시작일 경우
-        if (noKeyDown.IsTalking == false)
-        {
-            // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-            if (npc is not null && Input.GetKeyDown(option.Interact))
-            {
-                lineManager.initTalk(npc);
-            }
-        }
-    }
 
     /************************************************************
      * [움직임 제어]
@@ -143,7 +108,7 @@ public class ChrControl : MonoBehaviour
         getDashVector();
 
         // 대쉬 작동
-        noKeyDown.IsDashing = true;
+        playerState.IsDashing = true;
     }
 
     private void getDashVector()
@@ -196,13 +161,13 @@ public class ChrControl : MonoBehaviour
     private void FixedUpdate()
     {
         // 대쉬 발동에 따른 이동
-        if (noKeyDown.IsDashing)
+        if (playerState.IsDashing)
         {
             moveDash();
         }
 
         // 움직일 수 없는 상태이면 이동을 멈춤
-        if(noKeyDown.IsPlayerControllable == false)
+        if(playerState.IsPlayerControllable == false)
         {
             rigid.velocity = new Vector2(0, 0);
         }
@@ -221,7 +186,7 @@ public class ChrControl : MonoBehaviour
         if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
         {
             Debug.Log("ready");
-            noKeyDown.IsDashing = false;
+            playerState.IsDashing = false;
         }
     }
 
@@ -231,7 +196,7 @@ public class ChrControl : MonoBehaviour
         if (collision.CompareTag("NPC"))
         {
             // 해당 NPC의 정보를 가져오기
-            npc = collision.gameObject.GetComponent<NPC>();
+            player.Npc = collision.gameObject.GetComponent<NPC>();
             Debug.Log("keydown " + option.Interact.ToString());
         }
     }
@@ -242,7 +207,7 @@ public class ChrControl : MonoBehaviour
         if (collision.CompareTag("NPC"))
         {
             // NPC의 정보를 초기화
-            npc = null;
+            player.Npc = null;
             Debug.Log("exit");
         }
     }

@@ -5,22 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
 public class PlayerData : ObjectData
 {
-    private UnityEvent<Vector2> _onPlayerAngleChanged = new UnityEvent<Vector2>();
-    public UnityEvent<Vector2> OnPlayerAngleChanged { get { return _onPlayerAngleChanged; } }
-
-    private const float DASH_SPEED = 0.35f; // 대쉬 거리까지 이동하는 속도
-    public float DashSpeed { get { return DASH_SPEED; } }
-
-    public override int HP
-    {
-        get { return base.HP; }
-        set
-        {
-            base.HP = value;
-            OnPropertyChanged("HP");
-        }
-    }
-
+    [Header("스테이터스")]
     [SerializeField]
     private int _awakenPoint;
     /***************************************************************
@@ -89,8 +74,27 @@ public class PlayerData : ObjectData
         }
     }
 
+    // 대쉬 거리까지 이동하는 속도
+    private const float DASH_SPEED = 0.35f;
+    public float DashSpeed { get { return DASH_SPEED; } }
+
+    // HP 애니메이션 추가용 override
+    public override int HP
+    {
+        get { return base.HP; }
+        set
+        {
+            base.HP = value;
+            OnPropertyChanged("HP");
+        }
+    }
+
+    [Space]
+    [Header("플레이어블 캐릭터 상태")]
+
+    // 플레이어 시선 각도
     [SerializeField]
-    private Vector2 _angle; // 플레이어 시선 각도
+    private Vector2 _angle; 
     public Vector2 Angle
     {
         get { return _angle; }
@@ -104,5 +108,19 @@ public class PlayerData : ObjectData
                 Debug.Log(_angle);
             }
         }
+    }
+
+    private UnityEvent<Vector2> _onPlayerAngleChanged = new UnityEvent<Vector2>();
+    public UnityEvent<Vector2> OnPlayerAngleChanged 
+    {
+        get { return _onPlayerAngleChanged; }
+    }
+
+    // 플레이어와 근접한 NPC
+    private NPC _npc;
+    public NPC Npc
+    {
+        get { return _npc; }
+        set { _npc = value; }
     }
 }

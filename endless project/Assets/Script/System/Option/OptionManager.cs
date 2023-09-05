@@ -14,14 +14,14 @@ namespace Assets.Script.System.Option
         private void Awake()
         {
             optionSetting = OptionSetting.Instance;
-            NoKeyDown.Instance.initialize();
+            PlayerState.Instance.initialize();
 
             //StartCoroutine(checkForControllers());
         }
 
         private void OnApplicationQuit()
         {
-            NoKeyDown.Instance.initialize();
+            PlayerState.Instance.initialize();
         }
 
         private IEnumerator checkForControllers()

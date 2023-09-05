@@ -18,7 +18,7 @@ namespace Assets.Script.UI
         public GameObject selectPrefab;
         [Space]
         [Header("참조 스크립트")]
-        public LineManager lineManager;
+        public TalkManager lineManager;
 
         private List<GameObject> options = new List<GameObject>();
 
