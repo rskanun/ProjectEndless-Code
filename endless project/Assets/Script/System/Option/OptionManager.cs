@@ -14,14 +14,8 @@ namespace Assets.Script.System.Option
         private void Awake()
         {
             optionSetting = OptionSetting.Instance;
-            PlayerState.Instance.initialize();
 
             //StartCoroutine(checkForControllers());
-        }
-
-        private void OnApplicationQuit()
-        {
-            PlayerState.Instance.initialize();
         }
 
         private IEnumerator checkForControllers()

@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed3f7b4fff92619488e39e69156a0368, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  healthPoint: 20
-  maxHealthPoint: 100
-  strength: 0
-  agility: 40
-  defensive: 0
-  manaPoint: 5
+  _healthPoint: 100
+  _maxHealthPoint: 100
+  _strength: 0
+  _agility: 30
+  _defensive: 0
+  _manaPoint: 0
   _awakenPoint: 0
   _maxAwakenPoint: 100
   _armorPen: 0
-  _angle: {x: 18, y: 35}
+  _angle: {x: 0.15584382, y: 0}

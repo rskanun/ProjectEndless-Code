@@ -5,9 +5,14 @@ using UnityEngine;
 
 public class ChrControl : MonoBehaviour
 {
-    private const int ANIMATION_CONSTANT = 10; // 플레이어의 마우스 위치에 따른 시선 변경 보정 상수
-    private const float STOP_DISTANCE = 0.05f;
+    // 플레이어의 마우스 위치에 따른 시선 변경 보정 상수
+    private const int ANIMATION_CONSTANT = 10;
+    
+    // 대쉬 제동 거리
+    private const float MIN_STOP_DISTANCE = 0.05f;
+    private float stopDistance = MIN_STOP_DISTANCE;
 
+    // 플레이어와 대쉬 보조용 가상 엔티티 벡터
     private Vector2 playerVec;
     private Vector2 dashVec;
 
@@ -20,12 +25,17 @@ public class ChrControl : MonoBehaviour
     [SerializeField]
     private PlayerData player;
 
-    [Header("참조 스크립트")]
-    [SerializeField]
-    private TalkManager talkManager;
-
+    // 참조 스크립터블 오브젝트
     private OptionSetting option;
     private PlayerState playerState;
+
+    private bool isPlayerRunningStopped
+    {
+        get
+        {
+            return playerState.IsRunning && playerVec.Equals(Vector2.zero);
+        }
+    }
 
     private void Awake()
     {
@@ -78,8 +88,8 @@ public class ChrControl : MonoBehaviour
     private void moveActionKey()
     {
         // 패드 및 키보드의 움직임(패드의 경우 경도)에 따른 백터 변화
-        playerVec.x = Input.GetAxisRaw("Horizontal");
-        playerVec.y = Input.GetAxisRaw("Vertical");
+        playerVec.x = Input.GetAxis("Horizontal");
+        playerVec.y = Input.GetAxis("Vertical");
 
         // 키보드 누른 방향으로 애니메이션 움직임 제어
         player.Angle = playerVec;
@@ -107,8 +117,14 @@ public class ChrControl : MonoBehaviour
         // 대쉬 이동을 위한 계산식
         getDashVector();
 
+        // 멈춤 거리 계산
+        stopDistance = player.RunSpeed * Time.fixedDeltaTime;
+
         // 대쉬 작동
         playerState.IsDashing = true;
+
+        // 달리기 멈춤 체크
+        StartCoroutine(checkPlayerRunningStopped());
     }
 
     private void getDashVector()
@@ -132,8 +148,10 @@ public class ChrControl : MonoBehaviour
         dashVec.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
         dashVec.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
 
+        // 대쉬 애니메이션 설정
         setDashAnimation();
 
+        // 현재 좌표값을 기준으로 대쉬 좌표 재설정
         dashVec.x += loc_chr.x;
         dashVec.y += loc_chr.y;
     }
@@ -152,10 +170,28 @@ public class ChrControl : MonoBehaviour
         player.Angle = animaVec;
     }
 
+    IEnumerator checkPlayerRunningStopped()
+    {
+        WaitForSeconds checkTime = new WaitForSeconds(0.2f);
+
+        while (playerState.IsRunning)
+        {
+            // 대쉬 중이 아닌 플레이어가 달리는 걸 멈출 경우
+            if (playerState.IsDashing == false && isPlayerRunningStopped)
+            {
+                // 달리기 종료
+                playerState.IsRunning = false;
+                Debug.Log("stop!");
+            }
+
+            yield return checkTime;
+        }
+    }
+
     /************************************************************
-    * [시스템]
+    * [물리 시스템]
     * 
-    * 실제 게임 내의 캐릭터의 움직임이나 모션을 상황에 맞게 제어
+    * 실제 게임 내의 캐릭터의 행동에 따른 변화
     ************************************************************/
 
     private void FixedUpdate()
@@ -166,14 +202,8 @@ public class ChrControl : MonoBehaviour
             moveDash();
         }
 
-        // 움직일 수 없는 상태이면 이동을 멈춤
-        if(playerState.IsPlayerControllable == false)
-        {
-            rigid.velocity = new Vector2(0, 0);
-        }
-        // 방향키 이동에 따른(혹은 그에 준하는) 이동
-        else
-            rigid.velocity = playerVec.normalized * player.Speed;
+        // 방향키(혹은 비슷한 장치) 이동에 따른 이동
+        moveCharacter();
     }
 
     private void moveDash()
@@ -183,10 +213,47 @@ public class ChrControl : MonoBehaviour
         subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed);
 
         // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
-        if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
+        if (Vector2.Distance(dashVec, subEntity.position) <= stopDistance)
         {
-            Debug.Log("ready");
-            playerState.IsDashing = false;
+            // 달리기 거리만큼 가까워졌음에도 움직이지 않고 있을 경우
+            if(isPlayerRunningStopped)
+            {
+                // 달리기 멈춤
+                playerState.IsRunning = false;
+
+                // 제동 거리 재설정
+                stopDistance = MIN_STOP_DISTANCE;
+
+                Debug.Log("stop!");
+            }
+            else
+            {
+                playerState.IsDashing = false;
+
+                Debug.Log("ready");
+            }
+        }
+    }
+
+    private void moveCharacter()
+    {
+        // 움직일 수 없는 상태이면 이동을 멈춤
+        if (playerState.IsPlayerControllable == false)
+        {
+            rigid.velocity = new Vector2(0, 0);
+        }
+        else
+        {
+            // 달리고 있는 경우의 속도
+            if (playerState.IsRunning)
+            {
+                rigid.velocity = playerVec.normalized * player.RunSpeed;
+            }
+            // 걷고 있는 경우의 속도
+            else
+            {
+                rigid.velocity = playerVec.normalized * player.Speed;
+            }
         }
     }
 

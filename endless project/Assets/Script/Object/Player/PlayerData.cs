@@ -5,7 +5,6 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
 public class PlayerData : ObjectData
 {
-    [Header("스테이터스")]
     [SerializeField]
     private int _awakenPoint;
     /***************************************************************
@@ -75,8 +74,36 @@ public class PlayerData : ObjectData
     }
 
     // 대쉬 거리까지 이동하는 속도
-    private const float DASH_SPEED = 0.35f;
-    public float DashSpeed { get { return DASH_SPEED; } }
+    private float _dashSpeed = 0.35f;
+    public float DashSpeed 
+    {
+        get { return _dashSpeed; }
+    }
+
+    // 달리기 속도
+    private float _runSpeed;
+    public float RunSpeed
+    {
+        get
+        {
+            if (_runSpeed <= 0) _runSpeed = Speed * 1.25f;
+
+            return _runSpeed;
+        }
+    }    
+
+    // 민첩 수치 변경에 따른 달리기 속도 변화
+    public override int Speed
+    {
+        get { return base.Speed; }
+        set
+        {
+            base.Speed = value;
+
+            // 달리기 속도 조정
+            _runSpeed = Speed * 1.25f;
+        }
+    }
 
     // HP 애니메이션 추가용 override
     public override int HP
@@ -104,8 +131,6 @@ public class PlayerData : ObjectData
             {
                 _angle = value;
                 OnPlayerAngleChanged.Invoke(_angle);
-
-                Debug.Log(_angle);
             }
         }
     }

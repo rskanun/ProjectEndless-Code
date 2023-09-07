@@ -10117,9 +10117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2891b2768c24654680c6a1c4a241d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
-  lineManager: {fileID: 1540840968}
   subEntity: {fileID: 2102133564}
+  player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
 --- !u!1 &833333569
 GameObject:
   m_ObjectHideFlags: 0
@@ -15128,6 +15127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae89bd04d0ff51488d68c1cea9dd702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
   textManager: {fileID: 515810831}
   selectManager: {fileID: 650115005}
   eventManager: {fileID: 1540840964}

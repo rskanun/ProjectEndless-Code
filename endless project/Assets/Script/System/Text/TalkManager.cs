@@ -38,6 +38,7 @@ namespace Assets.Script.Control.Text
         // 텍스트 저장 공간
         private List<Line> lines;
 
+        // 참조 스크립터블 오브젝트
         private PlayerState playerState;
 
         private void Start()

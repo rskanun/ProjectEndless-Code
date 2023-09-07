@@ -6,8 +6,9 @@ using UnityEngine;
 
 public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
 {
+    [Header("스테이터스")]
     [SerializeField]
-    private int healthPoint;
+    private int _healthPoint;
     /***************************************************************
      * [ 체력 (Health Point) ]
      * 
@@ -15,40 +16,40 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
      ***************************************************************/
     public virtual int HP
     {
-        get { return healthPoint; }
+        get { return _healthPoint; }
         set
         {
-            if(healthPoint != value)
+            if(_healthPoint != value)
             {
                 // 입력값이 음수일 경우
                 if (value < 0)
-                    healthPoint = 0;
+                    _healthPoint = 0;
                 // 입력값이 최대치를 초과한 경우
-                else if (value > maxHealthPoint)
-                    healthPoint = maxHealthPoint;
+                else if (value > _maxHealthPoint)
+                    _healthPoint = _maxHealthPoint;
                 else
-                    healthPoint = value;
+                    _healthPoint = value;
             }
         }
     }
 
     [SerializeField]
-    private int maxHealthPoint;
+    private int _maxHealthPoint;
     public int MaxHP
     {
-        get { return maxHealthPoint; }
+        get { return _maxHealthPoint; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                maxHealthPoint = 0;
+                _maxHealthPoint = 0;
             else
-                maxHealthPoint = value;
+                _maxHealthPoint = value;
         }
     }
 
     [SerializeField]
-    private int strength;
+    private int _strength;
     /***************************************************************
     * [ 근력 (Strength) ]
     * 
@@ -57,41 +58,41 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
     ****************************************************************/
     public int STR
     {
-        get { return strength; }
+        get { return _strength; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                strength = 0;
+                _strength = 0;
             else
-                strength = value;
+                _strength = value;
 
             OnPropertyChanged("STR");
         }
     }
 
     [SerializeField]
-    private int agility;
+    private int _agility;
     /***************************************************************
     * [ 민첩 (Agility) ]
     * 
     * 오브젝트의 민첩 수치로 이동속도에 영향을 끼친다.
     ****************************************************************/
-    public int Speed
+    public virtual int Speed
     {
-        get { return agility; }
+        get { return _agility; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                agility = 0;
+                _agility = 0;
             else
-                agility = value;
+                _agility = value;
         }
     }
 
     [SerializeField]
-    private int defensive;
+    private int _defensive;
     /***************************************************************
     * [ 방어력 (Defensive) ]
     * 
@@ -100,21 +101,21 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
     ****************************************************************/
     public int DEF
     {
-        get { return defensive; }
+        get { return _defensive; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                defensive = 0;
+                _defensive = 0;
             else
-                defensive = value;
+                _defensive = value;
 
             OnPropertyChanged("DEF");
         }
     }
 
     [SerializeField]
-    private int manaPoint;
+    private int _manaPoint;
     /***************************************************************
      * [ 마력 (Mana Point) ]
      * 
@@ -125,14 +126,14 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
      ****************************************************************/
     public int MP
     {
-        get { return manaPoint; }
+        get { return _manaPoint; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                manaPoint = 0;
+                _manaPoint = 0;
             else
-                manaPoint = value;
+                _manaPoint = value;
         }
     }
 

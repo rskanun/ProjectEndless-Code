@@ -1,63 +1,45 @@
-﻿using UnityEngine;
+﻿
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-public class PlayerState : ScriptableObject
+public class PlayerState
 {
-    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
-    private const string FILE_DIRECTORY = "Assets/Resources/Option";
-    private const string FILE_PATH = "Assets/Resources/Option/PlayerState.asset";
-
     private static PlayerState _instance;
     public static PlayerState Instance
     {
         get
         {
-            if (_instance != null) return _instance;
-
-            _instance = Resources.Load<PlayerState>("Option/PlayerState");
-
-#if UNITY_EDITOR
             if (_instance == null)
             {
-                // 파일 경로가 없을 경우 폴더 생성
-                if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
-                {
-                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
-
-                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
-                }
-
-                // Resource.Load가 실패했을 경우
-                _instance = AssetDatabase.LoadAssetAtPath<PlayerState>(FILE_PATH);
-
-                if (_instance == null)
-                {
-                    _instance = CreateInstance<PlayerState>();
-                    AssetDatabase.CreateAsset(_instance, FILE_PATH);
-                }
+                _instance = new PlayerState();
             }
-#endif
-            _instance.initialize();
+            
             return _instance;
         }
     }
 
+    /************************************************************
+    * [플레이어 상태]
+    * 
+    * 현제 플레이어의 상태에 관한 변수
+    ************************************************************/
+
     // 플레이어가 현재 대시를 하고 있는 상태인지 여부
-    private bool _isDashing;
+    private bool _isDashing = false;
     public bool IsDashing
     {
         get { return _isDashing; }
-        set { _isDashing = value; }
+        set
+        {
+            _isDashing = value;
+
+            if(_isDashing)
+            {
+                _isRunning = true;
+            }
+        }
     }
 
     // 현재 플레이어가 NPC와 대화를 진행중인 상태인지 여부
-    private bool _isTalking;
+    private bool _isTalking = false;
     public bool IsTalking
     {
         get { return _isTalking; }
@@ -65,15 +47,29 @@ public class PlayerState : ScriptableObject
     }
 
     // 메뉴 화면이 현재 켜져있는지 여부
-    private bool _isMenuActive;
+    private bool _isMenuActive = false;
     public bool IsMenuActive
     {
         get { return _isMenuActive; }
         set { _isMenuActive = value; }
     }
 
+    // 현제 플레이어가 뛰고있는 상태인지 여부
+    private bool _isRunning = false;
+    public bool IsRunning
+    {
+        get { return _isRunning; }
+        set { _isRunning = value; }
+    }
+
+    /************************************************************
+    * [행동 제약]
+    * 
+    * 플레이어 행동 제약에 관한 변수
+    ************************************************************/
+
     // 플레이어를 조종할 수 있는지 여부
-    private bool _isPlayerControllable;
+    private bool _isPlayerControllable = true;
     public bool IsPlayerControllable
     {
         get
@@ -88,7 +84,7 @@ public class PlayerState : ScriptableObject
     }
 
     // 메뉴키를 누를 수 있는지 여부
-    private bool _allowMenuKey;
+    private bool _allowMenuKey = true;
     public bool AllowMenuKey
     {
         get
@@ -103,7 +99,7 @@ public class PlayerState : ScriptableObject
     }
 
     // 뒤로가기 키를 누를 수 있는지 여부
-    private bool _allowCancelKey;
+    private bool _allowCancelKey = false;
     public bool AllowCancelKey
     {
         get
@@ -115,16 +111,5 @@ public class PlayerState : ScriptableObject
         }
 
         set { _allowCancelKey = value; }
-    }
-
-    public void initialize()
-    {
-        // init value
-        _isDashing = false;
-        _isTalking = false;
-        _isMenuActive = false;
-
-        _isPlayerControllable = true;
-        _allowMenuKey = true;
     }
 }
