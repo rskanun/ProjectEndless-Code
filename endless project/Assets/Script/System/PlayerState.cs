@@ -27,15 +27,7 @@ public class PlayerState
     public bool IsDashing
     {
         get { return _isDashing; }
-        set
-        {
-            _isDashing = value;
-
-            if(_isDashing)
-            {
-                _isRunning = true;
-            }
-        }
+        set { _isDashing = value; }
     }
 
     // 현재 플레이어가 NPC와 대화를 진행중인 상태인지 여부

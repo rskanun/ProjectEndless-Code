@@ -124,7 +124,7 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
      * 마력 수치가 높아질수록 마력 공격의 데미지를 줄여 받는다.
      * 플레이어의 경우 마력의 수치에 따라 각성치 초기값이 달라진다.
      ****************************************************************/
-    public int MP
+    public virtual int MP
     {
         get { return _manaPoint; }
         set

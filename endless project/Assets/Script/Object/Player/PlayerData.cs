@@ -1,12 +1,11 @@
-﻿using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
 public class PlayerData : ObjectData
 {
-    [SerializeField]
-    private int _awakenPoint;
+    [SerializeField] private int _awakenPoint;
+    [SerializeField] private int _totalAwakenPoint; // ap + mp
     /***************************************************************
      * [ 각성치 (Awaken Point) ]
      * 
@@ -17,19 +16,22 @@ public class PlayerData : ObjectData
      ****************************************************************/
     public int AP
     {
-        get { return _awakenPoint; }
+        get { return _totalAwakenPoint; }
         set
         {
             if(_awakenPoint != value)
             {
                 // 입력값이 음수일 경우
                 if (value < 0)
-                    _awakenPoint = MP;
+                    _awakenPoint = 0;
                 // 입력값이 최대치를 초과한 경우
                 else if (value + MP > _maxAwakenPoint)
-                    _awakenPoint = _maxAwakenPoint;
+                    _awakenPoint = _maxAwakenPoint - MP;
                 else
                     _awakenPoint = value;
+
+                // 토탈값
+                _totalAwakenPoint = _awakenPoint + MP;
 
                 OnPropertyChanged("AP");
             }
@@ -102,6 +104,21 @@ public class PlayerData : ObjectData
 
             // 달리기 속도 조정
             _runSpeed = Speed * 1.25f;
+        }
+    }
+
+    // MP 수치 변경에 따른 AP 수치 변화
+    public override int MP
+    {
+        get { return base.MP; }
+        set
+        {
+            base.MP = value;
+
+            if(_awakenPoint <= MP)
+            {
+                _awakenPoint = MP;
+            }
         }
     }
 

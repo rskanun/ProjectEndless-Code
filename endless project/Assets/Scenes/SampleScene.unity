@@ -9952,6 +9952,7 @@ GameObject:
   - component: {fileID: 823037298}
   - component: {fileID: 823037297}
   - component: {fileID: 823037304}
+  - component: {fileID: 823037305}
   - component: {fileID: 823037299}
   - component: {fileID: 823037301}
   - component: {fileID: 823037302}
@@ -10117,7 +10118,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2891b2768c24654680c6a1c4a241d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigid: {fileID: 823037299}
+  mainEntity: {fileID: 823037298}
   subEntity: {fileID: 2102133564}
+  player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
+--- !u!114 &823037305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823037296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54baf5170135ac348857b2d919aad2ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 823037301}
   player: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
 --- !u!1 &833333569
 GameObject:
@@ -18850,7 +18867,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4ca94be506dbea84dba7ea0b72aab4db, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
