@@ -1,22 +1,21 @@
-﻿using UnityEngine;
+﻿using System.ComponentModel;
+using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "Player", menuName ="scriptable Object/Player")]
-public class PlayerData : ObjectData
+public class PlayerData : ObjectData, INotifyPropertyChanged
 {
     [SerializeField] private int _awakenPoint;
-    [SerializeField] private int _totalAwakenPoint; // ap + mp
     /***************************************************************
      * [ 각성치 (Awaken Point) ]
      * 
      * 플레이어만의 각성 수치로 시나리오에 벗어나는 행동을 할 시 올라간다.
      * 50% 달성 시 플레이어 제어권을 잃으며, 100%를 달성할 시
      * 강제 루프를 진행한다.
-     * 마력 수치에 따라 초기값이 달라진다.
      ****************************************************************/
     public int AP
     {
-        get { return _totalAwakenPoint; }
+        get { return _awakenPoint; }
         set
         {
             if(_awakenPoint != value)
@@ -25,13 +24,13 @@ public class PlayerData : ObjectData
                 if (value < 0)
                     _awakenPoint = 0;
                 // 입력값이 최대치를 초과한 경우
-                else if (value + MP > _maxAwakenPoint)
-                    _awakenPoint = _maxAwakenPoint - MP;
+                else if (value > _maxAwakenPoint)
+                    _awakenPoint = _maxAwakenPoint;
                 else
                     _awakenPoint = value;
 
-                // 토탈값
-                _totalAwakenPoint = _awakenPoint + MP;
+                // ap 수치 변경에 따른 mp 값 조절
+                MP = _totalMP * (_awakenPoint / _maxAwakenPoint);
 
                 OnPropertyChanged("AP");
             }
@@ -52,28 +51,31 @@ public class PlayerData : ObjectData
                 _maxAwakenPoint = value;
         }
     }
-
+    
     [SerializeField]
-    private int _armorPen;
+    private int _defensive;
     /***************************************************************
-     * [ 방어력 관통 (Armor Penetration) ]
-     * 
-     * 플레이어만 가지는 옵션으로 적의 방어력을 일부 무시하는 수치다.
-     * 방어력 관통 1당 방어력 1을 무시한다.
-     * 마력의 수치에 따라 방어력 관통 수치가 달라진다.
-     ****************************************************************/
-    public int ArmorPenetration
+    * [ 방어력 (Defensive) ]
+    * 
+    * 오브젝트의 방어력 수치로 받는 데미지에 영향을 끼친다.
+    * 방어력 1당 1의 데미지를 줄인다.
+    ****************************************************************/
+    public int DEF
     {
-        get { return _armorPen; }
+        get { return _defensive; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                _armorPen = 0;
+                _defensive = 0;
             else
-                _armorPen = value;
+                _defensive = value;
         }
     }
+
+    // 플레이어 총 마력 수치
+    [SerializeField]
+    private int _totalMP;
 
     // 대쉬 거리까지 이동하는 속도
     private float _dashSpeed = 0.35f;
@@ -107,19 +109,10 @@ public class PlayerData : ObjectData
         }
     }
 
-    // MP 수치 변경에 따른 AP 수치 변화
+    // AP에 의해서만 MP값이 수정되도록 변경
     public override int MP
     {
         get { return base.MP; }
-        set
-        {
-            base.MP = value;
-
-            if(_awakenPoint <= MP)
-            {
-                _awakenPoint = MP;
-            }
-        }
     }
 
     // HP 애니메이션 추가용 override
@@ -130,6 +123,16 @@ public class PlayerData : ObjectData
         {
             base.HP = value;
             OnPropertyChanged("HP");
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void OnPropertyChanged(string propertyName)
+    {
+        if (PropertyChanged != null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

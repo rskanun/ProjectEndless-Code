@@ -1,13 +1,11 @@
 ﻿using Assets.Script.Item;
-using System.Collections;
-using System.ComponentModel;
 using UnityEngine;
 
 namespace Assets.Script.Object.Player
 {
     // 물리 데미지 = 근력 * 무기 공격력 증가율
     // 마력 데미지 = 각 스킬에 대한 데미지
-    // 피해량 = (데미지 - (상대 방어력 - 플레이어의 방어력 관통력)[최소 0] - 마력에 의한 방어(자신의 마력 - 상대방의 마력)[최소 0])
+    // 피해량 = (데미지 - 마력에 의한 방어(자신의 마력 - 상대방의 마력)[최소 0])
 
     public class Player : MonoBehaviour
     {
@@ -19,6 +17,8 @@ namespace Assets.Script.Object.Player
 
         private float damage;
         public float Damage { get { return damage; } }
+
+        public float MP { get { return player.MP; } }
         
         private void damageUpdate()
         {
@@ -29,19 +29,6 @@ namespace Assets.Script.Object.Player
         private void Start()
         {
             damageUpdate();
-        }
-
-        private void OnStrengthChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "STR")
-            {
-                damageUpdate();
-            }
-        }
-
-        public void Attack()
-        {
-            Debug.Log(damage);
         }
     }
 }

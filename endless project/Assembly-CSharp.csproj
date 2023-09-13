@@ -99,6 +99,7 @@
     <Compile Include="Assets\Script\System\Text\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\Select.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Save\SaveUI.cs" />
+    <Compile Include="Assets\Script\UI\ObjectAnimation\Player\CharacterAnimation.cs" />
     <Compile Include="Assets\Script\System\Option\Option.cs" />
     <Compile Include="Assets\Script\Object\ObjectData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Script\UI\Menu\ToastUI.cs" />
     <Compile Include="Assets\Script\System\Menu\Save\SaveManager.cs" />
-    <Compile Include="Assets\Script\System\PlayerState.cs" />
+    <Compile Include="Assets\Script\System\Player\PlayerState.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\Popup.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
@@ -152,14 +153,17 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Popup\AlertUI.cs" />
-    <Compile Include="Assets\Script\System\Character\PlayerController.cs" />
+    <Compile Include="Assets\Script\System\Player\PlayerController.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\Alert.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\Script\System\Option\ListOption.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\AlertManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
-    <Compile Include="Assets\Script\UI\ObjectAnimation\Player\CharacterAnimation.cs" />
+    <Compile Include="Assets\Script\Object\Monster\MonsterData.cs" />
+    <Compile Include="Assets\Script\Object\Monster\Monster.cs" />
+    <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
+    <Compile Include="Assets\Script\System\Player\AttackAreaManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

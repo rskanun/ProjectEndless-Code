@@ -46,30 +46,11 @@ namespace Assets.Script.Control.Text
             playerState = PlayerState.Instance;
         }
 
-        private void Update()
-        {
-            // 텍스트 상호작용 키 감지
-            talkingKeyPress();
-        }
-
         /************************************************************
         * [대사 관리]
         * 
         * 대사를 읽어 그에 따른 인게임 이벤트 제어
         ************************************************************/
-
-        public void talkingKeyPress()
-        {
-            // 대화가 처음이고 가능한 상태일 경우
-            if (playerState.IsPlayerControllable)
-            {
-                // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
-                if (playerData.Npc is not null && Input.GetKeyDown(OptionSetting.Instance.Interact))
-                {
-                    initTalk(playerData.Npc);
-                }
-            }
-        }
 
         public void initTalk(NPC npc)
         {

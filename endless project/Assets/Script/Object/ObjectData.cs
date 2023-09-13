@@ -4,7 +4,16 @@ using System.ComponentModel;
 using UnityEditor.Experimental;
 using UnityEngine;
 
-public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
+public class Tag
+{
+    private static string _npc = "NPC";
+    public static string NPC { get { return _npc; } }
+
+    private static string _monster = "Monster";
+    public static string Monster { get { return _monster; } }
+}
+
+public abstract class ObjectData : ScriptableObject
 {
     [Header("스테이터스")]
     [SerializeField]
@@ -66,8 +75,6 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
                 _strength = 0;
             else
                 _strength = value;
-
-            OnPropertyChanged("STR");
         }
     }
 
@@ -92,29 +99,6 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
     }
 
     [SerializeField]
-    private int _defensive;
-    /***************************************************************
-    * [ 방어력 (Defensive) ]
-    * 
-    * 오브젝트의 방어력 수치로 받는 데미지에 영향을 끼친다.
-    * 방어력 1당 1의 데미지를 줄인다.
-    ****************************************************************/
-    public int DEF
-    {
-        get { return _defensive; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _defensive = 0;
-            else
-                _defensive = value;
-
-            OnPropertyChanged("DEF");
-        }
-    }
-
-    [SerializeField]
     private int _manaPoint;
     /***************************************************************
      * [ 마력 (Mana Point) ]
@@ -134,16 +118,6 @@ public abstract class ObjectData : ScriptableObject, INotifyPropertyChanged
                 _manaPoint = 0;
             else
                 _manaPoint = value;
-        }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged(string propertyName)
-    {
-        if (PropertyChanged != null)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

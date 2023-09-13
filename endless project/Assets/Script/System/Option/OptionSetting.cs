@@ -75,8 +75,8 @@ public class OptionSetting : ScriptableObject
     private KeyCode down  = KeyCode.S;
 
     // ¾×¼ÇÅ°
-    public KeyCode Action { get { return action; } }
-    private KeyCode action    = KeyCode.Mouse0;
+    public KeyCode Attack { get { return attack; } }
+    private KeyCode attack    = KeyCode.Mouse0;
     public KeyCode Dash { get { return dash; } }
     private KeyCode dash      = KeyCode.Mouse1;
     public KeyCode Interact { get { return interact; } }

@@ -26,5 +26,14 @@ namespace Assets.Script.UI.ObjectAnimation.Player
             playerAnimator.SetInteger("axisH", x);
             playerAnimator.SetInteger("axisV", y);
         }
+
+        public IEnumerator AttackAnimation()
+        {
+            // 애니메이션 실행
+
+            // 애니메이션 딜레이
+            float delay = 0.5f;
+            yield return new WaitForSeconds(delay);
+        }
     }
 }

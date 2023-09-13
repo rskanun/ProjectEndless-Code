@@ -8,8 +8,8 @@ namespace Assets.Script.UI
     {
         public Image hpBar;
 
-        private const float TICKS = 10;
-        private const float SPF = 0.025f; // second per frame
+        private float ticks = 10;
+        private float spf = 0.025f; // second per frame
 
         private float nowHP;
 
@@ -32,8 +32,8 @@ namespace Assets.Script.UI
 
         IEnumerator barAnimation(float setHP, float maxHP)
         {
-            float movePer = (nowHP - setHP) / TICKS;
-            WaitForSeconds wait = new WaitForSeconds(SPF);
+            float movePer = (nowHP - setHP) / ticks;
+            WaitForSeconds wait = new WaitForSeconds(spf);
 
             while (nowHP != setHP)
             {

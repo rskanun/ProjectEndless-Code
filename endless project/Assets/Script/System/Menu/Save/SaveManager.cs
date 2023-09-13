@@ -20,7 +20,6 @@ public class SaveData
     public int agi;
     public int def;
     public int mp;
-    public int armorPen;
 
     // Date
     public string date;
@@ -187,7 +186,6 @@ public class SaveManager : MonoBehaviour
         saveData.agi = playerData.Speed;
         saveData.def = playerData.DEF;
         saveData.mp = playerData.MP;
-        saveData.armorPen = playerData.ArmorPenetration;
     }
 
     private void saveOptionDate(SaveData saveData)
@@ -221,7 +219,6 @@ public class SaveManager : MonoBehaviour
         playerData.Speed = data.agi;
         playerData.DEF = data.def;
         playerData.MP = data.mp;
-        playerData.ArmorPenetration = data.armorPen;
     }
 
     private void loadOptionDate(SaveData data)
