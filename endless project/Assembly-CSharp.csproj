@@ -63,6 +63,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
+    <Compile Include="Assets\Script\System\Player\AttackAreaManager.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\Case.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Popup\ConfirmUI.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\EventLine.cs" />
     <Compile Include="Assets\Script\System\Menu\App\PhoneOptionSetting.cs" />
+    <Compile Include="Assets\Script\Object\Monster\Monster.cs" />
     <Compile Include="Assets\Script\UI\AwakenPointBarUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Script\UI\SelectUI.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Assets\Script\UI\Animation\AppAnimation.cs" />
     <Compile Include="Assets\Script\System\Menu\App\LoadApp.cs" />
     <Compile Include="Assets\Script\UI\Directing\SecretEffects.cs" />
+    <Compile Include="Assets\Script\Object\Monster\MonsterData.cs" />
     <Compile Include="Assets\Script\Item\Item.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Script\UI\Menu\ToastUI.cs" />
@@ -160,10 +163,7 @@
     <Compile Include="Assets\Script\System\Menu\Popup\AlertManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
-    <Compile Include="Assets\Script\Object\Monster\MonsterData.cs" />
-    <Compile Include="Assets\Script\Object\Monster\Monster.cs" />
     <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
-    <Compile Include="Assets\Script\System\Player\AttackAreaManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

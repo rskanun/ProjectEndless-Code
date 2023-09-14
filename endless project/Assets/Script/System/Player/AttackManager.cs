@@ -1,4 +1,5 @@
-﻿using Assets.Script.UI.ObjectAnimation.Player;
+﻿using Assets.Script.Object.Monster;
+using Assets.Script.UI.ObjectAnimation.Player;
 using System.Collections;
 using UnityEngine;
 
@@ -18,6 +19,14 @@ namespace Assets.Script.System.Player
         private void Start ()
         {
             playerState = PlayerState.Instance;
+        }
+
+        public void OnNormalDamage(Collider2D collision)
+        {
+            float damage = player.Damage;
+            float mp = player.MP;
+
+            collision.GetComponent<Monster>().OnTakeDamage(damage, mp);
         }
 
         public void OnNormalAttack()
@@ -48,9 +57,6 @@ namespace Assets.Script.System.Player
         private IEnumerator normalAttackAction()
         {
             normalAttackBox.SetActive(true);
-
-            // 대미지 값 전송
-            normalAttackBox.GetComponent<AttackAreaManager>().OnAttack(player.Damage, player.MP);
 
             // 공격 모션 실행
             yield return StartCoroutine(anim.AttackAnimation());

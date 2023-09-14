@@ -159,6 +159,7 @@ public class PlayerController : MonoBehaviour
 
     private void attackKeyPress()
     {
+        // 일반 공격
         if(Input.GetKeyDown(option.Attack) && playerState.IsAttacking == false)
         {
             atkManager.OnNormalAttack();
@@ -217,23 +218,29 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag(Tag.NPC))
+        if(playerState.IsAttacking == false)
         {
-            // 해당 NPC의 정보를 가져오기
-            player.Npc = collision.gameObject.GetComponent<NPC>();
-            Debug.Log("keydown " + option.Interact.ToString());
+            // 맞닿은 오브젝트가 NPC일 시
+            if (collision.CompareTag(Tag.NPC))
+            {
+                // 해당 NPC의 정보를 가져오기
+                player.Npc = collision.gameObject.GetComponent<NPC>();
+                Debug.Log("keydown " + option.Interact.ToString());
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag(Tag.NPC))
-        {
-            // NPC의 정보를 초기화
-            player.Npc = null;
-            Debug.Log("exit");
+        if (playerState.IsAttacking == false)
+        {    
+            // 맞닿은 오브젝트가 NPC일 시
+            if (collision.CompareTag(Tag.NPC))
+            {
+                // NPC의 정보를 초기화
+                player.Npc = null;
+                Debug.Log("exit");
+            }
         }
     }
 }
