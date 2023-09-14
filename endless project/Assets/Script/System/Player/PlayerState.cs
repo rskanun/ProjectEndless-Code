@@ -75,7 +75,7 @@ public class PlayerState
         get
         {
             if (_isPlayerControllable)
-                return _isDashing == false && _isTalking == false && _isMenuActive == false;
+                return _isDashing == false && _isTalking == false && _isMenuActive == false && _isAttacking == false;
             else
                 return _isPlayerControllable;
         }

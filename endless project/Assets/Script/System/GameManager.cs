@@ -7,16 +7,22 @@ namespace Assets.Script.System
     {
         private OptionSetting optionSetting;
 
+        [SerializeField]
+        private PlayerData playerData;
+
         private void Awake()
         {
             optionSetting = OptionSetting.Instance;
 
-            allDataLoad();
+            //allDataLoad();
+
+            // player data init
+            playerData.Npc = null;
         }
 
         private void OnApplicationQuit()
         {
-            allDataSave();
+            //allDataSave();
         }
 
         private void allDataLoad()

@@ -13,9 +13,10 @@ public class PlayerController : MonoBehaviour
     // 대쉬 제동 거리
     private const float STOP_DISTANCE = 0.05f;
 
-    // 플레이어와 대쉬 보조용 가상 엔티티 벡터
+    // 이동 위치 벡터
     private Vector2 playerVec;
     private Vector2 dashVec;
+    private Vector2 attackVec;
 
     [SerializeField] private Rigidbody2D rigid;
     [SerializeField] private Transform mainEntity; // 플레이어 캐릭터
@@ -25,7 +26,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerData player;
 
     [Header("참조 스크립트")]
-    [SerializeField] private CharacterAnimation anim;
     [SerializeField] private TalkManager talkManager;
     [SerializeField] private AttackManager atkManager;
 
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
             * Mathf.Rad2Deg;
 
         // 이동 거리 계산
-        float distance = player.Speed;
+        float distance = 40;
 
         dashVec.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
         dashVec.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
@@ -146,6 +146,9 @@ public class PlayerController : MonoBehaviour
             // 대화가능한 npc가 범위 내에 있다면 상호작용 키로 대화를 활성화
             if (player.Npc is not null && Input.GetKeyDown(option.Interact))
             {
+                // 움직임 멈춤
+                rigid.velocity = Vector2.zero;
+
                 talkManager.initTalk(player.Npc);
             }
         }
@@ -162,8 +165,42 @@ public class PlayerController : MonoBehaviour
         // 일반 공격
         if(Input.GetKeyDown(option.Attack) && playerState.IsAttacking == false)
         {
-            atkManager.OnNormalAttack();
+            // 공격 각도
+            float angle = getAttackAngle();
+
+            // 공격 시 이동 위치
+            Vector2 vec = getAttackMoveVec(angle);
+            attackVec.x = vec.x + mainEntity.position.x;
+            attackVec.y = vec.y + mainEntity.position.y;
+            Debug.Log(attackVec);
+            // 공격 액션
+            player.Angle = vec;
+            atkManager.OnAttack(angle);
         }
+    }
+
+    private float getAttackAngle()
+    {
+        Vector2 locClick = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 locPlayer = mainEntity.position;
+
+        float angle = Mathf.Atan2(locClick.y - locPlayer.y, locClick.x - locPlayer.x)
+            * Mathf.Rad2Deg;
+
+        return angle;
+    }
+
+    private Vector2 getAttackMoveVec(float angle)
+    {
+        Vector2 vector = Vector2.zero;
+
+        // 공격 시 살짝 이동할 거리
+        float distance = 1f;
+
+        vector.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
+        vector.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
+
+        return vector;
     }
 
     /************************************************************
@@ -179,9 +216,12 @@ public class PlayerController : MonoBehaviour
         {
             moveDash();
         }
-
+        else if(playerState.IsAttacking)
+        {
+            moveToAttack();
+        }
         // 방향키(혹은 비슷한 장치) 이동에 따른 이동
-        if(playerState.IsPlayerControllable)
+        else if(playerState.IsPlayerControllable)
         {
             moveCharacter();
         }
@@ -190,8 +230,8 @@ public class PlayerController : MonoBehaviour
     private void moveDash()
     {
         // 캐릭터 및 서브 오브젝트 이동
-        rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, player.DashSpeed));
-        subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed);
+        rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, player.DashSpeed * Time.deltaTime));
+        subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed * Time.deltaTime);
 
         // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
         if (Vector2.Distance(dashVec, subEntity.position) <= STOP_DISTANCE)
@@ -207,40 +247,17 @@ public class PlayerController : MonoBehaviour
         // 달리고 있는 경우의 속도
         if (playerState.IsRunning)
         {
-            rigid.velocity = playerVec.normalized * player.RunSpeed;
+            rigid.velocity = playerVec.normalized * player.RunSpeed * Time.deltaTime;
         }
         // 걷고 있는 경우의 속도
         else
         {
-            rigid.velocity = playerVec.normalized * player.Speed;
+            rigid.velocity = playerVec.normalized * player.Speed * Time.deltaTime;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void moveToAttack()
     {
-        if(playerState.IsAttacking == false)
-        {
-            // 맞닿은 오브젝트가 NPC일 시
-            if (collision.CompareTag(Tag.NPC))
-            {
-                // 해당 NPC의 정보를 가져오기
-                player.Npc = collision.gameObject.GetComponent<NPC>();
-                Debug.Log("keydown " + option.Interact.ToString());
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (playerState.IsAttacking == false)
-        {    
-            // 맞닿은 오브젝트가 NPC일 시
-            if (collision.CompareTag(Tag.NPC))
-            {
-                // NPC의 정보를 초기화
-                player.Npc = null;
-                Debug.Log("exit");
-            }
-        }
+        rigid.MovePosition(Vector2.Lerp(mainEntity.position, attackVec, 5.0f * Time.deltaTime));
     }
 }

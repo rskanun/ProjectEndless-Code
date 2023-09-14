@@ -67,7 +67,7 @@ namespace Assets.Script.Control.Text
             }
         }
 
-        IEnumerator textDelayPrint(string line)
+        private IEnumerator textDelayPrint(string line)
         {
             string text = "";
             WaitForSeconds wait = new WaitForSeconds(typingSpeed);

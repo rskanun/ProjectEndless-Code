@@ -78,6 +78,7 @@ public class PlayerData : ObjectData, INotifyPropertyChanged
     private int _totalMP;
 
     // 대쉬 거리까지 이동하는 속도
+    [SerializeField]
     private float _dashSpeed = 0.35f;
     public float DashSpeed 
     {
@@ -85,13 +86,12 @@ public class PlayerData : ObjectData, INotifyPropertyChanged
     }
 
     // 달리기 속도
-    private float _runSpeed;
+    [SerializeField] 
+    private float _runSpeed; // speed * 1.25
     public float RunSpeed
     {
         get
         {
-            if (_runSpeed <= 0) _runSpeed = Speed * 1.25f;
-
             return _runSpeed;
         }
     }    
