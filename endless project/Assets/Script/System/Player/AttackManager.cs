@@ -56,7 +56,7 @@ namespace Assets.Script.System.Player
         {
             if(collision.CompareTag(Tag.Monster))
             {
-                collision.GetComponent<Monster>().OnTakeDamage(player.Damage, player.MP);
+                collision.GetComponent<Monster>().OnTakeDamage(player.AttackDamage, player.MP);
             }
         }
     }

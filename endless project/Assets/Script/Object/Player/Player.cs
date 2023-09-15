@@ -15,15 +15,15 @@ namespace Assets.Script.Object.Player
         [SerializeField]
         private Weapon weapon;
 
-        private float damage;
-        public float Damage { get { return damage; } }
+        private int _atkDamage;
+        public int AttackDamage { get { return _atkDamage; } }
 
-        public float MP { get { return player.MP; } }
+        public int MP { get { return player.MP; } }
         
         private void damageUpdate()
         {
-            damage = player.STR;
-            if (weapon != null) damage *= weapon.DamagePercent;
+            _atkDamage = player.STR;
+            if (weapon != null) _atkDamage = Mathf.RoundToInt(_atkDamage * weapon.DamagePercent);
         }
 
         private void Start()

@@ -19,8 +19,8 @@ namespace Assets.Script.UI.ObjectAnimation.Player
         public void UpdateAnimationByPlayerSight(Vector2 angle)
         {
             // 올림 보정
-            int x = Mathf.CeilToInt(angle.x);
-            int y = Mathf.CeilToInt(angle.y);
+            int x = (angle.x > 0) ? Mathf.CeilToInt(angle.x) : Mathf.FloorToInt(angle.x);
+            int y = (angle.y > 0) ? Mathf.CeilToInt(angle.y) : Mathf.FloorToInt(angle.y);
 
             // 애니메이션 움직임 제어
             playerAnimator.SetInteger("axisH", x);

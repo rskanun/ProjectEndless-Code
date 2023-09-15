@@ -8,14 +8,14 @@ namespace Assets.Script.Object.Monster
         [Header("오브젝트 데이터 값")]
         [SerializeField] private MonsterData data;
 
-        public void OnTakeDamage(float damage, float targetMP)
+        public void OnTakeDamage(int damage, int targetMP)
         {
-            float resultMP = data.MP - targetMP;
-            float def = (resultMP < 0) ? 0 : resultMP;
+            float originHP = data.HP;
+            float originRP = data.RP;
 
-            float totalDamage = damage - def;
+            data.HP -= damage;
 
-            Debug.Log(totalDamage + " Damage!");
+            Debug.Log(damage + " Damage! " + originHP + " -> " + data.HP);
         }
     }
 }

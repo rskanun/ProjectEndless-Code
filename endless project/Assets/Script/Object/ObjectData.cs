@@ -99,25 +99,65 @@ public abstract class ObjectData : ScriptableObject
     }
 
     [SerializeField]
-    private int _manaPoint;
+    private int _regenPower;
     /***************************************************************
-     * [ 마력 (Mana Point) ]
+     * [ 재생력 (Regenerative Power) ]
      * 
-     * 오브젝트의 마력 수치로 마력과 관련된 데미지와 방어력에 영향을 끼친다.
-     * 마력 수치가 높아질수록 마력을 사용한 공격의 데미지가 올라간다.
-     * 마력 수치가 높아질수록 마력 공격의 데미지를 줄여 받는다.
-     * 플레이어의 경우 마력의 수치에 따라 각성치 초기값이 달라진다.
+     * 오브젝트의 재생 수치로 일정 주기마다 재생력만큼 체력을 회복한다.
+     * 오브젝트가 사망 시 재생력이 남아있다면,
+     * 재생력을 최대 체력만큼 깎고서 그만큼의 체력을 회복한다.
+     * 피격당할 시 상대방의 마력만큼 재생력을 잃는다.
      ****************************************************************/
-    public virtual int MP
+    public int RP
     {
-        get { return _manaPoint; }
+        get { return _regenPower; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                _manaPoint = 0;
+                _regenPower = 0;
+            // 입력값이 최대치를 초과한 경우
+            else if (value > _maxRegenPower)
+                _regenPower = _maxRegenPower;
             else
-                _manaPoint = value;
+                _regenPower = value;
+        }
+    }
+
+    [SerializeField]
+    private int _maxRegenPower;
+    public int MaxRP
+    {
+        get { return _maxRegenPower; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                _maxRegenPower = 0;
+            else
+                _maxRegenPower = value;
+        }
+    }
+
+    [SerializeField]
+    private int _magicPower;
+    /***************************************************************
+     * [ 마력 (Magic Power) ]
+     * 
+     * 오브젝트의 마력 수치로 마력과 관련된 데미지와 재생력에 영향을 끼친다.
+     * 마력 수치가 높아질수록 마력을 사용한 공격의 데미지가 올라간다.
+     * 플레이어의 경우 각성치에 따라 마력의 초기값이 달라진다.
+     ****************************************************************/
+    public virtual int MP
+    {
+        get { return _magicPower; }
+        set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                _magicPower = 0;
+            else
+                _magicPower = value;
         }
     }
 }

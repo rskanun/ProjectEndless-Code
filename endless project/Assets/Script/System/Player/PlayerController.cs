@@ -172,9 +172,12 @@ public class PlayerController : MonoBehaviour
             Vector2 vec = getAttackMoveVec(angle);
             attackVec.x = vec.x + mainEntity.position.x;
             attackVec.y = vec.y + mainEntity.position.y;
-            Debug.Log(attackVec);
+
+            // 움직임 멈춤
+            rigid.velocity = Vector2.zero;
+
             // 공격 액션
-            player.Angle = vec;
+            setSightAnimationToAttack(vec, angle);
             atkManager.OnAttack(angle);
         }
     }
@@ -193,14 +196,25 @@ public class PlayerController : MonoBehaviour
     private Vector2 getAttackMoveVec(float angle)
     {
         Vector2 vector = Vector2.zero;
+        float roundAngle = Mathf.Round(angle / 45.0f) * 45.0f;
 
         // 공격 시 살짝 이동할 거리
         float distance = 1f;
 
-        vector.x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
-        vector.y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
+        vector.x = Mathf.Cos(roundAngle * Mathf.Deg2Rad) * distance;
+        vector.y = Mathf.Sin(roundAngle * Mathf.Deg2Rad) * distance;
 
         return vector;
+    }
+
+    private void setSightAnimationToAttack(Vector2 vec, float angle)
+    {
+        float roundAngle = Mathf.Round(angle / 45.0f) * 45.0f;
+
+        vec.x = ((roundAngle - 90) % 180 == 0) ? 0 : vec.x;
+        vec.y = (roundAngle % 180 == 0) ? 0 : vec.y;
+
+        player.Angle = vec;
     }
 
     /************************************************************
