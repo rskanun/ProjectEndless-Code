@@ -178,7 +178,7 @@ public class PlayerController : MonoBehaviour
 
             // 공격 액션
             setSightAnimationToAttack(vec, angle);
-            atkManager.OnAttack(angle);
+            atkManager.OnAttack(angle, player.AttackDamage, player.MP);
         }
     }
 

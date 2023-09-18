@@ -1,6 +1,5 @@
 ﻿using Assets.Script.Object.Monster;
 using Assets.Script.UI.ObjectAnimation.Player;
-using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -12,19 +11,26 @@ namespace Assets.Script.System.Player
 
         [Header("참조 스크립트")]
         [SerializeField] private CharacterAnimation anim;
-        [SerializeField] private Object.Player.Player player;
 
         // 참조 스크립터블 오브젝트
         private PlayerState playerState;
+
+        // 공격 데미지 및 MP
+        private int _damage;
+        private int _mp;
 
         private void Start ()
         {
             playerState = PlayerState.Instance;
         }
 
-        public void OnAttack(float attackAngle)
+        public void OnAttack(float attackAngle, int damage, int playerMP)
         {
             playerState.IsAttacking = true;
+
+            // 데미지 설정
+            _damage = damage;
+            _mp = playerMP;
 
             // 공격(마우스) 방향으로 공격 범위 이동
             rotateAttackBox(attackAngle);
@@ -56,7 +62,7 @@ namespace Assets.Script.System.Player
         {
             if(collision.CompareTag(Tag.Monster))
             {
-                collision.GetComponent<Monster>().OnTakeDamage(player.AttackDamage, player.MP);
+                collision.GetComponent<Monster>().OnTakeDamage(_damage, _mp);
             }
         }
     }

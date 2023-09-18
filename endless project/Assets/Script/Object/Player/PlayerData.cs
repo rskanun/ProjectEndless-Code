@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Assets.Script.Item;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -133,6 +134,24 @@ public class PlayerData : ObjectData, INotifyPropertyChanged
         if (PropertyChanged != null)
         {
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    [Space]
+    [Header("장비")]
+
+    [SerializeField]
+    private Weapon _weapon;
+    public Weapon weapon
+    {
+        get { return _weapon; }
+        set
+        {
+            _weapon = value;
+
+            // 공격 데미지 업데이트
+            if (weapon != null)
+                _atkDamage = Mathf.RoundToInt(_atkDamage * _weapon.DamagePercent);
         }
     }
 

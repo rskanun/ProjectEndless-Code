@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _healthPoint: 0
   _maxHealthPoint: 100
-  _strength: 0
+  _strength: 5
   _agility: 2000
-  _manaPoint: 0
+  _mana: 0
+  _maxMana: 0
+  _magicPower: 1
+  _atkDamage: 5
   _awakenPoint: 5
   _maxAwakenPoint: 100
   _defensive: 0
   _totalMP: 0
   _dashSpeed: 17.5
   _runSpeed: 2500
-  _angle: {x: -1, y: 0}
+  _weapon: {fileID: 0}
+  _angle: {x: 0, y: -1}

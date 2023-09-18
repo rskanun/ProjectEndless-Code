@@ -69,7 +69,6 @@
     <Compile Include="Assets\Script\System\Menu\Popup\ConfirmManager.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\Line.cs" />
     <Compile Include="Assets\Script\System\EventManager.cs" />
-    <Compile Include="Assets\Script\UI\HealthPointBarUI.cs" />
     <Compile Include="Assets\Script\System\Menu\App\App.cs" />
     <Compile Include="Assets\Script\UI\Animation\SelectionAnimation.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
@@ -92,14 +91,13 @@
     <Compile Include="Assets\Script\System\Option\SliderOption.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
-    <Compile Include="Assets\Script\Object\Player\Player.cs" />
     <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
     <Compile Include="Assets\Script\UI\Effects\EffectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\Select.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Save\SaveUI.cs" />
-    <Compile Include="Assets\Script\UI\ObjectAnimation\Player\CharacterAnimation.cs" />
+    <Compile Include="Assets\Script\UI\Object\Player\CharacterAnimation.cs" />
     <Compile Include="Assets\Script\System\Option\Option.cs" />
     <Compile Include="Assets\Script\Object\ObjectData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
@@ -114,7 +112,6 @@
     <Compile Include="Assets\Script\System\Text\LineObject\EventLine.cs" />
     <Compile Include="Assets\Script\System\Menu\App\PhoneOptionSetting.cs" />
     <Compile Include="Assets\Script\Object\Monster\Monster.cs" />
-    <Compile Include="Assets\Script\UI\AwakenPointBarUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Script\UI\SelectUI.cs" />
     <Compile Include="Assets\Script\System\Option\OptionManager.cs" />
@@ -127,7 +124,6 @@
     <Compile Include="Assets\Script\System\Text\TalkManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Script\System\Option\ToggleOption.cs" />
-    <Compile Include="Assets\Script\UI\OptionUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\Script\System\Menu\MenuManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
@@ -164,6 +160,9 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
+    <Compile Include="Assets\Script\UI\GUI\AwakenPointBarUI.cs" />
+    <Compile Include="Assets\Script\UI\GUI\HealthPointBarUI.cs" />
+    <Compile Include="Assets\Script\UI\Object\Monster\NormalMonsterUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

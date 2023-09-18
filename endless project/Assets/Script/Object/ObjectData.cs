@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEditor.Experimental;
 using UnityEngine;
 
 public class Tag
@@ -75,6 +71,9 @@ public abstract class ObjectData : ScriptableObject
                 _strength = 0;
             else
                 _strength = value;
+
+            // 공격 데미지 업데이트
+            _atkDamage = _strength;
         }
     }
 
@@ -99,43 +98,44 @@ public abstract class ObjectData : ScriptableObject
     }
 
     [SerializeField]
-    private int _regenPower;
+    private int _mana;
     /***************************************************************
-     * [ 재생력 (Regenerative Power) ]
+     * [ 마나 (Mana) ]
      * 
-     * 오브젝트의 재생 수치로 일정 주기마다 재생력만큼 체력을 회복한다.
-     * 오브젝트가 사망 시 재생력이 남아있다면,
-     * 재생력을 최대 체력만큼 깎고서 그만큼의 체력을 회복한다.
-     * 피격당할 시 상대방의 마력만큼 재생력을 잃는다.
+     * 오브젝트의 마나로 특수한 공격이나 체력 회복에 사용된다.
+     * 오브젝트의 피가 닳았다면 일정 주기마다 마나를 사용해 체력을 회복한다.
+     * 오브젝트가 사망 시 마나가 남아있다면,
+     * 마나를 최대 체력만큼 깎고서 그만큼의 체력을 회복한다.
+     * 피격당할 시 상대방의 마력만큼 마나를 잃는다.
      ****************************************************************/
-    public int RP
+    public virtual int Mana
     {
-        get { return _regenPower; }
+        get { return _mana; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                _regenPower = 0;
+                _mana = 0;
             // 입력값이 최대치를 초과한 경우
-            else if (value > _maxRegenPower)
-                _regenPower = _maxRegenPower;
+            else if (value > _maxMana)
+                _mana = _maxMana;
             else
-                _regenPower = value;
+                _mana = value;
         }
     }
 
     [SerializeField]
-    private int _maxRegenPower;
-    public int MaxRP
+    private int _maxMana;
+    public int MaxMana
     {
-        get { return _maxRegenPower; }
+        get { return _maxMana; }
         set
         {
             // 입력값이 음수일 경우
             if (value < 0)
-                _maxRegenPower = 0;
+                _maxMana = 0;
             else
-                _maxRegenPower = value;
+                _maxMana = value;
         }
     }
 
@@ -144,7 +144,7 @@ public abstract class ObjectData : ScriptableObject
     /***************************************************************
      * [ 마력 (Magic Power) ]
      * 
-     * 오브젝트의 마력 수치로 마력과 관련된 데미지와 재생력에 영향을 끼친다.
+     * 오브젝트의 마력 수치로 마력과 관련된 데미지에 영향을 끼친다.
      * 마력 수치가 높아질수록 마력을 사용한 공격의 데미지가 올라간다.
      * 플레이어의 경우 각성치에 따라 마력의 초기값이 달라진다.
      ****************************************************************/
@@ -159,5 +159,13 @@ public abstract class ObjectData : ScriptableObject
             else
                 _magicPower = value;
         }
+    }
+
+    // 일반 공격 데미지
+    [SerializeField]
+    protected int _atkDamage;
+    public int AttackDamage
+    {
+        get { return _atkDamage; }
     }
 }

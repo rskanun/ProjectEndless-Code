@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 724aaa4997c3f524997d72b31b69cb89, type: 3}
   m_Name: Test_Monster
   m_EditorClassIdentifier: 
-  _healthPoint: 10
-  _maxHealthPoint: 0
+  _healthPoint: 0
+  _maxHealthPoint: 20
   _strength: 0
   _agility: 0
-  _manaPoint: 0
+  _mana: 0
+  _maxMana: 10
+  _magicPower: 0
+  _atkDamage: 0

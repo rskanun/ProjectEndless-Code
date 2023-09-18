@@ -1,8 +1,4 @@
-﻿using Assets.Script.Object.Player;
-using Assets.Script.System.Option;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Playables;
+﻿using UnityEngine;
 
 namespace Assets.Script.System.Player
 {
