@@ -2,7 +2,7 @@
 using Assets.Script.System.Menu.Popup;
 using UnityEngine;
 
-namespace Assets.Script.Control
+namespace Assets.Script.System.Menu
 {
     public class MenuControl : MonoBehaviour
     {

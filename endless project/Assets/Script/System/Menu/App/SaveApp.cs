@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Script.System.Interface.Menu.App
+namespace Assets.Script.System.Menu.App
 {
     public class SaveApp : App
     {

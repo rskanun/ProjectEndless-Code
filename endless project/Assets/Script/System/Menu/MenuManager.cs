@@ -1,5 +1,4 @@
 ﻿using Assets.Script.Control;
-using Assets.Script.System.Interface.Menu.App;
 using Assets.Script.UI;
 using System.Collections;
 using UnityEditor;
@@ -13,7 +12,7 @@ namespace Assets.Script.System.Menu
         private PlayerState playerState;
 
         // 메뉴 앱 관련 변수
-        private App nowApp = null;
+        private App.App nowApp = null;
         private bool isAppClose = true;
         public bool IsAppEmpty
         {
@@ -57,7 +56,7 @@ namespace Assets.Script.System.Menu
         * 메뉴에 존재하는 앱들을 제어
         ************************************************************/
 
-        public void appOpen(App app)
+        public void appOpen(App.App app)
         {
             nowApp = app;
             nowApp.open();

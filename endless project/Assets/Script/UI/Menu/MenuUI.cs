@@ -24,7 +24,11 @@ namespace Assets.Script.UI
         [SerializeField] private GameObject noServiceIcon;
 
         [Space]
+        [Header("배터리")]
         [SerializeField] private GameObject battery;
+
+        [Space]
+        [Header("시계")]
         [SerializeField] private TextMeshProUGUI timeText;
 
         private PhoneOptionSetting menuOption;

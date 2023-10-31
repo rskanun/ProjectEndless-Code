@@ -1,5 +1,4 @@
-﻿using Assets.Script.System.Interface.Menu.App;
-using Assets.Script.System.Menu.Save;
+﻿using Assets.Script.System.Menu.Save;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
