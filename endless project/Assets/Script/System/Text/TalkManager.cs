@@ -10,13 +10,13 @@ using UnityEngine;
 
 namespace Assets.Script.Control.Text
 {
-    public enum Code
+    public enum LineType
     {
         Text,   // 대사출력                  -> 대사번호,코드(Text),이름,대사
         Select, // 선택지                    -> 대사번호,코드(Select),선택1,선택2,...,선택n
-        Case,   // 선택지 선택에 따른 진행   -> 대사번호,코드(Case),선택지
-        End,    // 선택지 종료 선언          -> 대사번호,코드(End)
-        Event   // 이벤트(수치 조작 등) 발생 -> 대사번호,코드(Event),명령어
+        Case,   // 선택지 선택에 따른 진행    -> 대사번호,코드(Case),선택지
+        End,    // 선택지 종료 선언           -> 대사번호,코드(End)
+        Event   // 이벤트(수치 조작 등) 발생  -> 대사번호,코드(Event),명령어
     }
 
     public class TalkManager : MonoBehaviour
@@ -87,21 +87,21 @@ namespace Assets.Script.Control.Text
 
                 switch (line.Code)
                 {
-                    case Code.Text:
+                    case LineType.Text:
                         nowLine = (TextLine)line;
                         nextText();
                         break;
 
-                    case Code.Select:
+                    case LineType.Select:
                         readLock = true;
                         selectManager.openSelect((Select)line);
                         break;
 
-                    case Code.Case:
+                    case LineType.Case:
                         selectCase(); // End까지 스킵
                         break;
 
-                    case Code.Event:
+                    case LineType.Event:
                         EventLine eventLine = (EventLine)line;
                         eventManager.getCommandEvent(eventLine.Command);
                         break;
@@ -128,9 +128,9 @@ namespace Assets.Script.Control.Text
         public void selectCase(string option = "")
         {
             for (Line line = lines[lineNum];
-                line.Code != Code.End && lineNum < lines.Count; line = lines[++lineNum])
+                line.Code != LineType.End && lineNum < lines.Count; line = lines[++lineNum])
             {
-                if (line.Code == Code.Case)
+                if (line.Code == LineType.Case)
                 {
                     Case selectCase = (Case)line;
                     if (selectCase.Choice.Equals(option))

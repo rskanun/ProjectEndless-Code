@@ -8,7 +8,7 @@ namespace Assets.Script.Control.Text.Object
         public string Command { get { return command; } }
         private string command;
 
-        public EventLine(string command) : base(Code.Event)
+        public EventLine(string command) : base(LineType.Event)
         {
             this.command = command;
         }

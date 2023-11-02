@@ -10,7 +10,7 @@ namespace Assets.Script.Control.Text.Object
         public string Text { get { return text; } }
         private string text;
 
-        public TextLine(string name, string text) : base(Code.Text)
+        public TextLine(string name, string text) : base(LineType.Text)
         {
             this.name = name;
             this.text = text.Replace("\\r\\n", "\r\n");

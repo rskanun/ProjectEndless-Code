@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\UI\Menu\DarkPanelSetting.cs" />
+    <Compile Include="Assets\Script\UI\Menu\App\Option\OptionUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Script\System\Text\CSVReader.cs" />
     <Compile Include="Assets\Script\Object\NPC\NPC.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Assets\Script\System\Option\SliderOption.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
+    <Compile Include="Assets\Script\System\Menu\App\OptionApp.cs" />
     <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
     <Compile Include="Assets\Script\UI\Effects\EffectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Assets\Script\Item\Weapon.cs" />
     <Compile Include="Assets\Script\System\SetRatio.cs" />
     <Compile Include="Assets\Script\Object\NPC\NPCData.cs" />
+    <Compile Include="Assets\Script\UI\Menu\App\Messenger\MessengerUI.cs" />
     <Compile Include="Assets\Script\Item\Armor.cs" />
     <Compile Include="Assets\Script\UI\Animation\AppAnimation.cs" />
     <Compile Include="Assets\Script\UI\GUI\AwakenPointBarUI.cs" />
@@ -140,8 +143,10 @@
     <Compile Include="Assets\Script\Object\Monster\MonsterData.cs" />
     <Compile Include="Assets\Script\Item\Item.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Script\UI\Menu\App\SubWindowUI.cs" />
     <Compile Include="Assets\Script\UI\Menu\ToastUI.cs" />
     <Compile Include="Assets\Script\System\Menu\Save\SaveManager.cs" />
+    <Compile Include="Assets\Script\System\Menu\App\SubWindowApp.cs" />
     <Compile Include="Assets\Script\System\Player\PlayerState.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\Popup.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
@@ -150,6 +155,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
+    <Compile Include="Assets\Script\UI\Menu\HomeScreenUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Script\UI\Object\Monster\NormalMonsterUI.cs" />
@@ -163,12 +169,10 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
-    <Compile Include="Assets\Script\UI\Menu\HomeScreenUI.cs" />
-    <Compile Include="Assets\Script\UI\Menu\App\SubWindowUI.cs" />
-    <Compile Include="Assets\Script\UI\Menu\App\Option\OptionUI.cs" />
-    <Compile Include="Assets\Script\System\Menu\App\SubWindowApp.cs" />
-    <Compile Include="Assets\Script\UI\Menu\App\Messenger\MessengerUI.cs" />
-    <Compile Include="Assets\Script\System\Menu\App\OptionApp.cs" />
+    <Compile Include="Assets\Script\System\Text\LineObject\Scenario.cs" />
+    <Compile Include="Assets\Script\System\Text\LineObject\Script.cs" />
+    <Compile Include="Assets\Script\System\Text\LineFactory.cs" />
+    <Compile Include="Assets\Script\System\Text\ChapterResource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

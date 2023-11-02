@@ -9,7 +9,7 @@ namespace Assets.Script.Control.Text.Object
         public List<string> Options { get { return options; } }
         private List<string> options = new List<string>();
 
-        public Select(string[] options) : base(Code.Select)
+        public Select(string[] options) : base(LineType.Select)
         {
             // 대사번호(0), 코드(1) 제외
             for (int i = 2; i < options.Length; i++)

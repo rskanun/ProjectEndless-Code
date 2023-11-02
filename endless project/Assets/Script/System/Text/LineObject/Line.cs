@@ -5,10 +5,10 @@ namespace Assets.Script.Control.Text.Object
 {
     public class Line
     {
-        private Code code;
-        public Code Code { get { return code; } }
+        private LineType code;
+        public LineType Code { get { return code; } }
 
-        public Line(Code code)
+        public Line(LineType code)
         {
             this.code = code;
         }

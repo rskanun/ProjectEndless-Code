@@ -4,6 +4,8 @@ using Assets.Script.Control.Text.Object;
 using System.IO;
 using System;
 using Assets.Script.Control.Text;
+using Assets.Script.System.Text;
+using Assets.Script.System.Text.LineObject;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,10 +14,8 @@ using UnityEditor;
 public class CSVReader : ScriptableObject
 {
     private const string DIALOG_FILE_DIRECTORY = "Assets/Resources";
-    private const string FILE_DIRECTORY = "Assets/Resources/Dialog";
-    private const string FILE_PATH = "Assets/Resources/Dialog/CSVReader.asset";
-
-    private const string CSV_FILE_PATH = "Assets/Resources/Dialog/dialogue.csv";
+    private const string FILE_DIRECTORY = "Assets/Resources/Scripts";
+    private const string FILE_PATH = "Assets/Resources/Scripts/CSVReader.asset";
 
     private static CSVReader _instance;
     public static CSVReader Instance
@@ -24,7 +24,7 @@ public class CSVReader : ScriptableObject
         {
             if(_instance != null) return _instance;
 
-            _instance = Resources.Load<CSVReader>("Dialog/CSVReader");
+            _instance = Resources.Load<CSVReader>("Scripts/CSVReader");
 
 #if UNITY_EDITOR
             if(_instance == null)
@@ -32,13 +32,12 @@ public class CSVReader : ScriptableObject
                 // 파일 경로가 없을 경우 폴더 생성
                 if(!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
-                    Debug.Log("!");
                     if(!AssetDatabase.IsValidFolder(DIALOG_FILE_DIRECTORY))
                     {
                         AssetDatabase.CreateFolder("Assets", "Resources");
                     }
 
-                    AssetDatabase.CreateFolder("Assets/Resources", "Dialog");
+                    AssetDatabase.CreateFolder("Assets/Resources", "Scripts");
                 }
 
                 // Resource.Load가 실패했을 경우
@@ -56,82 +55,81 @@ public class CSVReader : ScriptableObject
         }
     }
 
-    private Dictionary<int, List<Line>> lineData;
-    public Dictionary<int, List<Line>> LineData
+    private Dictionary<int, Script> _mainScript;
+    public Script getMainScript()
     {
-        get
+        int chapterID = 0;
+
+        if (_mainScript != null) return _mainScript[chapterID];
+
+        // main script is null
+        _mainScript = new Dictionary<int, Script>();
+
+        if (ChapterResource.Instance.Data != null)
         {
-            if(lineData != null) return lineData;
+            foreach (ChapterData data in ChapterResource.Instance.Data)
+            {
+                if (data.csvFile != null)
+                {
+                    int id = data.chapterID;
 
-            lineData = fileRead();
+                    // 중복 주의
+                    if (_mainScript.ContainsKey(id))
+                    {
+                        Debug.LogWarning("ID:" + id + " 챕터가 중복으로 입력되었습니다!");
+                        Debug.LogWarning("현재 파일로 덮어 씌웁니다.");
+                    }
 
-            return lineData;
+                    _mainScript[id] = fileRead(data.csvFile);
+                }
+            }
+
+            return _mainScript[chapterID];
         }
+
+        return _mainScript[chapterID];
     }
 
-    private Dictionary<int, List<Line>> fileRead()
+    private Script fileRead(TextAsset csvFile)
     {
-        Dictionary<int, List<Line>> data = new Dictionary<int, List<Line>>();
+        Script script = new Script();
 
-        if(File.Exists(CSV_FILE_PATH))
+        if (csvFile != null)
         {
-            StreamReader reader = new StreamReader(File.OpenRead(CSV_FILE_PATH));
+            StringReader sr = new StringReader(csvFile.text);
 
-            // 텍스트 코드를 기억할 dummy int
-            int num = 0;
+            // id를 기억할 dummy int
+            int id = 0;
 
-            while (!reader.EndOfStream)
+            string str;
+            while ((str = sr.ReadLine()) != null)
             {
-                string str = reader.ReadLine();
-
-                if (str.ToCharArray()[0] != '#')
+                if (str[0] != '#')
                 {
-                    addLineData(ref data, ref num, str);
+                    string[] strs = str.Split(',');
+
+                    // 처음 부여한 키면 list 추가
+                    if (string.IsNullOrEmpty(strs[0]) == false)
+                    {
+                        id = int.Parse(strs[0]);
+                        script.setScenario(new Scenario(), id);
+                    }
+
+                    Scenario scenario = script.getScenario(id);
+                    scenario.AddLine(addLineData(strs));
                 }
             }
         }
 
-        return data;
+        return script;
     }
 
-    private void addLineData(ref Dictionary<int, List<Line>> data, ref int num, string str)
+    private Line addLineData(string[] strs)
     {
-        string[] strs = str.Split(",");
-
-        // 번호칸이 비어있다면 이전 번호 그대로 사용
-        if (string.IsNullOrEmpty(strs[0]) == false)
-        {
-            num = int.Parse(strs[0]);
-            data[num] = new List<Line>();
-        }
-
         // 코드별로 분리
-        Code code = (Code)Enum.Parse(typeof(Code), strs[1]);
+        LineType code = (LineType)Enum.Parse(typeof(LineType), strs[1]);
+        Line line = LineFactory.Instance.createLine(code, strs);
 
-        switch (code)
-        {
-            case Code.Text:
-                data[num].Add(new TextLine(strs[2], strs[3]));
-                break;
-
-            case Code.Select:
-                data[num].Add(new Select(strs));
-                break;
-
-            case Code.Case:
-                data[num].Add(new Case(strs[2]));
-                break;
-
-            case Code.End:
-                data[num].Add(new Line(Code.End));
-                break;
-
-            case Code.Event:
-                data[num].Add(new EventLine(strs[2]));
-                break;
-
-            default:
-                break;
-        }
+        return line;
     }
 }
