@@ -13,10 +13,11 @@ public class ChapterData
     public TextAsset csvFile;
 }
 
+[CreateAssetMenu(menuName = "Singleton Object/ChapterResource", fileName = "ChapterResource")]
 public class ChapterResource : ScriptableObject
 {
-    private const string FILE_DIRECTORY = "Assets/Resources/Scripts";
-    private const string FILE_PATH = "Assets/Resources/Scripts/ChapterResource.asset";
+    private const string FILE_DIRECTORY = "Assets/Resources/Scenario";
+    private const string FILE_PATH = "Assets/Resources/Scenario/ChapterResource.asset";
 
     private static ChapterResource _instance;
     public static ChapterResource Instance
@@ -25,7 +26,7 @@ public class ChapterResource : ScriptableObject
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<ChapterResource>("Scripts/ChapterResource");
+            _instance = Resources.Load<ChapterResource>("Scenario/ChapterResource");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -38,7 +39,7 @@ public class ChapterResource : ScriptableObject
                         AssetDatabase.CreateFolder("Assets", "Resources");
                     }
 
-                    AssetDatabase.CreateFolder("Assets/Resources", "Scripts");
+                    AssetDatabase.CreateFolder("Assets/Resources", "Scenario");
                 }
 
                 // Resource.Load가 실패했을 경우

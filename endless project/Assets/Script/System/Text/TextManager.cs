@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Control.Text
+namespace Assets.Script.Text
 {
     public class TextManager : MonoBehaviour
     {

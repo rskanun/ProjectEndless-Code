@@ -8,22 +8,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Assets.Script.Control.Text
+namespace Assets.Script.Text
 {
-    public enum LineType
-    {
-        Text,   // 대사출력                  -> 대사번호,코드(Text),이름,대사
-        Select, // 선택지                    -> 대사번호,코드(Select),선택1,선택2,...,선택n
-        Case,   // 선택지 선택에 따른 진행    -> 대사번호,코드(Case),선택지
-        End,    // 선택지 종료 선언           -> 대사번호,코드(End)
-        Event   // 이벤트(수치 조작 등) 발생  -> 대사번호,코드(Event),명령어
-    }
-
     public class TalkManager : MonoBehaviour
     {
-        [Header("플레이어 데이터")]
-        [SerializeField] private PlayerData playerData;
-
         [Header("참조 스크립트")]
         [SerializeField] private TextManager textManager;
         [SerializeField] private SelectManager selectManager;
@@ -35,6 +23,9 @@ namespace Assets.Script.Control.Text
         private bool coroutineLock;
         private int lineNum;
 
+        // Select 관련 변수
+        private Stack<Select> selectStack;
+
         // 텍스트 저장 공간
         private List<Line> lines;
 
@@ -44,6 +35,28 @@ namespace Assets.Script.Control.Text
         private void Start()
         {
             playerState = PlayerState.Instance;
+        }
+
+        public void nextText()
+        {
+            readLock = !textManager.talking(nowLine);
+        }
+
+        public void optionSelect(string option)
+        {
+            Select select = selectStack.Peek();
+            int skipLineNum = select.OptionsLineNum[option];
+
+            jumpLine(skipLineNum);
+        }
+
+        private void jumpLine(int num)
+        {
+            if (num < lines.Count)
+            {
+                lineNum = num + 1; // case나 end 제외
+                readLock = false;
+            }
         }
 
         /************************************************************
@@ -59,6 +72,7 @@ namespace Assets.Script.Control.Text
             {
                 // 대화 처음 시작 시 해당되는 대화목록 가져오기
                 lines = npc.getLines();
+                selectStack = new Stack<Select>();
 
                 playerState.IsTalking = true;
 
@@ -83,32 +97,11 @@ namespace Assets.Script.Control.Text
         {
             if (lineNum < lines.Count)
             {
-                Line line = lines[lineNum++];
+                Line line = lines[lineNum];
+                processLine(line);
 
-                switch (line.Code)
-                {
-                    case LineType.Text:
-                        nowLine = (TextLine)line;
-                        nextText();
-                        break;
-
-                    case LineType.Select:
-                        readLock = true;
-                        selectManager.openSelect((Select)line);
-                        break;
-
-                    case LineType.Case:
-                        selectCase(); // End까지 스킵
-                        break;
-
-                    case LineType.Event:
-                        EventLine eventLine = (EventLine)line;
-                        eventManager.getCommandEvent(eventLine.Command);
-                        break;
-
-                    default:
-                        break;
-                }
+                // 다음 라인으로 이동
+                lineNum++;
             }
 
             else
@@ -120,29 +113,67 @@ namespace Assets.Script.Control.Text
             coroutineLock = false;
         }
 
-        public void nextText()
+        /************************************************************
+        * [라인 출력 관리]
+        * 
+        * 라인을 읽고서 거기에 따른 인게임 이벤트 제어
+        ************************************************************/
+
+        private void processLine(Line line)
         {
-            readLock = !textManager.talking(nowLine);
+            switch (line.Code)
+            {
+                case LineType.Text:
+                    processTextLine((TextLine)line);
+                    break;
+
+                case LineType.Select:
+                    processSelect((Select)line);
+                    break;
+
+                case LineType.Case:
+                    processCase(); // End까지 스킵
+                    break;
+
+                case LineType.Event:
+                    processEventLine((EventLine)line);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        public void selectCase(string option = "")
+        private void processTextLine(TextLine line)
         {
-            for (Line line = lines[lineNum];
-                line.Code != LineType.End && lineNum < lines.Count; line = lines[++lineNum])
-            {
-                if (line.Code == LineType.Case)
-                {
-                    Case selectCase = (Case)line;
-                    if (selectCase.Choice.Equals(option))
-                    {
-                        lineNum++;
-                        selectManager.closeSelect();
-                        break;
-                    }
-                }
-            }
+            readLock = true;
+            nowLine = line;
+
+            readLock = !textManager.talking(line);
+        }
+
+        private void processSelect(Select line)
+        {
+            readLock = true;
+
+            selectStack.Push(line);
+            selectManager.openSelect(line);
+        }
+
+        private void processCase()
+        {
+            Select select = selectStack.Pop();
+            int skipLineNum = select.EndLineNum;
+
+            jumpLine(skipLineNum);
 
             readLock = false;
+        }
+
+        private void processEventLine(EventLine line)
+        {
+            string command = line.Command;
+            eventManager.getCommandEvent(command);
         }
     }
 }

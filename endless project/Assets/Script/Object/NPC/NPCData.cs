@@ -1,4 +1,5 @@
 ﻿using Assets.Script.Control.Text.Object;
+using Assets.Script.System.Text.LineObject;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class NPCData : ScriptableObject
         get
         {
             // 해당 npc가 대사를 가지고 있지 않은 경우 임시적으로 0번을 리턴
-            if(id != 0 && !CSVReader.Instance.LineData.ContainsKey(id))
+            if(id != 0 && !CSVReader.Instance.getMainScript().ContainsKey(id))
             {
                 return 0;
             }
@@ -26,11 +27,11 @@ public class NPCData : ScriptableObject
         get
         {
             // 해당 npc의 id에 해당하는 대사가 존재할 경우에만 담기
-            if(CSVReader.Instance.LineData.ContainsKey(id))
+            if(CSVReader.Instance.getMainScript().ContainsKey(id))
             {
                 if (lines != null) return lines;
-
-                lines = CSVReader.Instance.LineData[id];
+                
+                lines = CSVReader.Instance.getMainScript().getScenario(id);
             }
 
             return lines;

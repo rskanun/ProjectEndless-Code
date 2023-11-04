@@ -2324,6 +2324,7 @@ GameObject:
   - component: {fileID: 330478549}
   - component: {fileID: 330478551}
   - component: {fileID: 330478550}
+  - component: {fileID: 330478552}
   m_Layer: 5
   m_Name: Selection Box
   m_TagString: Untagged
@@ -2389,6 +2390,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330478548}
   m_CullTransparentMesh: 1
+--- !u!114 &330478552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330478548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 10
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &350201177
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,7 +3715,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 515810827}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61fed27c8e126684498498e838405ede, type: 3}
+  m_Script: {fileID: 11500000, guid: 762998da1734c3e4ead262ff0896dea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 1523486053}
@@ -4527,6 +4554,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui: {fileID: 650115006}
+  talkManager: {fileID: 1540840968}
 --- !u!114 &650115006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4536,13 +4564,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 650115004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 139330be859280447b9642214f144eac, type: 3}
+  m_Script: {fileID: 11500000, guid: d3dc50a1e20dfc34bb4411ca3f10fa25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   darkPanel: {fileID: 1060513599}
   selectionWindow: {fileID: 330478548}
   selectPrefab: {fileID: 8614811364247800755, guid: 5e31a0db00331ee44bb11f831fdf2823, type: 3}
-  lineManager: {fileID: 1540840968}
+  layoutGroup: {fileID: 330478552}
 --- !u!224 &650115008
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15488,7 +15516,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae89bd04d0ff51488d68c1cea9dd702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
   textManager: {fileID: 515810831}
   selectManager: {fileID: 650115005}
   eventManager: {fileID: 1540840964}

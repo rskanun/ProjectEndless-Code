@@ -1,6 +1,7 @@
 ﻿using Assets.Script.Control.Text;
 using Assets.Script.System;
 using Assets.Script.System.Player;
+using Assets.Script.Text;
 using Assets.Script.UI.ObjectAnimation.Player;
 using System.Collections;
 using UnityEngine;
