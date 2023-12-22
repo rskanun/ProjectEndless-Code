@@ -79,6 +79,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Option\ToggleUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
+    <Compile Include="Assets\Script\UI\Text\SelectOptionSetting.cs" />
     <Compile Include="Assets\Script\System\CameraControl.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Script\System\Stat\HUD.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\Script\System\Menu\App\OptionApp.cs" />
     <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
     <Compile Include="Assets\Script\UI\Effects\EffectManager.cs" />
+    <Compile Include="Assets\Script\UI\Text\TextUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\TextLine.cs" />
     <Compile Include="Assets\Script\System\Text\LineObject\Select.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Assets\Script\System\Menu\App\SaveApp.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\Confirm.cs" />
     <Compile Include="Assets\Script\System\Text\SelectManager.cs" />
+    <Compile Include="Assets\Script\UI\Text\SelectButtonUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Script\System\Mouse.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
@@ -130,6 +133,7 @@
     <Compile Include="Assets\Script\System\Menu\MenuManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Script\Item\Weapon.cs" />
+    <Compile Include="Assets\Script\UI\Text\SelectUI.cs" />
     <Compile Include="Assets\Script\System\SetRatio.cs" />
     <Compile Include="Assets\Script\Object\NPC\NPCData.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Messenger\MessengerUI.cs" />
@@ -170,10 +174,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
-    <Compile Include="Assets\Script\UI\Text\SelectOptionSetting.cs" />
-    <Compile Include="Assets\Script\UI\Text\SelectUI.cs" />
-    <Compile Include="Assets\Script\UI\Text\TextUI.cs" />
-    <Compile Include="Assets\Script\UI\Text\SelectButtonUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
