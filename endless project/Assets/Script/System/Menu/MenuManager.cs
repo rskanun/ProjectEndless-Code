@@ -1,7 +1,4 @@
-﻿using Assets.Script.Control;
-using Assets.Script.UI;
-using System.Collections;
-using UnityEditor;
+﻿using Assets.Script.UI;
 using UnityEngine;
 
 namespace Assets.Script.System.Menu
@@ -9,7 +6,7 @@ namespace Assets.Script.System.Menu
     public class MenuManager : MonoBehaviour
     {
         private MenuUI ui;
-        private PlayerState playerState;
+        private OldPlayerState playerState;
 
         // 메뉴 앱 관련 변수
         private App.App nowApp = null;
@@ -33,7 +30,7 @@ namespace Assets.Script.System.Menu
 
         private void Start()
         {
-            playerState = PlayerState.Instance;
+            playerState = OldPlayerState.Instance;
             ui = MenuUI.Instance;
         }
 

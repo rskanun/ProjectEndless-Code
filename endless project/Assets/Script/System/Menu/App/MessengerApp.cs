@@ -1,11 +1,6 @@
-﻿using Assets.Script.Control;
-using Assets.Script.System.Menu;
-using Assets.Script.System.Option;
-using Assets.Script.UI;
-using Assets.Script.UI.Menu;
+﻿using Assets.Script.UI.Menu;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace Assets.Script.System.Menu.App
 {

@@ -1,6 +1,5 @@
 ﻿using Assets.Script.UI.Menu.App.Save;
 using Assets.Script.UI.Menu.Save;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,13 +176,10 @@ public class SaveManager : MonoBehaviour
     private void savePlayerData(SaveData saveData)
     {
         saveData.pos = player.transform.position;
-        saveData.angle = playerData.Angle;
         saveData.hp = playerData.HP;
-        saveData.maxHP = playerData.MaxHP;
         saveData.ap = playerData.AP;
-        saveData.maxAP = playerData.MaxAP;
         saveData.str = playerData.STR;
-        saveData.agi = playerData.Speed;
+        saveData.agi = playerData.AGI;
         saveData.def = playerData.DEF;
         saveData.mp = playerData.MP;
     }
@@ -210,13 +206,10 @@ public class SaveManager : MonoBehaviour
     private void loadPlayerData(SaveData data)
     {
         player.transform.position = data.pos;
-        playerData.Angle = data.angle;
         playerData.HP = data.hp;
-        playerData.MaxHP = data.maxHP;
         playerData.AP = data.ap;
-        playerData.MaxAP = data.maxAP;
         playerData.STR = data.str;
-        playerData.Speed = data.agi;
+        playerData.AGI = data.agi;
         playerData.DEF = data.def;
         playerData.MP = data.mp;
     }

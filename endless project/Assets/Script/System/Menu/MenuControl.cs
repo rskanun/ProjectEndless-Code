@@ -11,14 +11,14 @@ namespace Assets.Script.System.Menu
         
         // 참조 스크립터블 오브젝트
         private OptionSetting option;
-        private PlayerState playerState;
+        private OldPlayerState playerState;
 
         private void Start()
         {
             menuManager = MenuManager.Instance;
 
             option = OptionSetting.Instance;
-            playerState = PlayerState.Instance;
+            playerState = OldPlayerState.Instance;
         }
 
         /************************************************************

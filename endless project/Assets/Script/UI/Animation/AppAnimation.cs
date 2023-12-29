@@ -82,7 +82,7 @@ namespace Assets.Script.UI
 
         private static Sequence openMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            PlayerState.Instance.AllowMenuKey = false;
+            OldPlayerState.Instance.AllowMenuKey = false;
 
             float delay = 0.08f;
             float menuOpenDelay = 0.19f;
@@ -121,13 +121,13 @@ namespace Assets.Script.UI
                         .AppendInterval(delay)
                         .Append(canvasGroup.DOFade(1f, screenOpenDelay - 0.05f))
                         .Append(window.transform.DOScale(new Vector3(resultScale, resultScale), screenOpenDelay).SetEase(Ease.OutSine))
-                        .OnComplete(() => PlayerState.Instance.AllowMenuKey = true);
+                        .OnComplete(() => OldPlayerState.Instance.AllowMenuKey = true);
                 });
         }
 
         private static Sequence closeMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face, float openRotate, float closeRotate)
         {
-            PlayerState.Instance.AllowMenuKey = false;
+            OldPlayerState.Instance.AllowMenuKey = false;
 
             float delay = 0.15f;
             float menuCloseDelay = 0.19f;
@@ -149,7 +149,7 @@ namespace Assets.Script.UI
                     phone.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
                     face.transform.position = oriPos;
                     face.transform.rotation = Quaternion.Euler(oriRotate);
-                    PlayerState.Instance.AllowMenuKey = true;
+                    OldPlayerState.Instance.AllowMenuKey = true;
                 });
         }
 

@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
-using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Monster", menuName = "scriptable Object/Monster", order = 3)]
+[CreateAssetMenu(menuName = "Game Object/Monster/Monster", fileName = "Monster")]
 public class MonsterData : ObjectData, INotifyPropertyChanged
 {
     public override int HP
@@ -36,4 +35,9 @@ public class MonsterData : ObjectData, INotifyPropertyChanged
     }
 
     // 해당 몬스터 ai
+
+    public override void Initialization()
+    {
+        
+    }
 }

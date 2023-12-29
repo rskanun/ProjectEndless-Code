@@ -1,5 +1,4 @@
 ﻿using Assets.Script.Object.Monster;
-using Assets.Script.UI.ObjectAnimation.Player;
 using System.Collections;
 using UnityEngine;
 
@@ -10,10 +9,10 @@ namespace Assets.Script.System.Player
         [SerializeField] private BoxCollider2D colliderComponent;
 
         [Header("참조 스크립트")]
-        [SerializeField] private CharacterAnimation anim;
+        [SerializeField] private PlayerAnimation anim;
 
         // 참조 스크립터블 오브젝트
-        private PlayerState playerState;
+        private OldPlayerState playerState;
 
         // 공격 데미지 및 MP
         private int _damage;
@@ -21,7 +20,7 @@ namespace Assets.Script.System.Player
 
         private void Start ()
         {
-            playerState = PlayerState.Instance;
+            playerState = OldPlayerState.Instance;
         }
 
         public void OnAttack(float attackAngle, int damage, int playerMP)
@@ -52,7 +51,7 @@ namespace Assets.Script.System.Player
             colliderComponent.enabled = true;
 
             // 공격 모션 실행
-            yield return StartCoroutine(anim.AttackAnimation());
+            yield return StartCoroutine(anim.AttackAnim());
 
             colliderComponent.enabled = false;
             playerState.IsAttacking = false;
@@ -60,7 +59,7 @@ namespace Assets.Script.System.Player
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.CompareTag(Tag.Monster))
+            if(collision.CompareTag(ObjectTag.Monster))
             {
                 collision.GetComponent<Monster>().OnTakeDamage(_damage, _mp);
             }
