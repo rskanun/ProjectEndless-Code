@@ -33,16 +33,12 @@ public class SelectUI : MonoBehaviour
     {
         if (isView)
         {
-            float containerHeight = selectionWindowRect.rect.height;
+            float containerHeight = originSize.y;
             float buttonHeight = selectPrefabRect.rect.height;
             float spacing = layoutGroup.spacing;
             float height = containerHeight + optionList.Count * (buttonHeight + spacing);
 
             SelectionAnimation.openSelectionAnimation(selectionWindow, optionList, height);
-        }
-        else
-        {
-            selectionWindowRect.sizeDelta = originSize;
         }
 
         selectionWindow.SetActive(isView);

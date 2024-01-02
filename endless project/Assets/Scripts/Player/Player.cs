@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
         apEvent = ApEvent.Instance;
     }
 
+    public void InitStat()
+    {
+        stat.Initialization();
+    }
+
     public void OnDamage(int damage)
     {
         stat.HP -= Mathf.Abs(damage);

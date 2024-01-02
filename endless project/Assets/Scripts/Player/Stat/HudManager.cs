@@ -1,5 +1,4 @@
-﻿using Assets.Script.UI;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HudManager : MonoBehaviour
 {
@@ -30,6 +29,8 @@ public class HudManager : MonoBehaviour
 
     public void ApUpdate()
     {
+        int currentAP = stat.AP;
 
+        apBarUI.BarUpdate(currentAP);
     }
 }

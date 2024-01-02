@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed3f7b4fff92619488e39e69156a0368, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  _healthPoint: 0
+  _healthPoint: 100
   _maxHealthPoint: 100
   _strength: 5
-  _agility: 2000
+  _agility: 15
+  _moveSpeed: 1500
   _mana: 0
   _maxMana: 0
-  _magicPower: 1
+  _magicPower: 10
   _atkDamage: 5
-  _awakenPoint: 5
+  _awakenPoint: 10
   _maxAwakenPoint: 100
+  _totalMP: 100
   _defensive: 0
-  _totalMP: 0
+  _stamina: 100
+  _maxStamina: 100
   _dashSpeed: 17.5
-  _runSpeed: 2500
-  _weapon: {fileID: 0}
-  _angle: {x: 0, y: -1}
+  _runSpeed: 2550

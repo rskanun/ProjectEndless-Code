@@ -33,13 +33,27 @@ public class TalkController : MonoBehaviour, IControlState
 
     public void OnReadHandler(ControlContext context)
     {
-        if (isTalking)
+        if (isTalking && !selectManager.IsSelectOpen)
         {
             if (textManager.IsPrinting) textManager.TextSkip();
             else readLock = false;
         }
-        else
+        else if(!isTalking)
+        {
             EndTalk(context);
+        }
+    }
+
+    private void EndTalk(ControlContext context)
+    {
+        // reset value
+        readLock = false;
+        lineNum = 0;
+
+        // dialog ui off
+        textManager.TextDestroy();
+
+        context.setPlayerState();
     }
 
     /************************************************************
@@ -72,18 +86,6 @@ public class TalkController : MonoBehaviour, IControlState
         }
 
         isTalking = false;
-    }
-
-    private void EndTalk(ControlContext context)
-    {
-        // reset value
-        readLock = false;
-        lineNum = 0;
-
-        // dialog ui off
-        textManager.TextDestroy();
-
-        context.setPlayerState();
     }
 
     /************************************************************

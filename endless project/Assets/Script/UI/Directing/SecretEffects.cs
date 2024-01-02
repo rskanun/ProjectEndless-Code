@@ -80,11 +80,11 @@ namespace Assets.Script.UI.Effects
                 yield return wait;
             }
 
-            effect.glitchEffect(pauseTime / 2);
+            effect.GlitchEffect(pauseTime / 2);
 
             yield return wait;
 
-            effect.glitchEffect(pauseTime / 2);
+            effect.GlitchEffect(pauseTime / 2);
 
             // time sub
             option.timeSub();

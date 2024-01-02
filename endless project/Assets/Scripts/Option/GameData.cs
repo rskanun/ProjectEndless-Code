@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Object/GameData", fileName = "Game_Data")]
 public class GameData : ScriptableObject

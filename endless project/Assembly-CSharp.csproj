@@ -102,7 +102,7 @@
     <Compile Include="Assets\Script\UI\Menu\AutoSelectButton.cs" />
     <Compile Include="Assets\Script\System\Menu\App\OptionApp.cs" />
     <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
-    <Compile Include="Assets\Script\UI\Effects\EffectManager.cs" />
+    <Compile Include="Assets\Scripts\Effect\EffectManager.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextLine.cs" />
@@ -139,7 +139,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Script\Item\Weapon.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Select\SelectUI.cs" />
-    <Compile Include="Assets\Script\System\SetRatio.cs" />
+    <Compile Include="Assets\Scripts\Option\SetRatio.cs" />
     <Compile Include="Assets\Scripts\Option\GameData.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Messenger\MessengerUI.cs" />
     <Compile Include="Assets\Scripts\Event\GameEventListener.cs" />
@@ -182,6 +182,11 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
     <Compile Include="Assets\Scripts\PlayerTrackerCamera.cs" />
+    <Compile Include="Assets\Editors\PlayerDataEditor.cs" />
+    <Compile Include="Assets\Kino\Glitch\AnalogGlitch.cs" />
+    <Compile Include="Assets\Kino\Glitch\DigitalGlitch.cs" />
+    <Compile Include="Assets\Scripts\Effect\GlitchEffect.cs" />
+    <Compile Include="Assets\Scripts\Effect\Effect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -202,6 +207,8 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Kino\Glitch\Shader\DigitalGlitch.shader" />
+    <None Include="Assets\Kino\Glitch\Shader\AnalogGlitch.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />

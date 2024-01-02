@@ -40,9 +40,9 @@ public class AwakenPointBarUI : MonoBehaviour
         }
     }
 
-    public void BarUpdate(int ap, int maxAP)
+    public void BarUpdate(int ap)
     {
-        effect.glitchEffect(0.4f);
-        SetApBar(ap, maxAP);
+        effect.GlitchEffect(0.65f);
+        SetApBar(ap);
     }
 }

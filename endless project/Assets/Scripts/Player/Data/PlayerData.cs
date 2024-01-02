@@ -42,9 +42,14 @@ public class PlayerData : ObjectData
         get { return _maxAwakenPoint; }
     }
 
-    // 플레이어 총 마력 수치
     [SerializeField]
     private int _totalMP;
+    /***************************************************************
+     * [ 총 마력 (Total Mana Power) ]
+     * 
+     * 플레이어의 총 마력 수치로 각성치가 100%에 도달했을 때의 마력이다.
+     * 각성치의 비율만큼 MP에 적용된다.
+     ****************************************************************/
 
     [SerializeField]
     private int _defensive;
@@ -114,13 +119,13 @@ public class PlayerData : ObjectData
         {
             base.AGI = value;
 
-            _runSpeed = MoveSpeed * 1.25f;
+            _runSpeed = MoveSpeed * 1.7f;
         }
     }
 
     // 대시 거리까지 이동하는 속도
     [SerializeField]
-    private float _dashSpeed = 0.35f;
+    private float _dashSpeed;
     public float DashSpeed 
     {
         get { return _dashSpeed; }
@@ -128,7 +133,7 @@ public class PlayerData : ObjectData
 
     // 달리기 속도
     [SerializeField] 
-    private float _runSpeed; // speed * 1.25
+    private float _runSpeed;
     public float RunSpeed
     {
         get
@@ -139,6 +144,46 @@ public class PlayerData : ObjectData
 
     public override void Initialization()
     {
+        // hp
+        MaxHP = 100;
+        HP = 100;
 
+        // strength
+        STR = 5;
+
+        // speed
+        SpeedRatio = 100;
+        AGI = 15;
+        _dashSpeed = 17.5f;
+
+        // mana
+        MaxMana = 0;
+        Mana = 0;
+
+        // mp & ap
+        _totalMP = 100;
+        _maxAwakenPoint = 100;
+        AP = 5;
+
+        // defensive
+        DEF = 0;
+
+        // stamina
+        _maxStamina = 100;
+        Stamina = 100;
+    }
+
+    public void ReloadStat()
+    {
+        MaxHP = MaxHP;
+        HP = HP;
+        STR = STR;
+        AGI = AGI;
+        MaxMana = MaxMana;
+        Mana = Mana;
+        MP = MP;
+        AP = AP;
+        DEF = DEF;
+        Stamina = Stamina;
     }
 }

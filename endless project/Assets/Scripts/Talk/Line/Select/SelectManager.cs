@@ -8,8 +8,16 @@ public class SelectManager : MonoBehaviour
 
     private Action<string> onClickHandler;
 
+    private bool isSelectOpen;
+    public bool IsSelectOpen
+    {
+        get { return isSelectOpen; }
+    }
+
     public void OpenSelect(Select select, Action<string> onClickHandler)
     {
+        isSelectOpen = true;
+
         this.onClickHandler = onClickHandler;
 
         string[] options = select.Options.ToArray();
@@ -28,5 +36,7 @@ public class SelectManager : MonoBehaviour
     {
         ui.destroySelect();
         ui.setView(false);
+
+        isSelectOpen = false;
     }
 }

@@ -24,17 +24,14 @@ public abstract class ObjectData : ScriptableObject
         get { return _healthPoint; }
         set
         {
-            if(_healthPoint != value)
-            {
-                // 입력값이 음수일 경우
-                if (value < 0)
-                    _healthPoint = 0;
-                // 입력값이 최대치를 초과한 경우
-                else if (value > _maxHealthPoint)
-                    _healthPoint = _maxHealthPoint;
-                else
-                    _healthPoint = value;
-            }
+            // 입력값이 음수일 경우
+            if (value < 0)
+                _healthPoint = 0;
+            // 입력값이 최대치를 초과한 경우
+            else if (value > _maxHealthPoint)
+                _healthPoint = _maxHealthPoint;
+            else
+                _healthPoint = value;
         }
     }
 
@@ -43,6 +40,14 @@ public abstract class ObjectData : ScriptableObject
     public virtual int MaxHP
     {
         get { return _maxHealthPoint; }
+        protected set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                _maxHealthPoint = 0;
+            else
+                _maxHealthPoint = value;
+        }
     }
 
     [SerializeField]
@@ -93,7 +98,7 @@ public abstract class ObjectData : ScriptableObject
     }
 
     // 민첩의 이동속도 전환율
-    private float _speedRatio = 100;
+    private float _speedRatio;
     public float SpeedRatio
     {
         get { return _speedRatio; }
@@ -140,6 +145,14 @@ public abstract class ObjectData : ScriptableObject
     public virtual int MaxMana
     {
         get { return _maxMana; }
+        protected set
+        {
+            // 입력값이 음수일 경우
+            if (value < 0)
+                _maxMana = 0;
+            else
+                _maxMana = value;
+        }
     }
 
     [SerializeField]
@@ -173,7 +186,5 @@ public abstract class ObjectData : ScriptableObject
         protected set { _atkDamage = value; }
     }
 
-
-    [ContextMenu("Initialization Data")]
     public abstract void Initialization();
 }

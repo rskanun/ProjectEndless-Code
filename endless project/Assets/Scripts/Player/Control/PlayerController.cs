@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 enum PlayerState
 {
     Idle,
-    Running,
     Dashing,
     Attacking
 }
@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     // 현재 플레이어 캐릭터 상태
     private PlayerState playerState;
+    private bool isRunning = false;
 
     // 이동 위치 벡터
     private Vector2 playerVec;
@@ -32,10 +33,6 @@ public class PlayerController : MonoBehaviour, IControlState
 
     [Header("참조 스크립트")]
     [SerializeField] private PlayerAnimation playerAnima;
-
-    private bool moveAvailable => 
-        playerState == PlayerState.Idle 
-        || playerState == PlayerState.Running;
 
     public void OnControlKeyPressed(ControlContext context)
     {
@@ -59,10 +56,39 @@ public class PlayerController : MonoBehaviour, IControlState
         playerVec.x = Input.GetAxisRaw("Horizontal");
         playerVec.y = Input.GetAxisRaw("Vertical");
 
-        if(moveAvailable)
+        // 걷는 정도의 스피드인지 판단
+        CheckingWalk(playerVec.x, playerVec.y);
+
+        // 키보드 누른 방향으로 애니메이션 움직임 제어
+        SetAngle(playerVec);
+    }
+
+    private void SetAngle(Vector2 playerVec)
+    {
+        if (playerState == PlayerState.Idle)
         {
-            // 키보드 누른 방향으로 애니메이션 움직임 제어
             playerAnima.SetPlayerAngleAnim(playerVec);
+        }
+    }
+
+    private void CheckingWalk(float x, float y)
+    {
+        if (playerState == PlayerState.Idle)
+        {
+            float absX = Mathf.Abs(x);
+            float absY = Mathf.Abs(y);
+
+            bool isWalkSpeed = absX <= 0.5f && absY <= 0.5f;
+
+            // 움직임 정도가 일정 이하면 걷기
+            if (!isRunning && isWalkSpeed)
+            {
+                isRunning = false;
+            }
+            else if(!isRunning)
+            {
+                isRunning = true;
+            }
         }
     }
 
@@ -76,7 +102,7 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         if(playerState == PlayerState.Idle && Input.GetButtonDown("Running"))
         {
-            playerState = PlayerState.Running;
+            isRunning = true;
         }
     }
 
@@ -88,7 +114,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnDashKeyPressed()
     {
-        if (moveAvailable && Input.GetButtonDown("Dash"))
+        if (playerState == PlayerState.Idle && Input.GetButtonDown("Dash"))
         {
             // 대쉬 이동을 위한 계산식
             dashVec = getDashVector();
@@ -226,7 +252,7 @@ public class PlayerController : MonoBehaviour, IControlState
             // moveToAttack();
         }
         // 방향키(혹은 비슷한 장치) 이동에 따른 이동
-        else if (moveAvailable)
+        else if (playerState == PlayerState.Idle)
         {
             MoveCharacter();
         }
@@ -241,7 +267,8 @@ public class PlayerController : MonoBehaviour, IControlState
         // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
         if (Vector2.Distance(dashVec, subEntity.position) <= stopDistance)
         {
-            playerState = PlayerState.Running;
+            playerState = PlayerState.Idle;
+            isRunning = true;
 
             Debug.Log("ready");
         }
@@ -249,7 +276,19 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void MoveCharacter()
     {
-        float speed = (playerState == PlayerState.Running) ? player.RunSpeed : player.AGI;
+        float speed = (isRunning) ? player.RunSpeed : player.MoveSpeed;
         rigid.velocity = playerVec.normalized * speed * Time.deltaTime;
+
+        // 달리기를 멈추면 걷기로 전환
+        if(CheckRunning(rigid.velocity) == false)
+        {
+            playerState = PlayerState.Idle;
+        }
+    }
+
+    private bool CheckRunning(Vector2 vec)
+    {
+        return isRunning
+            && vec != Vector2.zero;
     }
 }

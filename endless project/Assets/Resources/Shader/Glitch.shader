@@ -51,7 +51,7 @@ Shader "Ageia/ImageEffect/Glitch" {
 			   void surf(Input IN, inout SurfaceOutput o) {
 
 				half3 screenUV = IN.screenPos.xyz / IN.screenPos.w;
-				screenUV.y = 1 - screenUV.y; // 제거 시 화면 위아래 역전
+				// screenUV.y = 1 - screenUV.y; // 제거 시 화면 위아래 역전
 
 				//half Test = IN.uv_MainTex;
 				half2 glitchUV = half2(IN.uv_GlitchTex.x * _GlitchCutAmountX + (_Time.y * 100), IN.uv_GlitchTex.y * _GlitchCutAmountY + sin(_Time.y * 100));
