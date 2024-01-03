@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour, IControlState
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag(ObjectTag.NPC))
+        if (collision.CompareTag("NPC"))
         {
             // 해당 NPC의 정보를 가져오기
             npc = collision.gameObject.GetComponent<Npc>();
@@ -198,7 +198,7 @@ public class PlayerController : MonoBehaviour, IControlState
     private void OnTriggerExit2D(Collider2D collision)
     {
         // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag(ObjectTag.NPC))
+        if (collision.CompareTag("NPC"))
         {
             // NPC의 정보를 초기화
             npc = null;

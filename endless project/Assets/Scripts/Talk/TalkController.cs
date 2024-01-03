@@ -64,12 +64,15 @@ public class TalkController : MonoBehaviour, IControlState
 
     public void StartTalk(Npc npc)
     {
-        // 대화 처음 시작 시 해당되는 대화목록 가져오기
-        List<Line> lines = npc.getLines();
-        selectStack = new Stack<Select>();
+        if (npc.isInteractive())
+        {
+            // 대화 처음 시작 시 해당되는 대화목록 가져오기
+            List<Line> lines = npc.getLines();
+            selectStack = new Stack<Select>();
 
-        isTalking = true;
-        StartCoroutine(ReadLines(lines));
+            isTalking = true;
+            StartCoroutine(ReadLines(lines));
+        }
     }
 
     private IEnumerator ReadLines(List<Line> lines)

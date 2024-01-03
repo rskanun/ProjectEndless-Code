@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac49affdb83811419253a10a09e4b79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 76cfdb065797a2f40aecb6883d913e59, type: 2}
+  gameEvent: {fileID: 0}
   response:
     m_PersistentCalls:
       m_Calls:
@@ -771,6 +771,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfcdc5bd517637044a1b06f6b8685b7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hpEvent: {fileID: 0}
+  apEvent: {fileID: 0}
   stat: {fileID: 11400000, guid: 38b53a5d3fde3af46b7ed637e8f31a45, type: 2}
   equip: {fileID: 0}
 --- !u!1 &438389946
@@ -5500,7 +5502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a157d0711e2ac7478a7b7151cd05b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npc: {fileID: 11400000, guid: 7a3bb78272b76fa458198cdc9fcee3fe, type: 2}
+  npc: {fileID: 11400000, guid: 3724cd3b6342ceb49ae38ab5c9f62dd4, type: 2}
 --- !u!1 &836057440
 GameObject:
   m_ObjectHideFlags: 0
@@ -9755,7 +9757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac49affdb83811419253a10a09e4b79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 040b066df3e626547bdd8798cbccd260, type: 2}
+  gameEvent: {fileID: 0}
   response:
     m_PersistentCalls:
       m_Calls:

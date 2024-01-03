@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d00c706344ed2d549b490eb7165d8c94, type: 3}
-  m_Name: CsvReader
+  m_Name: CSVReader
   m_EditorClassIdentifier: 

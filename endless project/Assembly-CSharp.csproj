@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\GameManager\ControlContext.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
+    <Compile Include="Assets\Kino\Glitch\DigitalGlitch.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Select\Case.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\ScriptResource.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
@@ -75,13 +76,13 @@
     <Compile Include="Assets\Scripts\Talk\Line\Line.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Event\EventManager.cs" />
     <Compile Include="Assets\Script\System\Menu\App\App.cs" />
-    <Compile Include="Assets\Scripts\Event\Stat\HpEvent.cs" />
     <Compile Include="Assets\Script\UI\Animation\SelectionAnimation.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\LineFactory.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\Script\System\Menu\MenuControl.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\AppUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
+    <Compile Include="Assets\Scripts\Effect\Effect.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Option\ToggleUI.cs" />
     <Compile Include="Assets\Scripts\Object\NPC\Npc.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Assets\Script\System\Menu\Popup\Confirm.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Select\SelectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
+    <Compile Include="Assets\Editors\PlayerDataEditor.cs" />
     <Compile Include="Assets\Script\System\Mouse.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
@@ -162,19 +164,20 @@
     <Compile Include="Assets\Script\System\Menu\Popup\Popup.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\Scripts\Effect\GlitchEffect.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
-    <Compile Include="Assets\Scripts\Event\Stat\ApEvent.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
     <Compile Include="Assets\Script\UI\Menu\HomeScreenUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
-    <Compile Include="Assets\Script\UI\Object\Monster\NormalMonsterUI.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\NormalMonsterUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\Script\UI\Menu\App\Popup\AlertUI.cs" />
     <Compile Include="Assets\Scripts\Player\Stat\HudManager.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\Alert.cs" />
+    <Compile Include="Assets\Kino\Glitch\AnalogGlitch.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\Script\System\Option\ListOption.cs" />
     <Compile Include="Assets\Script\System\Menu\Popup\AlertManager.cs" />
@@ -182,11 +185,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Script\System\Player\AttackManager.cs" />
     <Compile Include="Assets\Scripts\PlayerTrackerCamera.cs" />
-    <Compile Include="Assets\Editors\PlayerDataEditor.cs" />
-    <Compile Include="Assets\Kino\Glitch\AnalogGlitch.cs" />
-    <Compile Include="Assets\Kino\Glitch\DigitalGlitch.cs" />
-    <Compile Include="Assets\Scripts\Effect\GlitchEffect.cs" />
-    <Compile Include="Assets\Scripts\Effect\Effect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

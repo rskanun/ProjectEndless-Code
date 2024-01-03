@@ -72,7 +72,7 @@ public class ScriptResource : ScriptableObject
     {
         // 챕터번호 1자리 + 분기번호 1자리 + 서브챕터번호 2자리
         string folderName = chapter.ToString() + root.ToString()
-            + ((subChapter < 10) ? "0" + subChapter.ToString() : subChapter.ToString());
+            + ((subChapter < 10) ? "0"  : "") + subChapter.ToString();
 
         string path = FILE_DIRECTORY + "/" + folderName;
 

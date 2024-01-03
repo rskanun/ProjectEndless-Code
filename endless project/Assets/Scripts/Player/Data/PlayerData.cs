@@ -3,6 +3,15 @@
 [CreateAssetMenu(menuName ="Game Object/Player", fileName = "PlayerData")]
 public class PlayerData : ObjectData
 {
+    [SerializeField]
+    private int _totalMP;
+    /***************************************************************
+     * [ 총 마력 (Total Mana Power) ]
+     * 
+     * 플레이어의 총 마력 수치로 각성치가 100%에 도달했을 때의 마력이다.
+     * 각성치의 비율만큼 MP에 적용된다.
+     ****************************************************************/
+
     [SerializeField] 
     private int _awakenPoint;
     /***************************************************************
@@ -41,15 +50,6 @@ public class PlayerData : ObjectData
     {
         get { return _maxAwakenPoint; }
     }
-
-    [SerializeField]
-    private int _totalMP;
-    /***************************************************************
-     * [ 총 마력 (Total Mana Power) ]
-     * 
-     * 플레이어의 총 마력 수치로 각성치가 100%에 도달했을 때의 마력이다.
-     * 각성치의 비율만큼 MP에 적용된다.
-     ****************************************************************/
 
     [SerializeField]
     private int _defensive;
@@ -142,7 +142,7 @@ public class PlayerData : ObjectData
         }
     }
 
-    public override void Initialization()
+    public void Initialization()
     {
         // hp
         MaxHP = 100;

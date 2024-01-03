@@ -1,5 +1,4 @@
-﻿using Assets.Script.Object.Monster;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Assets.Script.System.Player
@@ -59,7 +58,7 @@ namespace Assets.Script.System.Player
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.CompareTag(ObjectTag.Monster))
+            if(collision.CompareTag("Monster"))
             {
                 collision.GetComponent<Monster>().OnTakeDamage(_damage, _mp);
             }

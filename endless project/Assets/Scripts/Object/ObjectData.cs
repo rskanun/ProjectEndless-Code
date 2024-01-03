@@ -1,14 +1,5 @@
 using UnityEngine;
 
-public class ObjectTag
-{
-    private static string _npc = "NPC";
-    public static string NPC { get { return _npc; } }
-
-    private static string _monster = "Monster";
-    public static string Monster { get { return _monster; } }
-}
-
 public abstract class ObjectData : ScriptableObject
 {
     [Header("스테이터스")]
@@ -185,6 +176,4 @@ public abstract class ObjectData : ScriptableObject
         get { return _atkDamage; }
         protected set { _atkDamage = value; }
     }
-
-    public abstract void Initialization();
 }
