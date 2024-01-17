@@ -101,6 +101,18 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -110,7 +122,7 @@ TextureImporter:
         serializedVersion: 2
         x: 224
         y: 0
-        width: 205
+        width: 208
         height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -277,9 +289,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 224
-        width: 4
-        height: 5
+        y: 192
+        width: 11
+        height: 11
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +309,10 @@ TextureImporter:
       name: spread_off
       rect:
         serializedVersion: 2
-        x: 5
-        y: 224
-        width: 4
-        height: 5
+        x: 16
+        y: 192
+        width: 11
+        height: 11
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -315,13 +327,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wifi_on
+      name: wifi
       rect:
         serializedVersion: 2
-        x: 16
-        y: 224
-        width: 6
-        height: 6
+        x: 3
+        y: 176
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -331,27 +343,6 @@ TextureImporter:
       bones: []
       spriteID: ef97f80d40fc2034689e026113041be3
       internalID: -1371176707
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: wifi_off
-      rect:
-        serializedVersion: 2
-        x: 23
-        y: 224
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: aa9b06e15673d6c4b83d13a9a2aee102
-      internalID: 31322874
       vertices: []
       indices: 
       edges: []
@@ -378,13 +369,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: battery
+      name: battery_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 224
-        width: 3
-        height: 5
+        x: 5
+        y: 160
+        width: 6
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -402,8 +393,8 @@ TextureImporter:
       name: list_button
       rect:
         serializedVersion: 2
-        x: 0
-        y: 209
+        x: 112
+        y: 33
         width: 37
         height: 15
       alignment: 0
@@ -423,8 +414,8 @@ TextureImporter:
       name: home_button
       rect:
         serializedVersion: 2
-        x: 37
-        y: 209
+        x: 149
+        y: 33
         width: 38
         height: 15
       alignment: 0
@@ -444,8 +435,8 @@ TextureImporter:
       name: back_button
       rect:
         serializedVersion: 2
-        x: 75
-        y: 209
+        x: 187
+        y: 33
         width: 37
         height: 15
       alignment: 0
@@ -457,6 +448,90 @@ TextureImporter:
       bones: []
       spriteID: 7a14ff61c9e15fc4d8afc0e18f273ba0
       internalID: -179662010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: battery_2
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 160
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2440db03fc5983447a650b18c237ad87
+      internalID: 1473385746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: battery_3
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 160
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c17ae19c6c7b2b47bc6bb9d88301bf7
+      internalID: 1148194394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: battery_4
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 160
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca0b04a17569dfa4cbe7c6784e13cd7a
+      internalID: -1165110061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: battery_5
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 160
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34afb2fbed5434147a180eb9c01b4232
+      internalID: 1183243478
       vertices: []
       indices: 
       edges: []
@@ -475,6 +550,7 @@ TextureImporter:
       back_button: -179662010
       call: 1058399888
       menu_frame: -7132264
+      wifi: -1371176707
       spread_on: 867387410
       home_button: -1549498107
       optionGUI_14: 1821159120
@@ -483,14 +559,17 @@ TextureImporter:
       menu_background: 1083138216
       optionGUI_12: 1449279704
       list_button: -1985531063
-      wifi_on: -1371176707
+      battery_4: -1165110061
+      battery_3: 1148194394
       exit: -222913187
       landscape_mode: 344785514
-      battery: 1081617256
+      battery_2: 1473385746
+      battery_5: 1183243478
       option: 590721500
       save: 817963386
       load: -120440064
       select: 1787207043
+      battery_1: 1081617256
       wifi_off: 31322874
   spritePackingTag: 
   pSDRemoveMatte: 0

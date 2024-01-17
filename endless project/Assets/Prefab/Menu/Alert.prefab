@@ -213,8 +213,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2490671532873349079}
-        m_TargetAssemblyTypeName: Assets.Script.UI.Menu.Popup.AlertUI, Assembly-CSharp
-        m_MethodName: onClick
+        m_TargetAssemblyTypeName: AlertUI, Assembly-CSharp
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

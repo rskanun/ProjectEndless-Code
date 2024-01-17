@@ -1,60 +1,58 @@
-﻿using System.Collections;
+﻿using Assets.Script.System.Option;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.System.Option
+public class OptionManager : MonoBehaviour
 {
-    public class OptionManager : MonoBehaviour
+    [SerializeField]
+    private List<Option> optionList;
+
+    private OptionSetting optionSetting;
+
+    private void Awake()
     {
-        [SerializeField]
-        private List<Option> optionList;
+        optionSetting = OptionSetting.Instance;
 
-        private OptionSetting optionSetting;
+        //StartCoroutine(checkForControllers());
+    }
 
-        private void Awake()
+    private IEnumerator checkForControllers()
+    {
+        WaitForSeconds wait = new WaitForSeconds(1f);
+
+        while (true)
         {
-            optionSetting = OptionSetting.Instance;
+            var controllers = Input.GetJoystickNames();
 
-            //StartCoroutine(checkForControllers());
-        }
-
-        private IEnumerator checkForControllers()
-        {
-            WaitForSeconds wait = new WaitForSeconds(1f);
-
-            while(true)
+            if (optionSetting.IsController == false && controllers.Length > 0)
             {
-                var controllers = Input.GetJoystickNames();
-
-                if (optionSetting.IsController == false && controllers.Length > 0)
-                {
-                    optionSetting.IsController = true;
-                }
-                else if (optionSetting.IsController && controllers.Length == 0)
-                {
-                    optionSetting.IsController = false;
-                }
-
-                yield return wait;
+                optionSetting.IsController = true;
             }
-        }
-
-        private void readOption()
-        {
-            // read option to file
-        }
-
-        private void writeOption()
-        {
-            // write option to file
-        }
-
-        private void setOptionMenu()
-        {
-            foreach(Option option in optionList)
+            else if (optionSetting.IsController && controllers.Length == 0)
             {
-
+                optionSetting.IsController = false;
             }
+
+            yield return wait;
+        }
+    }
+
+    private void readOption()
+    {
+        // read option to file
+    }
+
+    private void writeOption()
+    {
+        // write option to file
+    }
+
+    private void setOptionMenu()
+    {
+        foreach (Option option in optionList)
+        {
+
         }
     }
 }

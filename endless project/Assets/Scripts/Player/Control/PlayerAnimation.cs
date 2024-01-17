@@ -17,12 +17,8 @@ public class PlayerAnimation : MonoBehaviour
         playerAnimator.SetInteger("axisV", y);
     }
 
-    public IEnumerator AttackAnim()
+    public void OnAttackAnim()
     {
-        // 애니메이션 실행
 
-        // 애니메이션 딜레이
-        float delay = 0.5f;
-        yield return new WaitForSeconds(delay);
     }
 }

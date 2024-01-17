@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -29,7 +30,7 @@ public class SelectUI : MonoBehaviour
         originSize = new Vector2(selectionWindowRect.rect.width, selectionWindowRect.rect.height);
     }
 
-    public void setView(bool isView)
+    public void SetView(bool isView)
     {
         if (isView)
         {
@@ -38,14 +39,36 @@ public class SelectUI : MonoBehaviour
             float spacing = layoutGroup.spacing;
             float height = containerHeight + optionList.Count * (buttonHeight + spacing);
 
-            SelectionAnimation.openSelectionAnimation(selectionWindow, optionList, height);
+            SelectionOpenAnimation(height);
         }
 
         selectionWindow.SetActive(isView);
         darkPanel.SetActive(isView);
     }
 
-    public void createButtons(string[] options, Action<string> onClickAction)
+    private void SelectionOpenAnimation(float height)
+    {
+        float minH = 104;
+        float sec = 0.25f;
+
+        RectTransform rect = selectionWindowRect;
+
+        DOTween.Sequence()
+            .OnStart(() =>
+            {
+                rect.sizeDelta = new Vector2(rect.rect.width, minH);
+            })
+            .Append(rect.DOSizeDelta(new Vector2(rect.rect.width, height), sec).SetEase(Ease.OutCubic))
+            .OnComplete(() =>
+            {
+                foreach (GameObject option in optionList)
+                {
+                    option.SetActive(true);
+                }
+            });
+    }
+
+    public void CreateButtons(string[] options, Action<string> onClickAction)
     {
         foreach (string option in options)
         {
@@ -64,7 +87,7 @@ public class SelectUI : MonoBehaviour
         }
     }
 
-    public void destroySelect()
+    public void DestroySelect()
     {
         foreach (GameObject obj in optionList)
         {

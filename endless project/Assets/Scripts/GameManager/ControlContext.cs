@@ -1,38 +1,62 @@
 ﻿using UnityEngine;
 
-public class ControlContext : MonoBehaviour
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class ControlContext : ScriptableObject
 {
-    [Header("컨트롤러 상태")]
-    [SerializeField] private PlayerController playerControlState;
-    [SerializeField] private IControlState menuControlState;
-    [SerializeField] private TalkController talkControlState;
+    // 저장 파일 위치
+    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
+    private const string FILE_DIRECTORY = "Assets/Resources/Option";
+    private const string FILE_PATH = "Assets/Resources/Option/ControlContext.asset";
+
+    private static ControlContext _instance;
+    public static ControlContext Instance
+    {
+        get
+        {
+            if (_instance != null) return _instance;
+
+            _instance = Resources.Load<ControlContext>("Option/ControlContext");
+
+#if UNITY_EDITOR
+            if (_instance == null)
+            {
+                // 파일 경로가 없을 경우 폴더 생성
+                if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
+                {
+                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
+                    {
+                        AssetDatabase.CreateFolder("Assets", "Resources");
+                    }
+
+                    AssetDatabase.CreateFolder(OPTION_FILE_DIRECTORY, "Option");
+                }
+
+                // Resource.Load가 실패했을 경우
+                _instance = AssetDatabase.LoadAssetAtPath<ControlContext>(FILE_PATH);
+
+                if (_instance == null)
+                {
+                    _instance = CreateInstance<ControlContext>();
+                    AssetDatabase.CreateAsset(_instance, FILE_PATH);
+                }
+            }
+#endif
+            return _instance;
+        }
+    }
 
     private IControlState state;
 
-    private void Awake()
+    public void OnKeyPressed()
     {
-        state = playerControlState;
+        state.OnControlKeyPressed();
     }
 
-    private void Update()
+    public void SetState(IControlState state)
     {
-        state.OnControlKeyPressed(this);
-    }
-
-    public void setTalkState(Npc npc)
-    {
-        state = talkControlState;
-
-        talkControlState.StartTalk(npc);
-    }
-
-    public void setMenuState()
-    {
-        state = menuControlState;
-    }
-
-    public void setPlayerState()
-    {
-        state = playerControlState;
+        this.state = state;
     }
 }

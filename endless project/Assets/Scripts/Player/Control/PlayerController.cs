@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 enum PlayerState
 {
@@ -16,11 +15,14 @@ public class PlayerController : MonoBehaviour, IControlState
     // 현재 플레이어 캐릭터 상태
     private PlayerState playerState;
     private bool isRunning = false;
+    private bool isStateIdle
+    {
+        get { return playerState == PlayerState.Idle; }
+    }
 
     // 이동 위치 벡터
     private Vector2 playerVec;
     private Vector2 dashVec;
-    private Vector2 attackVec;
 
     // 현재 상호작용 가능한 NPC
     private Npc npc;
@@ -33,15 +35,23 @@ public class PlayerController : MonoBehaviour, IControlState
 
     [Header("참조 스크립트")]
     [SerializeField] private PlayerAnimation playerAnima;
+    [SerializeField] private AttackManager attackManager;
+    [SerializeField] private TalkController talkController;
+    [SerializeField] private MenuController menuController;
 
-    public void OnControlKeyPressed(ControlContext context)
+    private void Start()
+    {
+        ControlContext.Instance.SetState(this);
+    }
+
+    public void OnControlKeyPressed()
     {
         OnMoveKeyPressed();
         OnRunKeyPressed();
         OnDashKeyPressed();
         OnAttackKeyPressed();
-        OnTalkKeyPressed(context);
-        OnMenuKeyPressed(context);
+        OnTalkKeyPressed();
+        OnMenuKeyPressed();
     }
 
     /************************************************************
@@ -65,7 +75,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void SetAngle(Vector2 playerVec)
     {
-        if (playerState == PlayerState.Idle)
+        if (isStateIdle)
         {
             playerAnima.SetPlayerAngleAnim(playerVec);
         }
@@ -73,7 +83,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void CheckingWalk(float x, float y)
     {
-        if (playerState == PlayerState.Idle)
+        if (isStateIdle)
         {
             float absX = Mathf.Abs(x);
             float absY = Mathf.Abs(y);
@@ -100,7 +110,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnRunKeyPressed()
     {
-        if(playerState == PlayerState.Idle && Input.GetButtonDown("Running"))
+        if(isStateIdle && Input.GetButtonDown("Running"))
         {
             isRunning = true;
         }
@@ -114,7 +124,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnDashKeyPressed()
     {
-        if (playerState == PlayerState.Idle && Input.GetButtonDown("Dash"))
+        if (isStateIdle && Input.GetButtonDown("Dash"))
         {
             // 대쉬 이동을 위한 계산식
             dashVec = getDashVector();
@@ -176,15 +186,17 @@ public class PlayerController : MonoBehaviour, IControlState
     * 바라보는 대상과 대화 시작
     ************************************************************/
 
-    private void OnTalkKeyPressed(ControlContext context)
+    private void OnTalkKeyPressed()
     {
-        if(npc != null && Input.GetButtonDown("Talking"))
+        if(npc != null && isStateIdle && Input.GetButtonDown("Talking"))
         {
-            context.setTalkState(npc);
+            ControlContext.Instance.SetState(talkController);
+            
+            talkController.StartTalk(npc);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void EnterNpcArea(Collider2D collision)
     {
         // 맞닿은 오브젝트가 NPC일 시
         if (collision.CompareTag("NPC"))
@@ -195,7 +207,7 @@ public class PlayerController : MonoBehaviour, IControlState
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void ExitNpcArea(Collider2D collision)
     {
         // 맞닿은 오브젝트가 NPC일 시
         if (collision.CompareTag("NPC"))
@@ -214,9 +226,9 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnAttackKeyPressed()
     {
-        if (Input.GetButtonDown("Attack"))
+        if (isStateIdle && Input.GetButtonDown("Attack"))
         {
-            // Attack
+            attackManager.OnAttack();
         }
     }
 
@@ -226,11 +238,14 @@ public class PlayerController : MonoBehaviour, IControlState
     * 메뉴창을 열음
     ************************************************************/
 
-    private void OnMenuKeyPressed(ControlContext context)
+    private void OnMenuKeyPressed()
     {
         if (Input.GetButtonDown("Menu"))
         {
+            playerVec = Vector2.zero;
 
+            ControlContext.Instance.SetState(menuController);
+            menuController.OpenMenu();
         }
     }
 
@@ -246,10 +261,6 @@ public class PlayerController : MonoBehaviour, IControlState
         if (playerState == PlayerState.Dashing)
         {
             MoveDash();
-        }
-        else if (playerState == PlayerState.Attacking)
-        {
-            // moveToAttack();
         }
         // 방향키(혹은 비슷한 장치) 이동에 따른 이동
         else if (playerState == PlayerState.Idle)
@@ -290,5 +301,15 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         return isRunning
             && vec != Vector2.zero;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        EnterNpcArea(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        ExitNpcArea(collision);
     }
 }

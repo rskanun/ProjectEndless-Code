@@ -8,6 +8,7 @@ public class TalkController : MonoBehaviour, IControlState
     [SerializeField] private TextManager textManager;
     [SerializeField] private SelectManager selectManager;
     [SerializeField] private EventManager eventManager;
+    [SerializeField] private PlayerController playerController;
 
     // 현재 라인 진행 상황
     private bool readLock;
@@ -23,15 +24,15 @@ public class TalkController : MonoBehaviour, IControlState
     * 대사를 읽어 그에 따른 인게임 이벤트 제어
     ************************************************************/
 
-    public void OnControlKeyPressed(ControlContext context)
+    public void OnControlKeyPressed()
     {
         if (Input.GetButtonDown("Talking"))
         {
-            OnReadHandler(context);
+            OnReadHandler();
         }
     }
 
-    public void OnReadHandler(ControlContext context)
+    public void OnReadHandler()
     {
         if (isTalking && !selectManager.IsSelectOpen)
         {
@@ -40,11 +41,11 @@ public class TalkController : MonoBehaviour, IControlState
         }
         else if(!isTalking)
         {
-            EndTalk(context);
+            EndTalk();
         }
     }
 
-    private void EndTalk(ControlContext context)
+    private void EndTalk()
     {
         // reset value
         readLock = false;
@@ -53,7 +54,7 @@ public class TalkController : MonoBehaviour, IControlState
         // dialog ui off
         textManager.TextDestroy();
 
-        context.setPlayerState();
+        ControlContext.Instance.SetState(playerController);
     }
 
     /************************************************************

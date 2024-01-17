@@ -18,7 +18,7 @@ namespace Assets.Script.UI.Menu
                 setActive(false);
 
             contents.text = msg;
-            AppAnimation.toastAnimation(toastMsg, openDelay, closeDelay);
+            MenuAnimation.ToastAnimation(toastMsg, openDelay, closeDelay);
         }
 
         public void setActive(bool isActive)

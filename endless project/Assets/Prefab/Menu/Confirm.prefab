@@ -590,8 +590,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5292790816603701748}
-        m_TargetAssemblyTypeName: Assets.Script.UI.Menu.Popup.ConfirmUI, Assembly-CSharp
-        m_MethodName: onNo
+        m_TargetAssemblyTypeName: ConfirmUI, Assembly-CSharp
+        m_MethodName: OnClickNo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -933,8 +933,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5292790816603701748}
-        m_TargetAssemblyTypeName: Assets.Script.UI.Menu.Popup.ConfirmUI, Assembly-CSharp
-        m_MethodName: onYes
+        m_TargetAssemblyTypeName: ConfirmUI, Assembly-CSharp
+        m_MethodName: OnClickYes
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

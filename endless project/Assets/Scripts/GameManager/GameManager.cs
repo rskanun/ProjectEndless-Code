@@ -9,12 +9,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Player player;
 
     private ScriptResource scriptResource;
+    private ControlContext controller;
 
     private void Start()
     {
         scriptResource = ScriptResource.Instance;
+        controller = ControlContext.Instance;
 
         StartGame();
+    }
+    private void Update()
+    {
+        controller.OnKeyPressed();
     }
 
     public void StartGame()

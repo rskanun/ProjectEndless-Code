@@ -22,8 +22,8 @@ public class SelectManager : MonoBehaviour
 
         string[] options = select.Options.ToArray();
 
-        ui.createButtons(options, OnButtonClick);
-        ui.setView(true);
+        ui.CreateButtons(options, OnButtonClick);
+        ui.SetView(true);
     }
 
     private void OnButtonClick(string option)
@@ -34,8 +34,8 @@ public class SelectManager : MonoBehaviour
 
     public void CloseSelect()
     {
-        ui.destroySelect();
-        ui.setView(false);
+        ui.DestroySelect();
+        ui.SetView(false);
 
         isSelectOpen = false;
     }

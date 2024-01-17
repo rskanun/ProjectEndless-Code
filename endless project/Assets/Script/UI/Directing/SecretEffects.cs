@@ -14,7 +14,6 @@ namespace Assets.Script.UI.Effects
         [Header("참조 스크립트")]
         [SerializeField] private EffectManager effect;
 
-        private OldPlayerState playerState;
         private OptionSetting option;
 
         private string originTime
@@ -42,7 +41,6 @@ namespace Assets.Script.UI.Effects
         {
             _instance = this;
 
-            playerState = OldPlayerState.Instance;
             option = OptionSetting.Instance;
         }
 
@@ -97,7 +95,7 @@ namespace Assets.Script.UI.Effects
 
         private void timePanelActive(bool isActive)
         {
-            playerState.IsPlayerControllable = !isActive;
+            // playerState.IsPlayerControllable = !isActive;
 
             timeText.gameObject.SetActive(isActive);
             timePanel.SetActive(isActive);
