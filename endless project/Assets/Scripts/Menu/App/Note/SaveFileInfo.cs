@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
+using System.Text.RegularExpressions;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -21,6 +23,7 @@ public class SaveData
     public SaveQuestData questData;
 }
 
+[System.Serializable]
 public struct SavePlayerData
 {
     public Vector2 pos;
@@ -35,6 +38,7 @@ public struct SavePlayerData
     public int mp;
 }
 
+[System.Serializable]
 public struct SaveStoryData
 {
     public string date;
@@ -43,12 +47,14 @@ public struct SaveStoryData
     public int subChapter;
 }
 
+[System.Serializable]
 public struct SaveMapData
 {
     public string id;
     public string name;
 }
 
+[System.Serializable]
 public struct SaveQuestData
 {
     public int id;
@@ -57,8 +63,7 @@ public struct SaveQuestData
 
 public class SaveFileInfo : ScriptableObject
 {
-    // 저장 파일 위치
-    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
+    private const string DIALOG_FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/SaveFileInfo.asset";
 
@@ -77,12 +82,12 @@ public class SaveFileInfo : ScriptableObject
                 // 파일 경로가 없을 경우 폴더 생성
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
-                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
+                    if (!AssetDatabase.IsValidFolder(DIALOG_FILE_DIRECTORY))
                     {
                         AssetDatabase.CreateFolder("Assets", "Resources");
                     }
 
-                    AssetDatabase.CreateFolder(OPTION_FILE_DIRECTORY, "Option");
+                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
                 }
 
                 // Resource.Load가 실패했을 경우
@@ -95,19 +100,20 @@ public class SaveFileInfo : ScriptableObject
                 }
             }
 #endif
+
             return _instance;
         }
     }
 
-    private string fileExtension = ".dat";
-    private string fileName = "DiaryPage";
+    [SerializeField] private string fileExtension = ".dat";
+    [SerializeField] private string fileName = "DiaryPage";
 
     private string _filePath;
     public string FilePath
     {
         get
         {
-            if (_filePath == null)
+            if (string.IsNullOrEmpty(_filePath))
             {
                 _filePath = Path.Combine(Application.persistentDataPath, "SaveFile");
 
@@ -125,5 +131,22 @@ public class SaveFileInfo : ScriptableObject
     public string GetFileName(int id)
     {
         return fileName + id + fileExtension;
+    }
+
+    public int GetFileNum(string file)
+    {
+        string pattern = $@"{Regex.Escape(fileName)}(\d+){Regex.Escape(fileExtension)}";
+
+        Match match = Regex.Match(file, pattern);
+        if (match.Success)
+        {
+            // 추출된 숫자 부분을 정수로 변환하여 반환
+            return int.Parse(match.Groups[1].Value);
+        }
+        else
+        {
+            // 형식에 맞지 않는 파일일 경우(숫자를 추출할 수 없는 경우)
+            return -1;
+        }
     }
 }

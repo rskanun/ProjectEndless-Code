@@ -11,23 +11,26 @@ public class NoteUI : MonoBehaviour
     [SerializeField] private GameObject viewer;
     [SerializeField] private GameObject notice;
     [SerializeField] private GameObject saveAddObj;
-    [Header("참조 스크립트")]
-    [SerializeField] private NoteApp context;
 
-    private Dictionary<int, GameObject> saveFileObjs;
+    private Dictionary<int, GameObject> saveFileObjs = new Dictionary<int, GameObject>();
     private const int MAX_FILE = 10;
-
-    private void Start()
-    {
-        saveFileObjs = new Dictionary<int, GameObject>();
-    }
 
     private void OnDisable()
     {
-        saveFileObjs.Clear();
+        DestroySaveFiles();
 
         ActiveAddSaveButton(false);
         ActiveNotice(false);
+    }
+
+    private void DestroySaveFiles()
+    {
+        foreach(GameObject obj in saveFileObjs.Values)
+        {
+            Destroy(obj);
+        }
+
+        saveFileObjs.Clear();
     }
 
     /************************************************************
@@ -56,7 +59,7 @@ public class NoteUI : MonoBehaviour
         SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
 
         manager.SetData(data);
-        manager.SetCallBack(() => context.OnClickNote(id));
+        manager.SetCallBack(() => NoteContext.Instance.OnClickNote(id));
 
         saveFileObjs[id] = saveFileObj;
 
@@ -124,6 +127,7 @@ public class NoteUI : MonoBehaviour
 
     public void InitNotice()
     {
+        Debug.Log(saveFileObjs.Count);
         if (saveFileObjs.Count <= 0)
         {
             // 세이브 파일이 없을 경우 알림 문구 띄움

@@ -74,6 +74,11 @@ public class TalkController : MonoBehaviour, IControlState
             isTalking = true;
             StartCoroutine(ReadLines(lines));
         }
+        else
+        {
+            // 상호작용이 불가능한 npc일 경우
+            EndTalk();
+        }
     }
 
     private IEnumerator ReadLines(List<Line> lines)

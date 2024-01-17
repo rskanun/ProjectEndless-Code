@@ -2,20 +2,26 @@
 
 public class NoteApp : App
 {
-    [Header("노트앱 모드")]
-    [SerializeField] private INoteState state;
+    [Header("노트 앱 참조 스크립트")]
 
-    [Header("참조 스크립트")]
-    [SerializeField] private NoteManager manager;
+    [SerializeField]
+    private NoteManager _manager;
+    public NoteManager manager
+    {
+        get { return _manager; }
+    }
+
+    [SerializeField]
+    private NoteUI _ui;
+    public NoteUI ui
+    {
+        get { return _ui; }
+    }
 
     protected override void LoadData()
     {
-        manager.InitSaveFile();
-        state.InitObj();
-    }
+        _manager.InitSaveFile();
 
-    public void OnClickNote(int id)
-    {
-        state.OnClickHandler(id);
+        NoteContext.Instance.InitAdditionalObj();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -58,8 +59,10 @@ public class SaveManager : MonoBehaviour
     private SaveStoryData GetCurrentStoryData()
     {
         SaveStoryData data = new SaveStoryData();
+        
+        DateTime date = OptionSetting.Instance.Date;
+        data.date = OptionSetting.Instance.DateToStr(date);
 
-        data.date = OptionSetting.Instance.Date.ToString("O");
         data.chapter = gameData.ChapterNum;
         data.root = gameData.RootNum;
         data.subChapter = gameData.SubChapterNum;

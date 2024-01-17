@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Scriptable Object/MapData", fileName = "Map_Data")]
 public class MapData : ScriptableObject
 {
     private string _id;
@@ -12,7 +13,7 @@ public class MapData : ScriptableObject
             if (string.IsNullOrEmpty(_id))
             {
                 // 앞의 12자리는 생성 시간 값의 16진수 변환 값
-                string timeBaseHex = DateTime.UtcNow.Ticks.ToString("X").Substring(0, 12);
+                string timeBaseHex = DateTime.UtcNow.Ticks.ToString("x").Substring(0, 12);
 
                 // 뒤의 12자리는 Guid를 사용한 랜덤한 값
                 string guidHex = Guid.NewGuid().ToString("N").Substring(0, 12);

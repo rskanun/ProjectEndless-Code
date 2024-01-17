@@ -60,7 +60,9 @@
   <ItemGroup>
     <Compile Include="Assets\Script\UI\Menu\DarkPanelSetting.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextManager.cs" />
+    <Compile Include="Assets\Scripts\Quest\QuestManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+    <Compile Include="Assets\Scripts\Menu\App\Note\Load\LoadApp.cs" />
     <Compile Include="Assets\Scripts\Map\MapData.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\CsvReader.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
@@ -101,12 +103,14 @@
     <Compile Include="Assets\Scripts\Talk\Line\Script.cs" />
     <Compile Include="Assets\Script\UI\Menu\DarkPanelUI.cs" />
     <Compile Include="Assets\Scripts\GameManager\IControlState.cs" />
+    <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\SaveFileInfo.cs" />
     <Compile Include="Assets\Script\System\Option\SliderOption.cs" />
     <Compile Include="Assets\Scripts\Object\NPC\NpcData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Menu\AutoSelectButton.cs" />
+    <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileUI.cs" />
     <Compile Include="Assets\Script\System\Option\OptionSetting.cs" />
     <Compile Include="Assets\Scripts\Effect\EffectManager.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextUI.cs" />
@@ -125,7 +129,7 @@
     <Compile Include="Assets\Scripts\Menu\Popup\Confirm\Confirm.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Select\SelectManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
-    <Compile Include="Assets\Editors\PlayerDataEditor.cs" />
+    <Compile Include="Assets\Editors\Player\PlayerDataEditor.cs" />
     <Compile Include="Assets\Script\System\Mouse.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\PopupManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
@@ -133,7 +137,7 @@
     <Compile Include="Assets\Scripts\Talk\Line\Event\EventLine.cs" />
     <Compile Include="Assets\Scripts\Menu\MenuAnimation.cs" />
     <Compile Include="Assets\Script\System\Menu\App\PhoneOptionSetting.cs" />
-    <Compile Include="Assets\Scripts\Menu\App\Note\Save\SaveState.cs" />
+    <Compile Include="Assets\Scripts\Menu\App\Note\Save\SaveApp.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\Scripts\Menu\MenuController.cs" />
     <Compile Include="Assets\Script\System\Option\OptionManager.cs" />
@@ -153,6 +157,7 @@
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteUI.cs" />
     <Compile Include="Assets\Scripts\Menu\App\AppUI.cs" />
     <Compile Include="Assets\Scripts\Event\GameEventListener.cs" />
+    <Compile Include="Assets\Scripts\Menu\App\Note\NoteAppUI.cs" />
     <Compile Include="Assets\Script\Item\Armor.cs" />
     <Compile Include="Assets\Scripts\Player\Stat\AwakenPointBarUI.cs" />
     <Compile Include="Assets\Script\UI\Directing\SecretEffects.cs" />
@@ -160,7 +165,6 @@
     <Compile Include="Assets\Script\Item\Item.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\Save\SaveManager.cs" />
-    <Compile Include="Assets\Script\UI\Menu\ToastUI.cs" />
     <Compile Include="Assets\Scripts\Talk\TalkController.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteApp.cs" />
     <Compile Include="Assets\Scripts\Player\Control\PlayerController.cs" />
@@ -186,11 +190,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Scripts\Player\Control\AttackManager.cs" />
     <Compile Include="Assets\Scripts\PlayerTrackerCamera.cs" />
-    <Compile Include="Assets\Scripts\Quest\QuestManager.cs" />
-    <Compile Include="Assets\Scripts\Menu\App\Note\Load\LoadState.cs" />
-    <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileManager.cs" />
-    <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileUI.cs" />
-    <Compile Include="Assets\Scripts\Menu\App\Note\NoteAppUI.cs" />
+    <Compile Include="Assets\Scripts\Menu\App\Note\NoteContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

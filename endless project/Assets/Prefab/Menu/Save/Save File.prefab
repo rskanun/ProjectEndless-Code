@@ -397,8 +397,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7294519975590617123}
-        m_TargetAssemblyTypeName: Assets.Script.UI.Menu.Save.SaveFileUI, Assembly-CSharp
-        m_MethodName: onClick
+        m_TargetAssemblyTypeName: SaveFileManager, Assembly-CSharp
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -417,11 +417,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8016489898399556364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd962b8b096acc84699279629ad543ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 48a8abec9022a5047906a59ac1dd9dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  date: {fileID: 8016489897252632371}
-  contents: {fileID: 8016489897885078829}
+  ui: {fileID: 1855687620972862147}
 --- !u!114 &1855687620972862147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,8 +430,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8016489898399556364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 315bc9fb3c1ae014d88f4490103cab60, type: 3}
+  m_Script: {fileID: 11500000, guid: 74585b392a51c0f478105a82883cc83b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveFile: {fileID: 8016489898399556364}
-  ui: {fileID: 7294519975590617123}
+  date: {fileID: 8016489897252632371}
+  contents: {fileID: 8016489897885078829}

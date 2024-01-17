@@ -52,7 +52,6 @@ public class GameData : ScriptableObject
     * 현재 플레이어가 진행 중인 퀘스트 관련 데이터
     ************************************************************/
 
-    [SerializeReference]
     [SerializeField]
     private QuestData _questData;
     public QuestData MainQuest
@@ -67,7 +66,6 @@ public class GameData : ScriptableObject
     * 현재 플레이어가 있는 지형 관련 데이터
     ************************************************************/
 
-    [SerializeReference]
     [SerializeField]
     private MapData _mapData;
     public MapData MapData

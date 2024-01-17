@@ -6,6 +6,7 @@ public enum QuestType
     Sub     // 서브 퀘스트 -> 스토리와 상관없는 퀘스트
 }
 
+[CreateAssetMenu(menuName = "Scriptable Object/QuestData", fileName = "Quest_Data")]
 public class QuestData : ScriptableObject
 {
     [SerializeField]
@@ -30,6 +31,7 @@ public class QuestData : ScriptableObject
     }
 
     [SerializeField]
+    [TextArea]
     private string _description;
     public string Description
     {

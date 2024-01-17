@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ public class NoteManager : MonoBehaviour
         saveFiles = GetSaveFile();
 
         // 오브젝트 배치
+        ui.InitSaveFileObj(saveFiles);
     }
 
     private Dictionary<int, SaveData> GetSaveFile()
@@ -28,18 +30,27 @@ public class NoteManager : MonoBehaviour
         DirectoryInfo di = new DirectoryInfo(SaveFileInfo.Instance.FilePath);
         foreach (FileInfo file in di.GetFiles())
         {
-            string fileNumStr = file.Name.Split('_')[0];
-            int fileNum = int.Parse(fileNumStr);
+            string fileName = file.Name;
+            int fileNum = SaveFileInfo.Instance.GetFileNum(fileName);
 
-            // 최신 파일 넘버 수정
-            if (latestFileNum < fileNum)
+            // 올바른 파일 번호를 얻었을 경우에만 데이터를 가져옴
+            if (fileNum >= 0)
             {
-                latestFileNum = fileNum;
+                try
+                {
+                    // 최신 파일 넘버 수정
+                    if (latestFileNum < fileNum)
+                    {
+                        latestFileNum = fileNum;
+                    }
+
+                    saveFiles[fileNum] = loadManager.ReadSaveFile(file.FullName);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"Error reading file '{fileName}': {e.Message}");
+                }
             }
-
-            SaveData data = loadManager.ReadSaveFile(file.ToString());
-
-            saveFiles[fileNum] = data;
         }
 
         return saveFiles;
@@ -143,4 +154,9 @@ public class NoteManager : MonoBehaviour
             loadManager.LoadGameData(data);
         }
     }    
+
+    private void LoadGame(SaveData data)
+    {
+        if (data.storyData.date < )
+    }
 }

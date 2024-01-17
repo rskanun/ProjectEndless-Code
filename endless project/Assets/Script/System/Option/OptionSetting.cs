@@ -153,6 +153,21 @@ public class OptionSetting : ScriptableObject
         set { _date = value; }
     }
 
+    public string DateToStr(DateTime date)
+    {
+        return date.ToString("O");
+    }
+
+    public DateTime StrToDate(string date)
+    {
+        return DateTime.Parse(date);
+    }
+
+    public bool IsPastDate(DateTime date)
+    {
+        return date < _date;
+    }
+
     /************************************************************
     * [세이브 로드]
     * 

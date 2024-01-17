@@ -1,11 +1,8 @@
-﻿using Assets.Script.UI.Menu;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class MessengerApp : App
 {
-    [SerializeField] private ToastUI toast;
-
     [Header("참조 스크립트")]
     [SerializeField] private MenuController menuManager;
 
@@ -62,8 +59,6 @@ public class MessengerApp : App
     {
         if (networkChecking != null)
             StopCoroutine(networkChecking);
-
-        toast.setActive(false);
 
         base.Close();
     }

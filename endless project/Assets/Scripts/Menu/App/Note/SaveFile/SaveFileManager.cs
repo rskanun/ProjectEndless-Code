@@ -2,16 +2,11 @@
 
 public class SaveFileManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject saveFile;
+    [Header("참조 스크립트")]
+    [SerializeField] private SaveFileUI ui;
 
-    [SerializeField]
-    private SaveFileUI ui;
-
-    private void OnDisable()
-    {
-        Destroy(saveFile);
-    }
+    public delegate void SaveFileCallBack();
+    private event SaveFileCallBack callBack;
 
     public void SetData(SaveData data)
     {
@@ -22,8 +17,13 @@ public class SaveFileManager : MonoBehaviour
         ui.SetSaveFile(date, location, quest);
     }
 
-    public void SetCallBack(SaveFileUI.SaveFileCallBack Listener)
+    public void SetCallBack(SaveFileCallBack listener)
     {
-        ui.SetCallBack(Listener);
+        callBack = listener;
+    }
+
+    public void OnClick()
+    {
+        callBack?.Invoke();
     }
 }
