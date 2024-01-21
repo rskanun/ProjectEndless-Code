@@ -127,7 +127,6 @@ public class NoteUI : MonoBehaviour
 
     public void InitNotice()
     {
-        Debug.Log(saveFileObjs.Count);
         if (saveFileObjs.Count <= 0)
         {
             // 세이브 파일이 없을 경우 알림 문구 띄움

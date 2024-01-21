@@ -48,15 +48,23 @@ public class ControlContext : ScriptableObject
         }
     }
 
-    private IControlState state;
+    private IControlState currentState;
+
+    public bool NoKeyDown
+    {
+        set { _noKeyDown = value; }
+    }
+    private bool _noKeyDown;
+
 
     public void OnKeyPressed()
     {
-        state.OnControlKeyPressed();
+        if (_noKeyDown == false)
+        currentState.OnControlKeyPressed();
     }
 
     public void SetState(IControlState state)
     {
-        this.state = state;
+        currentState = state;
     }
 }

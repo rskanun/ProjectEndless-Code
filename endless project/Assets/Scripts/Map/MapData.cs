@@ -54,6 +54,6 @@ public class MapData : ScriptableObject
 
     public override int GetHashCode()
     {
-        return Convert.ToInt32(ID, 16);
+        return base.GetHashCode();
     }
 }

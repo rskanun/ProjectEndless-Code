@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour, IControlState
     }
 
     // 이동 위치 벡터
-    private Vector2 playerVec;
     private Vector2 dashVec;
 
     // 현재 상호작용 가능한 NPC
@@ -62,15 +61,19 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnMoveKeyPressed()
     {
+        Vector2 vec = Vector2.zero;
+
         // 패드 및 키보드의 움직임(패드의 경우 경도)에 따른 백터 변화
-        playerVec.x = Input.GetAxisRaw("Horizontal");
-        playerVec.y = Input.GetAxisRaw("Vertical");
+        vec.x = Input.GetAxisRaw("Horizontal");
+        vec.y = Input.GetAxisRaw("Vertical");
+
+        player.Position = vec;
 
         // 걷는 정도의 스피드인지 판단
-        CheckingWalk(playerVec.x, playerVec.y);
+        CheckingWalk(player.Position.x, player.Position.y);
 
         // 키보드 누른 방향으로 애니메이션 움직임 제어
-        SetAngle(playerVec);
+        SetAngle(player.Position);
     }
 
     private void SetAngle(Vector2 playerVec)
@@ -242,7 +245,7 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         if (Input.GetButtonDown("Menu"))
         {
-            playerVec = Vector2.zero;
+            player.Position = Vector2.zero;
 
             ControlContext.Instance.SetState(menuController);
             menuController.OpenMenu();
@@ -288,7 +291,7 @@ public class PlayerController : MonoBehaviour, IControlState
     private void MoveCharacter()
     {
         float speed = (isRunning) ? player.RunSpeed : player.MoveSpeed;
-        rigid.velocity = playerVec.normalized * speed * Time.deltaTime;
+        rigid.velocity = player.Position.normalized * speed * Time.deltaTime;
 
         // 달리기를 멈추면 걷기로 전환
         if(CheckRunning(rigid.velocity) == false)

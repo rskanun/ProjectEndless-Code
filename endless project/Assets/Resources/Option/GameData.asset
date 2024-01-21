@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231b3ffb8fb43294bae3cfe05a18198c, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
-  _chapterNum: 9
-  _rootNum: 0
-  _subChapterNum: 0
+  _chapter:
+    _chapterNum: 9
+    _rootNum: 0
+    _subChapterNum: 0
+  _date:
+    year: 2048
+    month: 11
+    day: 18
+  _time:
+    remainCount: 30208
+    hour: 8
+    minute: 23
+    second: 28
   _questData: {fileID: 11400000, guid: 81a0e26a1831ac74c9380425cb427aa6, type: 2}
   _mapData: {fileID: 11400000, guid: 81da68e8ce9a53b4fb9aceda82be7f30, type: 2}

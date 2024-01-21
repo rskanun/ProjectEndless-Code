@@ -142,6 +142,14 @@ public class PlayerData : ObjectData
         }
     }
 
+    // 위치 값
+    private Vector2 _pos;
+    public Vector2 Position
+    {
+        get { return _pos; }
+        set { _pos = value; }
+    }
+
     public void Initialization()
     {
         // hp

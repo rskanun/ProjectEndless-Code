@@ -15,7 +15,7 @@ public class AwakenPointBarUI : MonoBehaviour
 
     [Space]
     [Header("참조 스크립트")]
-    [SerializeField] private EffectManager effect;
+    [SerializeField] private GlitchEffect glitch;
 
     public void SetApBar(int ap, int maxAp)
     {
@@ -42,7 +42,7 @@ public class AwakenPointBarUI : MonoBehaviour
 
     public void BarUpdate(int ap)
     {
-        effect.GlitchEffect(0.65f);
+        glitch.ActiveEffect(0.65f);
         SetApBar(ap);
     }
 }

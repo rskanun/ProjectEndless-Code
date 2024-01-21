@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MapManager
 {
@@ -20,6 +19,6 @@ public class MapManager
 
     public static void LoadMap(MapData map)
     {
-        SceneManager.LoadScene(map.SceneName);
+        LoadSceneManager.Instance.OnSceneClosed(map.SceneName);
     }
 }

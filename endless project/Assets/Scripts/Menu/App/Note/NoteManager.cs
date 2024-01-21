@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DG.Tweening;
+using Endless.GameData;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -12,6 +14,7 @@ public class NoteManager : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private SaveManager saveManager;
     [SerializeField] private LoadManager loadManager;
+    [SerializeField] private LoadSaveFileManager loadFileManager;
     [SerializeField] private MenuController menuController;
     [SerializeField] private NoteUI ui;
 
@@ -148,15 +151,31 @@ public class NoteManager : MonoBehaviour
 
         if (data != null)
         {
-            menuController.CloseAllApps();
-            menuController.CloseMenu();
+            Date loadDate = Date.StrToDate(data.storyData.date);
 
-            loadManager.LoadGameData(data);
+            if (loadDate < ReadOnlyGameData.Instance.Date)
+            {
+                // 불러올 게임의 시간대가 과거일 경우 불러올지 여부 확인
+                Confirm.CreateMsg("해당 시간대는 현재보다 과거입니다. 그래도 불러오시겠습니까?", "계속", "취소")
+                .SetYesHandler(() =>
+                {
+                    LoadSceneManager.Instance.SetAnimation(TimePassLoadingAnimation.Instance);
+                    LoadGame(data);
+                }).Show();
+            }
+            else
+            {
+                LoadSceneManager.Instance.SetAnimation(NormalLoadingAnimation.Instance);
+                LoadGame(data);
+            }
         }
-    }    
+    }
 
     private void LoadGame(SaveData data)
     {
-        if (data.storyData.date < )
+        menuController.CloseAllApps();
+        menuController.CloseMenu();
+
+        loadFileManager.LoadSaveFile(data);
     }
 }

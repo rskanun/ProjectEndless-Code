@@ -11,13 +11,35 @@ public class GameManager : MonoBehaviour
     private ScriptResource scriptResource;
     private ControlContext controller;
 
+    private static GameManager _instance;
+    public static GameManager Instance
+    {
+        get { return _instance; }
+    }
+
     private void Start()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+
+            Init();
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+            DestroyImmediate(gameObject);
+    }
+
+    private void Init()
     {
         scriptResource = ScriptResource.Instance;
         controller = ControlContext.Instance;
 
+        controller.NoKeyDown = false;
+
         StartGame();
     }
+
     private void Update()
     {
         controller.OnKeyPressed();
@@ -25,16 +47,16 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        LoadScript();
+        LoadScript(gameData.Chapter);
 
         player.InitStat();
     }
 
-    private void LoadScript()
+    private void LoadScript(Chapter data)
     {
-        int chapter = gameData.ChapterNum;
-        int root = gameData.RootNum;
-        int subChapter = gameData.SubChapterNum;
+        int chapter = data.ChapterNum;
+        int root = data.RootNum;
+        int subChapter = data.SubChapterNum;
 
         scriptResource.LoadScript(chapter, root, subChapter);
     }

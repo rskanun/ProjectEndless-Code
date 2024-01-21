@@ -1,0 +1,79 @@
+﻿using UnityEngine;
+using Endless.GameData;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class ReadOnlyGameData : ScriptableObject
+{
+    // 저장 파일 위치
+    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
+    private const string FILE_DIRECTORY = "Assets/Resources/Option";
+    private const string FILE_PATH = "Assets/Resources/Option/ReadOnlyGameData.asset";
+
+    private static ReadOnlyGameData _instance;
+    public static ReadOnlyGameData Instance
+    {
+        get
+        {
+            if (_instance != null) return _instance;
+
+            _instance = Resources.Load<ReadOnlyGameData>("Option/ReadOnlyGameData");
+
+#if UNITY_EDITOR
+            if (_instance == null)
+            {
+                // 파일 경로가 없을 경우 폴더 생성
+                if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
+                {
+                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
+                    {
+                        AssetDatabase.CreateFolder("Assets", "Resources");
+                    }
+
+                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
+                }
+
+                // Resource.Load가 실패했을 경우
+                _instance = AssetDatabase.LoadAssetAtPath<ReadOnlyGameData>(FILE_PATH);
+
+                if (_instance == null)
+                {
+                    _instance = CreateInstance<ReadOnlyGameData>();
+                    AssetDatabase.CreateAsset(_instance, FILE_PATH);
+                }
+            }
+#endif
+            return _instance;
+        }
+    }
+
+    [SerializeField]
+    private GameData _gameData;
+
+    public Chapter Chapter
+    {
+        get { return _gameData.Chapter; }
+    }
+
+    public Date Date
+    {
+        get { return _gameData.Date; }
+    }
+
+    public RemainTime time
+    {
+        get { return _gameData.Time; }
+    }
+
+    public QuestData MainQuest
+    {
+        get { return _gameData.MainQuest; }
+    }
+
+    public MapData MapData
+    {
+        get { return _gameData.MapData; }
+    }
+}

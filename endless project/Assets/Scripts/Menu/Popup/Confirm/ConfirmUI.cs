@@ -10,11 +10,9 @@ public class ConfirmUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI contents;
     [Space]
     [Header("확인 버튼")]
-    [SerializeField] private Button yesBtn;
     [SerializeField] private TextMeshProUGUI yesTxt;
     [Space]
     [Header("취소 버튼")]
-    [SerializeField] private Button noBtn;
     [SerializeField] private TextMeshProUGUI noTxt;
 
     public delegate void PopupCallBack();
