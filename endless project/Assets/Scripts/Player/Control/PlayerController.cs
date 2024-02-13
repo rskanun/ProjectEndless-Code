@@ -193,8 +193,9 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         if(npc != null && isStateIdle && Input.GetButtonDown("Talking"))
         {
+            player.Position = Vector2.zero;
+
             ControlContext.Instance.SetState(talkController);
-            
             talkController.StartTalk(npc);
         }
     }

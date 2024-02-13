@@ -27,12 +27,12 @@ public class MenuUI : MonoBehaviour
 
     // 참조 데이터
     private PhoneOptionSetting menuOption;
-    private OptionSetting option;
+    private ReadOnlyGameData gameData;
 
     private void Start()
     {
         menuOption = PhoneOptionSetting.Instance;
-        option = OptionSetting.Instance;
+        gameData = ReadOnlyGameData.Instance;
     }
 
     public Sequence OpenMenu()
@@ -82,8 +82,8 @@ public class MenuUI : MonoBehaviour
 
     public void UpdateTime()
     {
-        int hour = option.Hour;
-        int min = option.Minute;
+        int hour = gameData.time.Hour;
+        int min = gameData.time.Minute;
 
         string timeTxt = (hour < 12) ? "AM" : "PM";
         timeTxt += " ";

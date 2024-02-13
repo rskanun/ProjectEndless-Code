@@ -1,19 +1,13 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TextUI : MonoBehaviour
 {
     private bool isObjActive;
     private bool isPrinting;
+    private string currentText;
     public bool IsPrinting => isPrinting;
-
-    // 텍스트 출력 관련 변수
-    private WaitForSeconds typingSpeed;
-
-    // 옵션 스크립트
-    private OptionSetting option;
 
     // 글자 타이핑 코루틴
     private Coroutine typingCoroutine;
@@ -23,11 +17,6 @@ public class TextUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textLine;
     [SerializeField] private GameObject textDialogue;
     [SerializeField] private GameObject touchPanel;
-
-    private void Start()
-    {
-        option = OptionSetting.Instance;
-    }
 
     public void SetDialogView(bool isView)
     {
@@ -49,8 +38,6 @@ public class TextUI : MonoBehaviour
         // 타이핑 중인 텍스트가 있다면 멈춤
         if (typingCoroutine != null) StopCoroutine(typingCoroutine);
 
-        typingSpeed = new WaitForSeconds(option.TypingSpeed);
-
         typingCoroutine = StartCoroutine(TextDelayPrint(text));
     }
 
@@ -59,8 +46,12 @@ public class TextUI : MonoBehaviour
         int textCnt = 0;
         string text = "> ";
 
+        WaitForSeconds typingSpeed = new WaitForSeconds(OptionData.Instance.TypingSpeed);
+
+        currentText = line;
+
         // 대화 진행 도중일 경우
-        while (textCnt < line.Length)
+        while (textCnt < line.Length && isPrinting)
         {
             // 한 글자씩 대화를 출력
             textLine.text = text;
@@ -75,7 +66,8 @@ public class TextUI : MonoBehaviour
 
     public void TextSkip()
     {
-        typingSpeed = null;
+        textLine.text = "> " + currentText;
+        isPrinting = false;
     }
 
     public void SetName(string name)

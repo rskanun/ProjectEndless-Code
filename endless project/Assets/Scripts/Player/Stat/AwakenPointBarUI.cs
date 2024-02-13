@@ -1,5 +1,4 @@
-﻿using Assets.Script.System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class AwakenPointBarUI : MonoBehaviour

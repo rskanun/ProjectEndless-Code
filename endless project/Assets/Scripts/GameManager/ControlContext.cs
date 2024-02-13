@@ -48,7 +48,11 @@ public class ControlContext : ScriptableObject
         }
     }
 
-    private IControlState currentState;
+    private IControlState _currentState;
+    public IControlState CurrentState
+    {
+        get { return _currentState; }
+    }
 
     public bool NoKeyDown
     {
@@ -60,11 +64,11 @@ public class ControlContext : ScriptableObject
     public void OnKeyPressed()
     {
         if (_noKeyDown == false)
-        currentState.OnControlKeyPressed();
+        _currentState.OnControlKeyPressed();
     }
 
     public void SetState(IControlState state)
     {
-        currentState = state;
+        _currentState = state;
     }
 }

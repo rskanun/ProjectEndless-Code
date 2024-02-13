@@ -1,5 +1,4 @@
-﻿using Assets.Script.Item;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Object/Player/Equipment", fileName = "PlayerEquipmentData")]
 public class PlayerEquipData : ScriptableObject

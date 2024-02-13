@@ -796,7 +796,6 @@ GameObject:
   - component: {fileID: 52748549}
   - component: {fileID: 52748552}
   - component: {fileID: 52748551}
-  - component: {fileID: 52748550}
   m_Layer: 5
   m_Name: Dark Panel
   m_TagString: Untagged
@@ -824,19 +823,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000061035156, y: -26.00002}
   m_SizeDelta: {x: 215.3846, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &52748550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 52748548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0595bfbe05b5664185e9f08bc8da9a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  darkPanel: {fileID: 52748551}
 --- !u!114 &52748551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -850,7 +836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.2901961}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.4627451}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9820,7 +9806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a157d0711e2ac7478a7b7151cd05b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npc: {fileID: 11400000, guid: 7a3bb78272b76fa458198cdc9fcee3fe, type: 2}
+  npc: {fileID: 11400000, guid: 3724cd3b6342ceb49ae38ab5c9f62dd4, type: 2}
 --- !u!1 &799006053
 GameObject:
   m_ObjectHideFlags: 0
@@ -11626,7 +11612,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1031460559}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd8cb08bd03d9d498ef3efc8fefa64f, type: 3}
+  m_Script: {fileID: 11500000, guid: 33ad18bf940793e4289f93f79b286d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 840239113}
@@ -12507,9 +12493,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Assets.Script.System.Menu.MenuManager, Assembly-CSharp
-        m_MethodName: appClose
+      - m_Target: {fileID: 346718819}
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
+        m_MethodName: CloseApp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13250,7 +13236,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1191723765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20c32bf5ae3997846bb75efe332dd395, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b361528d9868ac4c91a0e5102853f3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 1790378064}
@@ -14251,7 +14237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1437917841
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14279,7 +14265,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437917840}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -17952,7 +17938,6 @@ GameObject:
   - component: {fileID: 1767933342}
   - component: {fileID: 1767933345}
   - component: {fileID: 1767933344}
-  - component: {fileID: 1767933343}
   m_Layer: 5
   m_Name: Dark Panel
   m_TagString: Untagged
@@ -17980,19 +17965,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1767933343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1767933341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0595bfbe05b5664185e9f08bc8da9a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  darkPanel: {fileID: 1767933344}
 --- !u!114 &1767933344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18006,7 +17978,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.4627451}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -20053,7 +20025,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2010151707}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00afa5cdeb5462641b28c51039a81b8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5039c7d06a5ba814188420395036b4fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 563798606}
