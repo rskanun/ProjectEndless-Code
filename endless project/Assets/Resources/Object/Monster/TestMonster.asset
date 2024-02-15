@@ -15,8 +15,9 @@ MonoBehaviour:
   _healthPoint: 20
   _maxHealthPoint: 20
   _strength: 0
-  _agility: 0
-  _moveSpeed: 0
+  _agility: 15
+  _speedRatio: 100
+  _moveSpeed: 1500
   _mana: 30
   _maxMana: 30
   _magicPower: 0

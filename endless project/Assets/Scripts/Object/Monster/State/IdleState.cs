@@ -12,6 +12,11 @@
         }
     }
 
+    public void OnEnterState(AIMonsterControlled monsterAI)
+    {
+        monsterAI.OnEnterIdle();
+    }
+
     public void OnAction(AIMonsterControlled monsterAI)
     {
         monsterAI.OnIdleAction();

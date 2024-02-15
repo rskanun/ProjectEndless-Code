@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 [RequireComponent(typeof(MonsterUI))]
 [RequireComponent (typeof(AIMonsterControlled))]
@@ -6,6 +7,10 @@ public class Monster : MonoBehaviour
 {
     [Header("오브젝트 데이터 값")]
     [SerializeField] private MonsterData stat;
+    public MonsterData Stat
+    {
+        get { return stat; }
+    }
 
     // 몬스터 스테이터스
     private int _currentHP;
@@ -57,13 +62,15 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         ui = gameObject.GetComponent<MonsterUI>();
+        ai = gameObject.GetComponent<AIMonsterControlled>();
     }
 
     private void OnEnable()
     {
         initStat();
 
-        currentState = IdleState.Instance;
+        // idle 상태 초기화
+        SetState(IdleState.Instance);
     }
 
     private void initStat()
@@ -83,6 +90,10 @@ public class Monster : MonoBehaviour
     public void SetState(IMonsterState state)
     {
         currentState = state;
+
+        currentState.OnEnterState(ai);
+
+        Debug.Log("change state");
     }
 
     /***************************************************************

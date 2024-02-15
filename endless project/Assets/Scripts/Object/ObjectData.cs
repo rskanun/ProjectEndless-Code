@@ -89,6 +89,7 @@ public abstract class ObjectData : ScriptableObject
     }
 
     // 민첩의 이동속도 전환율
+    [SerializeField]
     private float _speedRatio;
     public float SpeedRatio
     {
@@ -101,7 +102,15 @@ public abstract class ObjectData : ScriptableObject
     private int _moveSpeed;
     public virtual int MoveSpeed
     {
-        get { return _moveSpeed; }
+        get
+        {
+            if (_moveSpeed <= 0)
+            {
+                _moveSpeed = Mathf.RoundToInt(_agility * _speedRatio);
+            }
+
+            return _moveSpeed;
+        }
     }
 
     [SerializeField]
