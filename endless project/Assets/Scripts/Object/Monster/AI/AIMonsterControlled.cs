@@ -42,7 +42,6 @@ public class AIMonsterControlled : MonoBehaviour
     [SerializeField] private float moveRadius;
     [ReadOnly] private float thinkDelay;
     [ReadOnly] private Vector2 targetPos; // 움직일 위치
-    [ReadOnly] private float prevVelocity;
 
     // 플레이어 탐지 반경
     [Header("플레이어 탐지 반경")]
@@ -82,7 +81,7 @@ public class AIMonsterControlled : MonoBehaviour
 
     public void OnEnterIdle()
     {
-        ThinkMoveVec();
+        ThinkTargetPos();
     }
 
     public void OnIdleAction()
@@ -95,34 +94,8 @@ public class AIMonsterControlled : MonoBehaviour
                 DetectPlayer();
             }
 
-            prevVelocity = rigid.velocity.magnitude;
-            Debug.Log(prevVelocity + "/" + rigid.velocity.magnitude);
-
             // targetPos 까지 움직임
-            Vector2 moveVec = targetPos - (Vector2)transform.position;
-            float speed = monster.Stat.MoveSpeed * Time.deltaTime;
-            
-            Vector2 velocity = moveVec.normalized * speed;
-
-            if (rigid.velocity.magnitude >= velocity.magnitude || prevVelocity == 0)
-            {
-                rigid.velocity = moveVec.normalized * speed;
-
-                // 목표 좌표 도달 확인
-                if (Vector2.Distance(targetPos, transform.position) <= 1f)
-                {
-                    prevVelocity = 0;
-
-                    ThinkMoveVec();
-                }
-            }
-            else
-            {
-                // 움직이던 도중 멈출 경우
-
-                //ThinkMoveVec();
-                Debug.Log("stop");
-            }
+            MoveToTargetPos();
         }
         else
         {
@@ -143,7 +116,51 @@ public class AIMonsterControlled : MonoBehaviour
         }
     }
 
-    private void ThinkMoveVec()
+    private void MoveToTargetPos()
+    {
+        // 이동 좌표 계산
+        Vector2 moveVec = targetPos - (Vector2)transform.position;
+        float speed = monster.Stat.MoveSpeed * Time.deltaTime;
+
+        Vector2 movePos = moveVec.normalized * speed;
+
+        // 이동간의 충돌 확인
+        if (CheckToWall(movePos) == false)
+        {
+            rigid.velocity = movePos;
+
+            // 목표(+오차) 도달 확인
+            if (Vector2.Distance(targetPos, transform.position) <= 1f)
+            {
+                ThinkTargetPos();
+
+                // 다음 행동까지 딜레이
+                thinkDelay = Random.Range(1, 5);
+            }
+        }
+        else
+        {
+            // 이동할 곳에 벽이 있는 경우
+            ThinkTargetPos(); // 새 좌표 탐색
+        }
+    }
+
+    private bool CheckToWall(Vector2 nextMovePos)
+    {
+        float max
+
+        Vector2 boxSize = new Vector2(1f, 0.1f);
+
+        foreach(Collider2D collider in Physics2D.OverlapBoxAll(nextMovePos, ))
+        {
+
+        }
+
+        // 임시
+        return false;
+    }
+
+    private void ThinkTargetPos()
     {
         // 움직임 정지
         rigid.velocity = Vector2.zero;
@@ -153,9 +170,6 @@ public class AIMonsterControlled : MonoBehaviour
         float movePosY = Random.Range(-moveRadius, moveRadius) + transform.position.y;
 
         targetPos = new Vector2(movePosX, movePosY);
-
-        // 다음 행동까지 딜레이
-        thinkDelay = Random.Range(1, 5);
     }
 
     private Vector2 GetPlayerPos()

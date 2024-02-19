@@ -92,8 +92,6 @@ public class Monster : MonoBehaviour
         currentState = state;
 
         currentState.OnEnterState(ai);
-
-        Debug.Log("change state");
     }
 
     /***************************************************************
