@@ -1,29 +1,68 @@
-﻿public class ChaseState : IMonsterState
-{
-    private static ChaseState _instance;
-    public static ChaseState Instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = new ChaseState();
+﻿using UnityEngine;
 
-            return _instance;
+public class ChaseState : IMonsterState
+{
+    private Monster monster;
+    private Vector3 lastPlayerPos;
+
+    public ChaseState(Monster monster)
+    {
+        this.monster = monster;
+    }
+
+    public void OnEnterState()
+    {
+        lastPlayerPos = ReadOnlyPlayerData.Instance.Position;
+    }
+
+    public void OnAction(FSM fsm)
+    {
+        // 플레이어 추적
+        ChasePlayer(fsm);
+    }
+
+    private void ChasePlayer(FSM fsm)
+    {
+        Vector3 playerPos = GetPlayerPos();
+        if (playerPos != monster.transform.position)
+        {
+            float distance = ((Vector2)(playerPos - monster.transform.position)).magnitude;
+            float attackDistance = monster.Data.AttackDistance;
+            
+            if (distance <= attackDistance)
+            {
+                // 공격 범위 안에 있으면 공격
+                fsm.SetState(new AttackState());
+            }
+            else
+            {
+                // 공격 범위 밖이면 플레이어 추적
+                monster.MoveTo(playerPos);
+            }
+        }
+        else
+        {
+            // 상처받은 상태 -> Sleep
+            // 그 외 -> Idle
+            fsm.SetState(new IdleState(monster));
         }
     }
 
-    public void OnEnterState(AIMonsterControlled monsterAI)
+    private Vector3 GetPlayerPos()
     {
+        // 플레이어 탐지
+        Vector2 playerPos = ReadOnlyPlayerData.Instance.Position;
+        float distance = (playerPos - (Vector2)monster.transform.position).magnitude;
 
-    }
-
-    public void OnAction(AIMonsterControlled monsterAI)
-    {
+        if (distance <= monster.Data.DetectionArea)
+        {
+            // 플레이어가 탐지 범위 안이면 리턴
+            lastPlayerPos = playerPos;
+            return playerPos;
+        }
         
+        return lastPlayerPos;
     }
 
-    public void OnTakeDamage(AIMonsterControlled monsterAI)
-    {
-
-    }
+    public void OnTakeDamage(FSM fsm) { }
 }

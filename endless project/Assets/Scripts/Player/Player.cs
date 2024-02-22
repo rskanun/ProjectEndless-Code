@@ -7,8 +7,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameEvent apEvent;
 
     [Header("플레이어 데이터")]
-    [SerializeReference] [SerializeField] private PlayerData stat;
-    [SerializeReference] [SerializeField] private PlayerEquipData equip;
+    [SerializeField] private PlayerData stat;
+    [SerializeField] private PlayerEquipData equip;
 
     public void InitStat()
     {

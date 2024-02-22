@@ -76,7 +76,6 @@
     <Compile Include="Assets\Scripts\Talk\Line\ScriptResource.cs" />
     <Compile Include="Assets\Scripts\Camera\LoadCamera.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Option\OptionUI.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\AIMonsterControlled.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\Confirm\ConfirmUI.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\Confirm\ConfirmManager.cs" />
@@ -117,6 +116,7 @@
     <Compile Include="Assets\Scripts\Object\NPC\NpcData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Menu\AutoSelectButton.cs" />
+    <Compile Include="Assets\Scripts\LinkedList\CircleLinkedList.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileUI.cs" />
     <Compile Include="Assets\Scripts\Option\GameData\Chapter.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextUI.cs" />
@@ -125,16 +125,18 @@
     <Compile Include="Assets\Scripts\Talk\Line\Select\Select.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\Alert\AlertManager.cs" />
     <Compile Include="Assets\Scripts\Player\Control\PlayerAnimation.cs" />
+    <Compile Include="Assets\Scripts\Player\Data\ReadOnlyPlayerData.cs" />
     <Compile Include="Assets\Scripts\Object\ObjectData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Menu\MenuUI.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Messenger\MessengerApp.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Organ\DetectionOrgan.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\Popup.cs" />
     <Compile Include="Assets\Scripts\Save\LoadManager.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\IMonsterAI.cs" />
     <Compile Include="Assets\Scripts\Event\GameEvent.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\Confirm\Confirm.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Select\SelectManager.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Organ\Nose.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Scripts\Option\GameData\Date.cs" />
     <Compile Include="Assets\Editors\Player\PlayerDataEditor.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteManager.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteUI.cs" />
     <Compile Include="Assets\Scripts\Scene\LoadSceneManager.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Organ\Eye.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\State\IMonsterState.cs" />
     <Compile Include="Assets\Scripts\Option\GameData\OptionData.cs" />
     <Compile Include="Assets\Scripts\Menu\App\AppUI.cs" />
@@ -199,6 +202,12 @@
     <Compile Include="Assets\Scripts\Player\Control\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Camera\PlayerTrackerCamera.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\State\FSM.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Organ\OrganManager.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\RunState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\AttackState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\HelpState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\SleepState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\FaintState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

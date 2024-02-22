@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour, IControlState
     // 이동 위치 벡터
     private Vector2 dashVec;
 
+    // 플레이어 입력 키 벡터
+    private Vector2 arrowKeyVec;
+
     // 현재 상호작용 가능한 NPC
     private Npc npc;
 
@@ -41,6 +44,8 @@ public class PlayerController : MonoBehaviour, IControlState
     private void Start()
     {
         ControlContext.Instance.SetState(this);
+
+        transform.position = player.Position;
     }
 
     public void OnControlKeyPressed()
@@ -67,13 +72,13 @@ public class PlayerController : MonoBehaviour, IControlState
         vec.x = Input.GetAxisRaw("Horizontal");
         vec.y = Input.GetAxisRaw("Vertical");
 
-        player.Position = vec;
+        arrowKeyVec = vec;
 
         // 걷는 정도의 스피드인지 판단
-        CheckingWalk(player.Position.x, player.Position.y);
+        CheckingWalk(arrowKeyVec.x, arrowKeyVec.y);
 
         // 키보드 누른 방향으로 애니메이션 움직임 제어
-        SetAngle(player.Position);
+        SetAngle(arrowKeyVec);
     }
 
     private void SetAngle(Vector2 playerVec)
@@ -193,7 +198,7 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         if(npc != null && isStateIdle && Input.GetButtonDown("Talking"))
         {
-            player.Position = Vector2.zero;
+            arrowKeyVec = Vector2.zero;
 
             ControlContext.Instance.SetState(talkController);
             talkController.StartTalk(npc);
@@ -246,7 +251,7 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         if (Input.GetButtonDown("Menu"))
         {
-            player.Position = Vector2.zero;
+            arrowKeyVec = Vector2.zero;
 
             ControlContext.Instance.SetState(menuController);
             menuController.OpenMenu();
@@ -258,6 +263,11 @@ public class PlayerController : MonoBehaviour, IControlState
     * 
     * 실제 게임 내의 캐릭터의 행동에 따른 변화
     ************************************************************/
+
+    private void Update()
+    {
+        player.Position = transform.position;
+    }
 
     private void FixedUpdate()
     {
@@ -292,7 +302,7 @@ public class PlayerController : MonoBehaviour, IControlState
     private void MoveCharacter()
     {
         float speed = (isRunning) ? player.RunSpeed : player.MoveSpeed;
-        rigid.velocity = player.Position.normalized * speed * Time.deltaTime;
+        rigid.velocity = arrowKeyVec.normalized * speed * Time.deltaTime;
 
         // 달리기를 멈추면 걷기로 전환
         if(CheckRunning(rigid.velocity) == false)

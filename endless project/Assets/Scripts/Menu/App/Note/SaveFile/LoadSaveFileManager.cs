@@ -8,20 +8,10 @@ public class LoadSaveFileManager : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private LoadManager loadManager;
 
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += LoadData;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= LoadData;
-    }
-
     public void LoadSaveFile(SaveData data)
     {
         loadData = data;
+        SceneManager.sceneLoaded += LoadData;
 
         // 씬 이동
         MapData mapData = MapManager.FindMap(data.mapData.id);
@@ -34,6 +24,7 @@ public class LoadSaveFileManager : MonoBehaviour
         if (loadData != null)
         {
             loadManager.LoadGameData(loadData);
+            SceneManager.sceneLoaded -= LoadData;
         }
     }
 }

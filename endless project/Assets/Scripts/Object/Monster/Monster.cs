@@ -1,16 +1,23 @@
-﻿using UnityEngine;
-using UnityEngine.SocialPlatforms;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 [RequireComponent(typeof(MonsterUI))]
-[RequireComponent (typeof(AIMonsterControlled))]
 public class Monster : MonoBehaviour
 {
     [Header("오브젝트 데이터 값")]
-    [SerializeField] private MonsterData stat;
-    public MonsterData Stat
+    [SerializeField] private MonsterData data;
+    public MonsterData Data
     {
-        get { return stat; }
+        get { return data; }
     }
+
+    [Header("이동 좌표 포인트")]
+    [SerializeField]
+    private Color lineColor; // 표시 색
+    [SerializeField]
+    private List<Vector2> movePoints;
+    public List<Vector2> MovePoints { get { return movePoints; } }
 
     // 몬스터 스테이터스
     private int _currentHP;
@@ -23,8 +30,8 @@ public class Monster : MonoBehaviour
             {
                 if (value < 0)
                     _currentHP = 0;
-                else if (value > stat.MaxHP)
-                    _currentHP = stat.MaxHP;
+                else if (value > data.MaxHP)
+                    _currentHP = data.MaxHP;
                 else
                     _currentHP = value;
 
@@ -42,8 +49,8 @@ public class Monster : MonoBehaviour
             {
                 if (value < 0)
                     _currentMana = 0;
-                else if (value > stat.MaxMana)
-                    _currentMana = stat.MaxMana;
+                else if (value > data.MaxMana)
+                    _currentMana = data.MaxMana;
                 else
                     _currentMana = value;
 
@@ -52,46 +59,116 @@ public class Monster : MonoBehaviour
         }
     }
 
-    // 현재 몬스터 상태
-    private IMonsterState currentState;
+    // 현재 성향
+    private Propensity _curPropensity;
+    public Propensity Propensity
+    {
+        get { return _curPropensity; }
+        set
+        {
+            // 기본 성향이나 적대적인 성향으로만 변할 수 있음
+            if (value == data.Propensity || value == Propensity.Hostile)
+            {
+                _curPropensity = value;
+            }
+        }
+    }
 
     // 연관 스크립트
     private MonsterUI ui;
-    private AIMonsterControlled ai;
+    private OrganManager organManager;
+    private FSM fsm;
 
     private void Awake()
     {
+        // Init component
         ui = gameObject.GetComponent<MonsterUI>();
-        ai = gameObject.GetComponent<AIMonsterControlled>();
+        organManager = gameObject.GetComponentInChildren<OrganManager>();
+
+        // Init FSM
+        fsm = new FSM(new IdleState(this));
     }
 
     private void OnEnable()
     {
-        initStat();
+        InitStat();
+
+        // 성향 초기화
+        _curPropensity = data.Propensity;
 
         // idle 상태 초기화
-        SetState(IdleState.Instance);
+        fsm.SetState(new IdleState(this));
     }
 
-    private void initStat()
+    private void InitStat()
     {
-        hp = stat.HP;
-        mana = stat.Mana;
+        hp = data.HP;
+        mana = data.Mana;
 
-        ui.InitHp(stat.HP, stat.MaxHP);
-        ui.InitMana(stat.Mana, stat.MaxMana);
+        ui.InitHp(data.HP, data.MaxHP);
+        ui.InitMana(data.Mana, data.MaxMana);
     }
 
     private void FixedUpdate()
     {
-        currentState.OnAction(ai);
+        fsm.OnAction();
     }
 
-    public void SetState(IMonsterState state)
+    private void OnDrawGizmos()
     {
-        currentState = state;
+        // 이동 루트
+        if (movePoints.Count > 0)
+        {
+            Gizmos.color = lineColor;
 
-        currentState.OnEnterState(ai);
+            Vector2 prevPos = movePoints[movePoints.Count - 1];
+            foreach (Vector2 pos in movePoints)
+            {
+                Gizmos.DrawLine(prevPos, pos);
+
+                prevPos = pos;
+            }
+        }
+    }
+
+    /***************************************************************
+    * [ 플레이어 탐지 ]
+    * 
+    * 탐지 기관을 통한 플레이어 탐지
+    ***************************************************************/
+
+    public Vector3 DetectPlayer()
+    {
+        return organManager.DetectPlayer();
+    }
+
+    /***************************************************************
+    * [ 몬스터 이동 ]
+    * 
+    * 몬스터 이동에 따른 위치 및 애니메이션 변화 처리
+    ***************************************************************/
+
+    public void MoveTo(Vector2 movePoint)
+    {
+        // movePoint를 향해 이동
+        float speed = data.MoveSpeed * Time.deltaTime;
+
+        transform.position = Vector2.MoveTowards(transform.position, movePoint, speed);
+
+        // 이동 방향에 따른 방향 벡터 생성
+        Vector2 moveVec = (movePoint - (Vector2)transform.position).normalized;
+        Vector2 angleVec = GetAngleVec(moveVec);
+
+        // 탐지 기관 회전
+        organManager.RotateOrgans(angleVec);
+    }
+
+    private Vector2 GetAngleVec(Vector2 moveVec)
+    {
+        int x = Mathf.RoundToInt(moveVec.x);
+        int y = (x == 0) ? Mathf.RoundToInt(moveVec.y) : 0; // 4방향 중 좌우를 우선
+
+        return new Vector2(x, y);
     }
 
     /***************************************************************
@@ -102,7 +179,7 @@ public class Monster : MonoBehaviour
 
     public void OnTakeDamage(int damage, int targetMP)
     {
-        currentState.OnTakeDamage(ai);
+        fsm.OnTakeDamage();
 
         hp -= damage;
         mana -= targetMP;

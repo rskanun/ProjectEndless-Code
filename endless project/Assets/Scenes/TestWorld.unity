@@ -2632,6 +2632,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 221363502}
   m_CullTransparentMesh: 1
+--- !u!1 &224841016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 224841017}
+  - component: {fileID: 224841020}
+  - component: {fileID: 224841019}
+  - component: {fileID: 224841018}
+  m_Layer: 0
+  m_Name: Detection Organs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &224841017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224841016}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2055841027}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &224841018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224841016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7aa0a733d2a8c46b17a5ca2725a7ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRadius: 30
+--- !u!114 &224841019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224841016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b07c524857c94dc4c96dcdea839113a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAngle: 120
+  detectDistance: 40
+--- !u!114 &224841020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224841016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d4a0cc1ee2ba34fb4e5d0b3f9a4aac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &236749849
 GameObject:
   m_ObjectHideFlags: 0
@@ -9671,7 +9744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a157d0711e2ac7478a7b7151cd05b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npc: {fileID: 11400000, guid: 3724cd3b6342ceb49ae38ab5c9f62dd4, type: 2}
+  npc: {fileID: 0}
 --- !u!1 &799006053
 GameObject:
   m_ObjectHideFlags: 0
@@ -19761,11 +19834,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2055841027}
   - component: {fileID: 2055841029}
-  - component: {fileID: 2055841033}
+  - component: {fileID: 2055841032}
   - component: {fileID: 2055841028}
   - component: {fileID: 2055841031}
   - component: {fileID: 2055841030}
-  - component: {fileID: 2055841032}
   m_Layer: 0
   m_Name: Test Mob 1
   m_TagString: Monster
@@ -19781,12 +19853,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2055841026}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -25, y: 44.9, z: -4176}
+  m_LocalPosition: {x: 0, y: 40, z: -4176}
   m_LocalScale: {x: 10, y: 10, z: 46.399998}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 236749850}
   - {fileID: 1574271935}
+  - {fileID: 224841017}
   m_Father: {fileID: 1188081544}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19884,25 +19957,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39468296eab8ebb4c80aaa821513e55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stat: {fileID: 11400000, guid: 6c2cd0fc8b300094fa5c8979478730dc, type: 2}
---- !u!114 &2055841032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055841026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e0e1695204d9b4e8194dc861903244, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  propensity: 2
-  personality: 0
-  quality: 0
-  moveRadius: 30
-  detectionArea: 0
---- !u!50 &2055841033
+  data: {fileID: 11400000, guid: 6c2cd0fc8b300094fa5c8979478730dc, type: 2}
+  lineColor: {r: 1, g: 0.4481132, b: 0.803052, a: 1}
+  movePoints:
+  - {x: 0, y: 40}
+  - {x: 0, y: 80}
+  - {x: -40, y: 80}
+  - {x: -40, y: 40}
+--- !u!50 &2055841032
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -19914,8 +19976,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 99999
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}

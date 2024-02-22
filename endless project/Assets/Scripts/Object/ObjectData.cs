@@ -96,10 +96,15 @@ public abstract class ObjectData : ScriptableObject
         get { return _speedRatio; }
         protected set { _speedRatio = value; }
     }
-
-    // 이동속도
+    
     [SerializeField]
     private int _moveSpeed;
+    /***************************************************************
+    * [ 이동속도 (Speed) ]
+    * 
+    * 오브젝트의 이동속도로 민첩 수치에 영향을 받는다.
+    * 예외적으로 대시 속도는 민첩 수치에 영향을 받지 않는다.
+    ****************************************************************/
     public virtual int MoveSpeed
     {
         get

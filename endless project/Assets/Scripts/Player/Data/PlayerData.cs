@@ -106,12 +106,6 @@ public class PlayerData : ObjectData
         get { return _maxStamina; }
     }
 
-    /***************************************************************
-    * [ 이동속도 (Speed) ]
-    * 
-    * 오브젝트의 이동속도로 민첩 수치에 영향을 받는다.
-    * 예외적으로 대시 속도는 민첩 수치에 영향을 받지 않는다.
-    ****************************************************************/
     public override int AGI
     {
         get => base.AGI;
@@ -143,6 +137,7 @@ public class PlayerData : ObjectData
     }
 
     // 위치 값
+    [SerializeField]
     private Vector2 _pos;
     public Vector2 Position
     {
@@ -179,6 +174,9 @@ public class PlayerData : ObjectData
         // stamina
         _maxStamina = 100;
         Stamina = 100;
+
+        // position
+        Position = Vector2.zero;
     }
 
     public void ReloadStat()

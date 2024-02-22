@@ -1,7 +1,6 @@
 ﻿using Endless.GameData;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LoadManager : MonoBehaviour
 {

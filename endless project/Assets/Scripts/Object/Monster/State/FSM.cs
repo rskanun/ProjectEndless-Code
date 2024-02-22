@@ -1,22 +1,26 @@
 ﻿public class FSM
 {
-    private IMonsterState _currentState;
+    // 현재 몬스터 상태
+    private IMonsterState _curState;
 
-    public FSM(IMonsterState state)
+    public FSM(IMonsterState initState)
     {
-        _currentState = state;
+        SetState(initState);
     }
 
     public void SetState(IMonsterState state)
     {
-        _currentState = state;
+        _curState = state;
+        _curState.OnEnterState();
     }
 
-    public void UpdateState()
+    public void OnAction()
     {
-        if (_currentState != null)
-        {
-            // _currentState.OnAction();
-        }
+        _curState.OnAction(this);
+    }
+
+    public void OnTakeDamage()
+    {
+        _curState.OnTakeDamage(this);
     }
 }
