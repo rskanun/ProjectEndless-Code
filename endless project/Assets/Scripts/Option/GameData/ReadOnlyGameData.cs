@@ -42,6 +42,17 @@ public class ReadOnlyGameData : ScriptableObject
                 {
                     _instance = CreateInstance<ReadOnlyGameData>();
                     AssetDatabase.CreateAsset(_instance, FILE_PATH);
+
+                    // Player.asset 불러옴
+                    GameData gameData = AssetDatabase.LoadAssetAtPath<GameData>(FILE_DIRECTORY + "/GameData.asset");
+
+                    if (gameData == null)
+                    {
+                        gameData = CreateInstance<GameData>();
+                        AssetDatabase.CreateAsset(gameData, FILE_DIRECTORY + "/GameData.asset");
+                    }
+
+                    _instance._gameData = gameData;
                 }
             }
 #endif

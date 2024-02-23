@@ -51,7 +51,7 @@ public class ScriptResource : ScriptableObject
     [MenuItem("GameObject/Singleton Scriptable Object/ScriptResource", false, 30)]
     public static void CreateInInspector()
     {
-        ScriptResource instance = Instance;
+        ScriptResource dummy = Instance;
     }
 
     private Script _currentScript;

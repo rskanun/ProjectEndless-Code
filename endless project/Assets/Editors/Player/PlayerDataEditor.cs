@@ -16,10 +16,5 @@ public class PlayerDataEditor : Editor
         {
             playerData.Initialization();
         }
-
-        if (GUILayout.Button("플레이어 데이터 적용"))
-        {
-            playerData.ReloadStat();
-        }
     }
 }

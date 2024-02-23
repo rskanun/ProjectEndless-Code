@@ -54,7 +54,7 @@ public class CsvReader : ScriptableObject
     [MenuItem("GameObject/Singleton Scriptable Object/CsvReader", false, 30)]
     public static void CreateInInspector()
     {
-        CsvReader instance = Instance;
+        CsvReader dummy = Instance;
     }
 
     // Select 객체 내 optionsLineNum을 위한 Dictionary

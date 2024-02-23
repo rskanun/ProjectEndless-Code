@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 // 몬스터 AI = 성향 + 탐지 기관 + 성격 + 개체 특성
 
 // 성향: 플레이어와 대면 했을 때의 행동
-public enum Propensity
+public enum EPropensity
 {
     Friendly,   // 플레이어에게 이로운 영향을 주지만, 피해를 입을 시 적대적으로 변함
     Neutral,    // 플레이어에게 아무런 영향을 끼치지 않으나, 피해를 입을 시 적대적으로 변함
     Hostile     // 플레이어에게 해로운 영향을 끼침
 }
 // 성격: 적대적일 때 취하는 행동
-public enum Personality
+public enum EPersonality
 {
     Bravery,    // 자신의 체력에 상관없이 공격만을 행함
     Prudence,   // 자신의 체력에 따라 공격을 행하거나 수비적인 태세를 취함
@@ -40,13 +39,13 @@ public class MonsterData : ObjectData
 
     [Header("성향")]
     [SerializeField]
-    private Propensity _propensity; // 기본 성향
+    private EPropensity _propensity; // 기본 성향
     /***************************************************************
      * [ 성향 (Propensity) ]
      * 
      * 플레이어와 대면 했을 때의 행동
      ***************************************************************/
-    public Propensity Propensity
+    public EPropensity Propensity
     {
         get { return _propensity; }
     }

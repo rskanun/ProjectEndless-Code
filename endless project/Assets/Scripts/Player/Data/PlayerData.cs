@@ -179,7 +179,12 @@ public class PlayerData : ObjectData
         Position = Vector2.zero;
     }
 
-    public void ReloadStat()
+    private void OnValidate()
+    {
+        ReloadStat();
+    }
+
+    private void ReloadStat()
     {
         MaxHP = MaxHP;
         HP = HP;
