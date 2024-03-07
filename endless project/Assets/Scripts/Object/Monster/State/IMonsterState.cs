@@ -4,8 +4,6 @@
  * - Run: 플레이어로부터 멀어지는 상태
  * - Attack: 플레이어를 향해 공격하는 상태
  * - Help: 플레이어를 향해 이로운 효과를 주는 상태
- * - Sleep: 잠든 상태
- * - Faint: 기절 상태
  */
 
 public interface IMonsterState

@@ -27,15 +27,18 @@ public enum Quality
 [CreateAssetMenu(menuName = "Game Object/Monster/Monster", fileName = "Monster")]
 public class MonsterData : ObjectData
 {
-    [Header("플레이어 추적 반경")]
+    [Header("추적 변수")]
     [SerializeField]
     private float _detectionArea;
     public float DetectionArea { get { return _detectionArea; } }
 
-    [Header("타격 범위")]
+    [Header("공격 변수")]
     [SerializeField]
     private float _attackDistance;
     public float AttackDistance { get { return _attackDistance; } }
+    [SerializeField]
+    private float _attackCooldown;
+    public float AttackCooldown { get { return _attackCooldown; } }
 
     [Header("성향")]
     [SerializeField]

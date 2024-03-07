@@ -25,18 +25,10 @@ public class IdleState : IMonsterState
 
     public void OnAction(FSM fsm)
     {
-        if (monster.Propensity == EPropensity.Hostile)
-        {
-            // 적대적 성향일 경우 플레이어 탐지
-            Vector3 playerPos = monster.DetectPlayer();
-            if (playerPos != monster.transform.position)
-            {
-                // 플레이어 추적 상태로 변경
-                fsm.SetState(new ChaseState(monster));
-            }
-        }
+        // 성향에 따른 idle 액션
+        monster.CurPropensity.OnIdleAction(fsm);
 
-        // idle action
+        // 공통된 idle 움직임 액션
         OnMove();
     }
 
@@ -65,10 +57,6 @@ public class IdleState : IMonsterState
 
     public void OnTakeDamage(FSM fsm)
     {
-        // 공격을 당할 시, 적대적인 성향을 띔
-        monster.Propensity = EPropensity.Hostile;
-
-        // 플레이어 추적 상태로 변경
-        fsm.SetState(new ChaseState(monster));
+        monster.CurPropensity.OnAttacked(fsm);
     }
 }

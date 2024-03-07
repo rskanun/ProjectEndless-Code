@@ -3,11 +3,15 @@
 public class ChaseState : IMonsterState
 {
     private Monster monster;
+    private MonsterData data;
+
     private Vector3 lastPlayerPos;
 
     public ChaseState(Monster monster)
     {
         this.monster = monster;
+
+        data = monster.Data;
     }
 
     public void OnEnterState()
@@ -27,12 +31,12 @@ public class ChaseState : IMonsterState
         if (playerPos != monster.transform.position)
         {
             float distance = ((Vector2)(playerPos - monster.transform.position)).magnitude;
-            float attackDistance = monster.Data.AttackDistance;
+            float attackDistance = data.AttackDistance;
             
             if (distance <= attackDistance)
             {
                 // 공격 범위 안에 있으면 공격
-                fsm.SetState(new AttackState());
+                fsm.SetState(new AttackState(monster));
             }
             else
             {
@@ -42,8 +46,7 @@ public class ChaseState : IMonsterState
         }
         else
         {
-            // 상처받은 상태 -> Sleep
-            // 그 외 -> Idle
+            // 플레이어가 범위 밖으로 벗어나면 기본 상태로 전환
             fsm.SetState(new IdleState(monster));
         }
     }
@@ -54,7 +57,7 @@ public class ChaseState : IMonsterState
         Vector2 playerPos = ReadOnlyPlayerData.Instance.Position;
         float distance = (playerPos - (Vector2)monster.transform.position).magnitude;
 
-        if (distance <= monster.Data.DetectionArea)
+        if (distance <= data.DetectionArea)
         {
             // 플레이어가 탐지 범위 안이면 리턴
             lastPlayerPos = playerPos;

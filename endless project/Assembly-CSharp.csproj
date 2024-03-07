@@ -9,8 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{E0E19993-9F2D-73E9-AEC1-A2FC67BAAD5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -93,6 +92,7 @@
     <Compile Include="Assets\Scripts\Menu\App\Option\ToggleGroupUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\Scripts\Option\GameData\ReadOnlyGameData.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Type\Neutral\NeutralMonster.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\State\FSM.cs" />
     <Compile Include="Assets\Scripts\Quest\QuestData.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\State\ChaseState.cs" />
@@ -103,6 +103,7 @@
     <Compile Include="Assets\Scripts\Object\NPC\Npc.cs" />
     <Compile Include="Assets\Scripts\Clock\TimeBlinkAnimation.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Propensity.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\MonsterData.cs" />
     <Compile Include="Assets\Scripts\Map\MapManager.cs" />
     <Compile Include="Assets\Scripts\Menu\App\App.cs" />
@@ -111,21 +112,25 @@
     <Compile Include="Assets\Scripts\Player\Data\PlayerEquipData.cs" />
     <Compile Include="Assets\Scripts\Player\Data\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Script.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\State\FaintState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Friendly.cs" />
     <Compile Include="Assets\Scripts\GameManager\IControlState.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Neutral.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileInfo.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Type\Hostile\HostileMonster.cs" />
     <Compile Include="Assets\Scripts\Object\NPC\NpcData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Menu\AutoSelectButton.cs" />
     <Compile Include="Assets\Scripts\LinkedList\CircleLinkedList.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\SaveFile\SaveFileUI.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Personality\Prudence.cs" />
     <Compile Include="Assets\Scripts\Option\GameData\Chapter.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\AI\Organ\OrganManager.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Text\TextLine.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Hostile.cs" />
     <Compile Include="Assets\Scripts\Talk\Line\Select\Select.cs" />
     <Compile Include="Assets\Scripts\Menu\Popup\Alert\AlertManager.cs" />
     <Compile Include="Assets\Scripts\Player\Control\PlayerAnimation.cs" />
@@ -168,6 +173,7 @@
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteContext.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteManager.cs" />
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteUI.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Type\Friendly\FriendlyMonster.cs" />
     <Compile Include="Assets\Scripts\Scene\LoadSceneManager.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\AI\Organ\Eye.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\State\IMonsterState.cs" />
@@ -185,7 +191,7 @@
     <Compile Include="Assets\Scripts\Menu\App\Note\NoteApp.cs" />
     <Compile Include="Assets\Scripts\Player\Control\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Scene\Animation\ILoadAnimation.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\State\SleepState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Personality\Personality.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
     <Compile Include="Assets\Scripts\Effect\GlitchEffect.cs" />
@@ -209,14 +215,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Scripts\Player\Control\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Camera\PlayerTrackerCamera.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Propensity.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\Type\Friendly\FriendlyMonster.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\Personality\Personality.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\Type\Neutral\NeutralMonster.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Friendly.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\Type\Hostile\HostileMonster.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\Personality\Prudence.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\AI\Propensity\Neutral.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

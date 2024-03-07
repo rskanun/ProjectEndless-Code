@@ -11,13 +11,6 @@ public abstract class Monster : MonoBehaviour
         get { return data; }
     }
 
-    [Header("이동 좌표 포인트")]
-    [SerializeField]
-    private Color lineColor; // 표시 색
-    [SerializeField]
-    private List<Vector2> movePoints;
-    public List<Vector2> MovePoints { get { return movePoints; } }
-
     // 몬스터 스테이터스
     private int _currentHP;
     private int hp
@@ -58,44 +51,52 @@ public abstract class Monster : MonoBehaviour
         }
     }
 
-    // 몬스터 AI
+    // 몬스터 성향
     private Propensity _propensity;
     public Propensity Propensity
     {
         get
         {
-            if (_)
-        }
-        protected set { _propensity = value; }
-    }
+            if (_propensity == null) _propensity = CreatePropensity();
 
-    private Personality _personality;
-    public Personality Personality
-    {
-        get { return _personality; }
-        set
-        {
-            // 기본 설정된 성향이나 적대적인 성향으로만 변할 수 있음
-            if ()
+            return _propensity;
         }
     }
 
-    // 현재 성향
     private Propensity _curPropensity;
-    public Propensity Propensity
+    public Propensity CurPropensity
     {
         get { return _curPropensity; }
         set
         {
+            System.Type type = value.GetType();
+
             // 기본 성향이나 적대적인 성향으로만 변할 수 있음
-
-
-            if (value == data.Propensity || value == EPropensity.Hostile)
+            if (type == _propensity.GetType() || type == typeof(Hostile))
             {
                 _curPropensity = value;
             }
         }
     }
+
+    // 몬스터 성격
+    private Personality _personality;
+    public Personality Personality
+    {
+        get
+        {
+            if (_personality == null) _personality = CreatePersonality();
+
+            return _personality;
+        }
+    }
+
+    [Header("이동 좌표 포인트")]
+    [SerializeField]
+    private Color lineColor; // 표시 색
+    [SerializeField]
+    private List<Vector2> movePoints;
+    public List<Vector2> MovePoints { get { return movePoints; } }
 
     // 연관 스크립트
     private MonsterUI ui;
@@ -115,9 +116,6 @@ public abstract class Monster : MonoBehaviour
     private void OnEnable()
     {
         InitStat();
-
-        // 성향 초기화
-        _curPropensity = data.Propensity;
 
         // idle 상태 초기화
         fsm.SetState(new IdleState(this));
@@ -155,6 +153,16 @@ public abstract class Monster : MonoBehaviour
     }
 
     /***************************************************************
+    * [ 몬스터 초기값 설정 ]
+    * 
+    * 자식 클래스마다 설정할 몬스터 변수 초기값 설정
+    ***************************************************************/
+
+    protected abstract Propensity CreatePropensity();
+
+    protected abstract Personality CreatePersonality();
+
+    /***************************************************************
     * [ 플레이어 탐지 ]
     * 
     * 탐지 기관을 통한 플레이어 탐지
@@ -164,6 +172,14 @@ public abstract class Monster : MonoBehaviour
     {
         return organManager.DetectPlayer();
     }
+
+    /***************************************************************
+    * [ 플레이어 공격 ]
+    * 
+    * 몬스터의 공격 처리
+    ***************************************************************/
+
+    public abstract void OnAttack();
 
     /***************************************************************
     * [ 몬스터 이동 ]

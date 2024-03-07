@@ -1,4 +1,7 @@
-﻿public class HostileMonster : Monster
+﻿public abstract class HostileMonster : Monster
 {
-
+    protected override Propensity CreatePropensity()
+    {
+        return new Hostile();
+    }
 }

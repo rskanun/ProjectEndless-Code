@@ -17,7 +17,9 @@
 
     public override void OnAttacked(FSM fsm)
     {
-        // 플레이어 추적 상태로 변경
+        // 적대적 성향으로 바뀜
+        monster.CurPropensity = new Hostile();
+
         base.OnAttacked(fsm);
     }
 }
