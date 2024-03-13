@@ -176,7 +176,6 @@
     <Compile Include="Assets\Scripts\Object\Monster\Type\Friendly\FriendlyMonster.cs" />
     <Compile Include="Assets\Scripts\Scene\LoadSceneManager.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\AI\Organ\Eye.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\State\IMonsterState.cs" />
     <Compile Include="Assets\Scripts\Option\GameData\OptionData.cs" />
     <Compile Include="Assets\Scripts\Menu\App\AppUI.cs" />
     <Compile Include="Assets\Scripts\Event\GameEventListener.cs" />
@@ -198,7 +197,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets\Scripts\Object\Monster\State\RunState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
-    <Compile Include="Assets\Scripts\Object\Monster\State\HelpState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
     <Compile Include="Assets\Scripts\Menu\HomeScreenUI.cs" />
@@ -215,6 +213,11 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Scripts\Player\Control\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Camera\PlayerTrackerCamera.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\IMonsterState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\Type\Hostile\TestMob.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\State\DetectState.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Personality\Bravery.cs" />
+    <Compile Include="Assets\Scripts\Object\Monster\AI\Personality\Skittish.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

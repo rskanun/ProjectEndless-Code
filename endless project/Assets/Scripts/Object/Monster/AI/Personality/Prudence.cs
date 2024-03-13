@@ -1,6 +1,8 @@
 ﻿public class Prudence : Personality
 {
-    public override IMonsterState OnPlayerDetected()
+    public Prudence(Monster monster) : base(monster) { }
+
+    public override IMonsterState OnDetectedPlayer()
     {
         throw new System.NotImplementedException();
     }

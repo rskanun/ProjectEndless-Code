@@ -66,7 +66,12 @@ public abstract class Monster : MonoBehaviour
     private Propensity _curPropensity;
     public Propensity CurPropensity
     {
-        get { return _curPropensity; }
+        get
+        {
+            if (_curPropensity == null) _curPropensity = Propensity;
+
+            return _curPropensity;
+        }
         set
         {
             System.Type type = value.GetType();
@@ -194,20 +199,16 @@ public abstract class Monster : MonoBehaviour
 
         transform.position = Vector2.MoveTowards(transform.position, movePoint, speed);
 
-        // 이동 방향에 따른 방향 벡터 생성
-        Vector2 moveVec = (movePoint - (Vector2)transform.position).normalized;
-        Vector2 angleVec = GetAngleVec(moveVec);
-
-        // 탐지 기관 회전
-        organManager.RotateOrgans(angleVec);
+        // 이동 방향으로 몸 회전
+        RotateTo(movePoint);
     }
 
-    private Vector2 GetAngleVec(Vector2 moveVec)
+    public void RotateTo(Vector2 rotatePoint)
     {
-        int x = Mathf.RoundToInt(moveVec.x);
-        int y = (x == 0) ? Mathf.RoundToInt(moveVec.y) : 0; // 4방향 중 좌우를 우선
+        Vector2 rotateVec = (rotatePoint - (Vector2)transform.position).normalized;
 
-        return new Vector2(x, y);
+        // 탐지 기관 회전
+        organManager.RotateOrgans(rotateVec);
     }
 
     /***************************************************************

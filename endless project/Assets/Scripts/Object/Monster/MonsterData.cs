@@ -27,55 +27,11 @@ public enum Quality
 [CreateAssetMenu(menuName = "Game Object/Monster/Monster", fileName = "Monster")]
 public class MonsterData : ObjectData
 {
-    [Header("추적 변수")]
-    [SerializeField]
-    private float _detectionArea;
-    public float DetectionArea { get { return _detectionArea; } }
-
-    [Header("공격 변수")]
+    [Header("몬스터 행동 변수")]
     [SerializeField]
     private float _attackDistance;
     public float AttackDistance { get { return _attackDistance; } }
     [SerializeField]
     private float _attackCooldown;
     public float AttackCooldown { get { return _attackCooldown; } }
-
-    [Header("성향")]
-    [SerializeField]
-    private EPropensity _propensity; // 기본 성향
-    /***************************************************************
-     * [ 성향 (Propensity) ]
-     * 
-     * 플레이어와 대면 했을 때의 행동
-     ***************************************************************/
-    public EPropensity Propensity
-    {
-        get { return _propensity; }
-    }
-
-    [Header("성격")]
-    [SerializeField]
-    private Personality _personality;
-    /***************************************************************
-     * [ 성격 (Personality) ]
-     * 
-     * 적대적일 때 취하는 행동
-     ***************************************************************/
-    public Personality Personality
-    {
-        get { return _personality; }
-    }
-
-    [Header("개체 특성")]
-    [SerializeField]
-    private Quality _quality;
-    /***************************************************************
-     * [ 개체 특성 (Object Personality) ]
-     * 
-     * 다른 개체들과의 행동
-     ***************************************************************/
-    public Quality Quality
-    {
-        get { return _quality; }
-    }
 }

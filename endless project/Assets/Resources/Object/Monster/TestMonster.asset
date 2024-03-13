@@ -22,10 +22,5 @@ MonoBehaviour:
   _maxMana: 30
   _magicPower: 0
   _atkDamage: 0
-  detectionArea: 40
-  _propensity: 2
-  _personality: 0
-  _quality: 0
-  organs:
-  - {fileID: 11400000, guid: dfe0dc26ed4ce1340a0ca7ffdd00582e, type: 2}
-  - {fileID: 11400000, guid: 69c2e324fbe0bc7488f63965db741c41, type: 2}
+  _attackDistance: 0
+  _attackCooldown: 0

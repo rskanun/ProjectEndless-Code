@@ -1,6 +1,15 @@
 ﻿public abstract class Propensity
 {
-    protected Monster monster;
+    private Monster _monster;
+    protected Monster monster
+    {
+        get { return _monster; }
+    }
+
+    public Propensity(Monster monster)
+    {
+        _monster = monster;
+    }
 
     public abstract void OnIdleAction(FSM fsm);
     public virtual void OnAttacked(FSM fsm)

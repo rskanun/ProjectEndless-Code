@@ -19954,16 +19954,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2055841026}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39468296eab8ebb4c80aaa821513e55a, type: 3}
+  m_Script: {fileID: 11500000, guid: d6e60ee2700fea14a8f78ae05b7b4367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 6c2cd0fc8b300094fa5c8979478730dc, type: 2}
-  lineColor: {r: 1, g: 0.4481132, b: 0.803052, a: 1}
+  lineColor: {r: 0, g: 0, b: 0, a: 1}
   movePoints:
-  - {x: 0, y: 40}
-  - {x: 0, y: 80}
+  - {x: -30, y: 50}
+  - {x: -80, y: 60}
   - {x: -40, y: 80}
-  - {x: -40, y: 40}
 --- !u!50 &2055841032
 Rigidbody2D:
   serializedVersion: 4

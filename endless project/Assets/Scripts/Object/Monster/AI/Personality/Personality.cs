@@ -2,5 +2,16 @@
 
 public abstract class Personality : MonoBehaviour
 {
-    public abstract IMonsterState OnPlayerDetected();
+    private Monster _monster;
+    protected Monster monster
+    {
+        get { return _monster; }
+    }
+
+    public Personality(Monster monster)
+    {
+        _monster = monster;
+    }
+
+    public abstract IMonsterState OnDetectedPlayer();
 }

@@ -46,18 +46,17 @@ public class ChaseState : IMonsterState
         }
         else
         {
-            // 플레이어가 범위 밖으로 벗어나면 기본 상태로 전환
-            fsm.SetState(new IdleState(monster));
+            // 플레이어가 범위 밖으로 벗어나면 탐지 상태로 전환
+            fsm.SetState(new DetectState(monster));
         }
     }
 
     private Vector3 GetPlayerPos()
     {
         // 플레이어 탐지
-        Vector2 playerPos = ReadOnlyPlayerData.Instance.Position;
-        float distance = (playerPos - (Vector2)monster.transform.position).magnitude;
+        Vector3 playerPos = monster.DetectPlayer();
 
-        if (distance <= data.DetectionArea)
+        if (playerPos != monster.transform.position)
         {
             // 플레이어가 탐지 범위 안이면 리턴
             lastPlayerPos = playerPos;

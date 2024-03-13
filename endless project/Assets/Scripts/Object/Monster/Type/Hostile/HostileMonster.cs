@@ -2,6 +2,6 @@
 {
     protected override Propensity CreatePropensity()
     {
-        return new Hostile();
+        return new Hostile(this);
     }
 }
