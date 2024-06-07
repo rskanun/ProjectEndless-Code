@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Endless.GameData;
+using UnityEngine.Tilemaps;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -73,7 +74,7 @@ public class ReadOnlyGameData : ScriptableObject
         get { return _gameData.Date; }
     }
 
-    public RemainTime time
+    public RemainTime Time
     {
         get { return _gameData.Time; }
     }

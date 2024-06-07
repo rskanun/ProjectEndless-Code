@@ -155,7 +155,7 @@ public class PlayerData : ObjectData
         STR = 5;
 
         // speed
-        SpeedRatio = 100;
+        SpeedRatio = 10;
         AGI = 15;
         _dashSpeed = 17.5f;
 

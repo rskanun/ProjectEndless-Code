@@ -14,9 +14,7 @@ public class LoadSaveFileManager : MonoBehaviour
         SceneManager.sceneLoaded += LoadData;
 
         // 씬 이동
-        MapData mapData = MapManager.FindMap(data.mapData.id);
-
-        MapManager.LoadMap(mapData);
+        MapManager.LoadMap(data.mapData.id);
     }
 
     private void LoadData(Scene scene, LoadSceneMode mode)

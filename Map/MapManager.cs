@@ -17,8 +17,10 @@ public class MapManager
         return null;
     }
 
-    public static void LoadMap(MapData map)
+    public static void LoadMap(string id)
     {
-        LoadSceneManager.Instance.OnSceneClosed(map.SceneName);
+        MapData mapData = FindMap(id);
+
+        LoadSceneManager.Instance.OnSceneClosed(mapData.SceneName);
     }
 }

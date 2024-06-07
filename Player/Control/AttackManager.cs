@@ -73,7 +73,7 @@ public class AttackManager : MonoBehaviour
         float radian = Mathf.Deg2Rad * angle;
 
         Vector3 direction = new Vector3(Mathf.Cos(radian), Mathf.Sin(radian));
-        atkPos.position = transform.position + direction * 5f;
+        atkPos.position = transform.position + direction * 0.5f;
     }
 
     private void TakeDamageInArea(Collider2D[] collisions, int damage, int mp)

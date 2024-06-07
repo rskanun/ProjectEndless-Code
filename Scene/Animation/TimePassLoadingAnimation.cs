@@ -54,7 +54,7 @@ public class TimePassLoadingAnimation : MonoBehaviour, ILoadAnimation
         glitch.ActiveEffect(0.3f);
 
         // Time Consume
-        ReadOnlyGameData.Instance.time.ConsumeTime();
+        ReadOnlyGameData.Instance.Time.ConsumeTime();
 
         yield return cooldown;
         // Effect End

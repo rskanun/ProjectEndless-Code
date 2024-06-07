@@ -9,8 +9,8 @@ enum PlayerState
 
 public class PlayerController : MonoBehaviour, IControlState
 {
-    private int dashDistance = 40;
-    private float stopDistance = 0.05f;
+    private int dashDistance = 4;
+    private float stopDistance = 0.005f;
 
     // 현재 플레이어 캐릭터 상태
     private PlayerState playerState;

@@ -13,7 +13,7 @@ public class TimeBlinkAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        RemainTime time = ReadOnlyGameData.Instance.time;
+        RemainTime time = ReadOnlyGameData.Instance.Time;
 
         blinkCoroutine = StartCoroutine(BlinkAnimation(time));
     }

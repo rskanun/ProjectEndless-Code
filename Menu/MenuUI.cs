@@ -82,8 +82,8 @@ public class MenuUI : MonoBehaviour
 
     public void UpdateTime()
     {
-        int hour = gameData.time.Hour;
-        int min = gameData.time.Minute;
+        int hour = gameData.Time.Hour;
+        int min = gameData.Time.Minute;
 
         string timeTxt = (hour < 12) ? "AM" : "PM";
         timeTxt += " ";

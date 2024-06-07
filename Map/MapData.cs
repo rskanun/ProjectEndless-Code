@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Object/MapData", fileName = "Map_Data")]
@@ -34,10 +35,10 @@ public class MapData : ScriptableObject
     }
 
     [SerializeField]
-    private string _sceneName;
+    private SceneAsset _scene;
     public string SceneName
     {
-        get { return _sceneName; }
+        get { return _scene.name; }
     }
 
     public override bool Equals(object other)
@@ -49,7 +50,7 @@ public class MapData : ScriptableObject
             return ID == otherData.ID;
         }
 
-        return false;
+        throw new NotSupportedException("Equals method should be called with an object of type MapData.");
     }
 
     public override int GetHashCode()

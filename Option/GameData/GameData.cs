@@ -1,5 +1,6 @@
 ﻿using Endless.GameData;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "Scriptable Object/GameData", fileName = "Game_Data")]
 public class GameData : ScriptableObject

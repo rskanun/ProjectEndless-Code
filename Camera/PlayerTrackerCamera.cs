@@ -1,50 +1,60 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerTrackerCamera : MonoBehaviour
 {
     public Transform target;
-    public GameObject mapArea;
 
-    public float speed;
+    public float moveSpeed;
 
-    private Vector2 min;
-    private Vector2 max;
+    // 카메라 최소 최대 위치 좌표
+    private Vector2 minPos;
+    private Vector2 maxPos;
+    private Vector2 pos;
+    private Vector2 size;
 
-    void Start()
+    public void RoomChanged()
     {
+        MapAreaSet(RoomData.Instance.CurrentRoom);
+
         // 해당 이벤트의 위치를 캐릭터에 고정
         transform.position = target.position;
-
-        // 카메라가 이동할 맵의 범위를 파악
-        mapAreaSet();
     }
 
-    void mapAreaSet()
+    private void MapAreaSet(Tilemap map)
     {
-        // 맵의 가로 세로를 가져옴
-        float mapWidth = mapArea.GetComponent<RectTransform>().rect.width;
-        float mapHeight = mapArea.GetComponent<RectTransform>().rect.height;
+        // 맵 사이즈 및 시작점 Vector2로 변환
+        Vector2 mapSize = new Vector2(map.size.x , map.size.y);
+        Vector2 mapOrigin = new Vector2(map.origin.x , map.origin.y);
 
-        // 카메라의 가로 세로 및 위치도 가져옴
-        float cameraHeight = 2 * Camera.main.orthographicSize;
-        float cameraWidth = cameraHeight * Camera.main.aspect;
+        // 맵 중심 계산
+        Vector2 mapPosition = mapOrigin + mapSize / 2;
 
-        Vector2 mapPotision = mapArea.transform.localPosition;
+        // 카메라 사이즈 계산
+        Vector2 cameraSize = new Vector2(2 * Camera.main.orthographicSize * Camera.main.aspect, 2 * Camera.main.orthographicSize);
 
-        // 카메라의 끝과 맵의 끝이 닿는 범위를 계산
-        float distanceWidth = Mathf.Abs(mapWidth / 2 - cameraWidth / 2);
-        float distanceHeight = Mathf.Abs(mapHeight / 2 - cameraHeight / 2);
+        // 카메라의 끝과 맵의 끝이 닿는 범위 계산
+        Vector2 cameraMoveSize = (mapSize - cameraSize) / 2;
 
-        min = new Vector2(mapPotision.x - distanceWidth, mapPotision.y - distanceHeight);
-        max = new Vector2(mapPotision.x + distanceWidth, mapPotision.y + distanceHeight);
+        minPos = mapPosition - cameraMoveSize;
+        maxPos = mapPosition + cameraMoveSize;
+
+        pos = mapPosition;
+        size = minPos - maxPos;
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         // 범위 밖으로 나가지 않도록 해당 이벤트의 위치를 조정
-        float blockX = Mathf.Clamp(target.position.x, min.x, max.x);
-        float blockY = Mathf.Clamp(target.position.y, min.y, max.y);
+        float blockX = Mathf.Clamp(target.position.x, minPos.x, maxPos.x);
+        float blockY = Mathf.Clamp(target.position.y, minPos.y, maxPos.y);
 
-        transform.position = Vector2.Lerp(transform.position, new Vector2(blockX, blockY), speed);
+        transform.position = Vector3.Lerp(transform.position, new Vector3(blockX, blockY, -1), moveSpeed);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(pos, size);
     }
 }
