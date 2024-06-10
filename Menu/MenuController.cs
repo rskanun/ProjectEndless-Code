@@ -78,7 +78,7 @@ public class MenuController : MonoBehaviour, IControlState
         {
             currentApp.Close();
 
-            if (!currentApp.isActive)
+            if (!currentApp.IsActive)
             {
                 currentApp = null;
             }

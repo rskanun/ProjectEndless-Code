@@ -7,14 +7,18 @@ public abstract class App : MonoBehaviour
 
     // 앱 현재상황
     private bool _isActive;
-    public bool isActive { get { return _isActive; } }
+    public bool IsActive
+    {
+        private set { _isActive = value; }
+        get { return _isActive; }
+    }
 
     [Header("참조 스크립트")]
     [SerializeField] private AppUI ui;
 
     public virtual void Open()
     {
-        _isActive = true;
+        IsActive = true;
 
         ui.OpenApp(window);
         LoadData();
@@ -27,7 +31,7 @@ public abstract class App : MonoBehaviour
         SaveData();
         ui.CloseApp(window);
 
-        _isActive = false;
+        IsActive = false;
     }
 
     protected virtual void SaveData() { }
