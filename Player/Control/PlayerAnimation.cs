@@ -7,24 +7,25 @@ public class PlayerAnimation : MonoBehaviour
 
     public void SetPlayerAngleAnim(Vector2 angle)
     {
-        int x = (int)angle.x;
-        int y = (int)angle.y;
+        int h = (int)angle.x;
+        int v = (int)angle.y;
 
-        bool isChangedX = false;
-        bool isChangedY = false;
+        int curH = playerAnimator.GetInteger("axisH");
+        int curV = playerAnimator.GetInteger("axisV");
 
-        // 애니메이션 움직임 제어
-        if (playerAnimator.GetInteger("axisH") != x)
+        if (curV == 0 && curH != h)
         {
-            isChangedX = true;
-            playerAnimator.SetInteger("axisH", x);
+            playerAnimator.SetBool("isChanged", true);
+            playerAnimator.SetInteger("axisH", h);
         }
-        if (playerAnimator.GetInteger("axisV") != y)
+        else if (curH == 0 && curV != v)
         {
-            isChangedY = true;
-            playerAnimator.SetInteger("axisV", y);
+            playerAnimator.SetBool("isChanged", true);
+            playerAnimator.SetInteger("axisV", v);
         }
-
-        playerAnimator.SetBool("isChanged", isChangedX || isChangedY);
+        else
+        {
+            playerAnimator.SetBool("isChanged", false);
+        }
     }
 }
