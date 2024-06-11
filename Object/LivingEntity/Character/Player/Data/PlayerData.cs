@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName ="Game Object/Player", fileName = "PlayerData")]
-public class PlayerData : ObjectData
+public class PlayerData : EntityData
 {
     [SerializeField]
     private int _totalMP;

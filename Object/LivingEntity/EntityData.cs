@@ -1,7 +1,24 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ObjectData : ScriptableObject
+public abstract class EntityData : ScriptableObject
 {
+    [Header("오브젝트 정보")]
+    [SerializeField]
+    private string _name;
+    public string Name
+    {
+        get { return _name; }
+    }
+
+    [Header("보유 스킬")]
+    [SerializeField]
+    private List<Skill> _skills;
+    public List<Skill> Skills
+    {
+        get { return _skills; }
+    }
+
     [Header("스테이터스")]
     [SerializeField]
     private int _healthPoint;
@@ -10,7 +27,7 @@ public abstract class ObjectData : ScriptableObject
      * 
      * 오브젝트의 생명력 수치로 0이하로 떨어지면 죽는다.
      ***************************************************************/
-    public virtual int HP
+    public int HP
     {
         get { return _healthPoint; }
         set

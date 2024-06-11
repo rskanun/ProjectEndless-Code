@@ -25,7 +25,7 @@ public enum Quality
 }
 
 [CreateAssetMenu(menuName = "Game Object/Monster/Monster", fileName = "Monster")]
-public class MonsterData : ObjectData
+public class MonsterData : EntityData
 {
     [Header("몬스터 행동 변수")]
     [SerializeField]
