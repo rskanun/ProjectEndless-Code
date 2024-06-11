@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour, IControlState
 
     [Header("참조 스크립트")]
     [SerializeField] private PlayerAnimation playerAnima;
-    [SerializeField] private AttackManager attackManager;
     [SerializeField] private TalkController talkController;
     [SerializeField] private MenuController menuController;
 
@@ -53,7 +52,6 @@ public class PlayerController : MonoBehaviour, IControlState
         OnMoveKeyPressed();
         OnRunKeyPressed();
         OnDashKeyPressed();
-        OnAttackKeyPressed();
         OnTalkKeyPressed();
         OnMenuKeyPressed();
     }
@@ -224,20 +222,6 @@ public class PlayerController : MonoBehaviour, IControlState
             // NPC의 정보를 초기화
             npc = null;
             Debug.Log("exit");
-        }
-    }
-
-    /************************************************************
-    * [공격키]
-    * 
-    * 마우스 방향으로 플레이어가 공격
-    ************************************************************/
-
-    private void OnAttackKeyPressed()
-    {
-        if (isStateIdle && Input.GetButtonDown("Attack"))
-        {
-            attackManager.OnAttack();
         }
     }
 

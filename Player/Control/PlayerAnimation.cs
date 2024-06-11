@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
@@ -8,17 +7,24 @@ public class PlayerAnimation : MonoBehaviour
 
     public void SetPlayerAngleAnim(Vector2 angle)
     {
-        // 올림 보정
-        int x = (angle.x > 0) ? Mathf.CeilToInt(angle.x) : Mathf.FloorToInt(angle.x);
-        int y = (angle.y > 0) ? Mathf.CeilToInt(angle.y) : Mathf.FloorToInt(angle.y);
+        int x = (int)angle.x;
+        int y = (int)angle.y;
+
+        bool isChangedX = false;
+        bool isChangedY = false;
 
         // 애니메이션 움직임 제어
-        playerAnimator.SetInteger("axisH", x);
-        playerAnimator.SetInteger("axisV", y);
-    }
+        if (playerAnimator.GetInteger("axisH") != x)
+        {
+            isChangedX = true;
+            playerAnimator.SetInteger("axisH", x);
+        }
+        if (playerAnimator.GetInteger("axisV") != y)
+        {
+            isChangedY = true;
+            playerAnimator.SetInteger("axisV", y);
+        }
 
-    public void OnAttackAnim()
-    {
-
+        playerAnimator.SetBool("isChanged", isChangedX || isChangedY);
     }
 }
