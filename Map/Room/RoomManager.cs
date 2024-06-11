@@ -3,18 +3,18 @@ using UnityEngine.Tilemaps;
 
 public class RoomManager : MonoBehaviour
 {
-    private Tilemap _tilemap;
+    private Tilemap tilemap;
 
     private void Start()
     {
-        _tilemap = GetComponent<Tilemap>();
+        tilemap = GetComponent<Tilemap>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            RoomData.Instance.CurrentRoom = _tilemap;
+            RoomData.Instance.CurrentRoom = tilemap;
         }
     }
 }

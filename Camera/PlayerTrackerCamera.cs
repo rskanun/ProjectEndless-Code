@@ -19,6 +19,7 @@ public class PlayerTrackerCamera : MonoBehaviour
 
         // 해당 이벤트의 위치를 캐릭터에 고정
         transform.position = target.position;
+        Debug.Log("Changed");
     }
 
     private void MapAreaSet(Tilemap map)
