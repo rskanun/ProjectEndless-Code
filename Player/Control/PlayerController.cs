@@ -1,27 +1,10 @@
 ﻿using UnityEngine;
-
-enum PlayerState
-{
-    Idle,
-    Dashing,
-    Attacking
-}
+using UnityEngine.Playables;
 
 public class PlayerController : MonoBehaviour, IControlState
 {
-    private int dashDistance = 4;
-    private float stopDistance = 0.005f;
-
     // 현재 플레이어 캐릭터 상태
-    private PlayerState playerState;
     private bool isRunning = false;
-    private bool isStateIdle
-    {
-        get { return playerState == PlayerState.Idle; }
-    }
-
-    // 이동 위치 벡터
-    private Vector2 dashVec;
 
     // 플레이어 입력 키 벡터
     private Vector2 arrowKeyVec;
@@ -31,8 +14,6 @@ public class PlayerController : MonoBehaviour, IControlState
 
     [Header("관련 오브젝트")]
     [SerializeField] private Rigidbody2D rigid;
-    [SerializeField] private Transform mainEntity; // 플레이어 캐릭터
-    [SerializeField] private Transform subEntity; // 대쉬 예상 지점 계산을 위한 가상의 엔티티
     [SerializeField] private PlayerData player;
 
     [Header("참조 스크립트")]
@@ -51,7 +32,6 @@ public class PlayerController : MonoBehaviour, IControlState
     {
         OnMoveKeyPressed();
         OnRunKeyPressed();
-        OnDashKeyPressed();
         OnTalkKeyPressed();
         OnMenuKeyPressed();
     }
@@ -76,35 +56,24 @@ public class PlayerController : MonoBehaviour, IControlState
         CheckingWalk(arrowKeyVec.x, arrowKeyVec.y);
 
         // 키보드 누른 방향으로 애니메이션 움직임 제어
-        SetAngle(arrowKeyVec);
-    }
-
-    private void SetAngle(Vector2 playerVec)
-    {
-        if (isStateIdle)
-        {
-            playerAnima.SetPlayerAngleAnim(playerVec);
-        }
+        playerAnima.SetPlayerAngleAnim(arrowKeyVec);
     }
 
     private void CheckingWalk(float x, float y)
     {
-        if (isStateIdle)
+        float absX = Mathf.Abs(x);
+        float absY = Mathf.Abs(y);
+
+        bool isWalkSpeed = absX <= 0.5f && absY <= 0.5f;
+
+        // 움직임 정도가 일정 이하면 걷기
+        if (!isRunning && isWalkSpeed)
         {
-            float absX = Mathf.Abs(x);
-            float absY = Mathf.Abs(y);
-
-            bool isWalkSpeed = absX <= 0.5f && absY <= 0.5f;
-
-            // 움직임 정도가 일정 이하면 걷기
-            if (!isRunning && isWalkSpeed)
-            {
-                isRunning = false;
-            }
-            else if(!isRunning)
-            {
-                isRunning = true;
-            }
+            isRunning = false;
+        }
+        else if (!isRunning)
+        {
+            isRunning = true;
         }
     }
 
@@ -116,74 +85,10 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnRunKeyPressed()
     {
-        if(isStateIdle && Input.GetButtonDown("Running"))
+        if(isRunning == false && Input.GetButtonDown("Running"))
         {
             isRunning = true;
         }
-    }
-
-    /************************************************************
-    * [대시키]
-    * 
-    * 마우스 방향으로 플레이어가 빠르게 이동
-    ************************************************************/
-
-    private void OnDashKeyPressed()
-    {
-        if (isStateIdle && Input.GetButtonDown("Dash"))
-        {
-            // 대쉬 이동을 위한 계산식
-            dashVec = getDashVector();
-
-            // 움직임 멈춤
-            rigid.velocity = Vector2.zero;
-
-            // 대쉬 작동
-            playerState = PlayerState.Dashing;
-        }
-    }
-
-    private Vector2 getDashVector()
-    {
-        Vector2 vec = Vector2.zero;
-
-        // 서브 엔티티를 플레이어로 이동
-        subEntity.position = mainEntity.position;
-
-        // 캐릭터와 마우스 각도 계산
-        Vector2 locClick = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 locChr = mainEntity.position;
-
-        float angle = Mathf.Atan2(locClick.y - locChr.y, locClick.x - locChr.x)
-            * Mathf.Rad2Deg;
-
-        // 이동 거리 계산
-        vec.x = Mathf.Cos(angle * Mathf.Deg2Rad) * dashDistance;
-        vec.y = Mathf.Sin(angle * Mathf.Deg2Rad) * dashDistance;
-
-        // 대쉬 애니메이션 설정
-        setDashAnimation(vec);
-
-        // 현재 좌표값을 기준으로 대쉬 좌표 재설정
-        vec.x += locChr.x;
-        vec.y += locChr.y;
-
-        return vec;
-    }
-
-    private void setDashAnimation(Vector2 moveVec)
-    {
-        // 애니메이션 움직임 보정 및 설정
-        int constant = 10;
-        int tmpX = (int)moveVec.x;
-        int tmpY = (int)moveVec.y;
-
-        Vector2 animaVec = new Vector2();
-
-        animaVec.x = (-constant <= tmpX && tmpX <= constant) ? 0 : tmpX;
-        animaVec.y = (-constant <= tmpY && tmpY <= constant) ? 0 : tmpY;
-
-        playerAnima.SetPlayerAngleAnim(animaVec);
     }
 
     /************************************************************
@@ -194,7 +99,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnTalkKeyPressed()
     {
-        if(npc != null && isStateIdle && Input.GetButtonDown("Talking"))
+        if(npc != null && Input.GetButtonDown("Talking"))
         {
             arrowKeyVec = Vector2.zero;
 
@@ -255,43 +160,13 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void FixedUpdate()
     {
-        // 대쉬 발동에 따른 이동
-        if (playerState == PlayerState.Dashing)
-        {
-            MoveDash();
-        }
-        // 방향키(혹은 비슷한 장치) 이동에 따른 이동
-        else if (playerState == PlayerState.Idle)
-        {
-            MoveCharacter();
-        }
-    }
-
-    private void MoveDash()
-    {
-        // 캐릭터 및 서브 오브젝트 이동
-        rigid.MovePosition(Vector2.Lerp(mainEntity.position, dashVec, player.DashSpeed * Time.deltaTime));
-        subEntity.position = Vector2.Lerp(subEntity.position, dashVec, player.DashSpeed * Time.deltaTime);
-
-        // 만약 두 오브젝트 사이가 일정 수준까지 가까워지면 이동제한 해제
-        if (Vector2.Distance(dashVec, subEntity.position) <= stopDistance)
-        {
-            playerState = PlayerState.Idle;
-            isRunning = true;
-
-            Debug.Log("ready");
-        }
-    }
-
-    private void MoveCharacter()
-    {
         float speed = (isRunning) ? player.RunSpeed : player.MoveSpeed;
         rigid.velocity = arrowKeyVec.normalized * speed * Time.deltaTime;
 
         // 달리기를 멈추면 걷기로 전환
-        if(CheckRunning(rigid.velocity) == false)
+        if (CheckRunning(rigid.velocity) == false)
         {
-            playerState = PlayerState.Idle;
+            isRunning = false;
         }
     }
 
