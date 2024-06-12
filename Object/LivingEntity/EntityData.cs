@@ -30,32 +30,6 @@ public abstract class EntityData : ScriptableObject
     public int HP
     {
         get { return _healthPoint; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _healthPoint = 0;
-            // 입력값이 최대치를 초과한 경우
-            else if (value > _maxHealthPoint)
-                _healthPoint = _maxHealthPoint;
-            else
-                _healthPoint = value;
-        }
-    }
-
-    [SerializeField]
-    private int _maxHealthPoint;
-    public virtual int MaxHP
-    {
-        get { return _maxHealthPoint; }
-        protected set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _maxHealthPoint = 0;
-            else
-                _maxHealthPoint = value;
-        }
     }
 
     [SerializeField]
@@ -69,17 +43,19 @@ public abstract class EntityData : ScriptableObject
     public virtual int STR
     {
         get { return _strength; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _strength = 0;
-            else
-                _strength = value;
+    }
 
-            // 공격 데미지 업데이트
-            _atkDamage = _strength;
-        }
+    [SerializeField]
+    private int _defensive;
+    /***************************************************************
+    * [ 방어력 (Defensive) ]
+    * 
+    * 오브젝트의 방어력 수치로 받는 데미지에 영향을 끼친다.
+    * 방어력 1당 1의 데미지를 줄인다.
+    ****************************************************************/
+    public int DEF
+    {
+        get { return _defensive; }
     }
 
     [SerializeField]
@@ -87,94 +63,15 @@ public abstract class EntityData : ScriptableObject
     /***************************************************************
     * [ 민첩 (Agility) ]
     * 
-    * 오브젝트의 민첩 수치로 이동속도에 영향을 끼친다.
+    * 오브젝트의 민첩 수치로 행동 턴 수에 영향을 끼친다.
+    * 특정 행동까지 걸리는 턴 수를 민첩 수치에 따라 줄여준다.
+    * 같은 턴에 행동하는 다른 오브젝트가 있다면 민첩이 높은 순서대로
+    * 턴을 진행한다.
+    * 조작 불가능 오브젝트의 경우 민첩 수치에 따라 공격을 회피하기도 한다.
     ****************************************************************/
     public virtual int AGI
     {
         get { return _agility; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _agility = 0;
-            else
-                _agility = value;
-
-            // 이동속도 변경
-            _moveSpeed = Mathf.RoundToInt(_agility * _speedRatio);
-        }
-    }
-
-    // 민첩의 이동속도 전환율
-    [SerializeField]
-    private float _speedRatio;
-    public float SpeedRatio
-    {
-        get { return _speedRatio; }
-        protected set { _speedRatio = value; }
-    }
-    
-    [SerializeField]
-    private int _moveSpeed;
-    /***************************************************************
-    * [ 이동속도 (Speed) ]
-    * 
-    * 오브젝트의 이동속도로 민첩 수치에 영향을 받는다.
-    * 예외적으로 대시 속도는 민첩 수치에 영향을 받지 않는다.
-    ****************************************************************/
-    public virtual int MoveSpeed
-    {
-        get
-        {
-            if (_moveSpeed <= 0)
-            {
-                _moveSpeed = Mathf.RoundToInt(_agility * _speedRatio);
-            }
-
-            return _moveSpeed;
-        }
-    }
-
-    [SerializeField]
-    private int _mana;
-    /***************************************************************
-     * [ 마나 (Mana) ]
-     * 
-     * 오브젝트의 마나로 특수한 공격이나 체력 회복에 사용된다.
-     * 오브젝트의 피가 닳았다면 일정 주기마다 마나를 사용해 체력을 회복한다.
-     * 오브젝트가 사망 시 마나가 남아있다면,
-     * 마나를 최대 체력만큼 깎고서 그만큼의 체력을 회복한다.
-     * 피격당할 시 상대방의 마력만큼 마나를 잃는다.
-     ****************************************************************/
-    public virtual int Mana
-    {
-        get { return _mana; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _mana = 0;
-            // 입력값이 최대치를 초과한 경우
-            else if (value > _maxMana)
-                _mana = _maxMana;
-            else
-                _mana = value;
-        }
-    }
-
-    [SerializeField]
-    private int _maxMana;
-    public virtual int MaxMana
-    {
-        get { return _maxMana; }
-        protected set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _maxMana = 0;
-            else
-                _maxMana = value;
-        }
     }
 
     [SerializeField]
@@ -182,29 +79,26 @@ public abstract class EntityData : ScriptableObject
     /***************************************************************
      * [ 마력 (Magic Power) ]
      * 
-     * 오브젝트의 마력 수치로 마력과 관련된 데미지에 영향을 끼친다.
+     * 오브젝트의 마력 수치로 마력과 관련된 것들에 영향을 끼친다.
      * 마력 수치가 높아질수록 마력을 사용한 공격의 데미지가 올라간다.
+     * 마력 수치가 0이 될 시, 기절 상태에 빠진다.
      * 플레이어의 경우 각성치에 따라 마력의 초기값이 달라진다.
      ****************************************************************/
     public virtual int MP
     {
         get { return _magicPower; }
-        set
-        {
-            // 입력값이 음수일 경우
-            if (value < 0)
-                _magicPower = 0;
-            else
-                _magicPower = value;
-        }
     }
 
-    // 일반 공격 데미지
     [SerializeField]
-    private int _atkDamage;
-    public virtual int AttackDamage
+    private int _stamina;
+    /***************************************************************
+    * [ 스태미나 (Stamina) ]
+    * 
+    * 오브젝트의 스태미나 수치로 마력 사용에 영향을 끼친다.
+    * 마력을 이용한 행동을 할 때마다 일정 수치를 필요로 한다.
+    ****************************************************************/
+    public int Stamina
     {
-        get { return _atkDamage; }
-        protected set { _atkDamage = value; }
+        get { return _stamina; }
     }
 }
