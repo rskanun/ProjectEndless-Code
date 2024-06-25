@@ -1,12 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    [Header("저장 데이터")]
-    [SerializeField] private PlayerData playerData;
-    [SerializeField] private GameData gameData;
+    private ReadOnlyGameData gameData;
 
     /************************************************************
     * [게임 데이터 저장]
@@ -16,6 +14,8 @@ public class SaveManager : MonoBehaviour
 
     public SaveData SaveGameData(string path)
     {
+        gameData = ReadOnlyGameData.Instance;
+
         SaveData data = GetCurrentData();
 
         // Data to Json
@@ -32,30 +32,56 @@ public class SaveManager : MonoBehaviour
     {
         SaveData saveData = new SaveData();
 
-        saveData.playerData = GetCurrentPlayerData();
-        saveData.storyData = GetCurrentStoryData();
-        saveData.mapData = GetCurrentMapData();
-        saveData.questData = GetCurrentQuestData();
+        saveData.playerData = GetPlayerData();
+        saveData.storyData = GetStoryData();
+        saveData.mapData = GetMapData();
+        saveData.questData = GetQuestData();
 
         return saveData;
     }
 
-    private SavePlayerData GetCurrentPlayerData()
+    private SavePlayerData GetPlayerData()
     {
         SavePlayerData data = new SavePlayerData();
 
+        ReadOnlyPlayerData playerData = ReadOnlyPlayerData.Instance;
+
         data.pos = playerData.Position;
-        data.hp = playerData.HP;
         data.ap = playerData.AP;
-        data.str = playerData.STR;
-        data.agi = playerData.AGI;
-        data.def = playerData.DEF;
-        data.mp = playerData.MP;
 
         return data;
     }
 
-    private SaveStoryData GetCurrentStoryData()
+    private List<SaveMemberData> GetPartyData()
+    {
+        List<SaveMemberData> data = new List<SaveMemberData>();
+
+        PartyData partyData = PartyData.Instance;
+        foreach (CharacterData member in partyData.AllMemberList)
+        {
+            SaveMemberData memberData = new SaveMemberData();
+
+            memberData.name = member.Name;
+            memberData.isUnlocked = member.IsUnlocked;
+            memberData.isParty = member.IsParty;
+            memberData.hp = member.Stat.HP;
+            memberData.maxSP = member.Stat.MaxSP;
+            memberData.str = member.Stat.STR;
+            memberData.agi = member.Stat.AGI;
+            memberData.def = member.Stat.DEF;
+            memberData.mp = member.Stat.MP;
+            memberData.maxMP = member.Stat.MaxMP;
+            memberData.sp = member.Stat.SP;
+            memberData.maxSP = member.Stat.MaxSP;
+            memberData.SAN = member.Stat.SAN;
+
+            data.Add(memberData);
+        }
+
+        return data;
+    }
+
+    private SaveStoryData GetStoryData()
     {
         SaveStoryData data = new SaveStoryData();
 
@@ -69,7 +95,7 @@ public class SaveManager : MonoBehaviour
         return data;
     }
 
-    private SaveMapData GetCurrentMapData()
+    private SaveMapData GetMapData()
     {
         SaveMapData data = new SaveMapData();
 
@@ -79,7 +105,7 @@ public class SaveManager : MonoBehaviour
         return data;
     }
 
-    private SaveQuestData GetCurrentQuestData()
+    private SaveQuestData GetQuestData()
     {
         SaveQuestData data = new SaveQuestData();
 

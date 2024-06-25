@@ -53,7 +53,7 @@ public class ReadOnlyGameData : ScriptableObject
                         AssetDatabase.CreateAsset(gameData, FILE_DIRECTORY + "/GameData.asset");
                     }
 
-                    _instance._gameData = gameData;
+                    _instance.gameData = gameData;
                 }
             }
 #endif
@@ -62,30 +62,30 @@ public class ReadOnlyGameData : ScriptableObject
     }
 
     [SerializeField]
-    private GameData _gameData;
+    private GameData gameData;
 
     public Chapter Chapter
     {
-        get { return _gameData.Chapter; }
+        get { return gameData.Chapter; }
     }
 
     public Date Date
     {
-        get { return _gameData.Date; }
+        get { return gameData.Date; }
     }
 
     public RemainTime Time
     {
-        get { return _gameData.Time; }
+        get { return gameData.Time; }
     }
 
     public QuestData MainQuest
     {
-        get { return _gameData.MainQuest; }
+        get { return gameData.MainQuest; }
     }
 
     public MapData MapData
     {
-        get { return _gameData.MapData; }
+        get { return gameData.MapData; }
     }
 }

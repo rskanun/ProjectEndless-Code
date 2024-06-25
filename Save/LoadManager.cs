@@ -1,10 +1,12 @@
 ﻿using Endless.GameData;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class LoadManager : MonoBehaviour
 {
     [Header("저장 데이터")]
+    [SerializeField] private PartyData partyData;
     [SerializeField] private PlayerData playerData;
     [SerializeField] private GameData gameData;
 
@@ -35,21 +37,38 @@ public class LoadManager : MonoBehaviour
 
     public void LoadGameData(SaveData data)
     {
-        SetMapData(data.mapData);
         SetPlayerData(data.playerData);
+        SetPartyData(data.partyData);
         SetStoryData(data.storyData);
+        SetMapData(data.mapData);
         SetQuestData(data.questData);
     }
 
     private void SetPlayerData(SavePlayerData data)
     {
         playerData.Position = data.pos;
-        playerData.HP = data.hp;
         playerData.AP = data.ap;
-        playerData.STR = data.str;
-        playerData.AGI = data.agi;
-        playerData.DEF = data.def;
-        playerData.MP = data.mp;
+    }
+
+    private void SetPartyData(List<SaveMemberData> data)
+    {
+        foreach (SaveMemberData memberData in data)
+        {
+            CharacterData characterData = partyData.GetCharacter(memberData.name);
+
+            characterData.IsUnlocked = memberData.isUnlocked;
+            characterData.IsParty = memberData.isParty;
+            characterData.Stat.HP = memberData.hp;
+            characterData.Stat.MaxHP = memberData.maxHP;
+            characterData.Stat.STR = memberData.str;
+            characterData.Stat.AGI = memberData.agi;
+            characterData.Stat.DEF = memberData.def;
+            characterData.Stat.MP = memberData.mp;
+            characterData.Stat.MaxMP = memberData.maxMP;
+            characterData.Stat.SP = memberData.sp;
+            characterData.Stat.MaxSP = memberData.maxSP;
+            characterData.Stat.SAN = memberData.SAN;
+        }
     }
 
     private void SetStoryData(SaveStoryData data)

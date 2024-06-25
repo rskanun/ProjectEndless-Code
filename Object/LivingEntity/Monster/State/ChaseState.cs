@@ -2,16 +2,13 @@
 
 public class ChaseState : IMonsterState
 {
-    private Monster monster;
-    private MonsterData data;
+    private MonsterObject monster;
 
     private Vector3 lastPlayerPos;
 
-    public ChaseState(Monster monster)
+    public ChaseState(MonsterObject monster)
     {
         this.monster = monster;
-
-        data = monster.Data;
     }
 
     public void OnEnterState()
@@ -31,7 +28,7 @@ public class ChaseState : IMonsterState
         if (playerPos != monster.transform.position)
         {
             float distance = ((Vector2)(playerPos - monster.transform.position)).magnitude;
-            float attackDistance = data.AttackDistance;
+            float attackDistance = monster.AttackDistance;
             
             if (distance <= attackDistance)
             {
@@ -47,7 +44,7 @@ public class ChaseState : IMonsterState
         else
         {
             // 플레이어가 범위 밖으로 벗어나면 탐지 상태로 전환
-            fsm.SetState(new DetectState(monster));
+            fsm.SetState(new IdleState(monster));
         }
     }
 

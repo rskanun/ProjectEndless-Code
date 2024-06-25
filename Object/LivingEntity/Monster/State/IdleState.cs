@@ -1,35 +1,39 @@
-﻿using Endless.CustomObject;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class IdleState : IMonsterState
 {
-    private Monster monster;
+    private MonsterObject monster;
 
     // 몬스터 이동 관련 변수
-    private CircleLinkedList<Vector2> pointLinkedList; // 이동하게 될 목표 좌표 목록
-    private Node<Vector2> curTargetPos; // 현재 목표 좌표
+    private Vector2 targetPos;
+    private int pointIndex;
     private float thinkDelay;
 
-    public IdleState(Monster monster)
+    public IdleState(MonsterObject monster)
     {
         this.monster = monster;
     }
 
     public void OnEnterState()
     {
-        pointLinkedList = new CircleLinkedList<Vector2>(monster.MovePoints);
-
         // 첫 목표 설정
-        curTargetPos = pointLinkedList.Head;
+        targetPos = monster.MovePoints[pointIndex++];
     }
 
     public void OnAction(FSM fsm)
     {
-        // 성향에 따른 idle 액션
-        monster.CurPropensity.OnIdleAction(fsm);
-
-        // 공통된 idle 움직임 액션
+        OnDetected(fsm);
         OnMove();
+    }
+
+    private void OnDetected(FSM fsm)
+    {
+        Vector3 playerPos = monster.DetectPlayer();
+        if (playerPos != monster.transform.position)
+        {
+            // 탐지에 성공하면 플레이어 추적
+            fsm.SetState(new ChaseState(monster));
+        }
     }
 
     private void OnMove()
@@ -37,13 +41,17 @@ public class IdleState : IMonsterState
         if (thinkDelay <= 0)
         {
             // targetPos 까지 움직임
-            monster.MoveTo(curTargetPos.Value);
+            monster.MoveTo(targetPos);
 
             // 목표(+오차) 도달 확인
-            if (Vector2.Distance(curTargetPos.Value, monster.transform.position) <= 0.5f)
+            if (Vector2.Distance(targetPos, monster.transform.position) <= 0.5f)
             {
                 // 다음 포인트 설정
-                curTargetPos = curTargetPos.Next;
+                targetPos = monster.MovePoints[pointIndex++];
+                if (pointIndex >= monster.MovePoints.Count)
+                {
+                    pointIndex = 0;
+                }
 
                 // 다음 행동까지 딜레이
                 thinkDelay = Random.Range(1, 5);
@@ -55,8 +63,5 @@ public class IdleState : IMonsterState
         }
     }
 
-    public void OnTakeDamage(FSM fsm)
-    {
-        monster.CurPropensity.OnAttacked(fsm);
-    }
+    public void OnTakeDamage(FSM fsm) { }
 }

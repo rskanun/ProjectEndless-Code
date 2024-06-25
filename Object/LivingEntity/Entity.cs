@@ -2,20 +2,11 @@
 
 public abstract class Entity : MonoBehaviour
 {
-    // 오브젝트 스텟
-    public virtual EntityData Stat
+    [SerializeField]
+    private EntityStat _data;
+    public EntityStat Data
     {
-        get;
-    }
-
-    public virtual int CurrentHP
-    {
-        get; protected set;
-    }
-
-    public virtual int CurrentMP
-    {
-        get; protected set;
+        get { return _data; }
     }
 
     /***************************************************************
@@ -27,20 +18,20 @@ public abstract class Entity : MonoBehaviour
     public virtual void OnDamage(float damage, int targetMP)
     {
         // 최종 데미지 수치(임시)
-        CurrentHP = Mathf.RoundToInt(damage - Stat.DEF);
+        Data.HP = Mathf.RoundToInt(damage - Data.DEF);
 
         // 최종 마력 수치(임시)
-        CurrentMP = CurrentMP - targetMP;
+        Data.MP = Data.MP - targetMP;
 
         // 오브젝트 사망 처리
-        if (CurrentHP <= 0)
+        if (Data.HP <= 0)
         {
             // HP 수치가 0 이하로 떨어질 경우 사망 처리
             OnDead();
         }
 
         // 오브젝트 마력 고갈 처리
-        if (CurrentMP <= 0)
+        if (Data.MP <= 0)
         {
             // MP 수치가 0 이하로 떨어질 경우 마력 고갈 처리
             OnManaShort();

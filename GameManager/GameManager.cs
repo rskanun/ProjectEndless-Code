@@ -5,9 +5,6 @@ public class GameManager : MonoBehaviour
     [Header("참조 스크립터블 오브젝트")]
     [SerializeField] private GameData gameData;
 
-    [Header("플레이어 데이터")]
-    [SerializeField] private Player player;
-
     private ScriptResource scriptResource;
     private ControlContext controller;
 
@@ -48,8 +45,6 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         LoadScript(gameData.Chapter);
-
-        player.InitStat();
     }
 
     private void LoadScript(Chapter data)

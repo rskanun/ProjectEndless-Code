@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+
 
 
 #if UNITY_EDITOR
@@ -12,6 +14,9 @@ public class SaveData
 {
     [Header("플레이어 데이터")]
     public SavePlayerData playerData;
+
+    [Header("파티 데이터")]
+    public List<SaveMemberData> partyData;
 
     [Header("인게임 진행 상황")]
     public SaveStoryData storyData;
@@ -27,15 +32,25 @@ public class SaveData
 public struct SavePlayerData
 {
     public Vector2 pos;
-    public Vector2 angle;
+    public int ap;
+}
+
+[System.Serializable]
+public struct SaveMemberData
+{
+    public string name;
+    public bool isUnlocked;
+    public bool isParty;
     public int hp;
     public int maxHP;
-    public int ap;
-    public int maxAP;
     public int str;
     public int agi;
     public int def;
     public int mp;
+    public int maxMP;
+    public int sp;
+    public int maxSP;
+    public int SAN;
 }
 
 [System.Serializable]

@@ -2,16 +2,13 @@
 
 public class AttackState : IMonsterState
 {
-    private Monster monster;
-    private MonsterData data;
+    private MonsterObject monster;
 
     private float attackCooldown;
 
-    public AttackState(Monster monster)
+    public AttackState(MonsterObject monster)
     {
         this.monster = monster;
-
-        data = monster.Data;
     }
 
     public void OnEnterState()
@@ -45,7 +42,7 @@ public class AttackState : IMonsterState
         monster.OnAttack();
 
         // 공격 후 다음 공격까지 쿨타임 적용
-        attackCooldown = data.AttackCooldown;
+        attackCooldown = monster.AttackCooldown;
     }
 
     private bool IsAttackable()
@@ -53,7 +50,7 @@ public class AttackState : IMonsterState
         Vector2 playerPos = ReadOnlyPlayerData.Instance.Position;
         float distance = (playerPos - (Vector2)monster.transform.position).magnitude;
 
-        return distance <= data.AttackDistance;
+        return distance <= monster.AttackDistance;
     }
 
     public void OnTakeDamage(FSM fsm) { }

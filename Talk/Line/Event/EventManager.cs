@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-    [Header("참조 스크립트")]
-    [SerializeField] private Player player;
+    [Header("게임 데이터")]
+    [SerializeField] private PlayerData playerData;
 
     public void getCommandEvent(string str)
     {
@@ -12,19 +12,11 @@ public class EventManager : MonoBehaviour
 
         switch (command)
         {
-            case "getDamage":
-                // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 데미지
-                if (int.TryParse(commands[1], out int damage))
-                {
-                    player.OnDamage(damage);
-                }
-                break;
-
             case "addAP":
                 // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 AP 증가
                 if (int.TryParse(commands[1], out int ap))
                 {
-                    player.ApproachAwaken(ap);
+                    playerData.AP = ap;
                 }
                 break;
 
