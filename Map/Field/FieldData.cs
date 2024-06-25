@@ -2,21 +2,21 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RoomData : ScriptableObject
+public class FieldData : ScriptableObject
 {
     // 저장 파일 위치
     private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
-    private const string FILE_PATH = "Assets/Resources/Option/RoomData.asset";
+    private const string FILE_PATH = "Assets/Resources/Option/FieldData.asset";
 
-    private static RoomData _instance;
-    public static RoomData Instance
+    private static FieldData _instance;
+    public static FieldData Instance
     {
         get
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<RoomData>("Option/RoomData");
+            _instance = Resources.Load<FieldData>("Option/FieldData");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -33,11 +33,11 @@ public class RoomData : ScriptableObject
                 }
 
                 // Resource.Load가 실패했을 경우
-                _instance = AssetDatabase.LoadAssetAtPath<RoomData>(FILE_PATH);
+                _instance = AssetDatabase.LoadAssetAtPath<FieldData>(FILE_PATH);
 
                 if (_instance == null)
                 {
-                    _instance = CreateInstance<RoomData>();
+                    _instance = CreateInstance<FieldData>();
                     AssetDatabase.CreateAsset(_instance, FILE_PATH);
                 }
             }
@@ -48,17 +48,17 @@ public class RoomData : ScriptableObject
     }
 
     [Header("이벤트")]
-    [SerializeField] private GameEvent roomEvent;
+    [SerializeField] private GameEvent fieldEvent;
 
-    private Tilemap _room;
-    public Tilemap CurrentRoom
+    private Tilemap _currentField;
+    public Tilemap CurrentField
     {
-        get { return _room; }
+        get { return _currentField; }
         set
         { 
-            _room = value;
+            _currentField = value;
 
-            roomEvent.NotifyUpdate();
+            fieldEvent.NotifyUpdate();
         }
     }
 }

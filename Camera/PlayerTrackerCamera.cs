@@ -15,7 +15,7 @@ public class PlayerTrackerCamera : MonoBehaviour
 
     public void RoomChanged()
     {
-        MapAreaSet(RoomData.Instance.CurrentRoom);
+        MapAreaSet(FieldData.Instance.CurrentField);
 
         // 해당 이벤트의 위치를 캐릭터에 고정
         transform.position = target.position;

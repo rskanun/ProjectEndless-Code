@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RoomManager : MonoBehaviour
+public class FieldManager : MonoBehaviour
 {
     private Tilemap tilemap;
 
@@ -14,7 +14,7 @@ public class RoomManager : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            RoomData.Instance.CurrentRoom = tilemap;
+            FieldData.Instance.CurrentField = tilemap;
         }
     }
 }

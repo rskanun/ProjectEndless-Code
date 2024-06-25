@@ -2,8 +2,9 @@
 
 public class GameManager : MonoBehaviour
 {
-    [Header("참조 스크립터블 오브젝트")]
+    [Header("참조 데이터")]
     [SerializeField] private GameData gameData;
+    [SerializeField] private PlayerData playerData;
 
     private ScriptResource scriptResource;
     private ControlContext controller;
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         LoadScript(gameData.Chapter);
+
+        playerData.Position = new Vector2(0, 0);
     }
 
     private void LoadScript(Chapter data)
