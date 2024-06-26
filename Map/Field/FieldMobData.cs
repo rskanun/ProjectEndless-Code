@@ -1,13 +1,21 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FieldMobData
 {
     [Header("출현 몬스터")]
     [SerializeField]
-    private List<Monster> fieldMonsters;
+    private List<GameObject> _fieldMonsterObjs;
+    public List<GameObject> FieldMonsterObjs
+    {
+        get { return _fieldMonsterObjs; }
+    }
     public List<Monster> FieldMonsters
     {
-        get { return fieldMonsters; }
+        get
+        {
+            return FieldMonsterObjs.Select(obj => obj.GetComponent<Monster>()).ToList();
+        }
     }
 }

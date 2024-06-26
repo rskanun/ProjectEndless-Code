@@ -41,6 +41,13 @@ public class CharacterData
         }
     }
 
+    [SerializeField]
+    private BattlePosition _position;
+    public BattlePosition Position
+    {
+        get { return _position; }
+    }
+
     [Header("스킬 정보")]
     [SerializeField]
     private List<Skill> _skills;
