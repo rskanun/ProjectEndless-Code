@@ -32,4 +32,9 @@ public class Item : ScriptableObject
     {
         get { return lores; }
     }
+
+    public void OnUse(Entity target)
+    {
+
+    }
 }

@@ -1,31 +1,12 @@
-using System;
 using System.Collections.Generic;
-
-[System.Serializable]
-public class TurnData : IComparable<TurnData>
-{
-    public float remainTurn;
-    public Entity entity;
-
-    public int CompareTo(TurnData seq)
-    {
-        if (seq.remainTurn < remainTurn) return 1;
-        else return -1;
-    }
-}
 
 public class BattleSeq
 {
-    public List<TurnData> sequence;
+    public List<BattleAction> sequence;
 
     public BattleSeq()
     {
-        sequence = new List<TurnData>();
-    }
-
-    public BattleSeq(List<TurnData> seq)
-    {
-        sequence = seq;
+        sequence = new List<BattleAction>();
     }
 
     public BattleSeq(List<Entity> entityList)
@@ -34,13 +15,10 @@ public class BattleSeq
         List<Entity> sortedList = new List<Entity>(entityList);
         sortedList.Sort((x, y) => y.Stat.AGI.CompareTo(x.Stat.AGI));
 
-        // 모든 엔티티 값들을 TurnData로 전환
+        // 모든 엔티티들은 0턴 대기 행동 시전
         foreach (Entity entity in sortedList)
         {
-            TurnData turnData = new TurnData();
-
-            turnData.remainTurn = 0;
-            turnData.entity = entity;
+            WaitAction turnData = new WaitAction(0);
 
             sequence.Add(turnData);
         }
@@ -51,11 +29,29 @@ public class BattleSeq
         sequence.AddRange(seq.sequence);
     }
 
-    public TurnData GetCurrentTurn()
+    public void NextTurn()
+    {
+        float passedTurn = sequence[0].remainTurn;
+        sequence.RemoveAt(0);
+
+        // 삭제된 턴만큼 수치 앞당기기
+        foreach (BattleAction turnData in sequence)
+        {
+            turnData.remainTurn -= passedTurn;
+        }
+    }
+
+    public BattleAction GetCurrentTurn()
     {
         if (sequence.Count <= 0) return null;
         return sequence[0];
     }
 
+    public void SetTurn(BattleAction action)
+    {
+        int index = sequence.BinarySearch(action);
 
+        if (index < 0) sequence.Insert(~index, action);
+        else sequence.Insert(index, action);
+    }
 }

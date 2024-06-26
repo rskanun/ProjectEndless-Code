@@ -11,11 +11,9 @@ public class FieldMobData
     {
         get { return _fieldMonsterObjs; }
     }
-    public List<Monster> FieldMonsters
+
+    public List<Entity> GetFieldMobs()
     {
-        get
-        {
-            return FieldMonsterObjs.Select(obj => obj.GetComponent<Monster>()).ToList();
-        }
+        return FieldMonsterObjs.Select(obj => obj.GetComponent<Entity>()).ToList();
     }
 }
