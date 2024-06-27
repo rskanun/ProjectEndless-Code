@@ -3,16 +3,16 @@ public class AttackAction : BattleAction
     public Entity attacker;
     public Entity target;
 
-    public AttackAction(float turn)
+    public AttackAction()
     {
-        remainTurn = turn;
         action = ActionType.Attack;
     }
 
     public override BattleAction Clone()
     {
-        AttackAction clone = new AttackAction(remainTurn);
+        AttackAction clone = new AttackAction();
 
+        clone.remainTurn = remainTurn;
         clone.attacker = attacker;
         clone.target = target;
 

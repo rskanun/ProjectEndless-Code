@@ -6,8 +6,8 @@ public class FieldData : ScriptableObject
 {
     // 저장 파일 위치
     private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
-    private const string FILE_DIRECTORY = "Assets/Resources/Option";
-    private const string FILE_PATH = "Assets/Resources/Option/FieldData.asset";
+    private const string FILE_DIRECTORY = "Assets/Resources/InGameData";
+    private const string FILE_PATH = "Assets/Resources/InGameData/FieldData.asset";
 
     private static FieldData _instance;
     public static FieldData Instance
@@ -16,7 +16,7 @@ public class FieldData : ScriptableObject
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<FieldData>("Option/FieldData");
+            _instance = Resources.Load<FieldData>("InGameData/FieldData");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -29,7 +29,7 @@ public class FieldData : ScriptableObject
                         AssetDatabase.CreateFolder("Assets", "Resources");
                     }
 
-                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
+                    AssetDatabase.CreateFolder("Assets/Resources", "InGameData");
                 }
 
                 // Resource.Load가 실패했을 경우

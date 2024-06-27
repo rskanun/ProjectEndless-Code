@@ -2,16 +2,16 @@ public class WaitAction : BattleAction
 {
     public Entity target;
 
-    public WaitAction(float turn)
+    public WaitAction()
     {
-        remainTurn = turn;
         action = ActionType.Wait;
     }
 
     public override BattleAction Clone()
     {
-        WaitAction clone = new WaitAction(remainTurn);
+        WaitAction clone = new WaitAction();
 
+        clone.remainTurn = remainTurn;
         clone.target = target;
 
         return clone;
@@ -19,6 +19,6 @@ public class WaitAction : BattleAction
 
     public override void OnAction()
     {
-        target.OnWating();
+        target.OnWaiting();
     }
 }

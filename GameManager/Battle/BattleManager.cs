@@ -18,13 +18,13 @@ public class BattleManager : MonoBehaviour
     private PositionData battlePos;
     private Dictionary<(BattlePosition, int), Vector2> position;
 
+    [Header("테스트 필드 몬스터")]
+    [SerializeField] private FieldMobData mobData;
+
     // 현재 상황
     private BattleSeq sequence;
-    private int mobCount;
-    private bool isAmbushPlayer;    // 플레이어가 기습을 당했는지 여부
-    private bool isAmbushEnemy;   // 적이 기습을 당했는지 여부
 
-    private void Awake()
+    private void InitPosition()
     {
         position = new Dictionary<(BattlePosition, int), Vector2>();
 
@@ -41,6 +41,12 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // 임시 몹 데이터 집어넣기
+        OnBattle(mobData);
+    }
+
     /***************************************************************
     * [ 전투 순서 ]
     * 
@@ -49,19 +55,39 @@ public class BattleManager : MonoBehaviour
 
     public void OnBattle(FieldMobData fieldMobData)
     {
-        // 처리해야 할 적 숫자 설정
-        mobCount = fieldMobData.FieldMonsterObjs.Count;
+        BattleData.Instance.EnemyData = fieldMobData;
 
         // 전투 참여 엔티티 목록
-        List<Entity> entityList = GetPartyObjs();
-        entityList.AddRange(fieldMobData.GetFieldMobs());
+        List<Entity> entityList = new List<Entity>();
+
+        // 플레이어 진형 파티 설정
+        List<Character> playerParty = GetPartyMember();
+        foreach (Character member in playerParty)
+        {
+            member.OnJoinBattle();
+        }
+
+        entityList.AddRange(playerParty);
+
+        // 적 진형 파티 설정
+        List<Monster> enemyParty = new List<Monster>();
+        foreach (GameObject enemyObj in fieldMobData.FieldMonsters)
+        {
+            // 적 소환
+            Instantiate(enemyObj);
+
+            // 소환된 적을 전투 참여 엔티티 목록에 추가
+            Monster enemy = enemyObj.GetComponent<Monster>();
+            enemyParty.Add(enemy);
+        }
+
+        entityList.AddRange(enemyParty);
 
         // 시퀀스 생성
         sequence = new BattleSeq(entityList);
 
         // 처음 턴 진행
-        BattleAction curAction = sequence.GetCurrentTurn();
-        TakeAction(curAction);
+        TakeTurn();
     }
 
     public void OnAmbushEnemy(FieldMobData fieldMobData)
@@ -74,25 +100,25 @@ public class BattleManager : MonoBehaviour
         // 적에게 기습당했을 때의 전투 시작
     }
 
-    private List<Entity> GetPartyObjs()
+    private List<Character> GetPartyMember()
     {
         PartyData partyData = PartyData.Instance;
 
         // 리턴될 파티 맴버 오브젝트 목록
-        List<Entity> partyList = new List<Entity>();
+        List<Character> partyList = new List<Character>();
 
         // 모든 멤버 오브젝트를 Dictionary로 변환
-        Dictionary<string, Entity> memberMap = new Dictionary<string, Entity>();
+        Dictionary<string, Character> memberMap = new Dictionary<string, Character>();
         foreach (GameObject memberObj in allMemberObjs)
         {
-            Entity member = memberObj.GetComponent<Character>();
+            Character member = memberObj.GetComponent<Character>();
             memberMap[member.Name] = member;
         }
 
         // 파티 멤버 데이터를 가져와서 검색
         foreach (CharacterData memberData in partyData.GetPartyMembers())
         {
-            if (memberMap.TryGetValue(memberData.Name, out Entity member))
+            if (memberMap.TryGetValue(memberData.Name, out Character member))
             {
                 partyList.Add(member);
             }
@@ -107,10 +133,11 @@ public class BattleManager : MonoBehaviour
     * 전투 순서에 따른 현재 턴 진행
     ***************************************************************/
 
-    public void TakeAction(BattleAction action)
+    private void TakeTurn()
     {
-        // 예약해둔 턴의 행동 실행
-        action.OnAction();
+        // 턴 진행
+        BattleAction curAction = sequence.GetCurrentTurn();
+        curAction.OnAction();
     }
 
     public void SetTurn(BattleAction action)
@@ -119,6 +146,7 @@ public class BattleManager : MonoBehaviour
         sequence.SetTurn(action);
 
         // 다음 턴 넘어가기
+        NextTurn();
     }
 
     private void NextTurn()
@@ -126,7 +154,6 @@ public class BattleManager : MonoBehaviour
         sequence.NextTurn();
 
         // 다음 턴 진행
-        BattleAction curAction = sequence.GetCurrentTurn();
-        TakeAction(curAction);
+        TakeTurn();
     }
 }

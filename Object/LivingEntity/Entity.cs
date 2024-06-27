@@ -42,9 +42,6 @@ public abstract class Entity : MonoBehaviour
         get { return _stat; }
     }
 
-    [Header("참조 스크립트")]
-    [SerializeField] private BattleManager battleManager;
-
     /***************************************************************
     * [ 턴 진행 ]
     * 
@@ -52,6 +49,32 @@ public abstract class Entity : MonoBehaviour
     ***************************************************************/
 
     public abstract void TakeTurn();
+
+    public virtual void OnAttack(Entity target)
+    {
+
+    }
+
+    public virtual void OnCast(Skill skill, Entity target)
+    {
+        skill.OnCasting(target);
+    }
+
+    public virtual void OnUseItem(Item item, Entity target)
+    {
+        item.OnUse(target);
+    }
+
+    public virtual void OnWaiting()
+    {
+        // 아무런 행동도 하지 않고서, 다음 턴에 할 행동 예약
+        TakeTurn();
+    }
+
+    public virtual void OnRun()
+    {
+
+    }
 
     /***************************************************************
     * [ 상태 처리 ]
@@ -82,28 +105,12 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public virtual void OnAttack(Entity target)
-    {
-
-    }
-
     public virtual void OnDead()
     {
 
     }
 
     public virtual void OnManaShort()
-    {
-
-    }
-
-    public virtual void OnWating()
-    {
-        // 아무런 행동도 하지 않고서, 다음 턴에 할 행동 예약
-        TakeTurn();
-    }
-
-    public virtual void OnRun()
     {
 
     }

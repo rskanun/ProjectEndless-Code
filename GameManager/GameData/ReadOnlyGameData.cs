@@ -10,8 +10,8 @@ public class ReadOnlyGameData : ScriptableObject
 {
     // 저장 파일 위치
     private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
-    private const string FILE_DIRECTORY = "Assets/Resources/Option";
-    private const string FILE_PATH = "Assets/Resources/Option/ReadOnlyGameData.asset";
+    private const string FILE_DIRECTORY = "Assets/Resources/InGameData";
+    private const string FILE_PATH = "Assets/Resources/InGameData/ReadOnlyGameData.asset";
 
     private static ReadOnlyGameData _instance;
     public static ReadOnlyGameData Instance
@@ -20,7 +20,7 @@ public class ReadOnlyGameData : ScriptableObject
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<ReadOnlyGameData>("Option/ReadOnlyGameData");
+            _instance = Resources.Load<ReadOnlyGameData>("InGameData/ReadOnlyGameData");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -33,7 +33,7 @@ public class ReadOnlyGameData : ScriptableObject
                         AssetDatabase.CreateFolder("Assets", "Resources");
                     }
 
-                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
+                    AssetDatabase.CreateFolder("Assets/Resources", "InGameData");
                 }
 
                 // Resource.Load가 실패했을 경우

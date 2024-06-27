@@ -2,16 +2,16 @@ public class RunAction : BattleAction
 {
     public Entity target;
 
-    public RunAction(float turn)
+    public RunAction()
     {
-        remainTurn = turn;
         action = ActionType.Run;
     }
 
     public override BattleAction Clone()
     {
-        RunAction clone = new RunAction(remainTurn);
+        RunAction clone = new RunAction();
 
+        clone.remainTurn = remainTurn;
         clone.target = target;
 
         return clone;
