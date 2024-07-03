@@ -5,9 +5,8 @@ using UnityEngine;
 public class BattleData : ScriptableObject
 {
     // 저장 파일 위치
-    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
-    private const string FILE_DIRECTORY = "Assets/Resources/InGameData";
-    private const string FILE_PATH = "Assets/Resources/InGameData/BattleData.asset";
+    private const string FILE_DIRECTORY = "Assets/Resources/InGameData/Battle";
+    private const string FILE_PATH = "Assets/Resources/InGameData/Battle/BattleData.asset";
 
     private static BattleData _instance;
     public static BattleData Instance
@@ -16,7 +15,7 @@ public class BattleData : ScriptableObject
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<BattleData>("InGameData/BattleData");
+            _instance = Resources.Load<BattleData>("InGameData/Battle/BattleData");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -24,12 +23,18 @@ public class BattleData : ScriptableObject
                 // 파일 경로가 없을 경우 폴더 생성
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
-                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
+                    string[] folders = FILE_DIRECTORY.Split('/');
+                    string currentPath = folders[0];
 
-                    AssetDatabase.CreateFolder(OPTION_FILE_DIRECTORY, "InGameData");
+                    for (int i = 1; i < folders.Length; i++)
+                    {
+                        if (!AssetDatabase.IsValidFolder(currentPath + "/" + folders[i]))
+                        {
+                            AssetDatabase.CreateFolder(currentPath, folders[i]);
+                        }
+
+                        currentPath += "/" + folders[i];
+                    }
                 }
 
                 // Resource.Load가 실패했을 경우
@@ -47,40 +52,17 @@ public class BattleData : ScriptableObject
     }
 
     [Header("적 정보")]
-    [SerializeField]
-    private FieldMobData _enemyData;
-    public FieldMobData EnemyData
-    {
-        set
-        {
-            _enemyData = value;
-
-            // 새로운 적에 대한 데이터 삽입
-            AllEnemyList = _enemyData.FieldMonsters;
-            foreach (GameObject enemyObj in _enemyData.FieldMonsters)
-            {
-                BattlePosition position = enemyObj.GetComponent<Monster>().Position;
-
-                if (position.Equals(BattlePosition.Front))
-                {
-                    // 전위의 경우 전위 목록에도 추가
-                    EnemyFrontList.Add(enemyObj);
-                }
-            }
-        }
-    }
-
     [ReadOnly]
     [SerializeField]
-    private List<GameObject> _allEnemyList = new List<GameObject>();
-    public List<GameObject> AllEnemyList
+    private List<GameObject> _enemyList = new List<GameObject>();
+    public List<GameObject> EnemyList
     {
-        private set { _allEnemyList = value; }
-        get { return _allEnemyList; }
+        private set { _enemyList = value; }
+        get { return _enemyList; }
     }
     public int EnemyCount
     {
-        get { return AllEnemyList.Count; }
+        get { return EnemyList.Count; }
     }
 
     [ReadOnly]
@@ -121,5 +103,44 @@ public class BattleData : ScriptableObject
     public int PartyFrontCount
     {
         get { return PartyFrontList.Count; }
+    }
+
+    [Header("전투 정보")]
+    [ReadOnly]
+    [SerializeField]
+    private bool _isInBattle = false;
+    public bool IsInBattle
+    {
+        set { _isInBattle = value; }
+        get { return _isInBattle; }
+    }
+
+    [SerializeField]
+    private BattleSequence _sequence;
+    public BattleSequence Sequence
+    {
+        get
+        {
+            if (_sequence == null)
+                _sequence = new BattleSequence();
+
+            return _sequence;
+        }
+    }
+
+    public void SetEncounterEnemy(FieldMobData data)
+    {
+        // 새로운 적에 대한 데이터 삽입
+        EnemyList = data.FieldMonsters;
+        foreach (GameObject enemyObj in data.FieldMonsters)
+        {
+            BattlePosition position = enemyObj.GetComponent<Monster>().Position;
+
+            if (position.Equals(BattlePosition.Front))
+            {
+                // 전위의 경우 전위 목록에도 추가
+                EnemyFrontList.Add(enemyObj);
+            }
+        }
     }
 }

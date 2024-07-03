@@ -1,7 +1,6 @@
 public class SkillAction : BattleAction
 {
     public Skill castSkill;
-    public Entity caster;
     public Entity target;
 
     public SkillAction()
@@ -15,7 +14,7 @@ public class SkillAction : BattleAction
 
         clone.remainTurn = remainTurn;
         clone.castSkill = castSkill;
-        clone.caster = caster;
+        clone.actor = actor;
         clone.target = target;
 
         return clone;
@@ -23,6 +22,6 @@ public class SkillAction : BattleAction
 
     public override void OnAction()
     {
-        caster.OnCast(castSkill, target);
+        actor.OnCast(castSkill, target);
     }
 }

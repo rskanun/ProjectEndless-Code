@@ -9,6 +9,9 @@ public enum BattlePosition
 
 public abstract class Entity : MonoBehaviour
 {
+    [Header("이벤트")]
+    [SerializeField] private GameEvent turnEndEvent;
+
     [Header("엔티티 정보")]
     [SerializeField]
     private string _name;
@@ -50,6 +53,12 @@ public abstract class Entity : MonoBehaviour
 
     public abstract void TakeTurn();
 
+    public void EndTurn()
+    {
+        // 턴이 끝났음을 알림
+        turnEndEvent.NotifyUpdate();
+    }
+
     public virtual void OnAttack(Entity target)
     {
 
@@ -67,8 +76,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnWaiting()
     {
-        // 아무런 행동도 하지 않고서, 다음 턴에 할 행동 예약
-        TakeTurn();
+        // 아무런 행동도 하지 않음
     }
 
     public virtual void OnRun()

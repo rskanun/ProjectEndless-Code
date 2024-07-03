@@ -18,24 +18,4 @@ public class ActionUI : MonoBehaviour
     {
         actionWindow.SetActive(active);
     }
-
-    public void OnSelectEnemy()
-    {
-
-    }
-
-    public void OnSelectMember()
-    {
-
-    }
-
-    public void OnSelectTarget()
-    {
-
-    }
-
-    public void CloseTargetSelection()
-    {
-
-    }
 }

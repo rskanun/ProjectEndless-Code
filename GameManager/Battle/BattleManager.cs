@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,11 +19,18 @@ public class BattleManager : MonoBehaviour
     private PositionData battlePos;
     private Dictionary<(BattlePosition, int), Vector2> position;
 
+    [Header("참조 스크립트")]
+    [SerializeField] private Timeline timeline;
+
     [Header("테스트 필드 몬스터")]
     [SerializeField] private FieldMobData mobData;
 
-    // 현재 상황
-    private BattleSeq sequence;
+    // 참조 데이터
+    private BattleData battleData;
+    private BattleSequence battleSeq;
+
+    // 전투 진행 상태
+    private bool isTurnEnded = false;
 
     private void InitPosition()
     {
@@ -43,8 +51,11 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
+        battleData = BattleData.Instance;
+        battleSeq = battleData.Sequence;
+
         // 임시 몹 데이터 집어넣기
-        OnBattle(mobData);
+        OnEncounter(mobData);
     }
 
     /***************************************************************
@@ -53,41 +64,10 @@ public class BattleManager : MonoBehaviour
     * 현재 상황에 따른 전투 진행 순서 처리
     ***************************************************************/
 
-    public void OnBattle(FieldMobData fieldMobData)
+    public void OnEncounter(FieldMobData fieldMobData)
     {
-        BattleData.Instance.EnemyData = fieldMobData;
-
-        // 전투 참여 엔티티 목록
-        List<Entity> entityList = new List<Entity>();
-
-        // 플레이어 진형 파티 설정
-        List<Character> playerParty = GetPartyMember();
-        foreach (Character member in playerParty)
-        {
-            member.OnJoinBattle();
-        }
-
-        entityList.AddRange(playerParty);
-
-        // 적 진형 파티 설정
-        List<Monster> enemyParty = new List<Monster>();
-        foreach (GameObject enemyObj in fieldMobData.FieldMonsters)
-        {
-            // 적 소환
-            Instantiate(enemyObj);
-
-            // 소환된 적을 전투 참여 엔티티 목록에 추가
-            Monster enemy = enemyObj.GetComponent<Monster>();
-            enemyParty.Add(enemy);
-        }
-
-        entityList.AddRange(enemyParty);
-
-        // 시퀀스 생성
-        sequence = new BattleSeq(entityList);
-
-        // 처음 턴 진행
-        TakeTurn();
+        // 일반 전투 시작
+        StartBattle(fieldMobData);
     }
 
     public void OnAmbushEnemy(FieldMobData fieldMobData)
@@ -100,7 +80,33 @@ public class BattleManager : MonoBehaviour
         // 적에게 기습당했을 때의 전투 시작
     }
 
-    private List<Character> GetPartyMember()
+    private void StartBattle(FieldMobData fieldMobData)
+    {
+        battleData.SetEncounterEnemy(fieldMobData);
+
+        // 전투 참여 엔티티 목록
+        List<Entity> entityList = new List<Entity>();
+
+        // 플레이어 진형 파티 설정
+        List<Character> playerParty = GetPlayerParty();
+        foreach (Character member in playerParty)
+        {
+            member.OnJoinBattle();
+        }
+        entityList.AddRange(playerParty);
+
+        // 적 진형 파티 설정
+        List<Monster> enemyParty = GetEnemyParty(fieldMobData);
+        entityList.AddRange(enemyParty);
+
+        // 시퀀스 생성
+        battleSeq.SetSequence(entityList);
+
+        // 처음 턴 진행
+        StartCoroutine(RunningBattle());
+    }
+
+    private List<Character> GetPlayerParty()
     {
         PartyData partyData = PartyData.Instance;
 
@@ -127,33 +133,82 @@ public class BattleManager : MonoBehaviour
         return partyList;
     }
 
+    private List<Monster> GetEnemyParty(FieldMobData fieldMobData)
+    {
+        List<Monster> enemyParty = new List<Monster>();
+
+        foreach (GameObject prefabObj in fieldMobData.FieldMonsters)
+        {
+            // 적 소환
+            GameObject enemyObj = Instantiate(prefabObj);
+
+            // 소환된 적을 전투 참여 엔티티 목록에 추가
+            Monster enemy = enemyObj.GetComponent<Monster>();
+            enemyParty.Add(enemy);
+        }
+
+        return enemyParty;
+    }
+
     /***************************************************************
     * [ 전투 진행 ]
     * 
     * 전투 순서에 따른 현재 턴 진행
     ***************************************************************/
 
+    private IEnumerator RunningBattle()
+    {
+        battleData.IsInBattle = battleData.EnemyCount > 0;
+
+        // 전투가 진행되는 동안 각자의 턴 진행
+        while (battleData.IsInBattle)
+        {
+            timeline.Print();
+
+            TakeTurn();
+            yield return new WaitUntil(() => isTurnEnded);
+        }
+
+        EndBattle();
+    }
+
     private void TakeTurn()
     {
         // 턴 진행
-        BattleAction curAction = sequence.GetCurrentTurn();
+        isTurnEnded = false;
+
+        // 이전에 입력한 행동 실행
+        BattleAction curAction = battleSeq.GetCurrentTurn();
         curAction.OnAction();
+
+        // 다음 턴에 진행할 행동 선택
+        curAction.actor.TakeTurn();
     }
 
-    public void SetTurn(BattleAction action)
+    public void EndTurn()
     {
-        // 다음 자신의 턴에 진행할 행동 설정
-        sequence.SetTurn(action);
+        if (battleData.EnemyCount <= 0 || battleData.IsInBattle == false)
+        {
+            // 모든 적을 해치웠거나, 전투가 끝난 경우 전투 종료
+            battleData.IsInBattle = false;
+        }
+        else
+        {
+            // 계속 전투 중일 경우 다음 턴 진행
+            battleSeq.NextTurn();
+        }
 
-        // 다음 턴 넘어가기
-        NextTurn();
+        // 턴 끝내기
+        isTurnEnded = true;
     }
 
-    private void NextTurn()
+    private void EndBattle()
     {
-        sequence.NextTurn();
+        if (battleData.EnemyCount <= 0)
+        {
+            // 모든 적을 해치운 경우 보상 지급
+        }
 
-        // 다음 턴 진행
-        TakeTurn();
+        // 전투 종료
     }
 }

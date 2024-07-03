@@ -1,7 +1,5 @@
 public class WaitAction : BattleAction
 {
-    public Entity target;
-
     public WaitAction()
     {
         action = ActionType.Wait;
@@ -12,13 +10,13 @@ public class WaitAction : BattleAction
         WaitAction clone = new WaitAction();
 
         clone.remainTurn = remainTurn;
-        clone.target = target;
+        clone.actor = actor;
 
         return clone;
     }
 
     public override void OnAction()
     {
-        target.OnWaiting();
+        actor.OnWaiting();
     }
 }

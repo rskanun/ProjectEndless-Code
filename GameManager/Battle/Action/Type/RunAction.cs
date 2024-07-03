@@ -1,7 +1,5 @@
 public class RunAction : BattleAction
 {
-    public Entity target;
-
     public RunAction()
     {
         action = ActionType.Run;
@@ -12,13 +10,13 @@ public class RunAction : BattleAction
         RunAction clone = new RunAction();
 
         clone.remainTurn = remainTurn;
-        clone.target = target;
+        clone.actor = actor;
 
         return clone;
     }
 
     public override void OnAction()
     {
-        target.OnRun();
+        actor.OnRun();
     }
 }

@@ -13,6 +13,7 @@ public enum ActionType
 public abstract class BattleAction : IComparable<BattleAction>
 {
     public float remainTurn;
+    public Entity actor;
     public ActionType action;
 
     public int CompareTo(BattleAction seq)

@@ -1,7 +1,6 @@
 public class ItemAction : BattleAction
 {
     public Item usingItem;
-    public Entity user;
     public Entity target;
 
     public ItemAction()
@@ -15,7 +14,7 @@ public class ItemAction : BattleAction
 
         clone.remainTurn = remainTurn;
         clone.usingItem = usingItem;
-        clone.user = user;
+        clone.actor = actor;
         clone.target = target;
 
         return clone;
@@ -23,6 +22,6 @@ public class ItemAction : BattleAction
 
     public override void OnAction()
     {
-        user.OnUseItem(usingItem, target);
+        actor.OnUseItem(usingItem, target);
     }
 }

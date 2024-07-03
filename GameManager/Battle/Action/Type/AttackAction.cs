@@ -1,6 +1,5 @@
 public class AttackAction : BattleAction
 {
-    public Entity attacker;
     public Entity target;
 
     public AttackAction()
@@ -13,7 +12,7 @@ public class AttackAction : BattleAction
         AttackAction clone = new AttackAction();
 
         clone.remainTurn = remainTurn;
-        clone.attacker = attacker;
+        clone.actor = actor;
         clone.target = target;
 
         return clone;
@@ -21,6 +20,6 @@ public class AttackAction : BattleAction
 
     public override void OnAction()
     {
-        attacker.OnAttack(target);
+        actor.OnAttack(target);
     }
 }
