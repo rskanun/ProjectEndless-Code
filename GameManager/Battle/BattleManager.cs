@@ -102,6 +102,9 @@ public class BattleManager : MonoBehaviour
         // 시퀀스 생성
         battleSeq.SetSequence(entityList);
 
+        // 타임라인 생성
+        timeline.InitTimeline(battleSeq);
+
         // 처음 턴 진행
         StartCoroutine(RunningBattle());
     }
@@ -163,10 +166,12 @@ public class BattleManager : MonoBehaviour
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
-            timeline.Print();
-
+            timeline.MarkCurIcon();
             TakeTurn();
+
             yield return new WaitUntil(() => isTurnEnded);
+
+            timeline.UpdateTimeline();
         }
 
         EndBattle();

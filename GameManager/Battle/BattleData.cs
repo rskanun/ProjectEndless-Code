@@ -130,6 +130,8 @@ public class BattleData : ScriptableObject
 
     public void SetEncounterEnemy(FieldMobData data)
     {
+        EnemyFrontList = new List<GameObject>();
+
         // 새로운 적에 대한 데이터 삽입
         EnemyList = data.FieldMonsters;
         foreach (GameObject enemyObj in data.FieldMonsters)
