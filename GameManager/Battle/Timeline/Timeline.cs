@@ -12,11 +12,6 @@ public class Timeline : MonoBehaviour
     public GameObject timeLineIcon;
     public Transform container;
 
-    // 움직임 범위
-    private Vector2 startPos;
-    private Vector2 endPos;
-    private float moveDistance;
-
     // 시퀀스 데이터
     private BattleSequence battleSeq;
 
@@ -30,17 +25,12 @@ public class Timeline : MonoBehaviour
 
         InitTimeLine();
 
-        // 아이콘 정렬
-        Canvas.ForceUpdateCanvases();
-
         // 첫번째 아이콘을 가운데에 위치
         MoveToStart();
     }
 
     private void InitTimeLine()
     {
-        int seqCount = battleSeq.Sequence.Count;
-
         foreach (BattleAction action in battleSeq.Sequence)
         {
             GameObject iconObj = Instantiate(timeLineIcon, container);
@@ -54,46 +44,19 @@ public class Timeline : MonoBehaviour
         }
     }
 
-    public void AddTimeline(BattleAction nextAction)
-    {
-        GameObject iconObj = Instantiate(timeLineIcon, container);
-        TimelineIcon icon = iconObj.GetComponent<TimelineIcon>();
-
-        // 타임라인 지정
-        icon.SetTimeline(nextAction);
-
-        // 아이콘 목록에 추가
-        InsertSorted(icon);
-    }
-
-    private void InsertSorted(TimelineIcon newIcon)
-    {
-        // 새 아이콘의 삽입 위치를 결정
-        int newIndex = icons.Count;
-
-        // 삽입 위치를 찾기 위해 remainTurn 값을 비교하여 정렬
-        for (int i = 0; i < icons.Count; i++)
-        {
-            if (icons[i].NextAction.remainTurn > newIcon.NextAction.remainTurn)
-            {
-                newIndex = i;
-                break;
-            }
-        }
-
-        // 리스트에 새 아이콘을 삽입
-        icons.Insert(newIndex, newIcon);
-
-        // UI에서의 순서도 업데이트
-        newIcon.transform.SetSiblingIndex(newIndex);
-    }
-
     public void UpdateTimeline()
     {
         // 현재 맨 앞에 있는 타임라인 삭제
         RemoveCurTimeline();
 
         // 새 타임라인 추가
+        UpdateNewTimeline();
+
+        // 타임라인 턴타이머 업데이트
+        foreach (TimelineIcon icon in icons)
+        {
+            icon.UpdateTurnTime();
+        }
     }
 
     private void RemoveCurTimeline()
@@ -101,16 +64,58 @@ public class Timeline : MonoBehaviour
         // 현재 차례인 타임라인 삭제
         Destroy(icons[0].gameObject);
         icons.RemoveAt(0);
+    }
 
-        // 위치 초기화
-        MoveToStart();
+    private void UpdateNewTimeline()
+    {
+        List<BattleAction> seq = battleSeq.Sequence; 
+
+        for (int i = 0; i < icons.Count; i++)
+        {
+            // 새로 추가된 타임라인 부분 찾기
+            if (seq[i] != icons[i].NextAction)
+            {
+                // 타임라인 추가
+                AddTimeline(i, seq[i]);
+
+                // 찾기 종료
+                return;
+            }
+        }
+
+        // 자리를 찾지 못한 경우 마지막 자리에 추가
+        if (seq.Count > icons.Count)
+        {
+            int index = icons.Count;
+            AddTimeline(index, seq[index]);
+        }
+    }
+
+    public void AddTimeline(int index, BattleAction nextAction)
+    {
+        GameObject iconObj = Instantiate(timeLineIcon, container);
+        TimelineIcon icon = iconObj.GetComponent<TimelineIcon>();
+
+        // 타임라인 지정
+        icon.SetTimeline(nextAction);
+
+        // 위치 지정
+        iconObj.transform.SetSiblingIndex(index + 1);
+
+        // 아이콘 목록에 추가
+        icons.Insert(index, icon);
     }
 
     private void MoveToStart()
     {
+        // 아이콘 정렬
+        Canvas.ForceUpdateCanvases();
+
+        // 아이콘 Container 이동
         index = battleSeq.Sequence.Count - 1;
 
-        container.transform.localPosition = icons[index].Position;
+        Vector2 startPos = new Vector2(icons[index].Position.x, container.transform.localPosition.y);
+        container.transform.localPosition = startPos;
     }
 
     public void MoveToNext()
@@ -122,13 +127,6 @@ public class Timeline : MonoBehaviour
         }
 
         container.transform.localPosition = icons[--index].Position;
-    }
-
-    public void MoveToEnd()
-    {
-        index = 0;
-
-        container.transform.localPosition = icons[index].Position;
     }
 
     public void MoveToPrev()

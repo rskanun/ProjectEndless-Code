@@ -1,13 +1,51 @@
+using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class DropItem
+{
+    [Range(0, 100)]
+    public float dropChance;
+    public Item dropItem;
+}
 public class Monster : Entity
 {
+    [Header("획득 보상")]
+    [SerializeField] private int minAmount;
+    [SerializeField] private int maxAmount;
+
+    [SerializeField]
+    private List<DropItem> _dropItems;
+    public List<DropItem> DropItems
+    {
+        get { return _dropItems; }
+    }
+
     // 전투 순서 데이터
     private BattleSequence battleSeq;
 
     private void Awake()
     {
         battleSeq = BattleData.Instance.Sequence;
+    }
+
+    public int GetDropGold()
+    {
+        int dropGold = Random.Range(minAmount, maxAmount);
+
+        return dropGold;
+    }
+
+    public List<Item> GetDropItems()
+    {
+        List<Item> dropItems = new List<Item>();
+
+        foreach (DropItem item in DropItems)
+        {
+            float chance = 
+        }
+
+        return dropItems;
     }
 
     /***************************************************************
@@ -21,6 +59,11 @@ public class Monster : Entity
         // AI에 따른 행동 처리
         // 임시로 상시 대기 실행
         Invoke(nameof(OnWaitingAction), 2.0f);
+    }
+
+    public override void OnAttack(Entity target)
+    {
+        throw new System.NotImplementedException();
     }
 
     public void OnWaitingAction()
@@ -51,7 +94,18 @@ public class Monster : Entity
 
     public override void OnDamage(float damage, int targetMP)
     {
+        int curHP = Stat.HP;
         base.OnDamage(damage, targetMP);
-        Debug.Log($"{Name} {damage - Stat.DEF} Damage!!");
+        Debug.Log($"{Name} {curHP - Stat.HP} Damage!!");
+    }
+
+    public override void OnDead()
+    {
+
+    }
+
+    public override void OnManaShort()
+    {
+        throw new System.NotImplementedException();
     }
 }

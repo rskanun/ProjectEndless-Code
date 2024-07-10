@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
@@ -82,8 +83,6 @@ public class BattleManager : MonoBehaviour
 
     private void StartBattle(FieldMobData fieldMobData)
     {
-        battleData.SetEncounterEnemy(fieldMobData);
-
         // 전투 참여 엔티티 목록
         List<Entity> entityList = new List<Entity>();
 
@@ -99,6 +98,13 @@ public class BattleManager : MonoBehaviour
         List<Monster> enemyParty = GetEnemyParty(fieldMobData);
         entityList.AddRange(enemyParty);
 
+        // 전투 데이터 초기화
+        battleData.Clear();
+
+        // 전투에 참여하는 엔티티 목록 설정
+        battleData.SetEncounterEnemy(fieldMobData);
+        battleData.SetPartyList(GetPartyObjs(playerParty));
+
         // 시퀀스 생성
         battleSeq.SetSequence(entityList);
 
@@ -113,7 +119,7 @@ public class BattleManager : MonoBehaviour
     {
         PartyData partyData = PartyData.Instance;
 
-        // 리턴될 파티 맴버 오브젝트 목록
+        // 리턴될 파티 맴버 목록
         List<Character> partyList = new List<Character>();
 
         // 모든 멤버 오브젝트를 Dictionary로 변환
@@ -134,6 +140,11 @@ public class BattleManager : MonoBehaviour
         }
 
         return partyList;
+    }
+
+    private List<GameObject> GetPartyObjs(List<Character> partyList)
+    {
+        return partyList.Select(character => character.gameObject).ToList();
     }
 
     private List<Monster> GetEnemyParty(FieldMobData fieldMobData)
@@ -166,14 +177,20 @@ public class BattleManager : MonoBehaviour
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
+            // 맨 앞의 타임라인 표식 갱신
             timeline.MarkCurIcon();
+
+            // 턴 진행
             TakeTurn();
 
+            // 턴이 끝날 때까지 대기
             yield return new WaitUntil(() => isTurnEnded);
 
+            // 타임라인 업데이트
             timeline.UpdateTimeline();
         }
 
+        // 전투 끝내기
         EndBattle();
     }
 

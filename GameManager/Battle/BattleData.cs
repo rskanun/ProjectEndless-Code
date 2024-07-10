@@ -128,13 +128,37 @@ public class BattleData : ScriptableObject
         }
     }
 
-    public void SetEncounterEnemy(FieldMobData data)
+    [ReadOnly]
+    [SerializeField]
+    private int _totalAmount;
+    public int TotalAmount
     {
-        EnemyFrontList = new List<GameObject>();
+        private set { _totalAmount = value; }
+        get { return _totalAmount; }
+    }
+    [ReadOnly]
+    [SerializeField]
+    private List<Item> _dropItems = new List<Item>();
+    public List<Item> DropItems
+    {
+        private set { _dropItems = value; }
+        get { return _dropItems; }
+    }
 
+    public void Clear()
+    {
+        // 적 정보 초기화
+        EnemyList.Clear();
+        EnemyFrontList.Clear();
+
+        // 아군 정보 초기화
+    }
+
+    public void SetEncounterEnemy(FieldMobData encountEnemy)
+    {
         // 새로운 적에 대한 데이터 삽입
-        EnemyList = data.FieldMonsters;
-        foreach (GameObject enemyObj in data.FieldMonsters)
+        EnemyList = encountEnemy.FieldMonsters;
+        foreach (GameObject enemyObj in encountEnemy.FieldMonsters)
         {
             BattlePosition position = enemyObj.GetComponent<Monster>().Position;
 
@@ -143,6 +167,51 @@ public class BattleData : ScriptableObject
                 // 전위의 경우 전위 목록에도 추가
                 EnemyFrontList.Add(enemyObj);
             }
+        }
+    }
+
+    public void SetPartyList(List<GameObject> party)
+    {
+        foreach (GameObject partyMemeber in party)
+        {
+            PartyList.Add(partyMemeber);
+
+            BattlePosition position = partyMemeber.GetComponent<Character>().Position;
+
+            if (position.Equals(BattlePosition.Front))
+            {
+                // 전위의 경우 전위 목록에도 추가
+                PartyFrontList.Add(partyMemeber);
+            }
+        }
+    }
+
+    public void KilledEnemy(GameObject enemy)
+    {
+        // 필드 몬스터일 경우에만 삭제
+        if (EnemyList.Contains(enemy))
+        {
+            // 필드 몬스터 목록에서 삭제
+            RemoveEnemyData(enemy);
+
+            // 해당 몬스터의 처지 보상 저장
+            Monster enemyMob = enemy.GetComponent<Monster>();
+
+            TotalAmount += enemyMob.GetDropGold();
+            DropItems.AddRange(enemyMob.GetDropItems());
+        }
+    }
+
+    private void RemoveEnemyData(GameObject enemy)
+    {
+        // 필드 몬스터 목록에서 삭제
+        EnemyList.Remove(enemy);
+
+        // 전위의 경우 전위 목록에서도 삭제
+        BattlePosition position = enemy.GetComponent<Monster>().Position;
+        if (position.Equals(BattlePosition.Front))
+        {
+            EnemyFrontList.Remove(enemy);
         }
     }
 }

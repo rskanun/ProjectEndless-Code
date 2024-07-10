@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TimelineIcon : MonoBehaviour
 {
     public Image iconImage;
+    public TextMeshProUGUI turnTimer;
     public GameObject highlight;
 
     // 해당 타임라인에 지정된 액션
@@ -28,17 +30,29 @@ public class TimelineIcon : MonoBehaviour
         SpriteRenderer actorImg = actor.GetComponent<SpriteRenderer>();
 
         // 타임라인 아이콘 이미지 지정
-        SetImage(actorImg);
+        InitImage(actorImg);
+
+        // 남은 턴 지정
     }
 
-    private void SetImage(SpriteRenderer sprite)
+    private void InitImage(SpriteRenderer sprite)
     {
         // 임시 색으로 지정
         iconImage.color = sprite.color;
     }
 
+    private void SetTurnTime(float time)
+    {
+        turnTimer.text = time.ToString("0.0");
+    }
+
     public void SetMark(bool active)
     {
         highlight.SetActive(active);
+    }
+
+    public void UpdateTurnTime()
+    {
+        SetTurnTime(NextAction.remainTurn);
     }
 }

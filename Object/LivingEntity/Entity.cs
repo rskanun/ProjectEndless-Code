@@ -59,10 +59,7 @@ public abstract class Entity : MonoBehaviour
         turnEndEvent.NotifyUpdate();
     }
 
-    public virtual void OnAttack(Entity target)
-    {
-
-    }
+    public abstract void OnAttack(Entity target);
 
     public virtual void OnCast(Skill skill, Entity target)
     {
@@ -93,7 +90,8 @@ public abstract class Entity : MonoBehaviour
     public virtual void OnDamage(float damage, int targetMP)
     {
         // 최종 데미지 수치(임시)
-        Stat.HP = Mathf.RoundToInt(damage - Stat.DEF);
+        float lastDamage = damage - Stat.DEF;
+        Stat.HP -= Mathf.RoundToInt(lastDamage > 0 ? lastDamage : 0.0f);
 
         // 최종 마력 수치(임시)
         Stat.MP = Stat.MP - targetMP;
@@ -113,13 +111,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public virtual void OnDead()
-    {
+    public abstract void OnDead();
 
-    }
-
-    public virtual void OnManaShort()
-    {
-
-    }
+    public abstract void OnManaShort();
 }
