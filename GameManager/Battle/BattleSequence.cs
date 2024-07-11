@@ -55,4 +55,15 @@ public class BattleSequence
         if (index < 0) Sequence.Insert(~index, action);
         else Sequence.Insert(index, action);
     }
+
+    public void RemoveTurns(Entity actor)
+    {
+        for (int i = Sequence.Count - 1; i >= 0; i--)
+        {
+            if (Sequence[i].actor == actor)
+            {
+                Sequence.RemoveAt(i);
+            }
+        }
+    }
 }

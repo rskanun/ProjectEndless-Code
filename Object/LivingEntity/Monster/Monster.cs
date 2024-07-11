@@ -5,7 +5,7 @@ using UnityEngine;
 public class DropItem
 {
     [Range(0, 100)]
-    public float dropChance;
+    public int dropChance;
     public Item dropItem;
 }
 public class Monster : Entity
@@ -31,7 +31,7 @@ public class Monster : Entity
 
     public int GetDropGold()
     {
-        int dropGold = Random.Range(minAmount, maxAmount);
+        int dropGold = Random.Range(minAmount, maxAmount + 1);
 
         return dropGold;
     }
@@ -42,7 +42,12 @@ public class Monster : Entity
 
         foreach (DropItem item in DropItems)
         {
-            float chance = 
+            int chance = Random.Range(0, 100) + 1;
+
+            if (chance <= item.dropChance)
+            {
+                dropItems.Add(item.dropItem);
+            }
         }
 
         return dropItems;
@@ -101,7 +106,10 @@ public class Monster : Entity
 
     public override void OnDead()
     {
+        BattleData.Instance.KilledEnemy(this);
 
+        // 오브젝트 삭제
+        Destroy(gameObject);
     }
 
     public override void OnManaShort()

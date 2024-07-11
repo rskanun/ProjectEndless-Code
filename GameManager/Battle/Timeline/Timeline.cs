@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +13,7 @@ public class Timeline : MonoBehaviour
     private BattleSequence battleSeq;
 
     // 타임라인 아이콘 관리
-    private List<TimelineIcon> icons = new List<TimelineIcon>();
+    private List<TimelineIcon> timelines = new List<TimelineIcon>();
     private int index;
 
     public void InitTimeline(BattleSequence battleSeq)
@@ -40,70 +37,55 @@ public class Timeline : MonoBehaviour
             icon.SetTimeline(action);
 
             // 아이콘 목록에 추가
-            icons.Add(icon);
+            timelines.Add(icon);
         }
     }
 
     public void UpdateTimeline()
     {
         // 현재 맨 앞에 있는 타임라인 삭제
-        RemoveCurTimeline();
+        RemoveTimeline();
 
         // 새 타임라인 추가
-        UpdateNewTimeline();
+        AddTimeline();
 
         // 타임라인 턴타이머 업데이트
-        foreach (TimelineIcon icon in icons)
+        foreach (TimelineIcon icon in timelines)
         {
             icon.UpdateTurnTime();
         }
     }
 
-    private void RemoveCurTimeline()
+    private void RemoveTimeline()
     {
-        // 현재 차례인 타임라인 삭제
-        Destroy(icons[0].gameObject);
-        icons.RemoveAt(0);
+        List<BattleAction> seq = battleSeq.Sequence;
+
+        timelines.RemoveAll(timeline => !seq.Contains(timeline.NextAction));
     }
 
-    private void UpdateNewTimeline()
+    private void AddTimeline()
     {
         List<BattleAction> seq = battleSeq.Sequence; 
 
-        for (int i = 0; i < icons.Count; i++)
+        for (int i = 0; i < seq.Count; i++)
         {
-            // 새로 추가된 타임라인 부분 찾기
-            if (seq[i] != icons[i].NextAction)
+            // 현재 타임라인에 없는 시퀀스가 있을 경우 타임라인에 추가
+            if (timelines.Count <= i || seq[i] != timelines[i].NextAction)
             {
                 // 타임라인 추가
-                AddTimeline(i, seq[i]);
+                GameObject iconObj = Instantiate(timeLineIcon, container);
+                TimelineIcon icon = iconObj.GetComponent<TimelineIcon>();
 
-                // 찾기 종료
-                return;
+                // 타임라인 지정
+                icon.SetTimeline(seq[i]);
+
+                // 위치 지정
+                iconObj.transform.SetSiblingIndex(i + 1);
+
+                // 아이콘 목록에 추가
+                timelines.Insert(i, icon);
             }
         }
-
-        // 자리를 찾지 못한 경우 마지막 자리에 추가
-        if (seq.Count > icons.Count)
-        {
-            int index = icons.Count;
-            AddTimeline(index, seq[index]);
-        }
-    }
-
-    public void AddTimeline(int index, BattleAction nextAction)
-    {
-        GameObject iconObj = Instantiate(timeLineIcon, container);
-        TimelineIcon icon = iconObj.GetComponent<TimelineIcon>();
-
-        // 타임라인 지정
-        icon.SetTimeline(nextAction);
-
-        // 위치 지정
-        iconObj.transform.SetSiblingIndex(index + 1);
-
-        // 아이콘 목록에 추가
-        icons.Insert(index, icon);
     }
 
     private void MoveToStart()
@@ -114,7 +96,7 @@ public class Timeline : MonoBehaviour
         // 아이콘 Container 이동
         index = battleSeq.Sequence.Count - 1;
 
-        Vector2 startPos = new Vector2(icons[index].Position.x, container.transform.localPosition.y);
+        Vector2 startPos = new Vector2(timelines[index].Position.x, container.transform.localPosition.y);
         container.transform.localPosition = startPos;
     }
 
@@ -126,23 +108,23 @@ public class Timeline : MonoBehaviour
             return;
         }
 
-        container.transform.localPosition = icons[--index].Position;
+        container.transform.localPosition = timelines[--index].Position;
     }
 
     public void MoveToPrev()
     {
-        if (index >= icons.Count - 1)
+        if (index >= timelines.Count - 1)
         {
             // 맨 마지막이라면 넘기기 X
             return;
         }
 
-        container.transform.localPosition = icons[++index].Position;
+        container.transform.localPosition = timelines[++index].Position;
     }
 
     public void MarkCurIcon()
     {
-        icons[0].SetMark(true);
+        timelines[0].SetMark(true);
     }
 
     public void Print()

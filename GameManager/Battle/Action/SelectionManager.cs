@@ -28,6 +28,15 @@ public class SelectionManager : ScriptableObject
 
     public void NotifySelectableFront()
     {
+        if (BattleData.Instance.EnemyFrontCount <= 0)
+        {
+            // 전위가 모두 사망한 경우 후위도 공격 가능
+            NotifySelectableEnemy();
+
+            return;
+        }
+
+        // 적 파티의 전위를 타겟으로 선택가능하게 설정
         SelectableTarget firstTarget = null;
 
         foreach (SelectableTarget target in listeners)
@@ -49,11 +58,24 @@ public class SelectionManager : ScriptableObject
 
     public void NotifySelectableEnemy()
     {
+        // 적 파티를 타겟으로 선택가능하게 설정
+        SelectableTarget firstTarget = null;
+
         foreach (SelectableTarget target in listeners)
         {
             bool isSelectable = target.isEnemy;
+
+            if (isSelectable && firstTarget == null)
+            {
+                // 자동으로 선택해놓을 대상 선택
+                firstTarget = target;
+            }
+
             target.SetSelectable(isSelectable);
         }
+
+        // 첫번째 대상 자동 선택
+        HoverTarget(firstTarget);
     }
 
     public void NotifySelectableMember()

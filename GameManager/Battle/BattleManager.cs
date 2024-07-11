@@ -88,10 +88,7 @@ public class BattleManager : MonoBehaviour
 
         // 플레이어 진형 파티 설정
         List<Character> playerParty = GetPlayerParty();
-        foreach (Character member in playerParty)
-        {
-            member.OnJoinBattle();
-        }
+        ReadyToJoinBattle(playerParty);
         entityList.AddRange(playerParty);
 
         // 적 진형 파티 설정
@@ -102,7 +99,7 @@ public class BattleManager : MonoBehaviour
         battleData.Clear();
 
         // 전투에 참여하는 엔티티 목록 설정
-        battleData.SetEncounterEnemy(fieldMobData);
+        battleData.SetEncounterEnemy(GetPartyObjs(enemyParty));
         battleData.SetPartyList(GetPartyObjs(playerParty));
 
         // 시퀀스 생성
@@ -119,49 +116,42 @@ public class BattleManager : MonoBehaviour
     {
         PartyData partyData = PartyData.Instance;
 
-        // 리턴될 파티 맴버 목록
-        List<Character> partyList = new List<Character>();
-
         // 모든 멤버 오브젝트를 Dictionary로 변환
-        Dictionary<string, Character> memberMap = new Dictionary<string, Character>();
-        foreach (GameObject memberObj in allMemberObjs)
-        {
-            Character member = memberObj.GetComponent<Character>();
-            memberMap[member.Name] = member;
-        }
+        Dictionary<string, Character> memberMap = allMemberObjs
+            .Select(memberObj => memberObj.GetComponent<Character>())
+            .ToDictionary(member => member.Name);
 
         // 파티 멤버 데이터를 가져와서 검색
-        foreach (CharacterData memberData in partyData.GetPartyMembers())
-        {
-            if (memberMap.TryGetValue(memberData.Name, out Character member))
-            {
-                partyList.Add(member);
-            }
-        }
-
-        return partyList;
+        return partyData.GetPartyMembers()
+            .Where(memberData => memberMap.TryGetValue(memberData.Name, out _))
+            .Select(memberData => memberMap[memberData.Name])
+            .ToList();
     }
 
-    private List<GameObject> GetPartyObjs(List<Character> partyList)
+    private void ReadyToJoinBattle(List<Character> playerParty)
     {
-        return partyList.Select(character => character.gameObject).ToList();
+        foreach (Character member in playerParty)
+        {
+            member.OnJoinBattle();
+        }
     }
 
     private List<Monster> GetEnemyParty(FieldMobData fieldMobData)
     {
-        List<Monster> enemyParty = new List<Monster>();
+        return fieldMobData.FieldMonsters
+            .Select(prefabObj =>
+            {
+                // 적 소환
+                GameObject enemyObj = Instantiate(prefabObj);
 
-        foreach (GameObject prefabObj in fieldMobData.FieldMonsters)
-        {
-            // 적 소환
-            GameObject enemyObj = Instantiate(prefabObj);
+                // 해당 적의 몬스터 객체 리턴
+                return enemyObj.GetComponent<Monster>();
+            }).ToList();
+    }
 
-            // 소환된 적을 전투 참여 엔티티 목록에 추가
-            Monster enemy = enemyObj.GetComponent<Monster>();
-            enemyParty.Add(enemy);
-        }
-
-        return enemyParty;
+    private List<GameObject> GetPartyObjs<T>(List<T> partyList) where T : Entity
+    {
+        return partyList.Select(entity => entity.gameObject).ToList();
     }
 
     /***************************************************************

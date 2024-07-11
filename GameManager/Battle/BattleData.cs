@@ -152,13 +152,22 @@ public class BattleData : ScriptableObject
         EnemyFrontList.Clear();
 
         // 아군 정보 초기화
+        PartyList.Clear();
+        PartyFrontList.Clear();
+
+        // 전투 정보 초기화
+        IsInBattle = false;
+
+        // 보상 정보 초기화
+        TotalAmount = 0;
+        DropItems.Clear();
     }
 
-    public void SetEncounterEnemy(FieldMobData encountEnemy)
+    public void SetEncounterEnemy(List<GameObject> encountEnemys)
     {
         // 새로운 적에 대한 데이터 삽입
-        EnemyList = encountEnemy.FieldMonsters;
-        foreach (GameObject enemyObj in encountEnemy.FieldMonsters)
+        EnemyList = encountEnemys;
+        foreach (GameObject enemyObj in encountEnemys)
         {
             BattlePosition position = enemyObj.GetComponent<Monster>().Position;
 
@@ -186,32 +195,34 @@ public class BattleData : ScriptableObject
         }
     }
 
-    public void KilledEnemy(GameObject enemy)
+    public void KilledEnemy(Monster enemy)
     {
         // 필드 몬스터일 경우에만 삭제
-        if (EnemyList.Contains(enemy))
+        if (EnemyList.Contains(enemy.gameObject))
         {
             // 필드 몬스터 목록에서 삭제
             RemoveEnemyData(enemy);
 
             // 해당 몬스터의 처지 보상 저장
-            Monster enemyMob = enemy.GetComponent<Monster>();
-
-            TotalAmount += enemyMob.GetDropGold();
-            DropItems.AddRange(enemyMob.GetDropItems());
+            TotalAmount += enemy.GetDropGold();
+            DropItems.AddRange(enemy.GetDropItems());
         }
     }
 
-    private void RemoveEnemyData(GameObject enemy)
+    private void RemoveEnemyData(Monster enemy)
     {
         // 필드 몬스터 목록에서 삭제
-        EnemyList.Remove(enemy);
+        EnemyList.Remove(enemy.gameObject);
+
+        // 전투 시퀀스 내에서 예약해둔 행동 삭제
+        Debug.Log(enemy.Name);
+        Sequence.RemoveTurns(enemy);
 
         // 전위의 경우 전위 목록에서도 삭제
-        BattlePosition position = enemy.GetComponent<Monster>().Position;
+        BattlePosition position = enemy.Position;
         if (position.Equals(BattlePosition.Front))
         {
-            EnemyFrontList.Remove(enemy);
+            EnemyFrontList.Remove(enemy.gameObject);
         }
     }
 }
