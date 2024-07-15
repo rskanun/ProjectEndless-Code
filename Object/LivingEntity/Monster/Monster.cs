@@ -6,6 +6,7 @@ public class DropItem
 {
     [Range(0, 100)]
     public int dropChance;
+    public int maxCount;
     public Item dropItem;
 }
 public class Monster : Entity
@@ -21,12 +22,15 @@ public class Monster : Entity
         get { return _dropItems; }
     }
 
-    // 전투 순서 데이터
-    private BattleSequence battleSeq;
+    [Header("이벤트")]
+    [SerializeField] private GameEvent deadEvent;
+
+    // 전투 데이터
+    private BattleData battleData;
 
     private void Awake()
     {
-        battleSeq = BattleData.Instance.Sequence;
+        battleData = BattleData.Instance;
     }
 
     public int GetDropGold()
@@ -36,21 +40,24 @@ public class Monster : Entity
         return dropGold;
     }
 
-    public List<Item> GetDropItems()
+    public Dictionary<Item, int> GetDropItems()
     {
-        List<Item> dropItems = new List<Item>();
+        Dictionary<Item, int> result = new Dictionary<Item, int>();
 
-        foreach (DropItem item in DropItems)
+        foreach (DropItem dropItem in DropItems)
         {
             int chance = Random.Range(0, 100) + 1;
 
-            if (chance <= item.dropChance)
+            if (chance <= dropItem.dropChance)
             {
-                dropItems.Add(item.dropItem);
+                Item item = dropItem.dropItem;
+                int count = Random.Range(1, dropItem.maxCount + 1);
+
+                result[item] = count;
             }
         }
 
-        return dropItems;
+        return result;
     }
 
     /***************************************************************
@@ -61,34 +68,36 @@ public class Monster : Entity
 
     public override void TakeTurn()
     {
+        if (battleData.IsInBattle == false)
+        {
+            // 전투가 끝났을 경우 행동을 하지 않고 종료
+            EndTurn();
+
+            return;
+        }
+
         // AI에 따른 행동 처리
         // 임시로 상시 대기 실행
         Invoke(nameof(OnWaitingAction), 2.0f);
     }
 
-    public override void OnAttack(Entity target)
+    private void OnWaitingAction()
     {
-        throw new System.NotImplementedException();
-    }
+        // 임시 대기
+        WaitAction waitAction = new WaitAction();
 
-    public void OnWaitingAction()
-    {
-        WaitAction action = new WaitAction();
+        waitAction.remainTurn = 10.0f;
+        waitAction.actor = this;
 
-        action.actor = this;
-        action.remainTurn = 5.0f / Stat.AGI;
+        battleData.Sequence.AddTurn(waitAction);
 
-        Debug.Log($"{Name} {action.remainTurn} 턴 뒤, 대기 행동 예약");
-        battleSeq.AddTurn(action);
-
-        // 행동 종료
+        // 턴 종료
         EndTurn();
     }
 
-    public override void OnWaiting()
+    public override void OnAttack(Entity target)
     {
-        Debug.Log($"{Name} 대기");
-        base.OnWaiting();
+        throw new System.NotImplementedException();
     }
 
     /***************************************************************
@@ -106,7 +115,12 @@ public class Monster : Entity
 
     public override void OnDead()
     {
-        BattleData.Instance.KilledEnemy(this);
+        // 현 전투에서 적 데이터 삭제 및 처지 보상 업데이트
+        battleData.AddKillReward(this);
+        battleData.RemoveEnemyData(this);
+
+        // 엔티티 사망 알림
+        deadEvent.NotifyUpdate();
 
         // 오브젝트 삭제
         Destroy(gameObject);

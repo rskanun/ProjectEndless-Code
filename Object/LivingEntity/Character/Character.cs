@@ -6,11 +6,11 @@ public class Character : Entity
     public ActionManager actionManager;
 
     // 전투 순서 데이터
-    private BattleSequence battleSeq;
+    private BattleData battleData;
 
     private void Start()
     {
-        battleSeq = BattleData.Instance.Sequence;
+        battleData = BattleData.Instance;
     }
 
     public void OnJoinBattle()
@@ -34,6 +34,14 @@ public class Character : Entity
 
     public override void TakeTurn()
     {
+        if (battleData.IsInBattle == false)
+        {
+            // 전투가 끝났을 경우 행동을 하지 않고 종료
+            EndTurn();
+
+            return;
+        }
+
         // 행동 선택창 열기
         actionManager.OnSelectAction(this);
     }
@@ -47,7 +55,7 @@ public class Character : Entity
         action.target = target;
 
         // 행동 예약
-        battleSeq.AddTurn(action);
+        battleData.Sequence.AddTurn(action);
 
         // 턴 종료
         EndTurn();

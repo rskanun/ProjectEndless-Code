@@ -22,6 +22,7 @@ public class BattleManager : MonoBehaviour
 
     [Header("참조 스크립트")]
     [SerializeField] private Timeline timeline;
+    [SerializeField] private BattleResultUI resultUI;
 
     [Header("테스트 필드 몬스터")]
     [SerializeField] private FieldMobData mobData;
@@ -162,8 +163,6 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator RunningBattle()
     {
-        battleData.IsInBattle = battleData.EnemyCount > 0;
-
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
@@ -199,14 +198,9 @@ public class BattleManager : MonoBehaviour
 
     public void EndTurn()
     {
-        if (battleData.EnemyCount <= 0 || battleData.IsInBattle == false)
+        if (battleData.IsInBattle)
         {
-            // 모든 적을 해치웠거나, 전투가 끝난 경우 전투 종료
-            battleData.IsInBattle = false;
-        }
-        else
-        {
-            // 계속 전투 중일 경우 다음 턴 진행
+            // 적이 남아있다면 다음 턴 진행
             battleSeq.NextTurn();
         }
 
@@ -216,11 +210,10 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle()
     {
-        if (battleData.EnemyCount <= 0)
+        if (battleData.MemberCount > 0)
         {
-            // 모든 적을 해치운 경우 보상 지급
+            // 파티가 살아남았다면 결과창 출력
+            resultUI.OpenResult();
         }
-
-        // 전투 종료
     }
 }

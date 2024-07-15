@@ -106,15 +106,6 @@ public class BattleData : ScriptableObject
     }
 
     [Header("전투 정보")]
-    [ReadOnly]
-    [SerializeField]
-    private bool _isInBattle = false;
-    public bool IsInBattle
-    {
-        set { _isInBattle = value; }
-        get { return _isInBattle; }
-    }
-
     [SerializeField]
     private BattleSequence _sequence;
     public BattleSequence Sequence
@@ -128,6 +119,18 @@ public class BattleData : ScriptableObject
         }
     }
 
+    public bool IsInBattle
+    {
+        get
+        {
+            bool isLivingEnemy = EnemyCount > 0;
+            bool isLivingParty = MemberCount > 0;
+
+            // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
+            return isLivingEnemy && isLivingParty;
+        }
+    }
+
     [ReadOnly]
     [SerializeField]
     private int _totalAmount;
@@ -136,10 +139,8 @@ public class BattleData : ScriptableObject
         private set { _totalAmount = value; }
         get { return _totalAmount; }
     }
-    [ReadOnly]
-    [SerializeField]
-    private List<Item> _dropItems = new List<Item>();
-    public List<Item> DropItems
+    private Dictionary<Item, int> _dropItems = new Dictionary<Item, int>();
+    public Dictionary<Item, int> DropItems
     {
         private set { _dropItems = value; }
         get { return _dropItems; }
@@ -154,9 +155,6 @@ public class BattleData : ScriptableObject
         // 아군 정보 초기화
         PartyList.Clear();
         PartyFrontList.Clear();
-
-        // 전투 정보 초기화
-        IsInBattle = false;
 
         // 보상 정보 초기화
         TotalAmount = 0;
@@ -195,27 +193,31 @@ public class BattleData : ScriptableObject
         }
     }
 
-    public void KilledEnemy(Monster enemy)
+    public void AddKillReward(Monster enemy)
     {
-        // 필드 몬스터일 경우에만 삭제
-        if (EnemyList.Contains(enemy.gameObject))
-        {
-            // 필드 몬스터 목록에서 삭제
-            RemoveEnemyData(enemy);
+        Dictionary<Item, int> items = enemy.GetDropItems();
 
-            // 해당 몬스터의 처지 보상 저장
-            TotalAmount += enemy.GetDropGold();
-            DropItems.AddRange(enemy.GetDropItems());
+        // 해당 몬스터의 처지 보상 저장
+        TotalAmount += enemy.GetDropGold();
+        foreach (Item item in items.Keys)
+        {
+            if (DropItems.ContainsKey(item))
+            {
+                DropItems[item] += items[item];
+            }
+            else
+            {
+                DropItems[item] = items[item];
+            }
         }
     }
 
-    private void RemoveEnemyData(Monster enemy)
+    public void RemoveEnemyData(Monster enemy)
     {
         // 필드 몬스터 목록에서 삭제
         EnemyList.Remove(enemy.gameObject);
 
         // 전투 시퀀스 내에서 예약해둔 행동 삭제
-        Debug.Log(enemy.Name);
         Sequence.RemoveTurns(enemy);
 
         // 전위의 경우 전위 목록에서도 삭제

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum Type
+public enum ItemType
 {
     Consumable, // 소모성 아이템
     Weapon,     // 무기
@@ -9,32 +9,26 @@ public enum Type
     Other       // 기타
 }
 
+[CreateAssetMenu(menuName = "Item/Other", fileName = "Other Item")]
 public class Item : ScriptableObject
 {
     [SerializeField]
-    private string itmeName;
+    private string _itemName;
     public string Name
     {
-        get { return name; }
+        get { return _itemName; }
     }
 
-    [SerializeField]
-    private Type type;
-    public Type ItemType
+    public virtual ItemType Type
     {
-        get { return type; }
+        get { return ItemType.Other; }
     }
 
     [SerializeField]
     [TextArea]
-    private string lores;
+    private string _lores;
     public string Lores
     {
-        get { return lores; }
-    }
-
-    public void OnUse(Entity target)
-    {
-
+        get { return _lores; }
     }
 }

@@ -9,16 +9,12 @@ public class TimelineIcon : MonoBehaviour
     public GameObject highlight;
 
     // 해당 타임라인에 지정된 액션
+    [SerializeField]
     private BattleAction _nextAction;
     public BattleAction NextAction
     {
         private set { _nextAction = value; }
         get { return _nextAction; }
-    }
-
-    public Vector2 Position
-    {
-        get { return transform.localPosition; }
     }
 
     public void SetTimeline(BattleAction nextAction)

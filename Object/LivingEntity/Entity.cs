@@ -66,14 +66,9 @@ public abstract class Entity : MonoBehaviour
         skill.OnCasting(target);
     }
 
-    public virtual void OnUseItem(Item item, Entity target)
+    public virtual void OnUseItem(Consumable item, Entity target)
     {
         item.OnUse(target);
-    }
-
-    public virtual void OnWaiting()
-    {
-        // 아무런 행동도 하지 않음
     }
 
     public virtual void OnRun()
