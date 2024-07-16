@@ -23,6 +23,7 @@ public class BattleManager : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private Timeline timeline;
     [SerializeField] private BattleResultUI resultUI;
+    [SerializeField] private SelectionManager selectionManager;
 
     [Header("테스트 필드 몬스터")]
     [SerializeField] private FieldMobData mobData;
@@ -108,6 +109,9 @@ public class BattleManager : MonoBehaviour
 
         // 타임라인 생성
         timeline.InitTimeline(battleSeq);
+
+        // 선택 버튼 생성
+        selectionManager.InitSelectableEntities();
 
         // 처음 턴 진행
         StartCoroutine(RunningBattle());
@@ -210,7 +214,7 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle()
     {
-        if (battleData.MemberCount > 0)
+        if (battleData.PartyMemberCount > 0)
         {
             // 파티가 살아남았다면 결과창 출력
             resultUI.OpenResult();

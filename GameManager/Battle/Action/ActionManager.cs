@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ActionManager : MonoBehaviour
@@ -7,10 +10,16 @@ public class ActionManager : MonoBehaviour
     [SerializeField] private SelectionManager selectionManager;
 
     private delegate void ActionHandler(Entity target);
+    private Dictionary<ActionType, ActionHandler> actionHandlers = new();
     private ActionHandler onTargetSelected;
 
     // 현재 턴인 캐릭터
     private Character actor;
+
+    private void Awake()
+    {
+        actionHandlers.Add(ActionType.Attack, (target) => actor.OnAttackAction(target));
+    }
 
     public void OnSelectAction(Character actor)
     {
@@ -22,20 +31,28 @@ public class ActionManager : MonoBehaviour
 
     public void OnSelectAttack()
     {
-        ui.ActiveSelection(false);
-
-        // 공격 대상 선택 UI 활성화
-        selectionManager.NotifySelectableFront();
-
-        // 공격 대상 선택 시 행동 예약
-        onTargetSelected = (target) => actor.OnAttackAction(target);
+        SetupAction(ActionType.Attack, () => selectionManager.SelectFront());
     }
 
-    public void SetTarget()
+    private void SetupAction(ActionType action, Action selectionAction)
     {
-        GameObject selectObj = selectionManager.SelectTarget;
+        // 선택창 닫기
+        ui.ActiveSelection(false);
+
+        // 대상 선택 UI가 필요하다면 활성화
+        selectionAction?.Invoke();
+
+        // 행동 예약
+        if (actionHandlers.TryGetValue(action, out ActionHandler handler))
+        {
+            onTargetSelected = handler;
+        }
+    }
+
+    public void SelectTarget(GameObject selectObj)
+    {
         Entity target = selectObj.GetComponent<Entity>();
 
-        onTargetSelected(target);
+        onTargetSelected?.Invoke(target);
     }
 }

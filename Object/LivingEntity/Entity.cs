@@ -11,6 +11,7 @@ public abstract class Entity : MonoBehaviour
 {
     [Header("이벤트")]
     [SerializeField] private GameEvent turnEndEvent;
+    [SerializeField] private GameEvent deadEvent;
 
     [Header("엔티티 정보")]
     [SerializeField]
@@ -106,7 +107,14 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public abstract void OnDead();
+    public virtual void OnDead()
+    {
+        // 엔티티 사망 알림
+        deadEvent.NotifyUpdate();
+
+        // 오브젝트 삭제
+        Destroy(gameObject);
+    }
 
     public abstract void OnManaShort();
 }

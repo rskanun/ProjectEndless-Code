@@ -22,9 +22,6 @@ public class Monster : Entity
         get { return _dropItems; }
     }
 
-    [Header("이벤트")]
-    [SerializeField] private GameEvent deadEvent;
-
     // 전투 데이터
     private BattleData battleData;
 
@@ -119,11 +116,8 @@ public class Monster : Entity
         battleData.AddKillReward(this);
         battleData.RemoveEnemyData(this);
 
-        // 엔티티 사망 알림
-        deadEvent.NotifyUpdate();
-
-        // 오브젝트 삭제
-        Destroy(gameObject);
+        // 기존 사망 처리 실행
+        base.OnDead();
     }
 
     public override void OnManaShort()

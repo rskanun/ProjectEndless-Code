@@ -87,7 +87,7 @@ public class BattleData : ScriptableObject
         private set { _partyList = value; }
         get { return _partyList; }
     }
-    public int MemberCount
+    public int PartyMemberCount
     {
         get { return PartyList.Count; }
     }
@@ -100,7 +100,7 @@ public class BattleData : ScriptableObject
         private set { _partyFrontList = value; }
         get { return _partyFrontList; }
     }
-    public int PartyFrontCount
+    public int PartyMemberFrontCount
     {
         get { return PartyFrontList.Count; }
     }
@@ -124,7 +124,7 @@ public class BattleData : ScriptableObject
         get
         {
             bool isLivingEnemy = EnemyCount > 0;
-            bool isLivingParty = MemberCount > 0;
+            bool isLivingParty = PartyMemberCount > 0;
 
             // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
             return isLivingEnemy && isLivingParty;

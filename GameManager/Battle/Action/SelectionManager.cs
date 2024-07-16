@@ -1,120 +1,98 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Scriptable Object/Selection Manager", fileName = "SelectionManager")]
-public class SelectionManager : ScriptableObject
+public class SelectionManager : MonoBehaviour
 {
-    [Header("º±≈√ Ω√ πﬂµø«“ ¿Ã∫•∆Æ")]
-    [SerializeField] private GameEvent selectEvent;
+    [Header("Ï∞∏Ï°∞ Ïä§ÌÅ¨Î¶ΩÌä∏")]
+    [SerializeField] private SelectionUI ui;
+    [SerializeField] private ActionManager actionManager;
 
-    private List<SelectableTarget> listeners = new List<SelectableTarget>();
-    private SelectableTarget hoverTarget;
-    private GameObject _selectTarget;
-    public GameObject SelectTarget
+    private Dictionary<Button, GameObject> btnToEntityMap = new Dictionary<Button, GameObject>();
+    private List<Button> allEntities = new List<Button>();
+    private List<Button> enemyPartyFront = new List<Button>();
+    private List<Button> enemyParty = new List<Button>();
+    private List<Button> playerParty = new List<Button>();
+
+    public void InitSelectableEntities()
     {
-        private set { _selectTarget = value; }
-        get { return _selectTarget; }
+        InitSelectableEnemies();
+        InitSelectableMembers();
     }
 
-    public void RegisterListener(SelectableTarget listener)
+    private void InitSelectableEnemies()
     {
-        listeners.Add(listener);
+        List<GameObject> enemyList = BattleData.Instance.EnemyList;
+        List<GameObject> enemyFrontList = BattleData.Instance.EnemyFrontList;
+
+        foreach (GameObject enemyObj in enemyList)
+        {
+            AddButtonToList(enemyObj, enemyParty);
+            if (enemyFrontList.Contains(enemyObj))
+            {
+                enemyPartyFront.Add(enemyParty[enemyParty.Count - 1]);
+            }
+        }
     }
 
-    public void RemoveListener(SelectableTarget listener)
+    private void InitSelectableMembers()
     {
-        listeners.Remove(listener);
+        List<GameObject> partyList = BattleData.Instance.PartyList;
+
+        foreach (GameObject memberObj in partyList)
+        {
+            AddButtonToList(memberObj, playerParty);
+        }
     }
 
-    public void NotifySelectableFront()
+    private void AddButtonToList(GameObject obj, List<Button> list)
+    {
+        Button selectButton = ui.CreateSelectButton(obj.transform.position);
+
+        list.Add(selectButton);
+        allEntities.Add(selectButton);
+
+        btnToEntityMap[selectButton] = obj;
+    }
+
+    public void SelectFront()
     {
         if (BattleData.Instance.EnemyFrontCount <= 0)
         {
-            // ¿¸¿ß∞° ∏µŒ ªÁ∏¡«— ∞ÊøÏ »ƒ¿ßµµ ∞¯∞› ∞°¥…
-            NotifySelectableEnemy();
-
-            return;
+            SelectEntities(enemyParty);
         }
-
-        // ¿˚ ∆ƒ∆º¿« ¿¸¿ß∏¶ ≈∏∞Ÿ¿∏∑Œ º±≈√∞°¥…«œ∞‘ º≥¡§
-        SelectableTarget firstTarget = null;
-
-        foreach (SelectableTarget target in listeners)
+        else
         {
-            bool isSelectable = target.isEnemy && target.isFront;
-
-            if (isSelectable && firstTarget == null)
-            {
-                // ¿⁄µø¿∏∑Œ º±≈√«ÿ≥ı¿ª ¥ÎªÛ º±≈√
-                firstTarget = target;
-            }
-
-            target.SetSelectable(isSelectable);
-        }
-
-        // √ππ¯¬∞ ¥ÎªÛ ¿⁄µø º±≈√
-        HoverTarget(firstTarget);
-    }
-
-    public void NotifySelectableEnemy()
-    {
-        // ¿˚ ∆ƒ∆º∏¶ ≈∏∞Ÿ¿∏∑Œ º±≈√∞°¥…«œ∞‘ º≥¡§
-        SelectableTarget firstTarget = null;
-
-        foreach (SelectableTarget target in listeners)
-        {
-            bool isSelectable = target.isEnemy;
-
-            if (isSelectable && firstTarget == null)
-            {
-                // ¿⁄µø¿∏∑Œ º±≈√«ÿ≥ı¿ª ¥ÎªÛ º±≈√
-                firstTarget = target;
-            }
-
-            target.SetSelectable(isSelectable);
-        }
-
-        // √ππ¯¬∞ ¥ÎªÛ ¿⁄µø º±≈√
-        HoverTarget(firstTarget);
-    }
-
-    public void NotifySelectableMember()
-    {
-        foreach (SelectableTarget target in listeners)
-        {
-            bool isSelectable = !target.isEnemy;
-            target.SetSelectable(isSelectable);
+            SelectEntities(enemyPartyFront);
         }
     }
 
-    public void HoverTarget(SelectableTarget target)
+    public void SelectEnemy()
     {
-        if (hoverTarget != null)
-        {
-            // ¿Ã¿¸ ¥ÎªÛ¿« «•Ωƒ ¡ˆøÏ±‚
-            hoverTarget.SelectCancel();
-        }
-
-        // «ˆ¿Á º±≈√µ» ¥ÎªÛ πŸ≤Ÿ±‚
-        hoverTarget = target;
-        hoverTarget.SelectThis();
+        SelectEntities(enemyParty);
     }
 
-    public void OnSelect()
+    public void SelectParty()
     {
-        if (hoverTarget != null)
+        SelectEntities(playerParty);
+    }
+
+    private void SelectEntities(List<Button> selectedEntities)
+    {
+        foreach (Button button in allEntities)
         {
-            SelectTarget = hoverTarget.gameObject;
+            button.interactable = selectedEntities.Contains(button);
+        }
 
-            // º±≈√ «•Ωƒ √ ±‚»≠
-            hoverTarget.SelectCancel();
-            foreach (SelectableTarget target in listeners)
-            {
-                target.SetSelectable(false);
-            }
+        // Ï≤´ Î≤ÑÌäºÏùò Í≤ΩÏö∞ ÌôúÏÑ±Ìôî ÏÉÅÌÉúÎ°ú Ï†ÑÌôò
+        selectedEntities[0].Select();
+    }
 
-            // º±≈√ æÀ∏≤ ∫∏≥ª±‚
-            selectEvent.NotifyUpdate();
+    public void OnSelect(Button selectButton)
+    {
+        if (btnToEntityMap.TryGetValue(selectButton, out GameObject target))
+        {
+            actionManager.SelectTarget(target);
         }
     }
 }
