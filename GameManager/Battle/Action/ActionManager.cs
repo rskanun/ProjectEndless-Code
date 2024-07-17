@@ -26,7 +26,7 @@ public class ActionManager : MonoBehaviour
         this.actor = actor;
 
         // 행동 선택창 열기
-        ui.ActiveSelection(true);
+        ui.OpenSelectionWindow();
     }
 
     public void OnSelectAttack()
@@ -37,7 +37,7 @@ public class ActionManager : MonoBehaviour
     private void SetupAction(ActionType action, Action selectionAction)
     {
         // 선택창 닫기
-        ui.ActiveSelection(false);
+        ui.CloseSelectionWindow();
 
         // 대상 선택 UI가 필요하다면 활성화
         selectionAction?.Invoke();
@@ -49,10 +49,8 @@ public class ActionManager : MonoBehaviour
         }
     }
 
-    public void SelectTarget(GameObject selectObj)
+    public void SelectTarget(Entity target)
     {
-        Entity target = selectObj.GetComponent<Entity>();
-
         onTargetSelected?.Invoke(target);
     }
 }

@@ -118,6 +118,9 @@ public class Monster : Entity
 
         // 기존 사망 처리 실행
         base.OnDead();
+
+        // 사망 모션
+        gameObject.SetActive(false);
     }
 
     public override void OnManaShort()

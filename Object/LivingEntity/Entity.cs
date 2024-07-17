@@ -46,6 +46,14 @@ public abstract class Entity : MonoBehaviour
         get { return _stat; }
     }
 
+    // 현재 상태
+    private bool _isDead;
+    public bool IsDead
+    {
+        private set { _isDead = value; }
+        get { return _isDead; }
+    }
+
     /***************************************************************
     * [ 턴 진행 ]
     * 
@@ -109,11 +117,11 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnDead()
     {
+        // 엔티티 사망 처리
+        IsDead = true;
+
         // 엔티티 사망 알림
         deadEvent.NotifyUpdate();
-
-        // 오브젝트 삭제
-        Destroy(gameObject);
     }
 
     public abstract void OnManaShort();

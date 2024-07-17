@@ -19,6 +19,13 @@ public class Item : ScriptableObject
         get { return _itemName; }
     }
 
+    [SerializeField]
+    private Sprite _icon;
+    public Sprite Icon
+    {
+        get { return _icon; }
+    }
+
     public virtual ItemType Type
     {
         get { return ItemType.Other; }

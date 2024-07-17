@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ActionUI : MonoBehaviour
@@ -6,16 +8,37 @@ public class ActionUI : MonoBehaviour
     [Header("행동 선택창")]
     [SerializeField] private GameObject actionWindow;
 
-    [Header("초기 선택 버튼")]
-    [SerializeField] private Button firstButton;
+    [Header("행동 선택 버튼")]
+    [SerializeField] private List<Button> actionButtons;
 
-    private void OnEnable()
+    private Button lastSelectedButton;
+
+    private void OnDisable()
     {
-        firstButton.Select();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
-    public void ActiveSelection(bool active)
+    public void OpenSelectionWindow()
     {
-        actionWindow.SetActive(active);
+        actionWindow.SetActive(true);
+
+        // 마지막으로 사용한 버튼 활성화
+        SelectLastSelctedButton();
+    }
+
+    public void CloseSelectionWindow()
+    {
+        actionWindow.SetActive(false);
+
+        // 버튼 비활성화
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    private void SelectLastSelctedButton()
+    {
+        if (lastSelectedButton == null)
+            lastSelectedButton = actionButtons[0];
+
+        lastSelectedButton.Select();
     }
 }

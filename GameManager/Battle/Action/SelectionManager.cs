@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -8,91 +8,78 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private SelectionUI ui;
     [SerializeField] private ActionManager actionManager;
 
-    private Dictionary<Button, GameObject> btnToEntityMap = new Dictionary<Button, GameObject>();
-    private List<Button> allEntities = new List<Button>();
-    private List<Button> enemyPartyFront = new List<Button>();
-    private List<Button> enemyParty = new List<Button>();
-    private List<Button> playerParty = new List<Button>();
+    private List<SelectionButton> selectionButtons = new List<SelectionButton>();
 
     public void InitSelectableEntities()
     {
-        InitSelectableEnemies();
-        InitSelectableMembers();
+        AddButtonToList(BattleData.Instance.EnemyList);
+        AddButtonToList(BattleData.Instance.PartyList);
     }
 
-    private void InitSelectableEnemies()
+    private void AddButtonToList(List<GameObject> entityList)
     {
-        List<GameObject> enemyList = BattleData.Instance.EnemyList;
-        List<GameObject> enemyFrontList = BattleData.Instance.EnemyFrontList;
-
-        foreach (GameObject enemyObj in enemyList)
+        foreach (GameObject entityObj in entityList)
         {
-            AddButtonToList(enemyObj, enemyParty);
-            if (enemyFrontList.Contains(enemyObj))
-            {
-                enemyPartyFront.Add(enemyParty[enemyParty.Count - 1]);
-            }
+            Entity target = entityObj.GetComponent<Entity>();
+            SelectionButton selectButton = ui.CreateSelectButton(target, entityObj.transform.position);
+
+            selectionButtons.Add(selectButton);
         }
-    }
-
-    private void InitSelectableMembers()
-    {
-        List<GameObject> partyList = BattleData.Instance.PartyList;
-
-        foreach (GameObject memberObj in partyList)
-        {
-            AddButtonToList(memberObj, playerParty);
-        }
-    }
-
-    private void AddButtonToList(GameObject obj, List<Button> list)
-    {
-        Button selectButton = ui.CreateSelectButton(obj.transform.position);
-
-        list.Add(selectButton);
-        allEntities.Add(selectButton);
-
-        btnToEntityMap[selectButton] = obj;
     }
 
     public void SelectFront()
     {
         if (BattleData.Instance.EnemyFrontCount <= 0)
         {
-            SelectEntities(enemyParty);
+            SelectEnemy();
         }
         else
         {
-            SelectEntities(enemyPartyFront);
+            ActiveButtons((button) => button.EnemyFrontActive());
         }
     }
 
     public void SelectEnemy()
     {
-        SelectEntities(enemyParty);
+        ActiveButtons((button) => button.EnemyActive());
     }
 
     public void SelectParty()
     {
-        SelectEntities(playerParty);
+        ActiveButtons((button) => button.PlayerPartyActive());
     }
 
-    private void SelectEntities(List<Button> selectedEntities)
+    private void ActiveButtons(System.Action<SelectionButton> activeAction)
     {
-        foreach (Button button in allEntities)
+        foreach (SelectionButton button in selectionButtons)
         {
-            button.interactable = selectedEntities.Contains(button);
+            activeAction(button);
+
+            if (EventSystem.current.currentSelectedGameObject == false)
+            {
+                HoverFirst(button);
+            }
         }
-
-        // 첫 버튼의 경우 활성화 상태로 전환
-        selectedEntities[0].Select();
     }
 
-    public void OnSelect(Button selectButton)
+    private void HoverFirst(SelectionButton hoverButton)
     {
-        if (btnToEntityMap.TryGetValue(selectButton, out GameObject target))
+        hoverButton.OnHover();
+    }
+
+    public void OnSelect(Entity target)
+    {
+        actionManager.SelectTarget(target);
+
+        // 모든 버튼 비활성화
+        DeactiveAllButtons();
+    }
+
+    private void DeactiveAllButtons()
+    {
+        foreach (SelectionButton button in selectionButtons)
         {
-            actionManager.SelectTarget(target);
+            button.SetActive(false);
         }
     }
 }
