@@ -13,11 +13,6 @@ public class ActionUI : MonoBehaviour
 
     private Button lastSelectedButton;
 
-    private void OnDisable()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-    }
-
     public void OpenSelectionWindow()
     {
         actionWindow.SetActive(true);

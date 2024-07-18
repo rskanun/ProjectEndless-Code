@@ -43,7 +43,7 @@ public class Character : Entity
         }
 
         // 행동 선택창 열기
-        actionManager.OnSelectAction(this);
+        actionManager.SelectAction(this);
     }
 
     public void OnAttackAction(Entity target)

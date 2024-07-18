@@ -56,6 +56,12 @@ public class BattleSequence
         else Sequence.Insert(index, action);
     }
 
+    public void AddTurn(BattleAction action, int index)
+    {
+        if (index >= Sequence.Count) Sequence.Insert(Sequence.Count - 1, action);
+        else Sequence.Insert(index, action);
+    }
+
     public void RemoveTurns(Entity actor)
     {
         for (int i = Sequence.Count - 1; i >= 0; i--)
@@ -65,5 +71,18 @@ public class BattleSequence
                 Sequence.RemoveAt(i);
             }
         }
+    }
+
+    public int GetMinIndex(Entity actor, int turn)
+    {
+        // 최소 위치 파악을 위한 임시 행동
+        WaitAction action = new WaitAction(); 
+        action.actor = actor;
+        action.remainTurn = turn;
+
+        int index = Sequence.BinarySearch(action);
+        if (index < 0) index = ~index;
+
+        return index;
     }
 }

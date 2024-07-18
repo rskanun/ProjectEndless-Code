@@ -10,19 +10,19 @@ public class TimelineIcon : MonoBehaviour
 
     // 해당 타임라인에 지정된 액션
     [SerializeField]
-    private BattleAction _nextAction;
-    public BattleAction NextAction
+    private BattleAction _action;
+    public BattleAction Action
     {
-        private set { _nextAction = value; }
-        get { return _nextAction; }
+        private set { _action = value; }
+        get { return _action; }
     }
 
-    public void SetTimeline(BattleAction nextAction)
+    public void SetTimeline(BattleAction action)
     {
-        NextAction = nextAction;
+        Action = action;
 
         // 해당 행동을 하는 행위자의 외형을 타임라인의 이미지로 사용
-        GameObject actor = nextAction.actor.gameObject;
+        GameObject actor = action.actor.gameObject;
         SpriteRenderer actorImg = actor.GetComponent<SpriteRenderer>();
 
         // 타임라인 아이콘 이미지 지정
@@ -49,6 +49,6 @@ public class TimelineIcon : MonoBehaviour
 
     public void UpdateTurnTime()
     {
-        SetTurnTime(NextAction.remainTurn);
+        SetTurnTime(Action.remainTurn);
     }
 }

@@ -65,15 +65,20 @@ public class Monster : Entity
 
     public override void TakeTurn()
     {
-        if (battleData.IsInBattle == false)
+        if (battleData.IsInBattle)
+        {
+            // AI에 따른 행동 처리
+            SelectAction();
+        }
+        else
         {
             // 전투가 끝났을 경우 행동을 하지 않고 종료
             EndTurn();
-
-            return;
         }
+    }
 
-        // AI에 따른 행동 처리
+    private void SelectAction()
+    {
         // 임시로 상시 대기 실행
         Invoke(nameof(OnWaitingAction), 2.0f);
     }
@@ -87,6 +92,7 @@ public class Monster : Entity
         waitAction.actor = this;
 
         battleData.Sequence.AddTurn(waitAction);
+        Debug.Log($"{Name}: {waitAction.remainTurn} Turn Waiting...");
 
         // 턴 종료
         EndTurn();
