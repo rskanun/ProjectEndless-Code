@@ -3,7 +3,7 @@ using UnityEngine;
 public class Character : Entity
 {
     [Header("참조 스크립트")]
-    public ActionManager actionManager;
+    [SerializeField] private ActionManager actionSelection;
 
     // 전투 순서 데이터
     private BattleData battleData;
@@ -19,6 +19,8 @@ public class Character : Entity
         CharacterData data = PartyData.Instance.GetCharacter(Name);
 
         // 데이터 덮어씌우기
+        Position = data.Position;
+        AttackType = data.AttackType;
         SkillList = data.Skills;
         Stat = data.Stat;
 
@@ -43,22 +45,17 @@ public class Character : Entity
         }
 
         // 행동 선택창 열기
-        actionManager.SelectAction(this);
+        actionSelection.SelectAction(this);
     }
 
-    public void OnAttackAction(Entity target)
+    public AttackAction CreateAttackAction()
     {
         AttackAction action = new AttackAction();
 
         action.remainTurn = 1.0f;  // 임시 턴수
         action.actor = this;
-        action.target = target;
 
-        // 행동 예약
-        battleData.Sequence.AddTurn(action);
-
-        // 턴 종료
-        EndTurn();
+        return action;
     }
 
     public override void OnAttack(Entity target)
@@ -77,6 +74,15 @@ public class Character : Entity
     public void OnSelectItem()
     {
 
+    }
+
+    public void OnSelectAction(BattleAction action, int index)
+    {
+        // 행동 예약
+        battleData.Sequence.AddTurn(action, index);
+
+        // 턴 종료
+        EndTurn();
     }
 
     /***************************************************************

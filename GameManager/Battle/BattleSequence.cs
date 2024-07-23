@@ -73,13 +73,8 @@ public class BattleSequence
         }
     }
 
-    public int GetMinIndex(Entity actor, int turn)
+    public int GetMinIndex(BattleAction action)
     {
-        // 최소 위치 파악을 위한 임시 행동
-        WaitAction action = new WaitAction(); 
-        action.actor = actor;
-        action.remainTurn = turn;
-
         int index = Sequence.BinarySearch(action);
         if (index < 0) index = ~index;
 

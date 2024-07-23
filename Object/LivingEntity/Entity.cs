@@ -7,6 +7,12 @@ public enum BattlePosition
     Back
 }
 
+public enum AttackType
+{
+    Melee,  // 근접 공격
+    Ranged  // 원거리 공격
+}
+
 public abstract class Entity : MonoBehaviour
 {
     [Header("이벤트")]
@@ -25,7 +31,16 @@ public abstract class Entity : MonoBehaviour
     private BattlePosition _position;
     public BattlePosition Position
     {
+        protected set { _position = value; }
         get { return _position; }
+    }
+
+    [SerializeField]
+    private AttackType _attackType;
+    public AttackType AttackType
+    {
+        protected set { _attackType = value; }
+        get { return _attackType; }
     }
 
     [Header("스킬 목록")]
@@ -70,14 +85,20 @@ public abstract class Entity : MonoBehaviour
 
     public abstract void OnAttack(Entity target);
 
-    public virtual void OnCast(Skill skill, Entity target)
+    public virtual void OnCast(Skill skill, List<Entity> targets)
     {
-        skill.OnCasting(target);
+        foreach (Entity target in targets)
+        {
+            skill.OnCasting(target);
+        }
     }
 
-    public virtual void OnUseItem(Consumable item, Entity target)
+    public virtual void OnUseItem(Consumable item, List<Entity> targets)
     {
-        item.OnUse(target);
+        foreach (Entity target in targets)
+        {
+            item.OnUse(target);
+        }
     }
 
     public virtual void OnRun()

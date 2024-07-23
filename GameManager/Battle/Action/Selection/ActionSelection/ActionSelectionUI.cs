@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActionUI : MonoBehaviour
+public class ActionSelectionUI : MonoBehaviour
 {
     [Header("행동 선택창")]
     [SerializeField] private GameObject actionWindow;
@@ -35,5 +35,15 @@ public class ActionUI : MonoBehaviour
             lastSelectedButton = actionButtons[0];
 
         lastSelectedButton.Select();
+    }
+
+    private void Update()
+    {
+        if (actionWindow.activeSelf)
+        {
+            GameObject selectButtonObj = lastSelectedButton?.gameObject;
+
+            EventSystem.current.SetSelectedGameObject(selectButtonObj);
+        }
     }
 }

@@ -23,7 +23,7 @@ public class BattleManager : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private Timeline timeline;
     [SerializeField] private BattleResultUI resultUI;
-    [SerializeField] private SelectionManager selectionManager;
+    [SerializeField] private TargetSelection selectionManager;
 
     [Header("테스트 필드 몬스터")]
     [SerializeField] private FieldMobData mobData;

@@ -3,7 +3,7 @@ public class WaitAction : BattleAction
 {
     public WaitAction()
     {
-        action = ActionType.Wait;
+        actionType = ActionType.Wait;
     }
 
     public override void OnAction()

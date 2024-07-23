@@ -48,6 +48,13 @@ public class CharacterData
         get { return _position; }
     }
 
+    [SerializeField]
+    private AttackType _attackType;
+    public AttackType AttackType
+    {
+        get { return _attackType; }
+    }
+
     [Header("스킬 정보")]
     [SerializeField]
     private List<Skill> _skills;

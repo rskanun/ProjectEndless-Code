@@ -2,7 +2,7 @@ public class RunAction : BattleAction
 {
     public RunAction()
     {
-        action = ActionType.Run;
+        actionType = ActionType.Run;
     }
 
     public override void OnAction()

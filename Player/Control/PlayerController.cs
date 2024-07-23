@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour, IControlState
 
     private void OnRunKeyPressed()
     {
-        if(isRunning == false && Input.GetButtonDown("Running"))
+        if(Input.GetButtonDown("Running"))
         {
             isRunning = true;
         }

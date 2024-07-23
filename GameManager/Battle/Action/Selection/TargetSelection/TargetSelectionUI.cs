@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
-public class SelectionUI : MonoBehaviour
+public class TargetSelectionUI : MonoBehaviour
 {
     public GameObject targetPrefab;
     public Transform container;
 
     [Header("참조 스크립트")]
-    [SerializeField] private SelectionManager manager;
+    [SerializeField] private TargetSelection manager;
 
-    public SelectionButton CreateSelectButton(Entity target, Vector2 pos)
+    public TargetSelectButton CreateSelectButton(Entity target, Vector2 pos)
     {
         GameObject selectButtonObj = Instantiate(targetPrefab, container);
-        SelectionButton selection = selectButtonObj.GetComponent<SelectionButton>();
+        TargetSelectButton selection = selectButtonObj.GetComponent<TargetSelectButton>();
 
         // 버튼 위치값을 해당 엔티티의 중심으로 지정
         selectButtonObj.transform.position = pos;

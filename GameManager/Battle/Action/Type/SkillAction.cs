@@ -1,15 +1,17 @@
+using System.Collections.Generic;
+
 public class SkillAction : BattleAction
 {
     public Skill castSkill;
-    public Entity target;
+    public List<Entity> targets;
 
     public SkillAction()
     {
-        action = ActionType.Skill;
+        actionType = ActionType.Skill;
     }
 
     public override void OnAction()
     {
-        actor.OnCast(castSkill, target);
+        actor.OnCast(castSkill, targets);
     }
 }

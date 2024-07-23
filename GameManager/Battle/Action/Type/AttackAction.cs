@@ -4,7 +4,7 @@ public class AttackAction : BattleAction
 
     public AttackAction()
     {
-        action = ActionType.Attack;
+        actionType = ActionType.Attack;
     }
 
     public override void OnAction()

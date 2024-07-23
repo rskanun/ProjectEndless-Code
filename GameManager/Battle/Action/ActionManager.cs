@@ -1,73 +1,163 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ActionManager : MonoBehaviour
 {
-    [Header("참조 스크립트")]
-    [SerializeField] private ActionUI ui;
-    [SerializeField] private SelectionManager selectionManager;
+    private enum SelectState
+    {
+        Action,
+        Target,
+        Turn
+    }
 
-    private delegate void ActionHandler(Entity target);
-    private Dictionary<ActionType, ActionHandler> actionHandlers;
+    [Header("참조 스크립트")]
+    [SerializeField] private ActionSelection actionSelection;
+    [SerializeField] private TargetSelection targetSelection;
+    [SerializeField] private TurnSelection turnSelection;
+
+    // 참조 데이터
+    private BattleData battleData;
+
+    // 현재 선택창 정보
+    private SelectState state;
+    private int index;
 
     // 현재 턴 정보
+    private BattleAction action;
     private Character actor;
-    private Entity target;
-    private int seqIndex = -1;
+    private List<Entity> targets;
+    private float seqTurn;
+    private int seqIndex;
 
     private void Awake()
     {
-        actionHandlers = new Dictionary<ActionType, ActionHandler>();
-
-        // 각 행동 타입별 실행자의 행동 삽입
-        actionHandlers.Add(ActionType.Attack, (target) => actor.OnAttack(target));
+        battleData = BattleData.Instance;
     }
 
     public void SelectAction(Character actor)
     {
         this.actor = actor;
-        target = null;
-        seqIndex = -1;
 
         // 행동 선택창 열기
-        ui.OpenSelectionWindow();
+        actionSelection.OpenSelection(actor);
+
+        // 현재 상태 변경
+        SetState(SelectState.Action);
     }
+
+    private void SetState(SelectState state)
+    {
+        this.state = state;
+    }
+
+    public void UndoSelection()
+    {
+        switch (state)
+        {
+            case SelectState.Action:
+                actionSelection.UndoSelection();
+                break;
+
+            case SelectState.Target:
+                targetSelection.UndoSelection();
+                actionSelection.ReopenSelection();
+                break;
+
+            case SelectState.Turn:
+                turnSelection.UndoSelection();
+                targetSelection.ReopenSelection();
+                break;
+        }
+    }
+
+    /***************************************************************
+    * [ 행동 선택 ]
+    * 
+    * 현재 턴인 캐릭터가 어떤 행동을 취할 지 선택창 생성 및 처리
+    ***************************************************************/
 
     public void OnSelectAttack()
     {
-        StartCoroutine(SetupAction(ActionType.Attack, () => selectionManager.SelectFront()));
+        AttackAction action = actor.CreateAttackAction();
+
+        AttackType attackType = actor.AttackType;
+        TargetType targetType = GetTargetType(attackType);
+
+        OnSelectAction(action, targetType);
     }
 
-    private IEnumerator SetupAction(ActionType action, Action selectionAction)
+    public void OnSelectSkill(Skill skill)
     {
-        // 선택창 닫기
-        ui.CloseSelectionWindow();
 
-        // 대상 선택 UI가 필요하다면 활성화
-        if (selectionAction != null)
-        {
-            selectionAction.Invoke();
-
-            // 타겟 선택이 완료되었다면 다음 단계로 진행
-            yield return new WaitUntil(() => target != null);
-        }
-
-        // 턴 수 선택
-        yield return new WaitUntil(() => seqIndex >= 0);
-
-        // 행동 실행
-        actionHandlers[action].Invoke(target);
     }
+
+    public void OnSelectItem(Consumable item)
+    {
+        
+    }
+
+    public void OnSelectWaiting()
+    {
+
+    }
+
+    public void OnSelectRun()
+    {
+
+    }
+
+    private TargetType GetTargetType(AttackType attackType)
+    {
+        return (attackType == AttackType.Melee) ? TargetType.FrontEnemy : TargetType.Enemy;
+    }
+
+    private void OnSelectAction(BattleAction action, TargetType targetType)
+    {
+        this.action = action;
+
+        // 행동 선택창 닫기
+        actionSelection.CloseSelection();
+
+        // 타겟 선택창 열기
+        targetSelection.OpenSelection(targetType);
+
+        // 현재 상태 변경
+        SetState(SelectState.Target);
+    }
+
+    /***************************************************************
+    * [ 타겟 선택 ]
+    * 
+    * 현재 행동의 타겟이 될 대상 선택
+    ***************************************************************/
 
     public void SelectTarget(Entity target)
     {
-        this.target = target;
+        // 타겟 선택창 닫기
+        targetSelection.CloseSelection();
+
+        // 임시로 최소 턴 선택
+        switch (action.actionType)
+        {
+            case ActionType.Attack:
+                AttackAction attackAction = (AttackAction)action;
+                attackAction.target = target;
+                break;
+        }
+
+        // 턴 삽입
+        PushActionData(action);
     }
 
-    public void SetTurn(int index)
+    public void SelectTargets(List<Entity> targets)
     {
 
+    }
+
+    private void PushActionData(BattleAction action)
+    {
+        int minIndex = battleData.Sequence.GetMinIndex(action);
+
+        actor.OnSelectAction(action, minIndex);
     }
 }

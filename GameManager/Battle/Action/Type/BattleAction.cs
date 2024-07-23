@@ -15,7 +15,7 @@ public abstract class BattleAction : IComparable<BattleAction>
 {
     public float remainTurn;
     public Entity actor;
-    public ActionType action;
+    public ActionType actionType;
 
     public int CompareTo(BattleAction seq)
     {
