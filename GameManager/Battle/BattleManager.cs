@@ -108,7 +108,7 @@ public class BattleManager : MonoBehaviour
         battleSeq.SetSequence(entityList);
 
         // 타임라인 생성
-        timeline.InitTimeline(battleSeq);
+        timeline.SetupTimeline(battleSeq);
 
         // 선택 버튼 생성
         selectionManager.InitSelectableEntities();
@@ -181,7 +181,6 @@ public class BattleManager : MonoBehaviour
 
             // 타임라인 업데이트
             timeline.UpdateTimeline();
-            timeline.Print();
         }
 
         // 전투 끝내기

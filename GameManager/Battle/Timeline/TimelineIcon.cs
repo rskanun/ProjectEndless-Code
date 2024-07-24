@@ -6,10 +6,10 @@ public class TimelineIcon : MonoBehaviour
 {
     public Image iconImage;
     public TextMeshProUGUI turnTimer;
+    public GameObject turnTimerIcon;
     public GameObject highlight;
 
     // 해당 타임라인에 지정된 액션
-    [SerializeField]
     private BattleAction _action;
     public BattleAction Action
     {
@@ -29,6 +29,7 @@ public class TimelineIcon : MonoBehaviour
         InitImage(actorImg);
 
         // 남은 턴 지정
+        SetTurnTime(action.remainTurn);
     }
 
     private void InitImage(SpriteRenderer sprite)
@@ -42,9 +43,25 @@ public class TimelineIcon : MonoBehaviour
         turnTimer.text = time.ToString("0.0");
     }
 
-    public void SetMark(bool active)
+    public void SetMark(bool isActive)
     {
-        highlight.SetActive(active);
+        // 마킹된 아이콘 사이즈 조정
+        RectTransform rect = gameObject.GetComponent<RectTransform>();
+        Vector2 sizeChange = new Vector2(10f, 10f);
+
+        rect.sizeDelta += isActive ? sizeChange : -sizeChange;
+
+        // 하이라이트 활성화
+        highlight.SetActive(isActive);
+
+        // 현재 타임라인의 경우 남은 턴 수 숨기기
+        SetActiveTurnTimer(!isActive);
+    }
+
+    private void SetActiveTurnTimer(bool isActive)
+    {
+        turnTimer.gameObject.SetActive(isActive);
+        turnTimerIcon.SetActive(isActive);
     }
 
     public void UpdateTurnTime()

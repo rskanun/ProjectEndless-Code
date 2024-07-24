@@ -6,6 +6,7 @@ public class TimelineUI : MonoBehaviour
     public HorizontalLayoutGroup groupComponent;
     public RectTransform container;
     public GameObject timelineIcon;
+    public GameObject insertIcon;
 
     // 타임라인 위치 데이터
     private float iconWidth;
@@ -25,6 +26,12 @@ public class TimelineUI : MonoBehaviour
         container.localPosition = startPos;
     }
 
+    /***************************************************************
+    * [ 타임라인 관리 ]
+    * 
+    * 타임라인 아이콘 생성 및 관리
+    ***************************************************************/
+
     public TimelineIcon CreateTimelineIcon(BattleAction action, int? index = null)
     {
         GameObject iconObj = Instantiate(timelineIcon, container);
@@ -40,5 +47,17 @@ public class TimelineUI : MonoBehaviour
         }
 
         return icon;
+    }
+
+    public void SetActiveInsertIcon(bool isActive)
+    {
+        insertIcon.SetActive(isActive);
+    }
+
+    public void SetInsertIconImage(GameObject actor)
+    {
+        InsertIcon script = insertIcon.GetComponent<InsertIcon>();
+
+        script.SetImage(actor);
     }
 }

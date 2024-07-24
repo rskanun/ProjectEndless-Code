@@ -64,7 +64,7 @@ public class ControlContext : ScriptableObject
     public void OnKeyPressed()
     {
         if (_noKeyDown == false)
-        _currentState.OnControlKeyPressed();
+            _currentState.OnControlKeyPressed();
     }
 
     public void SetState(IControlState state)

@@ -6,6 +6,17 @@ public class BattleController : MonoBehaviour, IControlState
     [Header("참조 스크립트")]
     [SerializeField] private ActionManager actionManager;
 
+    private void Awake()
+    {
+        ControlContext.Instance.SetState(this);
+    }
+
+    private void Update()
+    {
+        // TMP GameManager Function
+        ControlContext.Instance.OnKeyPressed();
+    }
+
     /***************************************************************
     * [ 전투 조작 ]
     * 
@@ -14,8 +25,14 @@ public class BattleController : MonoBehaviour, IControlState
 
     public void OnControlKeyPressed()
     {
+        OnTimelineMoveKeyPressed();
         OnActionSelectKeyPressed();
         OnCancelKeyPressed();
+    }
+
+    public void OnTimelineMoveKeyPressed()
+    {
+
     }
 
     private void OnActionSelectKeyPressed()

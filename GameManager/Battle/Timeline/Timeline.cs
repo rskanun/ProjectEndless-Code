@@ -15,7 +15,12 @@ public class Timeline : MonoBehaviour
     private List<TimelineIcon> timelines = new List<TimelineIcon>();
     private int index;
 
-    public void InitTimeline(BattleSequence battleSeq)
+    // 턴 설정 관리
+    private InsertIcon insertIcon;
+    private bool isInsertMode;
+    private int minIndex;
+
+    public void SetupTimeline(BattleSequence battleSeq)
     {
         this.battleSeq = battleSeq;
 
@@ -80,11 +85,33 @@ public class Timeline : MonoBehaviour
             if (timelines.Count <= i || seq[i] != timelines[i].Action)
             {
                 // 타임라인 추가
-                TimelineIcon icon = ui.CreateTimelineIcon(seq[i], i);
-
-                // 아이콘 목록에 추가
-                timelines.Insert(i, icon);
+                AddTimelineIcon(seq[i], i);
             }
+        }
+    }
+
+    private void AddTimelineIcon(BattleAction seq, int index)
+    {
+        // 타임라인 추가
+        TimelineIcon icon = ui.CreateTimelineIcon(seq, index);
+
+        // 아이콘 목록에 추가
+        timelines.Insert(index, icon);
+    }
+
+    public void SetActiveInsertIcon(bool isActive)
+    {
+        // 삽입 아이콘 활성화 설정
+        ui.SetActiveInsertIcon(isActive);
+
+        // 활성화일 경우 아이콘 이미지 변경
+        if (isActive)
+        {
+            Entity curTurnChr = timelines[0].Action.actor;
+            GameObject chrObj = curTurnChr.gameObject;
+
+            // 아이콘 이미지 변경
+            ui.SetInsertIconImage(chrObj);
         }
     }
 
@@ -93,14 +120,9 @@ public class Timeline : MonoBehaviour
         timelines[0].SetMark(true);
     }
 
-    public void Print()
-    {
-        StringBuilder timeline = new StringBuilder();
-        foreach (BattleAction action in battleSeq.Sequence)
-        {
-            timeline.AppendFormat("{0} ({1}) -> ", action.actor.Name, action.remainTurn);
-        }
-
-        Debug.Log(timeline);
-    }
+    /***************************************************************
+    * [ 타임라인 이동 ]
+    * 
+    * 타임라인 이동 처리
+    ***************************************************************/
 }

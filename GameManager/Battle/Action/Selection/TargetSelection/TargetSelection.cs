@@ -4,12 +4,12 @@ using UnityEngine.EventSystems;
 
 public enum TargetType
 {
-    FrontEnemy, // 적 진형 선열 1명
-    Enemy,      // 적 진형 1명
-    EnemyParty,   // 모든 적
-    PartyMember,     // 파티 맴버 1명
-    PlayerParty,      // 모든 파티 맴버
-    Caster      // 사용자
+    FrontEnemy,     // 적 진형 선열 1명
+    Enemy,          // 적 진형 1명
+    EnemyParty,     // 모든 적
+    PartyMember,    // 파티 맴버 1명
+    PlayerParty,    // 모든 파티 맴버
+    Caster          // 사용자
 }
 
 public class TargetSelection : MonoBehaviour
@@ -19,6 +19,9 @@ public class TargetSelection : MonoBehaviour
     [SerializeField] private ActionManager actionManager;
 
     private List<TargetSelectButton> selectionButtons = new List<TargetSelectButton>();
+
+    // 현재 선택 가능한 타겟 범위
+    private TargetType target;
 
     public void InitSelectableEntities()
     {
@@ -41,6 +44,9 @@ public class TargetSelection : MonoBehaviour
     {
         // 타겟 활성화
         ActiveTarget(targetType);
+
+        // 현재 타겟 범위 설정
+        target = targetType;
     }
 
     public void CloseSelection()
@@ -51,7 +57,8 @@ public class TargetSelection : MonoBehaviour
 
     public void ReopenSelection()
     {
-
+        // 이전 타겟 재활성화
+        ActiveTarget(target);
     }
 
     public void UndoSelection()
