@@ -37,7 +37,7 @@ public class BattleController : MonoBehaviour, IControlState
 
     private void OnActionSelectKeyPressed()
     {
-
+        float h = Input.GetAxisRaw("Horizontal");
     }
 
     private void OnCancelKeyPressed()

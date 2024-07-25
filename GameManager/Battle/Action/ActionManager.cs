@@ -3,13 +3,6 @@ using UnityEngine;
 
 public class ActionManager : MonoBehaviour
 {
-    private enum SelectState
-    {
-        Action,
-        Target,
-        Turn
-    }
-
     [Header("참조 스크립트")]
     [SerializeField] private ActionSelection actionSelection;
     [SerializeField] private TargetSelection targetSelection;
@@ -17,10 +10,6 @@ public class ActionManager : MonoBehaviour
 
     // 참조 데이터
     private BattleData battleData;
-
-    // 현재 선택창 정보
-    private SelectState state;
-    private int index;
 
     // 현재 턴 정보
     private BattleAction action;
@@ -40,34 +29,21 @@ public class ActionManager : MonoBehaviour
 
         // 행동 선택창 열기
         actionSelection.OpenSelection(actor);
-
-        // 현재 상태 변경
-        SetState(SelectState.Action);
     }
 
-    private void SetState(SelectState state)
+    public void UndoAction()
     {
-        this.state = state;
+        actionSelection.ReopenSelection();
     }
 
-    public void UndoSelection()
+    public void UndoTarget()
     {
-        switch (state)
-        {
-            case SelectState.Action:
-                actionSelection.UndoSelection();
-                break;
+        actionSelection.ReopenSelection();
+    }
 
-            case SelectState.Target:
-                targetSelection.UndoSelection();
-                actionSelection.ReopenSelection();
-                break;
-
-            case SelectState.Turn:
-                turnSelection.UndoSelection();
-                targetSelection.ReopenSelection();
-                break;
-        }
+    public void UndoTurn()
+    {
+        targetSelection.ReopenSelection();
     }
 
     /***************************************************************
@@ -120,9 +96,6 @@ public class ActionManager : MonoBehaviour
 
         // 타겟 선택창 열기
         targetSelection.OpenSelection(targetType);
-
-        // 현재 상태 변경
-        SetState(SelectState.Target);
     }
 
     /***************************************************************
@@ -153,6 +126,12 @@ public class ActionManager : MonoBehaviour
     {
 
     }
+
+    /***************************************************************
+    * [ 턴 선택 ]
+    * 
+    * 현재 행동이 배치될 턴 설정
+    ***************************************************************/
 
     private void PushActionData(BattleAction action)
     {

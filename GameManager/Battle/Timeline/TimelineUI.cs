@@ -6,24 +6,24 @@ public class TimelineUI : MonoBehaviour
     public HorizontalLayoutGroup groupComponent;
     public RectTransform container;
     public GameObject timelineIcon;
-    public GameObject insertIcon;
 
     // 타임라인 위치 데이터
     private float iconWidth;
     private float spacing;
 
-    public void InitPosData()
+    private void Awake()
     {
         iconWidth = timelineIcon.GetComponent<RectTransform>().rect.width;
         spacing = groupComponent.spacing;
     }
 
-    public void ResetPos(int iconCount)
+    public void SetPos(int iconIndex)
     {
-        float startPosX = (iconWidth + spacing) / 2 * (iconCount - 1);
-        Vector2 startPos = new Vector2(startPosX, container.localPosition.y);
+        // n번째 아이콘이 가운데에 위치하도록 위치 조정
+        Vector2 startPos = new Vector2(-iconWidth / 2, container.localPosition.y);
+        float moveDistance = (iconWidth + spacing) * iconIndex;
 
-        container.localPosition = startPos;
+        container.localPosition = new Vector2(startPos.x - moveDistance, startPos.y);
     }
 
     /***************************************************************
@@ -47,17 +47,5 @@ public class TimelineUI : MonoBehaviour
         }
 
         return icon;
-    }
-
-    public void SetActiveInsertIcon(bool isActive)
-    {
-        insertIcon.SetActive(isActive);
-    }
-
-    public void SetInsertIconImage(GameObject actor)
-    {
-        InsertIcon script = insertIcon.GetComponent<InsertIcon>();
-
-        script.SetImage(actor);
     }
 }

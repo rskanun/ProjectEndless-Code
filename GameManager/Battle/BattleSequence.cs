@@ -42,10 +42,10 @@ public class BattleSequence
         }
     }
 
-    public BattleAction GetCurrentTurn()
+    public BattleAction GetTurnAction(int index)
     {
-        if (Sequence.Count <= 0) return null;
-        return Sequence[0];
+        if (Sequence.Count <= index) return null;
+        return Sequence[index];
     }
 
     public void AddTurn(BattleAction action)

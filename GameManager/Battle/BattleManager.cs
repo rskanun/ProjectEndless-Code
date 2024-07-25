@@ -170,9 +170,6 @@ public class BattleManager : MonoBehaviour
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
-            // 맨 앞의 타임라인 표식 갱신
-            timeline.MarkCurIcon();
-
             // 턴 진행
             TakeTurn();
 
@@ -193,7 +190,7 @@ public class BattleManager : MonoBehaviour
         isTurnEnded = false;
 
         // 이전에 입력한 행동 실행
-        BattleAction curAction = battleSeq.GetCurrentTurn();
+        BattleAction curAction = battleSeq.GetTurnAction(0);
         curAction.OnAction();
 
         // 다음 턴에 진행할 행동 선택
