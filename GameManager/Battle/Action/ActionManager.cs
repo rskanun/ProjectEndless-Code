@@ -109,7 +109,6 @@ public class ActionManager : MonoBehaviour
         // 타겟 선택창 닫기
         targetSelection.CloseSelection();
 
-        // 임시로 최소 턴 선택
         switch (action.actionType)
         {
             case ActionType.Attack:
@@ -118,8 +117,8 @@ public class ActionManager : MonoBehaviour
                 break;
         }
 
-        // 턴 삽입
-        PushActionData(action);
+        // 턴 선택창 열기
+        turnSelection.OpenSelection(action);
     }
 
     public void SelectTargets(List<Entity> targets)

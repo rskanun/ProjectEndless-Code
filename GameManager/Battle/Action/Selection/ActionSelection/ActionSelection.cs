@@ -4,6 +4,8 @@ using UnityEngine;
 public class ActionSelection : MonoBehaviour
 {
     [Header("참조 스크립트")]
+    [SerializeField] private ActionManager actionManager;
+    [SerializeField] private ActionSelectionController controller;
     [SerializeField] private ActionSelectionUI actionSelectionUI;
     [SerializeField] private SkillSelectionUI skillSelectionUI;
     [SerializeField] private ItemSelectionUI itemSelectionUI;
@@ -16,14 +18,22 @@ public class ActionSelection : MonoBehaviour
 
     public void OpenSelection(Character actor)
     {
-        subSelection = null;
         this.actor = actor;
+        subSelection = null;
 
+        // 컨트롤러 활성화
+        controller.ActiveController();
+
+        // 선택창 열기
         actionSelectionUI.OpenSelectionWindow();
     }
 
     public void CloseSelection()
     {
+        // 컨트롤러 비활성화
+        controller.DeactiveController();
+
+        // 선택창 닫기
         actionSelectionUI.CloseSelectionWindow();
         skillSelectionUI.CloseSubSelection();
         itemSelectionUI.CloseSubSelection();
@@ -48,10 +58,11 @@ public class ActionSelection : MonoBehaviour
         // 열려있는 서브 선택창이 있을 경우
         if (subSelection != null)
         {
-            // 해당 창을 닫고, 행동 선택 메뉴 열기
+            // 해당 창을 닫기
             subSelection.CloseSubSelection();
-            actionSelectionUI.OpenSelectionWindow();
         }
+
+        actionManager.UndoAction();
     }
 
     public void OpenSkillSelection()

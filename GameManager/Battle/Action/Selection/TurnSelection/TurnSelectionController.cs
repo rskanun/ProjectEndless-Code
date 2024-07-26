@@ -24,8 +24,8 @@ public class TurnSelectionController : SelectionController
     {
         float h = Input.GetAxisRaw("Horizontal");
 
-        if (h > 0f) selection.MoveNextTimeline();
-        else selection.MovePrevTimeline();
+        if (h > 0f) selection.MoveNext();
+        else if (h < 0f) selection.MovePrev();
     }
 
     public void OnSelectKeyPressed()

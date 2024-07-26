@@ -16,6 +16,7 @@ public class TargetSelection : MonoBehaviour
 {
     [Header("참조 스크립트")]
     [SerializeField] private TargetSelectionUI ui;
+    [SerializeField] private TargetSelectionController controller;
     [SerializeField] private ActionManager actionManager;
 
     private List<TargetSelectButton> selectionButtons = new List<TargetSelectButton>();
@@ -47,10 +48,16 @@ public class TargetSelection : MonoBehaviour
 
         // 현재 타겟 범위 설정
         target = targetType;
+
+        // 컨트롤러 활성화
+        controller.ActiveController();
     }
 
     public void CloseSelection()
     {
+        // 컨트롤러 비활성화
+        controller.DeactiveController();
+
         // 모든 버튼 비활성화
         DeactiveAllButtons();
     }
@@ -64,6 +71,7 @@ public class TargetSelection : MonoBehaviour
     public void UndoSelection()
     {
         CloseSelection();
+        actionManager.UndoTarget();
     }
 
     /***************************************************************

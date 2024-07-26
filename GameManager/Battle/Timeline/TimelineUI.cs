@@ -6,6 +6,7 @@ public class TimelineUI : MonoBehaviour
     public HorizontalLayoutGroup groupComponent;
     public RectTransform container;
     public GameObject timelineIcon;
+    public GameObject insertIcon;
 
     // 타임라인 위치 데이터
     private float iconWidth;
@@ -17,11 +18,11 @@ public class TimelineUI : MonoBehaviour
         spacing = groupComponent.spacing;
     }
 
-    public void SetPos(int iconIndex)
+    public void CenterIconAtIndex(int index)
     {
         // n번째 아이콘이 가운데에 위치하도록 위치 조정
-        Vector2 startPos = new Vector2(-iconWidth / 2, container.localPosition.y);
-        float moveDistance = (iconWidth + spacing) * iconIndex;
+        Vector2 startPos = new Vector2(-(iconWidth + 10f) / 2, container.localPosition.y);
+        float moveDistance = (iconWidth + spacing) * index;
 
         container.localPosition = new Vector2(startPos.x - moveDistance, startPos.y);
     }
@@ -43,9 +44,33 @@ public class TimelineUI : MonoBehaviour
         // 위치 지정
         if (index.HasValue)
         {
-            iconObj.transform.SetSiblingIndex(index.Value + 1);
+            // 삽입 아이콘 개수 만큼 뒤로 보내기
+            iconObj.transform.SetSiblingIndex(index.Value + 2);
         }
 
         return icon;
+    }
+
+    /***************************************************************
+    * [ 삽입 아이콘 관리 ]
+    * 
+    * 삽입 아이콘 활성화 설정 및 관리
+    ***************************************************************/
+
+    public void SetActiveInsertIcon(bool isActive)
+    {
+        insertIcon.SetActive(isActive);
+    }
+
+    public void SetSiblingInsertIcon(int index)
+    {
+        insertIcon.transform.SetSiblingIndex(index);
+    }
+
+    public void SetInsertIconImage(GameObject actor)
+    {
+        InsertIcon script = insertIcon.GetComponent<InsertIcon>();
+
+        script.SetImage(actor);
     }
 }

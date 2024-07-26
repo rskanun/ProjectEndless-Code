@@ -9,12 +9,20 @@ public class TimelineIcon : MonoBehaviour
     public GameObject turnTimerIcon;
     public GameObject highlight;
 
+    private Vector2 originSize;
+
     // 해당 타임라인에 지정된 액션
     private BattleAction _action;
     public BattleAction Action
     {
         private set { _action = value; }
         get { return _action; }
+    }
+
+    private void Awake()
+    {
+        RectTransform rect = gameObject.GetComponent<RectTransform>();
+        originSize = rect.sizeDelta;
     }
 
     public void SetTimeline(BattleAction action)
@@ -49,7 +57,7 @@ public class TimelineIcon : MonoBehaviour
         RectTransform rect = gameObject.GetComponent<RectTransform>();
         Vector2 sizeChange = new Vector2(10f, 10f);
 
-        rect.sizeDelta += isActive ? sizeChange : -sizeChange;
+        rect.sizeDelta = originSize + (isActive ? sizeChange : Vector2.zero);
 
         // 하이라이트 활성화
         highlight.SetActive(isActive);

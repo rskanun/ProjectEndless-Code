@@ -51,6 +51,7 @@ public class ControlContext : ScriptableObject
     private IControlState _currentState;
     public IControlState CurrentState
     {
+        private set { _currentState = value; }
         get { return _currentState; }
     }
 
@@ -64,11 +65,11 @@ public class ControlContext : ScriptableObject
     public void OnKeyPressed()
     {
         if (_noKeyDown == false)
-            _currentState.OnControlKeyPressed();
+            CurrentState?.OnControlKeyPressed();
     }
 
     public void SetState(IControlState state)
     {
-        _currentState = state;
+        CurrentState = state;
     }
 }
