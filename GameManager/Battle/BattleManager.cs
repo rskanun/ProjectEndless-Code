@@ -189,8 +189,9 @@ public class BattleManager : MonoBehaviour
         // 턴 진행
         isTurnEnded = false;
 
-        // 이전에 입력한 행동 실행
         BattleAction curAction = battleSeq.GetTurnAction(0);
+
+        // 이전에 입력한 행동 실행
         curAction.OnAction();
 
         // 다음 턴에 진행할 행동 선택

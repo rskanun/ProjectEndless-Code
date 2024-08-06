@@ -2,22 +2,13 @@ using UnityEngine;
 
 public class TargetSelectionController : SelectionController
 {
-    [Header("컨트롤 스크립트")]
+    // 컨트롤 스크립트
     [SerializeField] private TargetSelection selection;
 
-    public override void OnControlKeyPressed()
+    public override void OnSelectionControlKeyPressed()
     {
-        OnUndoKeyPressed();
         OnNavigateKeyPressed();
         OnSelectKeyPressed();
-    }
-
-    public override void OnUndoKeyPressed()
-    {
-        if (Input.GetButtonDown("Cancel"))
-        {
-            selection.UndoSelection();
-        }
     }
 
     public void OnNavigateKeyPressed()

@@ -1,79 +1,39 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class TargetSelectButton : MonoBehaviour
 {
-    public Button button;
+    public bool interactable;
+    public Image targetGraphic;
+    public Sprite selectedSprite;
 
-    private System.Action onClickAction;
-    private bool isLastHover;
+    private bool isSelected;
 
-    // 선택 타겟
-    private Entity selectTarget;
-    private bool IsEnemy => selectTarget is Monster;
-    private bool IsFront => selectTarget.Position == BattlePosition.Front;
-    public bool IsSelectable => !selectTarget.IsDead;
+    [SerializeField]
+    private UnityEvent onClick;
 
     public void OnHover()
     {
-        if (button.interactable)
+        if (interactable)
         {
-            isLastHover = true;
-            EventSystem.current.SetSelectedGameObject(button.gameObject);
+            isSelected = !isSelected;
+
+            SetSelected(isSelected);
         }
-    }
-
-    public void SetTarget(Entity target)
-    {
-        selectTarget = target;
-    }
-
-    public void SetListener(System.Action listener)
-    {
-        onClickAction = listener;
     }
 
     public void OnClick()
     {
-        onClickAction?.Invoke();
-    }
-
-    private void Update()
-    {
-        if (isLastHover)
+        if (interactable)
         {
-            // 버튼 선택이 해제되었을 경우 이전 버튼 선택
-            if (EventSystem.current.currentSelectedGameObject == null)
-            {
-                EventSystem.current.SetSelectedGameObject(gameObject);
-            }
-
-            // 최근에 선택된 버튼이 아닌 경우 해제
-            if (EventSystem.current.currentSelectedGameObject != gameObject)
-            {
-                isLastHover = false;
-            }
+            onClick?.Invoke();
         }
     }
 
-    public void EnemyFrontActive()
+    private void SetSelected(bool isSelected)
     {
-        SetActive(IsEnemy && IsFront);
-    }
-
-    public void EnemyActive()
-    {
-        SetActive(IsEnemy);
-    }
-
-    public void PlayerPartyActive()
-    {
-        SetActive(!IsEnemy);
-    }
-
-    public void SetActive(bool isActive)
-    {
-        button.interactable = isActive && selectTarget.IsDead == false;
+        if (isSelected) targetGraphic.sprite = selectedSprite;
+        else targetGraphic.sprite = null;
     }
 }

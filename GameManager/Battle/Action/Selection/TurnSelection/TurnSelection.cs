@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TurnSelection : MonoBehaviour
+public class TurnSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
     [SerializeField] private Timeline timeline;
@@ -18,8 +18,10 @@ public class TurnSelection : MonoBehaviour
         sequence = BattleData.Instance.Sequence;
     }
 
-    public void OpenSelection(BattleAction action)
+    public void OpenSelection()
     {
+        BattleAction action = actionManager.GetAction();
+
         // 타임라인 삽입 아이콘 활성화
         timeline.SetActiveInsert(true);
 
@@ -45,8 +47,11 @@ public class TurnSelection : MonoBehaviour
 
         // 타임라인 원위치
         timeline.MoveStart();
+    }
 
-        actionManager.UndoTurn();
+    public void ReopenSelection()
+    {
+        // 마지막 선택창이므로 재오픈 X
     }
 
     private void SetMinIndex(BattleAction action)

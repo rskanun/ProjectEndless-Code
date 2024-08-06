@@ -8,10 +8,10 @@ public class TargetSelectionUI : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private TargetSelection manager;
 
-    public TargetSelectButton CreateSelectButton(Entity target, Vector2 pos)
+    public OldTargetSelectButton CreateSelectButton(Entity target, Vector2 pos)
     {
         GameObject selectButtonObj = Instantiate(targetPrefab, container);
-        TargetSelectButton selection = selectButtonObj.GetComponent<TargetSelectButton>();
+        OldTargetSelectButton selection = selectButtonObj.GetComponent<OldTargetSelectButton>();
 
         // 버튼 위치값을 해당 엔티티의 중심으로 지정
         selectButtonObj.transform.position = pos;

@@ -45,7 +45,7 @@ public class Character : Entity
         }
 
         // 행동 선택창 열기
-        actionSelection.SelectAction(this);
+        actionSelection.OpenActionSelection(this);
     }
 
     public AttackAction CreateAttackAction()

@@ -12,14 +12,17 @@ public enum TargetType
     Caster          // 사용자
 }
 
-public class TargetSelection : MonoBehaviour
+public class TargetSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
     [SerializeField] private TargetSelectionUI ui;
     [SerializeField] private TargetSelectionController controller;
     [SerializeField] private ActionManager actionManager;
 
-    private List<TargetSelectButton> selectionButtons = new List<TargetSelectButton>();
+    [Header("선택창")]
+    [SerializeField] private TurnSelection turnSelection;
+
+    private List<OldTargetSelectButton> selectionButtons = new List<OldTargetSelectButton>();
 
     // 현재 선택 가능한 타겟 범위
     private TargetType target;
@@ -35,19 +38,19 @@ public class TargetSelection : MonoBehaviour
         foreach (GameObject entityObj in entityList)
         {
             Entity target = entityObj.GetComponent<Entity>();
-            TargetSelectButton selectButton = ui.CreateSelectButton(target, entityObj.transform.position);
+            OldTargetSelectButton selectButton = ui.CreateSelectButton(target, entityObj.transform.position);
 
             selectionButtons.Add(selectButton);
         }
     }
 
-    public void OpenSelection(TargetType targetType)
+    public void OpenSelection()
     {
-        // 타겟 활성화
-        ActiveTarget(targetType);
-
         // 현재 타겟 범위 설정
-        target = targetType;
+        target = actionManager.GetTargetType();
+
+        // 타겟 활성화
+        ActiveTarget(target);
 
         // 컨트롤러 활성화
         controller.ActiveController();
@@ -71,7 +74,6 @@ public class TargetSelection : MonoBehaviour
     public void UndoSelection()
     {
         CloseSelection();
-        actionManager.UndoTarget();
     }
 
     /***************************************************************
@@ -147,34 +149,37 @@ public class TargetSelection : MonoBehaviour
 
     }
 
-    private void ActiveButtons(System.Action<TargetSelectButton> activeAction)
+    private void ActiveButtons(System.Action<OldTargetSelectButton> activeAction)
     {
-        foreach (TargetSelectButton button in selectionButtons)
+        foreach (OldTargetSelectButton button in selectionButtons)
         {
+            // 특정 버튼만 활성화
             activeAction(button);
 
+            // 현재 선택된 버튼이 없을 경우
             if (EventSystem.current.currentSelectedGameObject == false)
             {
-                HoverFirst(button);
+                // 처음 버튼을 선택
+                button.OnHover();
             }
         }
     }
 
-    private void HoverFirst(TargetSelectButton hoverButton)
-    {
-        hoverButton.OnHover();
-    }
-
     public void OnSelect(Entity target)
     {
+        // 타겟 선택
         actionManager.SelectTarget(target);
+
+        // 턴 선택
+        actionManager.OpenSelection(turnSelection);
     }
 
     private void DeactiveAllButtons()
     {
-        foreach (TargetSelectButton button in selectionButtons)
+        // 모든 버튼 비활성화
+        foreach (OldTargetSelectButton button in selectionButtons)
         {
-            button.SetActive(false);
+            button.Deactive();
         }
     }
 }

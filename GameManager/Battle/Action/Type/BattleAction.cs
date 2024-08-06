@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public enum ActionType
 {
@@ -13,9 +14,9 @@ public enum ActionType
 [Serializable]
 public abstract class BattleAction : IComparable<BattleAction>
 {
-    public float remainTurn;
-    public Entity actor;
     public ActionType actionType;
+    public Entity actor;
+    public float remainTurn;
 
     public int CompareTo(BattleAction seq)
     {

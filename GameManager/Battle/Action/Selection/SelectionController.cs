@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public abstract class SelectionController : MonoBehaviour, IControlState
+public class SelectionController : MonoBehaviour, IControlState
 {
+    [Header("컨트롤 스크립트")]
+    [SerializeField] private ActionManager actionManager;
+
     public void ActiveController()
     {
         ControlContext.Instance.SetState(this);
@@ -14,6 +17,19 @@ public abstract class SelectionController : MonoBehaviour, IControlState
         Debug.Log($"Deactive {GetType().Name}");
     }
 
-    public abstract void OnControlKeyPressed();
-    public abstract void OnUndoKeyPressed();
+    public void OnControlKeyPressed()
+    {
+        OnUndoKeyPressed();
+        OnSelectionControlKeyPressed();
+    }
+
+    public void OnUndoKeyPressed()
+    {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            actionManager.UndoSelection();
+        }
+    }
+
+    public virtual void OnSelectionControlKeyPressed() { }
 }

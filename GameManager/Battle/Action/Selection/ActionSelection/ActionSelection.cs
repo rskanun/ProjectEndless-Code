@@ -1,26 +1,19 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionSelection : MonoBehaviour
+public class ActionSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
     [SerializeField] private ActionManager actionManager;
     [SerializeField] private ActionSelectionController controller;
     [SerializeField] private ActionSelectionUI actionSelectionUI;
-    [SerializeField] private SkillSelectionUI skillSelectionUI;
-    [SerializeField] private ItemSelectionUI itemSelectionUI;
 
-    // 현재 열려있는 선택창
-    private ISubActionSelection subSelection;
+    [Header("선택창")]
+    [SerializeField] private SkillSelection skillSelection;
+    [SerializeField] private ItemSelection itemSelection;
+    [SerializeField] private TargetSelection targetSelection;
 
-    // 현재 턴 정보
-    private Character actor;
-
-    public void OpenSelection(Character actor)
+    public void OpenSelection()
     {
-        this.actor = actor;
-        subSelection = null;
-
         // 컨트롤러 활성화
         controller.ActiveController();
 
@@ -35,48 +28,61 @@ public class ActionSelection : MonoBehaviour
 
         // 선택창 닫기
         actionSelectionUI.CloseSelectionWindow();
-        skillSelectionUI.CloseSubSelection();
-        itemSelectionUI.CloseSubSelection();
     }
 
     public void ReopenSelection()
     {
-        if (subSelection != null)
-        {
-            // 이전에 서브 선택창을 열었다면 그 창 열기
-            subSelection.ReopenSubSelection();
-        }
-        else
-        {
-            // 열었던 서브창이 없다면 행동 선택 메뉴 열기
-            actionSelectionUI.OpenSelectionWindow();
-        }
+        // 행동 선택창 열기
+        OpenSelection();
     }
 
     public void UndoSelection()
     {
-        // 열려있는 서브 선택창이 있을 경우
-        if (subSelection != null)
-        {
-            // 해당 창을 닫기
-            subSelection.CloseSubSelection();
-        }
-
-        actionManager.UndoAction();
+        // 해당 선택창에선 뒤로가기가 없음
     }
 
-    public void OpenSkillSelection()
-    {
-        // 현재 턴인 캐릭터가 사용가능한 스킬 목록 불러오기
-        List<Skill> skillList = actor.SkillList;
+    /***************************************************************
+    * [ 행동 선택 ]
+    * 
+    * 현재 턴인 캐릭터가 어떤 행동을 취할 지 선택창 생성 및 처리
+    ***************************************************************/
 
-        // 스킬 선택창 열기
-        subSelection = skillSelectionUI;
-        skillSelectionUI.OpenSkillSelection(skillList);
+    public void OnSelectAttack()
+    {
+        // 공격 행동 생성
+        Character actor = actionManager.GetActor();
+        AttackAction action = actor.CreateAttackAction();
+
+        // 다음 선택창으로 넘기기
+        OnSelectAction(action);
     }
 
-    public void OpenItemSelection()
+    public void OnSelectSkill(Skill skill)
     {
 
+    }
+
+    public void OnSelectItem(Consumable item)
+    {
+
+    }
+
+    public void OnSelectWaiting()
+    {
+
+    }
+
+    public void OnSelectRun()
+    {
+
+    }
+
+    private void OnSelectAction(BattleAction action)
+    {
+        // 선택한 행동 저장
+        actionManager.SelectAction(action);
+
+        // 다음 선택창 열기
+        actionManager.OpenSelection(targetSelection);
     }
 }
