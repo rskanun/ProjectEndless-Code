@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -22,10 +23,24 @@ public class TargetSelection : MonoBehaviour, ISelection
     [Header("선택창")]
     [SerializeField] private TurnSelection turnSelection;
 
-    private List<OldTargetSelectButton> selectionButtons = new List<OldTargetSelectButton>();
+    private Dictionary<TargetType, Action> targetSelectActions;
+    private List<TargetSelectButton> selectButtons = new List<TargetSelectButton>();
 
     // 현재 선택 가능한 타겟 범위
     private TargetType target;
+
+    private void Awake()
+    {
+        targetSelectActions = new Dictionary<TargetType, Action>
+        {
+            { TargetType.FrontEnemy, ActiveEnemyFront },
+            { TargetType.Enemy, ActiveEnemy },
+            { TargetType.EnemyParty, ActiveEnemyParty },
+            { TargetType.PartyMember, ActivePartyMember },
+            { TargetType.PlayerParty, ActiveParty },
+            { TargetType.Caster, ActiveCaster }
+        };
+    }
 
     public void InitSelectableEntities()
     {
@@ -38,9 +53,9 @@ public class TargetSelection : MonoBehaviour, ISelection
         foreach (GameObject entityObj in entityList)
         {
             Entity target = entityObj.GetComponent<Entity>();
-            OldTargetSelectButton selectButton = ui.CreateSelectButton(target, entityObj.transform.position);
+            TargetSelectButton selectButton = ui.CreateSelectButton(target, entityObj.transform.position);
 
-            selectionButtons.Add(selectButton);
+            selectButtons.Add(selectButton);
         }
     }
 
@@ -69,6 +84,9 @@ public class TargetSelection : MonoBehaviour, ISelection
     {
         // 이전 타겟 재활성화
         ActiveTarget(target);
+
+        // 컨트롤러 활성화
+        controller.ActiveController();
     }
 
     public void UndoSelection()
@@ -77,38 +95,20 @@ public class TargetSelection : MonoBehaviour, ISelection
     }
 
     /***************************************************************
-    * [ 타겟 선택 ]
+    * [ 타겟 선택 버튼 활성화 ]
     * 
     * 선택할 타겟 범위에 따른 타겟 표시 처리
     ***************************************************************/
 
+    private bool IsAlive(Entity target) => !target.IsDead;
+    private bool IsEnemy(Entity target) => target is Monster;
+    private bool IsFront(Entity target) => target.Position == BattlePosition.Front;
+
     private void ActiveTarget(TargetType targetType)
     {
-        switch (targetType)
+        if (targetSelectActions.TryGetValue(targetType, out var action))
         {
-            case TargetType.FrontEnemy:
-                ActiveEnemyFront();
-                break;
-
-            case TargetType.Enemy:
-                ActiveEnemy();
-                break;
-
-            case TargetType.EnemyParty:
-                ActiveEnemyParty();
-                break;
-
-            case TargetType.PartyMember:
-                ActivePartyMember();
-                break;
-
-            case TargetType.PlayerParty:
-                ActiveParty();
-                break;
-
-            case TargetType.Caster:
-                ActiveCaster();
-                break;
+            action.Invoke();
         }
     }
 
@@ -116,17 +116,20 @@ public class TargetSelection : MonoBehaviour, ISelection
     {
         if (BattleData.Instance.EnemyFrontCount <= 0)
         {
+            // 전위가 없다면 모든 적 선택 가능
             ActiveEnemy();
+
+            return;
         }
-        else
-        {
-            ActiveButtons((button) => button.EnemyFrontActive());
-        }
+
+        // 전위에 있는 적만 선택
+        ActiveButtons((target) => IsEnemy(target) && IsFront(target));
     }
 
     private void ActiveEnemy()
     {
-        ActiveButtons((button) => button.EnemyActive());
+        // 적만 선택
+        ActiveButtons((target) => IsEnemy(target));
     }
 
     private void ActiveEnemyParty()
@@ -136,7 +139,8 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActivePartyMember()
     {
-        ActiveButtons((button) => button.PlayerPartyActive());
+        // 아군만 선택
+        ActiveButtons((target) => !IsEnemy(target));
     }
 
     private void ActiveParty()
@@ -149,19 +153,15 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     }
 
-    private void ActiveButtons(System.Action<OldTargetSelectButton> activeAction)
+    private void ActiveButtons(Func<Entity, bool> selectCondition)
     {
-        foreach (OldTargetSelectButton button in selectionButtons)
+        // 특정 버튼만 활성화
+        foreach (TargetSelectButton button in selectButtons)
         {
-            // 특정 버튼만 활성화
-            activeAction(button);
+            Entity target = button.targetEntity;
 
-            // 현재 선택된 버튼이 없을 경우
-            if (EventSystem.current.currentSelectedGameObject == false)
-            {
-                // 처음 버튼을 선택
-                button.OnHover();
-            }
+            // 살아있는 엔티티 중 조건에 맞는 엔티티의 버튼만 활성화
+            button.interactable = IsAlive(target) && selectCondition(target);
         }
     }
 
@@ -177,9 +177,44 @@ public class TargetSelection : MonoBehaviour, ISelection
     private void DeactiveAllButtons()
     {
         // 모든 버튼 비활성화
-        foreach (OldTargetSelectButton button in selectionButtons)
+        foreach (TargetSelectButton button in selectButtons)
         {
-            button.Deactive();
+            button.interactable = false;
         }
+    }
+
+    /***************************************************************
+    * [ 타겟 선택 ]
+    * 
+    * 선택할 타겟 지정 및 타겟 선택 처리
+    ***************************************************************/
+
+    public TargetSelectButton GetNextButton()
+    {
+        TargetSelectButton curButton = GetCurrentTarget();
+
+        return curButton.NextButton;
+    }
+
+    public TargetSelectButton GetPrevButton()
+    {
+        TargetSelectButton curButton = GetCurrentTarget();
+
+        return curButton.PrevButton;
+    }
+
+    private TargetSelectButton GetCurrentTarget()
+    {
+        if (selectButtons.Count <= 0)
+        {
+            return null;
+        }
+
+        if (TargetSelectButton.selectedButton == null)
+        {
+            TargetSelectButton.selectedButton = selectButtons[0];
+        }
+
+        return TargetSelectButton.selectedButton;
     }
 }
