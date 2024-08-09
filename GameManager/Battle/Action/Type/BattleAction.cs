@@ -24,5 +24,9 @@ public abstract class BattleAction : IComparable<BattleAction>
         else return -1;
     }
 
+    public abstract void SetTarget(List<Entity> targets);
+
     public virtual void OnAction() { }
+
+    public abstract TargetType GetTargetType();
 }

@@ -12,6 +12,7 @@ public class TargetSelectionUI : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private TargetSelection manager;
 
+    private static int count = 0;
     public TargetSelectButton CreateSelectButton(Entity target, Vector2 pos)
     {
         GameObject selectButtonObj = Instantiate(targetPrefab, container);
@@ -22,7 +23,7 @@ public class TargetSelectionUI : MonoBehaviour
 
         // 버튼 클릭 시 실행 이벤트 설정
         selectButton.targetEntity = target;
-        selectButton.AddListener(() => manager.OnSelect(target));
+        selectButton.AddListener(() => manager.OnSelectOne(target));
 
         // 버튼 연결
         SetButtonLinked(selectButton);
@@ -38,17 +39,17 @@ public class TargetSelectionUI : MonoBehaviour
             head = button;
             tail = button;
 
-            button.prevButton = button;
-            button.nextButton = button;
+            button.PrevButton = button;
+            button.NextButton = button;
         }
         else
         {
             // 새 버튼은 항상 맨 뒤에 붙음
-            button.prevButton = tail;
-            button.nextButton = head;
+            button.PrevButton = tail;
+            button.NextButton = head;
 
-            tail.nextButton = button;
-            head.prevButton = button;
+            tail.NextButton = button;
+            head.PrevButton = button;
 
             tail = button;
         }

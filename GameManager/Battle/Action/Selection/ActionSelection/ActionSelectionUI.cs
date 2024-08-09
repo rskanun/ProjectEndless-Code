@@ -34,16 +34,6 @@ public class ActionSelectionUI : MonoBehaviour
         if (lastSelectedButton == null)
             lastSelectedButton = actionButtons[0];
 
-        lastSelectedButton.Select();
-    }
-
-    private void Update()
-    {
-        if (actionWindow.activeSelf)
-        {
-            GameObject selectButtonObj = lastSelectedButton?.gameObject;
-
-            EventSystem.current.SetSelectedGameObject(selectButtonObj);
-        }
+        SelectionData.SetSelectedObject(lastSelectedButton.gameObject);
     }
 }

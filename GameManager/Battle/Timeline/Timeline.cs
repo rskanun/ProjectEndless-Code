@@ -20,6 +20,8 @@ public class Timeline : MonoBehaviour
 
     private bool isActiveInsert;
 
+    public bool isMovable;
+
     /***************************************************************
     * [ 전투 타임라인 ]
     * 
@@ -136,7 +138,7 @@ public class Timeline : MonoBehaviour
 
     public void MoveNext()
     {
-        if (centerIndex < timelines.Count - 1)
+        if (isMovable && centerIndex < timelines.Count - 1)
         {
             MoveIndex(centerIndex + 1);
         }
@@ -144,7 +146,7 @@ public class Timeline : MonoBehaviour
 
     public void MovePrev()
     {
-        if (centerIndex > 0)
+        if (isMovable && centerIndex > 0)
         {
             MoveIndex(centerIndex - 1);
         }
@@ -170,8 +172,8 @@ public class Timeline : MonoBehaviour
         else
         {
             // 삽입 아이콘의 위치는 첫번째 아이콘의 무조건 뒤
-            ui.CenterIconAtIndex(index);
-            ui.SetSiblingInsertIcon(index);
+            ui.CenterIconAtIndex(index + 1);
+            ui.SetSiblingInsertIcon(index + 1);
         }
     }
 

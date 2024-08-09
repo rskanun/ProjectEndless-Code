@@ -1,22 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class ActionManager : MonoBehaviour
 {
-    [Header("참조 스크립트")]
+    [Header("선택창")]
     [SerializeField] private ActionSelection actionSelection;
+    [SerializeField] private TargetSelection targetSelection;
+    [SerializeField] private TurnSelection turnSelection;
 
     // 참조 데이터
     private BattleData battleData;
 
     // 현재 열린 창
     private Stack<ISelection> selectionLog;
+    public ISelection openSelection
+    {
+        get { return selectionLog.Count > 0 ? selectionLog.Peek() : null; }
+    }
 
     // 현재 턴 정보
-    private List<Entity> targets;
-    private float seqTurn;
-    private int seqIndex;
-
     private BattleAction action;
     private Character actor;
 
@@ -25,17 +29,7 @@ public class ActionManager : MonoBehaviour
         battleData = BattleData.Instance;
     }
 
-    public Character GetActor()
-    {
-        return actor;
-    }
-
-    public BattleAction GetAction()
-    {
-        return action;
-    }
-
-    public void OpenActionSelection(Character actor)
+    public void OpenSelection(Character actor)
     {
         this.actor = actor;
 
@@ -43,26 +37,22 @@ public class ActionManager : MonoBehaviour
         selectionLog = new Stack<ISelection>();
 
         // 행동 선택창 열기
-        OpenSelection(actionSelection);
+        OpenActionSelection();
     }
 
-    public void OpenSelection(ISelection selection)
+    public void OpenActionSelection()
     {
-        // 이전 열린 창 가져오기
-        ISelection prevSelection = selectionLog.Count > 0 ? selectionLog.Peek() : null;
-
-        // 이전 창은 닫고 현재 창 열기
-        prevSelection?.CloseSelection();
-        selection.OpenSelection();
+        // 행동 선택 창 열기
+        actionSelection.OpenSelection(actor);
 
         // 현재 창 로그에 추가
-        selectionLog.Push(selection);
+        selectionLog.Push(actionSelection);
     }
 
     public void UndoSelection()
     {
         // 되돌릴 로그가 있는 경우
-        if (selectionLog.Count > 1)
+        if (selectionLog != null && selectionLog.Count > 1)
         {
             ISelection curSelection = selectionLog.Pop();
             ISelection prevSelection = selectionLog.Peek();
@@ -75,6 +65,15 @@ public class ActionManager : MonoBehaviour
     public void SelectAction(BattleAction action)
     {
         this.action = action;
+
+        // 행동 선택창 닫기
+        actionSelection.CloseSelection();
+
+        // 대상 선택창 열기
+        targetSelection.OpenSelection(action.GetTargetType());
+
+        // 로그 추가
+        selectionLog.Push(targetSelection);
     }
 
     /***************************************************************
@@ -85,37 +84,23 @@ public class ActionManager : MonoBehaviour
 
     public void SelectTarget(Entity target)
     {
-        switch (action.actionType)
-        {
-            case ActionType.Attack:
-                AttackAction attackAction = (AttackAction)action;
-                attackAction.target = target;
-                break;
-        }
-    }
+        List<Entity> targets = new List<Entity>() { target };
 
-    public TargetType GetTargetType()
-    {
-        switch (action.actionType)
-        {
-            case ActionType.Attack:
-                return GetAttackTargetType(action);
-
-            default:
-                return TargetType.Caster;
-        }
-    }
-
-    private TargetType GetAttackTargetType(BattleAction action)
-    {
-        Entity attacker = action.actor;
-
-        return (attacker.AttackType == AttackType.Melee) ? TargetType.FrontEnemy : TargetType.Enemy;
+        SelectTargets(targets);
     }
 
     public void SelectTargets(List<Entity> targets)
     {
+        action.SetTarget(targets);
 
+        // 대상 선택창 닫기
+        targetSelection.CloseSelection();
+
+        // 턴 선택창 열기
+        turnSelection.OpenSelection(action);
+
+        // 로그 추가
+        selectionLog.Push(turnSelection);
     }
 
     /***************************************************************
@@ -124,10 +109,10 @@ public class ActionManager : MonoBehaviour
     * 현재 행동이 배치될 턴 설정
     ***************************************************************/
 
-    private void PushActionData(BattleAction action)
+    public void SelectTurn(float turn, int index)
     {
-        int minIndex = battleData.Sequence.GetMinIndex(action);
+        action.remainTurn = turn;
 
-        // actor.OnSelectAction(action, minIndex);
+        actor.OnSelectAction(action, index);
     }
 }

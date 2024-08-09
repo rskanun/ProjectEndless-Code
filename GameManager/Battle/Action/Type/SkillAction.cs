@@ -14,4 +14,14 @@ public class SkillAction : BattleAction
     {
         actor.OnCast(castSkill, targets);
     }
+
+    public override void SetTarget(List<Entity> targets)
+    {
+        targets = targets.ConvertAll(entity => entity);
+    }
+
+    public override TargetType GetTargetType()
+    {
+        return castSkill.TargetType;
+    }
 }

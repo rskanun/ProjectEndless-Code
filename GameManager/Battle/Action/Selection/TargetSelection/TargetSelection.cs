@@ -8,7 +8,8 @@ public enum TargetType
     FrontEnemy,     // 적 진형 선열 1명
     Enemy,          // 적 진형 1명
     EnemyParty,     // 모든 적
-    PartyMember,    // 파티 맴버 1명
+    FrontMember,    // 파티 진형 선열 1명
+    Member,         // 파티 맴버 1명
     PlayerParty,    // 모든 파티 맴버
     Caster          // 사용자
 }
@@ -17,7 +18,6 @@ public class TargetSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
     [SerializeField] private TargetSelectionUI ui;
-    [SerializeField] private TargetSelectionController controller;
     [SerializeField] private ActionManager actionManager;
 
     [Header("선택창")]
@@ -26,7 +26,7 @@ public class TargetSelection : MonoBehaviour, ISelection
     private Dictionary<TargetType, Action> targetSelectActions;
     private List<TargetSelectButton> selectButtons = new List<TargetSelectButton>();
 
-    // 현재 선택 가능한 타겟 범위
+    // 현재 타겟 타입
     private TargetType target;
 
     private void Awake()
@@ -36,7 +36,7 @@ public class TargetSelection : MonoBehaviour, ISelection
             { TargetType.FrontEnemy, ActiveEnemyFront },
             { TargetType.Enemy, ActiveEnemy },
             { TargetType.EnemyParty, ActiveEnemyParty },
-            { TargetType.PartyMember, ActivePartyMember },
+            { TargetType.Member, ActivePartyMember },
             { TargetType.PlayerParty, ActiveParty },
             { TargetType.Caster, ActiveCaster }
         };
@@ -59,23 +59,16 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
     }
 
-    public void OpenSelection()
+    public void OpenSelection(TargetType target)
     {
-        // 현재 타겟 범위 설정
-        target = actionManager.GetTargetType();
+        this.target = target;
 
         // 타겟 활성화
         ActiveTarget(target);
-
-        // 컨트롤러 활성화
-        controller.ActiveController();
     }
 
     public void CloseSelection()
     {
-        // 컨트롤러 비활성화
-        controller.DeactiveController();
-
         // 모든 버튼 비활성화
         DeactiveAllButtons();
     }
@@ -84,9 +77,6 @@ public class TargetSelection : MonoBehaviour, ISelection
     {
         // 이전 타겟 재활성화
         ActiveTarget(target);
-
-        // 컨트롤러 활성화
-        controller.ActiveController();
     }
 
     public void UndoSelection()
@@ -155,6 +145,8 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveButtons(Func<Entity, bool> selectCondition)
     {
+        TargetSelectButton firstSelectButton = null;
+
         // 특정 버튼만 활성화
         foreach (TargetSelectButton button in selectButtons)
         {
@@ -162,16 +154,30 @@ public class TargetSelection : MonoBehaviour, ISelection
 
             // 살아있는 엔티티 중 조건에 맞는 엔티티의 버튼만 활성화
             button.interactable = IsAlive(target) && selectCondition(target);
+
+            // 활성화된 버튼이 없을 경우
+            if (firstSelectButton == null && button.interactable)
+            {
+                // 임시로 첫번째 버튼 저장
+                firstSelectButton = button;
+            }
         }
+
+        // 이전 버튼 선택
+        if (TargetSelectButton.lastSelected == null || TargetSelectButton.lastSelected.interactable == false)
+        {
+            // 이전에 선택한 버튼을 선택할 수 없는 경우 선택가능한 첫 버튼 선택
+            TargetSelectButton.lastSelected = firstSelectButton;
+        }
+
+        GameObject prevObj = EventSystem.current.currentSelectedGameObject;
+        SelectionData.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
     }
 
-    public void OnSelect(Entity target)
+    public void OnSelectOne(Entity target)
     {
         // 타겟 선택
         actionManager.SelectTarget(target);
-
-        // 턴 선택
-        actionManager.OpenSelection(turnSelection);
     }
 
     private void DeactiveAllButtons()
@@ -181,40 +187,8 @@ public class TargetSelection : MonoBehaviour, ISelection
         {
             button.interactable = false;
         }
-    }
 
-    /***************************************************************
-    * [ 타겟 선택 ]
-    * 
-    * 선택할 타겟 지정 및 타겟 선택 처리
-    ***************************************************************/
-
-    public TargetSelectButton GetNextButton()
-    {
-        TargetSelectButton curButton = GetCurrentTarget();
-
-        return curButton.NextButton;
-    }
-
-    public TargetSelectButton GetPrevButton()
-    {
-        TargetSelectButton curButton = GetCurrentTarget();
-
-        return curButton.PrevButton;
-    }
-
-    private TargetSelectButton GetCurrentTarget()
-    {
-        if (selectButtons.Count <= 0)
-        {
-            return null;
-        }
-
-        if (TargetSelectButton.selectedButton == null)
-        {
-            TargetSelectButton.selectedButton = selectButtons[0];
-        }
-
-        return TargetSelectButton.selectedButton;
+        // 선택 버튼 초기화
+        SelectionData.SetSelectedObject(null);
     }
 }

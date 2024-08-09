@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
-public class TurnSelection : MonoBehaviour, ISelection
+public class TurnSelection : MonoBehaviour, ISelection, IMoveHandler
 {
     [Header("참조 스크립트")]
     [SerializeField] private Timeline timeline;
-    [SerializeField] private TurnSelectionController controller;
     [SerializeField] private ActionManager actionManager;
 
     // 참조 데이터
@@ -18,24 +19,20 @@ public class TurnSelection : MonoBehaviour, ISelection
         sequence = BattleData.Instance.Sequence;
     }
 
-    public void OpenSelection()
+    public void OpenSelection(BattleAction action)
     {
-        BattleAction action = actionManager.GetAction();
+        timeline.isMovable = true;
 
         // 타임라인 삽입 아이콘 활성화
         timeline.SetActiveInsert(true);
 
         // 배치 가능한 최소 위치 설정
         SetMinIndex(action);
-
-        // 컨트롤러 활성화
-        controller.ActiveController();
     }
 
     public void CloseSelection()
     {
-        // 컨트롤러 비활성화
-        controller.DeactiveController();
+        timeline.isMovable = false;
 
         // 타임라인 삽입 아이콘 비활성화
         timeline.SetActiveInsert(false);
@@ -62,6 +59,24 @@ public class TurnSelection : MonoBehaviour, ISelection
         timeline.MoveIndex(minIndex);
     }
 
+    /***************************************************************
+    * [ 타임라인 선택 ]
+    * 
+    * 해당 액션을 어느 타임라인에 넣을 지 선택 처리
+    ***************************************************************/
+
+    public void OnMove(AxisEventData eventData)
+    {
+        if (eventData.moveDir == MoveDirection.Left)
+        {
+            MoveNext();
+        }
+        else if (eventData.moveDir == MoveDirection.Right)
+        {
+            MovePrev();
+        }
+    }
+
     public void MoveNext()
     {
         timeline.MoveNext();
@@ -69,9 +84,9 @@ public class TurnSelection : MonoBehaviour, ISelection
 
     public void MovePrev()
     {
-        timeline.MovePrev();
         if (timeline.CenterIndex > minIndex)
         {
+            timeline.MovePrev();
         }
     }
 
@@ -79,6 +94,8 @@ public class TurnSelection : MonoBehaviour, ISelection
     {
         // 배치될 턴의 이전 행동의 턴 수 가져오기
         // (해당 턴 = 배치될 행동의 턴)
-        // BattleAction prevAction = sequence.GetTurnAction(timeline.IconIndex - 1);
+        BattleAction prevAction = sequence.GetTurnAction(timeline.CenterIndex);
+
+        actionManager.SelectTurn(prevAction.remainTurn, timeline.CenterIndex);
     }
 }

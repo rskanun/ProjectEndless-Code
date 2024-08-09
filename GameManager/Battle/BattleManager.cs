@@ -12,18 +12,18 @@ public class BattleManager : MonoBehaviour
         public List<Vector2> back;
     }
 
-    [Header("캐릭터 오브젝트")]
-    [SerializeField] private List<GameObject> allMemberObjs;
+    [Header("참조 스크립트")]
+    [SerializeField] private Timeline timeline;
+    [SerializeField] private BattleResultUI resultUI;
+    [SerializeField] private TargetSelection selectionManager;
 
     [Header("엔티티 배치")]
     [SerializeField]
     private PositionData battlePos;
     private Dictionary<(BattlePosition, int), Vector2> position;
 
-    [Header("참조 스크립트")]
-    [SerializeField] private Timeline timeline;
-    [SerializeField] private BattleResultUI resultUI;
-    [SerializeField] private TargetSelection selectionManager;
+    [Header("캐릭터 오브젝트")]
+    [SerializeField] private List<GameObject> allMemberObjs;
 
     [Header("테스트 필드 몬스터")]
     [SerializeField] private FieldMobData mobData;
