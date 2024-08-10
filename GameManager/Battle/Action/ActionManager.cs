@@ -5,6 +5,9 @@ using static UnityEngine.GraphicsBuffer;
 
 public class ActionManager : MonoBehaviour
 {
+    [Header("컨트롤러")]
+    [SerializeField] private BattleController controller;
+
     [Header("선택창")]
     [SerializeField] private ActionSelection actionSelection;
     [SerializeField] private TargetSelection targetSelection;
@@ -27,6 +30,11 @@ public class ActionManager : MonoBehaviour
     private void Awake()
     {
         battleData = BattleData.Instance;
+    }
+
+    public void SetSubController(IControlState subController)
+    {
+        controller.SetSubController(subController);
     }
 
     public void OpenSelection(Character actor)
@@ -111,8 +119,13 @@ public class ActionManager : MonoBehaviour
 
     public void SelectTurn(float turn, int index)
     {
+        // 턴 선택창 닫기
+        turnSelection.CloseSelection();
+
+        // 턴 적용
         action.remainTurn = turn;
 
+        // 선택한 데이터를 종합한 행동 실행
         actor.OnSelectAction(action, index);
     }
 }

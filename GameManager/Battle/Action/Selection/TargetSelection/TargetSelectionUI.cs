@@ -12,7 +12,6 @@ public class TargetSelectionUI : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private TargetSelection manager;
 
-    private static int count = 0;
     public TargetSelectButton CreateSelectButton(Entity target, Vector2 pos)
     {
         GameObject selectButtonObj = Instantiate(targetPrefab, container);

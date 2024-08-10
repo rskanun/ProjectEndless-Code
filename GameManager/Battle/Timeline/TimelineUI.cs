@@ -36,7 +36,7 @@ public class TimelineUI : MonoBehaviour
     public TimelineIcon CreateTimelineIcon(BattleAction action, int? index = null)
     {
         GameObject iconObj = Instantiate(timelineIcon, container);
-        TimelineIcon icon = iconObj.GetComponent<TimelineIcon>();
+        SequenceIcon icon = iconObj.GetComponent<SequenceIcon>();
 
         // 타임라인 지정
         icon.SetTimeline(action);
@@ -49,28 +49,5 @@ public class TimelineUI : MonoBehaviour
         }
 
         return icon;
-    }
-
-    /***************************************************************
-    * [ 삽입 아이콘 관리 ]
-    * 
-    * 삽입 아이콘 활성화 설정 및 관리
-    ***************************************************************/
-
-    public void SetActiveInsertIcon(bool isActive)
-    {
-        insertIcon.SetActive(isActive);
-    }
-
-    public void SetSiblingInsertIcon(int index)
-    {
-        insertIcon.transform.SetSiblingIndex(index);
-    }
-
-    public void SetInsertIconImage(GameObject actor)
-    {
-        InsertIcon script = insertIcon.GetComponent<InsertIcon>();
-
-        script.SetImage(actor);
     }
 }

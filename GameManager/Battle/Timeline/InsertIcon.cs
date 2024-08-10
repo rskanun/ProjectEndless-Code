@@ -1,9 +1,8 @@
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InsertIcon : MonoBehaviour
+public class InsertIcon : TimelineIcon
 {
     public Image iconImage;
     public Image highlight;

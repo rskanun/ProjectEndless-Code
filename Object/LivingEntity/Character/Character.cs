@@ -71,11 +71,6 @@ public class Character : Entity
         // 캐릭터의 성격마다 우선순위로 선택하는 타겟이 다름
     }
 
-    public void OnSelectItem()
-    {
-
-    }
-
     public void OnSelectAction(BattleAction action, int index)
     {
         // 행동 예약

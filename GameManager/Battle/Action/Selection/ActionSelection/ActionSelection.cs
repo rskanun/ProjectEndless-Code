@@ -6,6 +6,7 @@ public class ActionSelection : MonoBehaviour, ISelection
     [Header("참조 스크립트")]
     [SerializeField] private ActionManager actionManager;
     [SerializeField] private ActionSelectionUI actionSelectionUI;
+    [SerializeField] private ActionSelectionController controller;
 
     [Header("서브 선택창")]
     [SerializeField] private SkillSelectionUI skillSelectionUI;
@@ -24,6 +25,9 @@ public class ActionSelection : MonoBehaviour, ISelection
 
         // 선택창 열기
         actionSelectionUI.OpenSelectionWindow();
+
+        // 컨트롤러 설정
+        actionManager.SetSubController(controller);
     }
 
     public void CloseSelection()
@@ -32,11 +36,17 @@ public class ActionSelection : MonoBehaviour, ISelection
         {
             // 서브창이 열려있으면 서브창 닫기
             subSelection.CloseSubSelection();
+
+            // 컨트롤러 설정
+            actionManager.SetSubController(controller);
         }
         else
         {
             // 선택창이 열려있으면 선택창 닫기
             actionSelectionUI.CloseSelectionWindow();
+
+            // 컨트롤러 없애기
+            actionManager.SetSubController(null);
         }
     }
 
@@ -46,11 +56,17 @@ public class ActionSelection : MonoBehaviour, ISelection
         {
             // 서브창이 열린 적이 있다면, 서브창 열기
             subSelection.ReopenSubSelection();
+
+            // 컨트롤러 없애기
+            actionManager.SetSubController(null);
         }
         else
         {
             // 서브창이 열리지 않았다면 행동 선택창 열기
             actionSelectionUI.OpenSelectionWindow();
+
+            // 컨트롤러 설정
+            actionManager.SetSubController(controller);
         }
     }
 
