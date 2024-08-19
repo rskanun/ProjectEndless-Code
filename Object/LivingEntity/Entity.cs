@@ -87,10 +87,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
     {
-        foreach (Entity target in targets)
-        {
-            skill.OnCasting(target);
-        }
+        skill.OnCasting(this, targets);
     }
 
     public virtual void OnUseItem(Consumable item, List<Entity> targets)

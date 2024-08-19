@@ -99,7 +99,14 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void OnSelectSkill(Skill skill)
     {
+        // 스킬 행동 생성
+        SkillAction action = new SkillAction();
 
+        action.castSkill = skill;
+        action.actor = actor;
+
+        // 선택한 행동 알리기
+        actionManager.SelectAction(action);
     }
 
     public void OnSelectItem(Consumable item)
@@ -115,6 +122,16 @@ public class ActionSelection : MonoBehaviour, ISelection
     public void OnSelectRun()
     {
 
+    }
+
+    public void OpenSkillSelection()
+    {
+        // 행동 선택창 닫기
+        actionSelectionUI.CloseSelectionWindow();
+
+        // 스킬 선택창 열기
+        subSelection = skillSelectionUI;
+        skillSelectionUI.OpenSkillSelection(actor.SkillList);
     }
 
     private void SelectAction(BattleAction action)

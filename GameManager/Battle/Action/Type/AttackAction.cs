@@ -2,7 +2,12 @@ using System.Collections.Generic;
 
 public class AttackAction : BattleAction
 {
-    public Entity target;
+    private Entity _target;
+    public Entity Target
+    {
+        private set { _target = value; }
+        get { return _target; }
+    }
 
     public AttackAction()
     {
@@ -11,12 +16,12 @@ public class AttackAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnAttack(target);
+        actor.OnAttack(Target);
     }
 
     public override void SetTarget(List<Entity> targets)
     {
-        if (targets.Count > 0) target = targets[0];
+        if (targets.Count > 0) Target = targets[0];
     }
 
     public override TargetType GetTargetType()
