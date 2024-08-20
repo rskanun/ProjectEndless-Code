@@ -1,15 +1,11 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ActionSelectionUI : MonoBehaviour
 {
-    [Header("행동 선택창")]
     [SerializeField] private GameObject actionWindow;
-
-    [Header("행동 선택 버튼")]
-    [SerializeField] private List<Button> actionButtons;
+    [SerializeField] private Button firstSelectedButton;
 
     private Button lastSelectedButton;
 
@@ -32,8 +28,13 @@ public class ActionSelectionUI : MonoBehaviour
     private void SelectLastSelctedButton()
     {
         if (lastSelectedButton == null)
-            lastSelectedButton = actionButtons[0];
+            lastSelectedButton = firstSelectedButton;
 
         SelectionData.SetSelectedObject(lastSelectedButton.gameObject);
+    }
+
+    public void SetLastSelectedButton(Button button)
+    {
+        lastSelectedButton = button;
     }
 }

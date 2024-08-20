@@ -92,6 +92,7 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private bool IsAlive(Entity target) => !target.IsDead;
     private bool IsEnemy(Entity target) => target is Monster;
+    private bool IsMember(Entity target) => target is Character;
     private bool IsFront(Entity target) => target.Position == BattlePosition.Front;
 
     private void ActiveTarget(TargetType targetType)
@@ -124,7 +125,8 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveEnemyParty()
     {
-
+        // 모든 적 선택
+        MultiSelectButtons((target) => IsEnemy(target));
     }
 
     private void ActivePartyMember()
@@ -143,7 +145,7 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     }
 
-    private void ActiveButtons(Func<Entity, bool> selectCondition)
+    private void ActiveButtons(Func<Entity, bool> activeCondition)
     {
         TargetSelectButton firstSelectButton = null;
 
@@ -153,7 +155,7 @@ public class TargetSelection : MonoBehaviour, ISelection
             Entity target = button.targetEntity;
 
             // 살아있는 엔티티 중 조건에 맞는 엔티티의 버튼만 활성화
-            button.interactable = IsAlive(target) && selectCondition(target);
+            button.interactable = IsAlive(target) && activeCondition(target);
 
             // 활성화된 버튼이 없을 경우
             if (firstSelectButton == null && button.interactable)
@@ -174,10 +176,43 @@ public class TargetSelection : MonoBehaviour, ISelection
         SelectionData.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
     }
 
-    public void OnSelectOne(Entity target)
+    private void MultiSelectButtons(Func<Entity, bool> selectCondition)
     {
-        // 타겟 선택
-        actionManager.SelectTarget(target);
+        TargetSelectButton firstSelectButton = null;
+
+        // 특정 버튼만 활성화
+        foreach (TargetSelectButton button in selectButtons)
+        {
+            Entity target = button.targetEntity;
+
+            // 살아있는 엔티티 중 조건에 맞는 엔티티의 버튼만 활성화 및 선택
+            button.interactable = IsAlive(target) && selectCondition(target);
+
+            if (button.interactable)
+            {
+                button.MultiSelected();
+
+                if (firstSelectButton == null)
+                {
+                    firstSelectButton = button;
+                }
+            }
+        }
+
+        // 활성화 된 버튼 중 아무(첫번째) 버튼 선택
+        SelectionData.SetSelectedObject(firstSelectButton.gameObject);
+    }
+
+    public void OnSelect()
+    {
+        List<Entity> list = new List<Entity>();
+
+        foreach (TargetSelectButton button in selectButtons)
+        {
+            if (button.IsSelected) list.Add(button.targetEntity);
+        }
+
+        actionManager.SelectTargets(list);
     }
 
     private void DeactiveAllButtons()
@@ -186,6 +221,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         foreach (TargetSelectButton button in selectButtons)
         {
             button.interactable = false;
+            button.Deselected();
         }
 
         // 선택 버튼 초기화

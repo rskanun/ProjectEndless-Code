@@ -9,11 +9,8 @@ public class ActionSelection : MonoBehaviour, ISelection
     [SerializeField] private ActionSelectionController controller;
 
     [Header("서브 선택창")]
-    [SerializeField] private SkillSelectionUI skillSelectionUI;
+    [SerializeField] private SkillSelection skillSelection;
     [SerializeField] private ItemSelectionUI itemSelectionUI;
-
-    // 현재 열려있는 서브창
-    private ISubActionSelection subSelection;
 
     // 현재 행동을 진행 중인 캐릭터
     private Character actor;
@@ -21,7 +18,6 @@ public class ActionSelection : MonoBehaviour, ISelection
     public void OpenSelection(Character actor)
     {
         this.actor = actor;
-        subSelection = null;
 
         // 선택창 열기
         actionSelectionUI.OpenSelectionWindow();
@@ -32,54 +28,34 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void CloseSelection()
     {
-        if (subSelection != null)
-        {
-            // 서브창이 열려있으면 서브창 닫기
-            subSelection.CloseSubSelection();
+        // 선택창 닫기
+        actionSelectionUI.CloseSelectionWindow();
 
-            // 컨트롤러 설정
-            actionManager.SetSubController(controller);
-        }
-        else
-        {
-            // 선택창이 열려있으면 선택창 닫기
-            actionSelectionUI.CloseSelectionWindow();
-
-            // 컨트롤러 없애기
-            actionManager.SetSubController(null);
-        }
+        // 컨트롤러 없애기
+        actionManager.SetSubController(null);
     }
 
     public void ReopenSelection()
     {
-        if (subSelection != null)
-        {
-            // 서브창이 열린 적이 있다면, 서브창 열기
-            subSelection.ReopenSubSelection();
-
-            // 컨트롤러 없애기
-            actionManager.SetSubController(null);
-        }
-        else
-        {
-            // 서브창이 열리지 않았다면 행동 선택창 열기
-            actionSelectionUI.OpenSelectionWindow();
-
-            // 컨트롤러 설정
-            actionManager.SetSubController(controller);
-        }
+        // 현재 순서인 캐릭터 그대로 행동 선택창 열기
+        OpenSelection(actor);
     }
 
     public void UndoSelection()
     {
-        if (subSelection != null)
-        {
-            // 서브창이 열려있다면 닫기
-            subSelection.CloseSubSelection();
+        // 행동 선택창이 마지막이므로 되돌리기 X
+    }
 
-            // 서브창 로그 초기화
-            subSelection = null;
-        }
+    public void OpenSkillSelection()
+    {
+        // 행동 선택창 닫기
+        actionSelectionUI.CloseSelectionWindow();
+
+        // 스킬 선택창 열기
+        skillSelection.OpenSelection(actor.SkillList);
+
+        // 로그 추가
+        actionManager.AddLog(skillSelection);
     }
 
     /***************************************************************
@@ -122,16 +98,6 @@ public class ActionSelection : MonoBehaviour, ISelection
     public void OnSelectRun()
     {
 
-    }
-
-    public void OpenSkillSelection()
-    {
-        // 행동 선택창 닫기
-        actionSelectionUI.CloseSelectionWindow();
-
-        // 스킬 선택창 열기
-        subSelection = skillSelectionUI;
-        skillSelectionUI.OpenSkillSelection(actor.SkillList);
     }
 
     private void SelectAction(BattleAction action)

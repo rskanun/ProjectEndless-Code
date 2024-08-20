@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class ActionManager : MonoBehaviour
 {
@@ -18,10 +16,6 @@ public class ActionManager : MonoBehaviour
 
     // 현재 열린 창
     private Stack<ISelection> selectionLog;
-    public ISelection openSelection
-    {
-        get { return selectionLog.Count > 0 ? selectionLog.Peek() : null; }
-    }
 
     // 현재 턴 정보
     private BattleAction action;
@@ -35,6 +29,11 @@ public class ActionManager : MonoBehaviour
     public void SetSubController(IControlState subController)
     {
         controller.SetSubController(subController);
+    }
+
+    public void AddLog(ISelection openSelection)
+    {
+        selectionLog.Push(openSelection);
     }
 
     public void OpenSelection(Character actor)
@@ -54,7 +53,7 @@ public class ActionManager : MonoBehaviour
         actionSelection.OpenSelection(actor);
 
         // 현재 창 로그에 추가
-        selectionLog.Push(actionSelection);
+        AddLog(actionSelection);
     }
 
     public void UndoSelection()
@@ -74,14 +73,15 @@ public class ActionManager : MonoBehaviour
     {
         this.action = action;
 
-        // 행동 선택창 닫기
-        actionSelection.CloseSelection();
+        // 이전 선택창 닫기
+        ISelection prevSelection = selectionLog.Peek();
+        prevSelection.CloseSelection();
 
         // 대상 선택창 열기
         targetSelection.OpenSelection(action.GetTargetType());
 
         // 로그 추가
-        selectionLog.Push(targetSelection);
+        AddLog(targetSelection);
     }
 
     /***************************************************************
@@ -108,7 +108,7 @@ public class ActionManager : MonoBehaviour
         turnSelection.OpenSelection(action);
 
         // 로그 추가
-        selectionLog.Push(turnSelection);
+        AddLog(turnSelection);
     }
 
     /***************************************************************

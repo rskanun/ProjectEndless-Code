@@ -1,7 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -13,8 +12,9 @@ public class SkillInfo : MonoBehaviour, ISelectHandler
     public TextMeshProUGUI costTurn;
     public TextMeshProUGUI costSP;
 
-    // Hover 이벤트
+    // 이벤트
     private Action hoverHandler;
+    private Action clickHandler;
 
     public void SetSkill(Skill skill)
     {
@@ -36,6 +36,16 @@ public class SkillInfo : MonoBehaviour, ISelectHandler
     public void SetHoverHandler(Action handler)
     {
         hoverHandler = handler;
+    }
+
+    public void OnClick()
+    {
+        clickHandler?.Invoke();
+    }
+
+    public void SetClickHandler(Action handler)
+    {
+        clickHandler = handler;
     }
 
     public void OnSelect(BaseEventData eventData)

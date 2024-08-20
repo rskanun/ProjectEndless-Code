@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSelectionUI : MonoBehaviour, ISubActionSelection
+public class ItemSelectionUI : MonoBehaviour
 {
     public void OpenItemSelection(List<Consumable> items)
     {

@@ -9,6 +9,10 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
     public bool interactable;
     private bool isSelected;
+    public bool IsSelected
+    {
+        get { return isSelected; }
+    }
 
     [HideInInspector]
     public Entity targetEntity;

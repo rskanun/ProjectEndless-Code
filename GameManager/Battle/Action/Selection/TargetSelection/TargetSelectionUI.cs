@@ -22,7 +22,7 @@ public class TargetSelectionUI : MonoBehaviour
 
         // 버튼 클릭 시 실행 이벤트 설정
         selectButton.targetEntity = target;
-        selectButton.AddListener(() => manager.OnSelectOne(target));
+        selectButton.AddListener(() => manager.OnSelect());
 
         // 버튼 연결
         SetButtonLinked(selectButton);
