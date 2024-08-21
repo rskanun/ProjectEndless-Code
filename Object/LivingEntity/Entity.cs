@@ -19,6 +19,9 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] private GameEvent turnEndEvent;
     [SerializeField] private GameEvent deadEvent;
 
+    [Header("참조 스크립트")]
+    [SerializeField] private BattleHUD hud;
+
     [Header("엔티티 정보")]
     [SerializeField]
     private string _name;
@@ -69,6 +72,13 @@ public abstract class Entity : MonoBehaviour
         get { return _isDead; }
     }
 
+    protected void InitHUD()
+    {
+        // HUD 업데이트
+        hud.UpdateHP(Stat.HP, Stat.MaxHP);
+        hud.UpdateMP(Stat.MP, Stat.MaxMP);
+    }
+
     /***************************************************************
     * [ 턴 진행 ]
     * 
@@ -117,6 +127,10 @@ public abstract class Entity : MonoBehaviour
 
         // 최종 마력 수치(임시)
         Stat.MP = Stat.MP - targetMP;
+
+        // HUD 업데이트
+        hud.UpdateHP(Stat.HP, Stat.MaxHP);
+        hud.UpdateMP(Stat.MP, Stat.MaxMP);
 
         // 오브젝트 사망 처리
         if (Stat.HP <= 0)

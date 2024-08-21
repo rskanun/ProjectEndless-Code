@@ -21,8 +21,8 @@ public class SkillInfo : MonoBehaviour, ISelectHandler
         // 정보 적용
         icon.sprite = skill.IconSprite;
         skillName.text = skill.Name;
-        costTurn.text = skill.ConsumeTurn.ToString("0.0");
-        costSP.text = $"{skill.ConsumeSP} SP";
+        costTurn.text = skill.CostTurn.ToString("0.0");
+        costSP.text = $"{skill.CostSP} SP";
     }
 
     public void OnHover()

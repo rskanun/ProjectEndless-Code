@@ -28,6 +28,9 @@ public class Monster : Entity
     private void Awake()
     {
         battleData = BattleData.Instance;
+
+        // HUD 업데이트
+        InitHUD();
     }
 
     public int GetDropGold()
@@ -126,11 +129,10 @@ public class Monster : Entity
         base.OnDead();
 
         // 사망 모션
-        gameObject.SetActive(false);
     }
 
     public override void OnManaShort()
     {
-        throw new System.NotImplementedException();
+
     }
 }

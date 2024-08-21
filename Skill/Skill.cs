@@ -23,16 +23,16 @@ public abstract class Skill : ScriptableObject
         get { return _targetType; }
     }
     [SerializeField]
-    private float _consumeTurn;
-    public float ConsumeTurn
+    private float _costTurn;
+    public float CostTurn
     {
-        get { return _consumeTurn; }
+        get { return _costTurn; }
     }
     [SerializeField]
-    private int _consumeSP;
-    public int ConsumeSP
+    private int _costSP;
+    public int CostSP
     {
-        get { return _consumeSP; }
+        get { return _costSP; }
     }
     [SerializeField]
     [TextArea(0, 3)]

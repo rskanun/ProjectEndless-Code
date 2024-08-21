@@ -24,6 +24,9 @@ public class Character : Entity
         SkillList = data.Skills;
         Stat = data.Stat;
 
+        // HUD 업데이트
+        InitHUD();
+
         // 오브젝트 활성화
         gameObject.SetActive(true);
     }
