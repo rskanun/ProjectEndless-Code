@@ -22,12 +22,12 @@ public class Monster : Entity
         get { return _dropItems; }
     }
 
-    // 전투 데이터
-    private BattleData battleData;
-
-    private void Awake()
+    protected override void Awake()
     {
-        battleData = BattleData.Instance;
+        base.Awake();
+
+        // 최종스텟 설정
+        InitLastStat();
 
         // HUD 업데이트
         InitHUD();

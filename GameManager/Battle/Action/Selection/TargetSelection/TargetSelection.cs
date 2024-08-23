@@ -137,7 +137,8 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveParty()
     {
-
+        // 모든 아군 선택
+        MultiSelectButtons(target => !IsEnemy(target));
     }
 
     private void ActiveCaster()

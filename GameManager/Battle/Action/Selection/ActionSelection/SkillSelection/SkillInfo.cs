@@ -12,17 +12,27 @@ public class SkillInfo : MonoBehaviour, ISelectHandler
     public TextMeshProUGUI costTurn;
     public TextMeshProUGUI costSP;
 
+    // 스킬 정보
+    private Skill skill;
+
     // 이벤트
     private Action hoverHandler;
     private Action clickHandler;
 
     public void SetSkill(Skill skill)
     {
+        this.skill = skill;
+
         // 정보 적용
         icon.sprite = skill.IconSprite;
         skillName.text = skill.Name;
         costTurn.text = skill.CostTurn.ToString("0.0");
         costSP.text = $"{skill.CostSP} SP";
+    }
+
+    public Skill GetSkill()
+    {
+        return skill;
     }
 
     public void OnHover()

@@ -11,13 +11,21 @@ public class SkillSelection : MonoBehaviour, ISelection
     // 현재 스킬창 내 스킬 정보 오브젝트
     private List<GameObject> skillInfoList = new List<GameObject>();
 
+    // 마지막 선택 버튼
+    private GameObject lastSelected;
+
     public void OpenSelection(List<Skill> skills)
     {
+        lastSelected = null;
+
         // 스킬창 열기
         ui.SetActiveWindow(true);
 
         // 스킬 정보 배치
         SetSkillsInfo(skills);
+
+        // 초기 스킬 선택
+        SelectLastButton();
     }
 
     public void CloseSelection()
@@ -30,6 +38,9 @@ public class SkillSelection : MonoBehaviour, ISelection
     {
         // 이전 유지된 데이터를 기반으로 스킬창 열기
         ui.SetActiveWindow(true);
+
+        // 초기 스킬 선택
+        SelectLastButton();
     }
 
     public void UndoSelection()
@@ -54,16 +65,6 @@ public class SkillSelection : MonoBehaviour, ISelection
         {
             AddSkillInfo(skill);
         }
-
-        // 스킬 정보창 초기값 설정
-        if (skillInfoList.Count > 0)
-        {
-            // 첫번째 스킬을 초기 선택 스킬로 설정
-            EventSystem.current.SetSelectedGameObject(skillInfoList[0]);
-
-            // 해당 스킬 설명 설정
-            ui.SetDescription(skills[0]);
-        }
     }
 
     private void AddSkillInfo(Skill skill)
@@ -76,10 +77,14 @@ public class SkillSelection : MonoBehaviour, ISelection
         skillInfo.SetSkill(skill);
 
         // Hover 설정
-        skillInfo.SetHoverHandler(() => ui.SetDescription(skill));
+        skillInfo.SetHoverHandler(() => ui.SetDescription(skill.Description));
 
         // 버튼 클릭 설정
-        skillInfo.SetClickHandler(() => actionSelection.OnSelectSkill(skill));
+        skillInfo.SetClickHandler(() =>
+        {
+            actionSelection.OnSelectSkill(skill);
+            lastSelected = skillInfoObj;
+        });
 
         // 파괴를 위해 리스트에 추가
         skillInfoList.Add(skillInfoObj);
@@ -95,5 +100,24 @@ public class SkillSelection : MonoBehaviour, ISelection
 
         // 리스트 초기화
         skillInfoList.Clear();
+    }
+
+    private void SelectLastButton()
+    {
+        if (skillInfoList.Count > 0)
+        {
+            // 마지막으로 선택한 버튼이 없을 경우 첫버튼 선택
+            if (lastSelected == null)
+                lastSelected = skillInfoList[0];
+
+            // 버튼 선택
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+
+            // 설명 설정
+            SkillInfo skill = lastSelected.GetComponent<SkillInfo>();
+            string description = skill.GetSkill().Description;
+
+            ui.SetDescription(description);
+        }
     }
 }

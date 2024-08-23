@@ -34,6 +34,7 @@ public class BattleManager : MonoBehaviour
 
     // 전투 진행 상태
     private bool isTurnEnded = false;
+    private List<Entity> entityList = new List<Entity>();
 
     private void InitPosition()
     {
@@ -85,8 +86,8 @@ public class BattleManager : MonoBehaviour
 
     private void StartBattle(FieldMobData fieldMobData)
     {
-        // 전투 참여 엔티티 목록
-        List<Entity> entityList = new List<Entity>();
+        // 전투 참여 엔티티 목록 초기화
+        entityList.Clear();
 
         // 플레이어 진형 파티 설정
         List<Character> playerParty = GetPlayerParty();
@@ -186,12 +187,10 @@ public class BattleManager : MonoBehaviour
 
     private void TakeTurn()
     {
-        // 턴 진행
         isTurnEnded = false;
 
-        BattleAction curAction = battleSeq.GetTurnAction(0);
-
         // 이전에 입력한 행동 실행
+        BattleAction curAction = battleSeq.GetTurnAction(0);
         curAction.OnAction();
 
         // 다음 턴에 진행할 행동 선택
@@ -200,9 +199,14 @@ public class BattleManager : MonoBehaviour
 
     public void EndTurn()
     {
+        // 적이 남아있다면 다음 턴 진행
         if (battleData.IsInBattle)
         {
-            // 적이 남아있다면 다음 턴 진행
+            // 다음 턴 턴수만큼 상태이상 지속 시간 돌리기
+            BattleAction nextAction = battleSeq.GetTurnAction(1);
+            UpdateEffectTimers(nextAction.remainTurn);
+
+            // 다음 턴 진행
             battleSeq.NextTurn();
         }
 
@@ -216,6 +220,14 @@ public class BattleManager : MonoBehaviour
         {
             // 파티가 살아남았다면 결과창 출력
             resultUI.OpenResult();
+        }
+    }
+
+    private void UpdateEffectTimers(float turn)
+    {
+        foreach (Entity entity in entityList)
+        {
+            entity.UpdateEffectTimer(turn);
         }
     }
 }

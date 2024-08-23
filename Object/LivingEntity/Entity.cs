@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum BattlePosition
@@ -57,11 +58,18 @@ public abstract class Entity : MonoBehaviour
 
     [Header("스텟")]
     [SerializeField]
-    private EntityStat _stat;
+    private EntityStat _originStat;
+    public EntityStat OriginStat
+    {
+        protected set { _originStat = value; }
+        get { return _originStat; }
+    }
+    [SerializeField]
+    private EntityStat _lastStat;  // 상태 효과에 따른 최종 스탯값
     public EntityStat Stat
     {
-        protected set { _stat = value; }
-        get { return _stat; }
+        protected set { _lastStat = value; }
+        get { return _lastStat; }
     }
 
     // 현재 상태
@@ -72,11 +80,46 @@ public abstract class Entity : MonoBehaviour
         get { return _isDead; }
     }
 
+    // 상태 효과 관리 매니져
+    private StatusEffectManager effectManager;
+
+    // 전투 순서 데이터
+    protected BattleData battleData { private set; get; }
+
+    protected virtual void Awake()
+    {
+        InitData();
+    }
+
+    private void InitData()
+    {
+        effectManager = new StatusEffectManager();
+
+        battleData = BattleData.Instance;
+    }
+
     protected void InitHUD()
     {
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
         hud.UpdateMP(Stat.MP, Stat.MaxMP);
+    }
+
+    protected void InitLastStat()
+    {
+        if (Stat == null)
+            Stat = new EntityStat();
+
+        Stat.MaxHP = OriginStat.MaxHP;
+        Stat.HP = OriginStat.HP;
+        Stat.STR = OriginStat.STR;
+        Stat.DEF = OriginStat.DEF;
+        Stat.AGI = OriginStat.AGI;
+        Stat.MaxMP = OriginStat.MaxMP;
+        Stat.MP = OriginStat.MP;
+        Stat.MaxSP = OriginStat.MaxSP;
+        Stat.SP = OriginStat.SP;
+        Stat.SAN = OriginStat.SAN;
     }
 
     /***************************************************************
@@ -157,4 +200,73 @@ public abstract class Entity : MonoBehaviour
     }
 
     public abstract void OnManaShort();
+
+    /***************************************************************
+    * [ 상태 효과 ]
+    * 
+    * 상태 효과 관리와 그에 따른 상태 변화 적용
+    ***************************************************************/
+
+    public void UpdateEffectTimer(float turn)
+    {
+        effectManager.UpdateEffectTimer(turn);
+    }
+
+    public void AddEffect(StatusEffect effect)
+    {
+        // 효과 적용
+        effectManager.AddEffect(
+            effect, 
+            () => ApplyEffect(effect), 
+            () => ClearEffect(effect)
+        );
+    }
+
+    private void ApplyEffect(StatusEffect effect)
+    {
+        foreach (StatusEffectData effectData in effect.Effects)
+        {
+            ApplyEffect(effectData);
+        }
+    }
+
+    private void ApplyEffect(StatusEffectData effect)
+    {
+        switch (effect.Type)
+        {
+            case EffectType.Haste:
+                ApplyHaste(effect.EffectRange);
+                break;
+        }
+    }
+
+    private void ApplyHaste(float range)
+    {
+        float addAGI = OriginStat.AGI * range;
+        Stat.AGI += (int)Math.Round(addAGI, MidpointRounding.AwayFromZero);
+    }
+
+    private void ClearEffect(StatusEffect effect)
+    {
+        foreach (StatusEffectData effectData in effect.Effects)
+        {
+            ClearEffect(effectData);
+        }
+    }
+
+    private void ClearEffect(StatusEffectData effect)
+    {
+        switch (effect.Type)
+        {
+            case EffectType.Haste:
+                ClearHaste(effect.EffectRange);
+                break;
+        }
+    }
+
+    private void ClearHaste(float range)
+    {
+        float subAGI = OriginStat.AGI * range;
+        Stat.AGI -= (int)Math.Round(subAGI, MidpointRounding.AwayFromZero);
+    }
 }

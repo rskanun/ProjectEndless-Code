@@ -6,14 +6,17 @@ public class BuffSkill : Skill
 {
     [Header("버프 정보")]
     [SerializeField]
-    private StatusEffect _buff;
-    public StatusEffect Buff
+    private Buff _buff;
+    public Buff Buff
     {
         get { return _buff; }
     }
 
     public override void OnCasting(Entity caster, List<Entity> targets)
     {
-        throw new System.NotImplementedException();
+        foreach (Entity target in targets)
+        {
+            target.AddEffect(Buff);
+        }
     }
 }

@@ -14,9 +14,9 @@ public class SkillSelectionUI : MonoBehaviour
         selectionWindow.SetActive(isActive);
     }
 
-    public void SetDescription(Skill skill)
+    public void SetDescription(string description)
     {
-        descriptionText.text = skill.Description;
+        descriptionText.text = description;
     }
 
     public GameObject CreateSkillInfo(Skill skill)

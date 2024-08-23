@@ -5,12 +5,9 @@ public class Character : Entity
     [Header("참조 스크립트")]
     [SerializeField] private ActionManager actionSelection;
 
-    // 전투 순서 데이터
-    private BattleData battleData;
-
-    private void Start()
+    protected override void Awake()
     {
-        battleData = BattleData.Instance;
+        base.Awake();
     }
 
     public void OnJoinBattle()
@@ -22,7 +19,10 @@ public class Character : Entity
         Position = data.Position;
         AttackType = data.AttackType;
         SkillList = data.Skills;
-        Stat = data.Stat;
+        OriginStat = data.Stat;
+
+        // 최종스텟 설정
+        InitLastStat();
 
         // HUD 업데이트
         InitHUD();
