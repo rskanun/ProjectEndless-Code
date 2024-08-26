@@ -10,7 +10,7 @@ public class ItemResultUI : MonoBehaviour
 
     public void SetItemInfo(Item dropitem, int count)
     {
-        itemIcon.sprite = dropitem.Icon;
+        itemIcon.sprite = dropitem.IconSprite;
         itemName.text = dropitem.Name;
         itemCount.text = $"x {count:D2}";
     }

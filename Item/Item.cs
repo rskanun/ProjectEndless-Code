@@ -13,17 +13,17 @@ public enum ItemType
 public class Item : ScriptableObject
 {
     [SerializeField]
-    private string _itemName;
+    private string _name;
     public string Name
     {
-        get { return _itemName; }
+        get { return _name; }
     }
 
     [SerializeField]
-    private Sprite _icon;
-    public Sprite Icon
+    private Sprite _iconSprite;
+    public Sprite IconSprite
     {
-        get { return _icon; }
+        get { return _iconSprite; }
     }
 
     public virtual ItemType Type
@@ -33,9 +33,9 @@ public class Item : ScriptableObject
 
     [SerializeField]
     [TextArea]
-    private string _lores;
-    public string Lores
+    private string _description;
+    public string Description
     {
-        get { return _lores; }
+        get { return _description; }
     }
 }

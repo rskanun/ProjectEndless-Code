@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 public class ItemAction : BattleAction
 {
@@ -18,7 +17,7 @@ public class ItemAction : BattleAction
 
     public override void SetTarget(List<Entity> targets)
     {
-        targets = targets.ConvertAll(entity => entity);
+        this.targets = targets.ConvertAll(entity => entity);
     }
 
     public override TargetType GetTargetType()

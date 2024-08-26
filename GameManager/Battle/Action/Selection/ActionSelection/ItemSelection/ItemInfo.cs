@@ -4,37 +4,48 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SkillInfo : MonoBehaviour, ISelectHandler
+public class ItemInfo : MonoBehaviour, ISelectHandler
 {
-    [Header("스킬 정보 구성요소")]
+    [Header("아이템 정보 구성요소")]
     public Image icon;
     public Button button;
     public GameObject unusablePanel;
-    public TextMeshProUGUI skillName;
-    public TextMeshProUGUI costTurn;
-    public TextMeshProUGUI costSP;
+    public TextMeshProUGUI itemName;
+    public TextMeshProUGUI itemCount;
 
-    // 스킬 정보
-    private Skill skill;
+    // 아이템 정보
+    private Consumable item;
+    private int count;
 
     // 이벤트
     private Action hoverHandler;
     private Action clickHandler;
 
-    public void SetSkill(Skill skill)
+    public void SetItem(Consumable item, int count)
     {
-        this.skill = skill;
+        this.item = item;
+        this.count = count;
 
-        // 정보 적용
-        icon.sprite = skill.IconSprite;
-        skillName.text = skill.Name;
-        costTurn.text = skill.CostTurn.ToString("0.0");
-        costSP.text = $"{skill.CostSP} SP";
+        // 정보 적응
+        icon.sprite = item.IconSprite;
+        itemName.text = item.Name;
+        itemCount.text = $"x{count}";
     }
 
-    public Skill GetSkill()
+    public Consumable GetItem()
     {
-        return skill;
+        return item;
+    }
+
+    public int GetCount()
+    {
+        return count;
+    }
+
+    public void SetCount(int count)
+    {
+        this.count = count;
+        itemCount.text = $"x{count}";
     }
 
     public void OnHover()
@@ -55,7 +66,10 @@ public class SkillInfo : MonoBehaviour, ISelectHandler
 
     public void OnClick()
     {
-        clickHandler?.Invoke();
+        if (count > 0)
+        {
+            clickHandler?.Invoke();
+        }
     }
 
     public void SetClickHandler(Action handler)

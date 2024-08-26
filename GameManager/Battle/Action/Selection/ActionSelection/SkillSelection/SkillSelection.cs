@@ -14,7 +14,7 @@ public class SkillSelection : MonoBehaviour, ISelection
     // 마지막 선택 버튼
     private GameObject lastSelected;
 
-    public void OpenSelection(List<Skill> skills)
+    public void OpenSelection(Character actor)
     {
         lastSelected = null;
 
@@ -22,7 +22,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         ui.SetActiveWindow(true);
 
         // 스킬 정보 배치
-        SetSkillsInfo(skills);
+        InitSkillsInfo(actor.SkillList, actor.Stat.SP);
 
         // 초기 스킬 선택
         SelectLastButton();
@@ -55,7 +55,7 @@ public class SkillSelection : MonoBehaviour, ISelection
     * 스킬 선택창의 구성 UI 설정
     ***************************************************************/
 
-    private void SetSkillsInfo(List<Skill> skills)
+    private void InitSkillsInfo(List<Skill> skills, int remainSP)
     {
         // 기존 스킬 정보 삭제
         ClearSkillList();
@@ -63,11 +63,15 @@ public class SkillSelection : MonoBehaviour, ISelection
         // 새 스킬 정보 등록
         foreach (Skill skill in skills)
         {
-            AddSkillInfo(skill);
+            // 스킬 정보 오브젝트 생성
+            GameObject skillInfoObj = CreateSkillInfoObject(skill, remainSP);
+
+            // 오브젝트 리스트에 추가
+            skillInfoList.Add(skillInfoObj);
         }
     }
 
-    private void AddSkillInfo(Skill skill)
+    private GameObject CreateSkillInfoObject(Skill skill, int remainSP)
     {
         // 스킬 정보를 담은 오브젝트 생성
         GameObject skillInfoObj = ui.CreateSkillInfo(skill);
@@ -76,18 +80,25 @@ public class SkillSelection : MonoBehaviour, ISelection
         SkillInfo skillInfo = skillInfoObj.GetComponent<SkillInfo>();
         skillInfo.SetSkill(skill);
 
-        // Hover 설정
+        // hover 설정
         skillInfo.SetHoverHandler(() => ui.SetDescription(skill.Description));
 
         // 버튼 클릭 설정
         skillInfo.SetClickHandler(() =>
         {
-            actionSelection.OnSelectSkill(skill);
-            lastSelected = skillInfoObj;
+            OnSkillClicked(skill, skillInfoObj);
         });
 
-        // 파괴를 위해 리스트에 추가
-        skillInfoList.Add(skillInfoObj);
+        // 스킬 사용 여부 설정
+        skillInfo.SetUsable(skill.CostSP <= remainSP);
+
+        return skillInfoObj;
+    }
+
+    private void OnSkillClicked(Skill skill, GameObject skillInfoObj)
+    {
+        actionSelection.OnSelectSkill(skill);
+        lastSelected = skillInfoObj;
     }
 
     private void ClearSkillList()
@@ -104,20 +115,42 @@ public class SkillSelection : MonoBehaviour, ISelection
 
     private void SelectLastButton()
     {
-        if (skillInfoList.Count > 0)
+        if (skillInfoList.Count == 0) return;
+
+        if (lastSelected == null)
         {
-            // 마지막으로 선택한 버튼이 없을 경우 첫버튼 선택
-            if (lastSelected == null)
-                lastSelected = skillInfoList[0];
-
-            // 버튼 선택
-            EventSystem.current.SetSelectedGameObject(lastSelected);
-
-            // 설명 설정
-            SkillInfo skill = lastSelected.GetComponent<SkillInfo>();
-            string description = skill.GetSkill().Description;
-
-            ui.SetDescription(description);
+            // 이전에 선택한 버튼이 없는 경우 선택 가능한 첫번째 요소를 선택
+            lastSelected = GetFirstUsableItem();
         }
+
+        // 버튼 선택
+        EventSystem.current.SetSelectedGameObject(lastSelected);
+
+        // 스킬 설명 설정
+        UpdateDescription(lastSelected);
+    }
+
+    private GameObject GetFirstUsableItem()
+    {
+        // 첫번째 선택 요소 찾기
+        foreach (GameObject skillInfoObj in skillInfoList)
+        {
+            SkillInfo skillInfo = skillInfoObj.GetComponent<SkillInfo>();
+
+            // 해당 스킬을 사용가능한 경우
+            if (skillInfo.IsUsable())
+            {
+                // 해당 스킬을 첫번째 선택 요소로 반환
+                return skillInfoObj;
+            }
+        }
+
+        return null;
+    }
+
+    private void UpdateDescription(GameObject selectedItem)
+    {
+        SkillInfo skill = selectedItem.GetComponent<SkillInfo>();
+        ui.SetDescription(skill.GetSkill().Description);
     }
 }

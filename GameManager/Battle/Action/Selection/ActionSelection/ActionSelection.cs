@@ -10,7 +10,7 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     [Header("서브 선택창")]
     [SerializeField] private SkillSelection skillSelection;
-    [SerializeField] private ItemSelectionUI itemSelectionUI;
+    [SerializeField] private ItemSelection itemSelection;
 
     // 현재 행동을 진행 중인 캐릭터
     private Character actor;
@@ -52,10 +52,22 @@ public class ActionSelection : MonoBehaviour, ISelection
         actionSelectionUI.CloseSelectionWindow();
 
         // 스킬 선택창 열기
-        skillSelection.OpenSelection(actor.SkillList);
+        skillSelection.OpenSelection(actor);
 
         // 로그 추가
         actionManager.AddLog(skillSelection);
+    }
+
+    public void OpenItemSelection()
+    {
+        // 행동 선택창 닫기
+        actionSelectionUI.CloseSelectionWindow();
+
+        // 아이템 선택창 열기
+        itemSelection.OpenSelection();
+
+        // 로그 추가
+        actionManager.AddLog(itemSelection);
     }
 
     /***************************************************************
@@ -80,6 +92,7 @@ public class ActionSelection : MonoBehaviour, ISelection
 
         action.castSkill = skill;
         action.actor = actor;
+        action.remainTurn = skill.CostTurn;
 
         // 선택한 행동 알리기
         actionManager.SelectAction(action);
@@ -87,12 +100,27 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void OnSelectItem(Consumable item)
     {
+        // 아이템 행동 생성
+        ItemAction action = new ItemAction();
 
+        action.usingItem = item;
+        action.actor = actor;
+        action.remainTurn = 0.0f;
+
+        // 선택한 행동 알리기
+        actionManager.SelectAction(action);
     }
 
     public void OnSelectWaiting()
     {
+        // 대기 행동 생성
+        WaitAction action = new WaitAction();
 
+        action.actor = actor;
+        action.remainTurn = 0.0f;
+
+        // 선택한 행동 알리기
+        actionManager.SelectAction(action);
     }
 
     public void OnSelectRun()

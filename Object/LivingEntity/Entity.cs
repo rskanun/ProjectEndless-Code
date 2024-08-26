@@ -20,9 +20,6 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] private GameEvent turnEndEvent;
     [SerializeField] private GameEvent deadEvent;
 
-    [Header("참조 스크립트")]
-    [SerializeField] private BattleHUD hud;
-
     [Header("엔티티 정보")]
     [SerializeField]
     private string _name;
@@ -72,6 +69,9 @@ public abstract class Entity : MonoBehaviour
         get { return _lastStat; }
     }
 
+    [Header("참조 스크립트")]
+    [SerializeField] protected BattleHUD hud;
+
     // 현재 상태
     private bool _isDead;
     public bool IsDead
@@ -103,6 +103,7 @@ public abstract class Entity : MonoBehaviour
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
         hud.UpdateMP(Stat.MP, Stat.MaxMP);
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
     }
 
     protected void InitLastStat()
@@ -140,15 +141,17 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
     {
+        // SP 소모
+        Stat.SP -= skill.CostSP;
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
+
+        // 스킬 시전
         skill.OnCasting(this, targets);
     }
 
     public virtual void OnUseItem(Consumable item, List<Entity> targets)
     {
-        foreach (Entity target in targets)
-        {
-            item.OnUse(target);
-        }
+        item.OnUse(targets);
     }
 
     public virtual void OnRun()

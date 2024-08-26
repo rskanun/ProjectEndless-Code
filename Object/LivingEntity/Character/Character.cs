@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Character : Entity
 {
-    [Header("참조 스크립트")]
+    // 참조 스크립트
     [SerializeField] private ActionManager actionSelection;
 
     protected override void Awake()

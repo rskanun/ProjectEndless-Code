@@ -3,12 +3,7 @@ using System.Collections.Generic;
 public class SkillAction : BattleAction
 {
     public Skill castSkill;
-    private List<Entity> _targets;
-    public List<Entity> Targets
-    {
-        private set { _targets = value; }
-        get { return _targets; }
-    }
+    public List<Entity> targets;
 
     public SkillAction()
     {
@@ -17,12 +12,12 @@ public class SkillAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnCast(castSkill, Targets);
+        actor.OnCast(castSkill, targets);
     }
 
     public override void SetTarget(List<Entity> targets)
     {
-        Targets = targets.ConvertAll(entity => entity);
+        this.targets = targets.ConvertAll(entity => entity);
     }
 
     public override TargetType GetTargetType()

@@ -90,13 +90,6 @@ public class ActionManager : MonoBehaviour
     * 현재 행동의 타겟이 될 대상 선택
     ***************************************************************/
 
-    public void SelectTarget(Entity target)
-    {
-        List<Entity> targets = new List<Entity>() { target };
-
-        SelectTargets(targets);
-    }
-
     public void SelectTargets(List<Entity> targets)
     {
         action.SetTarget(targets);

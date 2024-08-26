@@ -8,6 +8,10 @@ public class BattleHUD : MonoBehaviour
     public Image hpBar;
     public TextMeshProUGUI hpAmount;
 
+    [Header("스테미나바 요소")]
+    public Image spBar;
+    public TextMeshProUGUI spAmount;
+
     [Header("마력바 요소")]
     public Image mpBar;
 
@@ -18,6 +22,15 @@ public class BattleHUD : MonoBehaviour
 
         // 텍스트 업데이트
         hpAmount.text = $"{currentHP} / {maxHP}";
+    }
+
+    public void UpdateSP(int currentSP, int maxSP)
+    {
+        // 바 업데이트
+        spBar.fillAmount = (float)currentSP / maxSP;
+
+        // 텍스트 업데이트
+        spAmount.text = $"{currentSP} / {maxSP}";
     }
 
     public void UpdateMP(int currentMP, int maxMP)

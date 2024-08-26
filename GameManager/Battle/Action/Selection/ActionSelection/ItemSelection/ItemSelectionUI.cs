@@ -1,11 +1,11 @@
 using TMPro;
 using UnityEngine;
 
-public class SkillSelectionUI : MonoBehaviour
+public class ItemSelectionUI : MonoBehaviour
 {
-    [Header("스킬창 구성요소")]
+    [Header("아이템창 구성요소")]
     public GameObject selectionWindow;
-    public GameObject skillInfoPrefab;
+    public GameObject itemInfoPrefab;
     public Transform container;
     public TextMeshProUGUI descriptionText;
 
@@ -19,11 +19,11 @@ public class SkillSelectionUI : MonoBehaviour
         descriptionText.text = description;
     }
 
-    public GameObject CreateSkillInfo(Skill skill)
+    public GameObject CreateItemInfo(Consumable item)
     {
-        GameObject skillInfoObj = Instantiate(skillInfoPrefab, container);
+        GameObject itemInfoObj = Instantiate(itemInfoPrefab, container);
 
         // 생성된 오브젝트 리턴
-        return skillInfoObj;
+        return itemInfoObj;
     }
 }
