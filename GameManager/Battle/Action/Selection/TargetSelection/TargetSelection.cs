@@ -11,7 +11,7 @@ public enum TargetType
     FrontMember,    // 파티 진형 선열 1명
     Member,         // 파티 맴버 1명
     PlayerParty,    // 모든 파티 맴버
-    Caster          // 사용자
+    None            // 타겟 선택 X
 }
 
 public class TargetSelection : MonoBehaviour, ISelection
@@ -38,7 +38,7 @@ public class TargetSelection : MonoBehaviour, ISelection
             { TargetType.EnemyParty, ActiveEnemyParty },
             { TargetType.Member, ActivePartyMember },
             { TargetType.PlayerParty, ActiveParty },
-            { TargetType.Caster, ActiveCaster }
+            { TargetType.None, ActiveNone }
         };
     }
 
@@ -59,9 +59,9 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
     }
 
-    public void OpenSelection(TargetType target)
+    public void OpenSelection(SelectionData selectionData)
     {
-        this.target = target;
+        target = selectionData.action.GetTargetType();
 
         // 타겟 활성화
         ActiveTarget(target);
@@ -141,9 +141,10 @@ public class TargetSelection : MonoBehaviour, ISelection
         MultiSelectButtons(target => !IsEnemy(target));
     }
 
-    private void ActiveCaster()
+    private void ActiveNone()
     {
-
+        // 선택 스킵
+        actionManager.SelectTargets(null);
     }
 
     private void ActiveButtons(Func<Entity, bool> activeCondition)
@@ -174,7 +175,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         GameObject prevObj = EventSystem.current.currentSelectedGameObject;
-        SelectionData.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
+        AutoSelectedData.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
     }
 
     private void MultiSelectButtons(Func<Entity, bool> selectCondition)
@@ -201,7 +202,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         // 활성화 된 버튼 중 아무(첫번째) 버튼 선택
-        SelectionData.SetSelectedObject(firstSelectButton.gameObject);
+        AutoSelectedData.SetSelectedObject(firstSelectButton.gameObject);
     }
 
     public void OnSelect()
@@ -226,6 +227,6 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         // 선택 버튼 초기화
-        SelectionData.SetSelectedObject(null);
+        AutoSelectedData.SetSelectedObject(null);
     }
 }
