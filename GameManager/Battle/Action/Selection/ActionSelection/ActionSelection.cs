@@ -8,22 +8,16 @@ public class ActionSelection : MonoBehaviour, ISelection
     [SerializeField] private ActionSelectionUI actionSelectionUI;
     [SerializeField] private ActionSelectionController controller;
 
-    [Header("서브 선택창")]
-    [SerializeField] private SkillSelection skillSelection;
-    [SerializeField] private ItemSelection itemSelection;
-
-    // 현재 행동을 진행 중인 캐릭터
+    // 현재 턴인 캐릭터
     private Character actor;
 
-    public void OpenSelection(Character actor)
+    public void OpenSelection(SelectionData selectionData)
     {
-        this.actor = actor;
+        // 현재 턴인 캐릭터 설정
+        actor = selectionData.actor;
 
-        // 선택창 열기
-        actionSelectionUI.OpenSelectionWindow();
-
-        // 컨트롤러 설정
-        actionManager.SetSubController(controller);
+        // 행동 선택창 열기
+        OpenActionSelection(actor);
     }
 
     public void CloseSelection()
@@ -37,8 +31,8 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void ReopenSelection()
     {
-        // 현재 순서인 캐릭터 그대로 행동 선택창 열기
-        OpenSelection(actor);
+        // 다시 선택창 열기
+        OpenActionSelection(actor);
     }
 
     public void UndoSelection()
@@ -46,28 +40,13 @@ public class ActionSelection : MonoBehaviour, ISelection
         // 행동 선택창이 마지막이므로 되돌리기 X
     }
 
-    public void OpenSkillSelection()
+    private void OpenActionSelection(Character actor)
     {
-        // 행동 선택창 닫기
-        actionSelectionUI.CloseSelectionWindow();
+        // 선택창 열기
+        actionSelectionUI.OpenSelectionWindow();
 
-        // 스킬 선택창 열기
-        skillSelection.OpenSelection(actor);
-
-        // 로그 추가
-        actionManager.AddLog(skillSelection);
-    }
-
-    public void OpenItemSelection()
-    {
-        // 행동 선택창 닫기
-        actionSelectionUI.CloseSelectionWindow();
-
-        // 아이템 선택창 열기
-        itemSelection.OpenSelection();
-
-        // 로그 추가
-        actionManager.AddLog(itemSelection);
+        // 컨트롤러 설정
+        actionManager.SetSubController(controller);
     }
 
     /***************************************************************
@@ -81,29 +60,26 @@ public class ActionSelection : MonoBehaviour, ISelection
         // 공격 행동 생성
         AttackAction action = actor.CreateAttackAction();
 
-        // 선택한 행동 알리기
+        // 타겟 선택창으로 넘어가기
         actionManager.SelectAction(action);
     }
 
-    public void OnSelectSkill(Skill skill)
+    public void OnSelectSkill()
     {
         // 스킬 행동 생성
         SkillAction action = new SkillAction();
 
-        action.castSkill = skill;
         action.actor = actor;
-        action.remainTurn = skill.CostTurn;
 
         // 선택한 행동 알리기
         actionManager.SelectAction(action);
     }
 
-    public void OnSelectItem(Consumable item)
+    public void OnSelectItem()
     {
         // 아이템 행동 생성
         ItemAction action = new ItemAction();
 
-        action.usingItem = item;
         action.actor = actor;
         action.remainTurn = 0.0f;
 

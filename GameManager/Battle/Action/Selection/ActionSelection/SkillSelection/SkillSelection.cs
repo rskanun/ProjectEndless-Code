@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class SkillSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
-    [SerializeField] private ActionSelection actionSelection;
+    [SerializeField] private ActionManager actionManager;
     [SerializeField] private SkillSelectionUI ui;
 
     // 현재 스킬창 내 스킬 정보 오브젝트
@@ -14,7 +14,7 @@ public class SkillSelection : MonoBehaviour, ISelection
     // 마지막 선택 버튼
     private GameObject lastSelected;
 
-    public void OpenSelection(Character actor)
+    public void OpenSelection(SelectionData selectionData)
     {
         lastSelected = null;
 
@@ -22,6 +22,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         ui.SetActiveWindow(true);
 
         // 스킬 정보 배치
+        Character actor = selectionData.actor;
         InitSkillsInfo(actor.SkillList, actor.Stat.SP);
 
         // 초기 스킬 선택
@@ -97,7 +98,7 @@ public class SkillSelection : MonoBehaviour, ISelection
 
     private void OnSkillClicked(Skill skill, GameObject skillInfoObj)
     {
-        actionSelection.OnSelectSkill(skill);
+        actionManager.SelectSkill(skill);
         lastSelected = skillInfoObj;
     }
 

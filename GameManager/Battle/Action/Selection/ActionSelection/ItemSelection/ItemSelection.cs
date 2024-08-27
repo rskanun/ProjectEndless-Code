@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class ItemSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
-    [SerializeField] private ActionSelection actionSelection;
+    [SerializeField] private ActionManager actionManager;
     [SerializeField] private ItemSelectionUI ui;
 
     // 현재 아이템창 내 아이템 정보 오브젝트
@@ -14,7 +14,7 @@ public class ItemSelection : MonoBehaviour, ISelection
     // 마지막 선택 버튼
     private GameObject lastSelected;
 
-    public void OpenSelection()
+    public void OpenSelection(SelectionData selectionData)
     {
         // 아이템창 열기
         ui.SetActiveWindow(true);
@@ -107,7 +107,7 @@ public class ItemSelection : MonoBehaviour, ISelection
 
     private void OnItemClicked(ItemInfo itemInfo, Consumable consumable, GameObject itemInfoObj)
     {
-        actionSelection.OnSelectItem(consumable);
+        actionManager.SelectItem(consumable);
         lastSelected = itemInfoObj;
     }
 

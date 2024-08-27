@@ -21,6 +21,6 @@ public class RunAction : BattleAction
 
     public override TargetType GetTargetType()
     {
-        return TargetType.Caster;
+        return TargetType.None;
     }
 }

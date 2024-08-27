@@ -24,9 +24,9 @@ public class TurnSelection : MonoBehaviour, ISelection
         sequence = BattleData.Instance.Sequence;
     }
 
-    public void OpenSelection(BattleAction action)
+    public void OpenSelection(SelectionData selectionData)
     {
-        this.action = action;
+        action = selectionData.action;
 
         // 타임라인 삽입 아이콘 활성화
         ActiveInsertIcon();

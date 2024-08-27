@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class SelectionData
+{
+    public Character actor;
+    public BattleAction action;
+}
+
 public class ActionManager : MonoBehaviour
 {
     [Header("컨트롤러")]
@@ -8,6 +14,8 @@ public class ActionManager : MonoBehaviour
 
     [Header("선택창")]
     [SerializeField] private ActionSelection actionSelection;
+    [SerializeField] private SkillSelection skillSelection;
+    [SerializeField] private ItemSelection itemSelection;
     [SerializeField] private TargetSelection targetSelection;
     [SerializeField] private TurnSelection turnSelection;
 
@@ -18,42 +26,29 @@ public class ActionManager : MonoBehaviour
     private Stack<ISelection> selectionLog;
 
     // 현재 턴 정보
-    private BattleAction action;
-    private Character actor;
+    private SelectionData selectionData;
 
     private void Awake()
     {
         battleData = BattleData.Instance;
+
+        selectionData = new SelectionData();
     }
 
-    public void SetSubController(IControlState subController)
+    public void OpenSelection(ISelection selection)
     {
-        controller.SetSubController(subController);
-    }
+        // 이전 선택창이 있으면 닫기
+        if (selectionLog.Count > 0)
+        {
+            ISelection prevSelection = selectionLog.Peek();
+            prevSelection.CloseSelection();
+        }
 
-    public void AddLog(ISelection openSelection)
-    {
-        selectionLog.Push(openSelection);
-    }
+        // 다음 열 선택창 로그에 추가
+        selectionLog.Push(selection);
 
-    public void OpenSelection(Character actor)
-    {
-        this.actor = actor;
-
-        // 로그 초기화
-        selectionLog = new Stack<ISelection>();
-
-        // 행동 선택창 열기
-        OpenActionSelection();
-    }
-
-    public void OpenActionSelection()
-    {
-        // 행동 선택 창 열기
-        actionSelection.OpenSelection(actor);
-
-        // 현재 창 로그에 추가
-        AddLog(actionSelection);
+        // 다음 선택창 열기
+        selection.OpenSelection(selectionData);
     }
 
     public void UndoSelection()
@@ -69,19 +64,83 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    public void SetSubController(IControlState subController)
+    {
+        controller.SetSubController(subController);
+    }
+
+    public void OnSelect(Character actor)
+    {
+        selectionData.actor = actor;
+
+        // 로그 초기화
+        selectionLog = new Stack<ISelection>();
+
+        // 행동 선택창 열기
+        OpenSelection(actionSelection);
+    }
+
+    /***************************************************************
+    * [ 행동 선택 ]
+    * 
+    * 다음에 취할 행동 선택
+    ***************************************************************/
+
     public void SelectAction(BattleAction action)
     {
-        this.action = action;
+        selectionData.action = action;
 
-        // 이전 선택창 닫기
-        ISelection prevSelection = selectionLog.Peek();
-        prevSelection.CloseSelection();
+        // 다음 선택창 열기
+        ISelection nextSelection = GetNextSelection(action.actionType);
+        OpenSelection(nextSelection);
+    }
 
-        // 대상 선택창 열기
-        targetSelection.OpenSelection(action.GetTargetType());
+    public void SelectSkill(Skill skill)
+    {
+        // 선택한 스킬 등록
+        SkillAction action = (SkillAction)selectionData.action;
 
-        // 로그 추가
-        AddLog(targetSelection);
+        Debug.Log(selectionData.action == null);
+        action.castSkill = skill;
+        action.remainTurn = skill.CostTurn;
+
+        // 다음 선택창 열기
+        OpenSelection(targetSelection);
+    }
+
+    public void SelectItem(Consumable item)
+    {
+        // 선택한 아이템 등록
+        ItemAction action = (ItemAction)selectionData.action;
+
+        action.usingItem = item;
+
+        // 다음 선택창 열기
+        OpenSelection(targetSelection);
+    }
+
+    private ISelection GetNextSelection(ActionType type)
+    {
+        if (type == ActionType.Run || type == ActionType.Wait)
+        {
+            // 도망과 대기는 타겟 선택 X
+            return turnSelection;
+        }
+        else if (type == ActionType.Skill)
+        {
+            // 스킬일 경우 스킬 선택창 열기
+            return skillSelection;
+        }
+        else if (type == ActionType.Item)
+        {
+            // 아이템일 경우 아이템 선택창 열기
+            return itemSelection;
+        }
+        else
+        {
+            // 나머지는 전부 타겟 선택
+            return targetSelection;
+        }
     }
 
     /***************************************************************
@@ -92,16 +151,10 @@ public class ActionManager : MonoBehaviour
 
     public void SelectTargets(List<Entity> targets)
     {
-        action.SetTarget(targets);
-
-        // 대상 선택창 닫기
-        targetSelection.CloseSelection();
+        selectionData.action.SetTarget(targets);
 
         // 턴 선택창 열기
-        turnSelection.OpenSelection(action);
-
-        // 로그 추가
-        AddLog(turnSelection);
+        OpenSelection(turnSelection);
     }
 
     /***************************************************************
@@ -112,6 +165,9 @@ public class ActionManager : MonoBehaviour
 
     public void SelectTurn(float turn, int index)
     {
+        Character actor = selectionData.actor;
+        BattleAction action = selectionData.action;
+
         // 턴 선택창 닫기
         turnSelection.CloseSelection();
 

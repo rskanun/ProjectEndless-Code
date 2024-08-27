@@ -30,7 +30,7 @@ public class ActionSelectionUI : MonoBehaviour
         if (lastSelectedButton == null)
             lastSelectedButton = firstSelectedButton;
 
-        SelectionData.SetSelectedObject(lastSelectedButton.gameObject);
+        AutoSelectedData.SetSelectedObject(lastSelectedButton.gameObject);
     }
 
     public void SetLastSelectedButton(Button button)

@@ -125,7 +125,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
             }
 
             // 해당 버튼을 선택된 버튼으로 선택
-            SelectionData.SetSelectedObject(gameObject);
+            AutoSelectedData.SetSelectedObject(gameObject);
         }
 
         // 버튼 선택

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SelectionData
+public class AutoSelectedData
 {
     private static GameObject _selectedObj;
     public static GameObject SelectedObj
@@ -23,14 +23,14 @@ public class AutoSelector : MonoBehaviour
     {
         GameObject firstSelected = EventSystem.current.firstSelectedGameObject;
 
-        SelectionData.SetSelectedObject(firstSelected);
+        AutoSelectedData.SetSelectedObject(firstSelected);
     }
 
     private void Update()
     {
-        if (SelectionData.SelectedObj != null && EventSystem.current.currentSelectedGameObject == null)
+        if (AutoSelectedData.SelectedObj != null && EventSystem.current.currentSelectedGameObject == null)
         {
-            EventSystem.current.SetSelectedGameObject(SelectionData.SelectedObj);
+            EventSystem.current.SetSelectedGameObject(AutoSelectedData.SelectedObj);
         }
     }
 }
