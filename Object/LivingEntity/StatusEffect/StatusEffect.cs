@@ -40,6 +40,13 @@ public abstract class StatusEffect : ScriptableObject
     }
 
     [SerializeField]
+    private Sprite _icon;
+    public Sprite Icon
+    {
+        get { return _icon; }
+    }
+
+    [SerializeField]
     private List<StatusEffectData> _effects;
     public List<StatusEffectData> Effects
     {

@@ -115,8 +115,6 @@ public class SkillSelection : MonoBehaviour, ISelection
 
     private void SelectLastButton()
     {
-        if (skillInfoList.Count == 0) return;
-
         if (lastSelected == null)
         {
             // 이전에 선택한 버튼이 없는 경우 선택 가능한 첫번째 요소를 선택
@@ -150,7 +148,15 @@ public class SkillSelection : MonoBehaviour, ISelection
 
     private void UpdateDescription(GameObject selectedItem)
     {
-        SkillInfo skill = selectedItem.GetComponent<SkillInfo>();
-        ui.SetDescription(skill.GetSkill().Description);
+        if (selectedItem == null)
+        {
+            // 선택한 스킬이 없을 경우 설명창 비우기
+            ui.SetDescription("");
+        }
+        else
+        {
+            SkillInfo skill = selectedItem.GetComponent<SkillInfo>();
+            ui.SetDescription(skill.GetSkill().Description);
+        }
     }
 }

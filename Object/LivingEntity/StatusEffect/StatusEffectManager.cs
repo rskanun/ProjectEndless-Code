@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class StatusEffectManager
+public class StatusEffectManager : MonoBehaviour
 {
     private class ActiveEffect
     {
@@ -17,10 +18,14 @@ public class StatusEffectManager
             remainDuration = effect.Duration;
         }
     }
+
+    [SerializeField]
+    private StatusEffectUI ui;
+
     // 현재 지니고 있는 상태효과 목록
     private Dictionary<StatusEffect, ActiveEffect> activeEffectList;
 
-    public StatusEffectManager()
+    private void Awake()
     {
         activeEffectList = new Dictionary<StatusEffect, ActiveEffect>();
     }
@@ -40,9 +45,18 @@ public class StatusEffectManager
             // 상태효과 추가
             activeEffectList.Add(effect, activeEffect);
 
+            // 아이콘 추가
+            AddEffectIcon(effect);
+
             // 효과 주기
             startAction?.Invoke();
         }
+    }
+
+    private void AddEffectIcon(StatusEffect effect)
+    {
+        if (effect.IsBuff) ui.CreateBuffIcon((Buff)effect);
+        else ui.CreateDebuffIcon((Debuff)effect);
     }
 
     public bool HasEffect(StatusEffect effect)
