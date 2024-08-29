@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : Entity
@@ -61,17 +62,27 @@ public class Character : Entity
         return action;
     }
 
-    public override void OnAttack(Entity target)
+    protected override Entity OnRetarget(Entity target)
     {
-        // 공격 행동
-        if (target != null)
-        {
-            target.OnDamage(Stat.STR, Stat.MP);
-            Debug.Log($"{Name} Attack {target.Name}!!");
-        }
-
-        // 공격하려는 대상이 없는 경우 공격가능한 다른 대상을 타겟으로 공격
         // 캐릭터의 성격마다 우선순위로 선택하는 타겟이 다름
+        return null;
+    }
+
+    public override void OnRun()
+    {
+        List<Character> partyList = battleData.CharacterList;
+
+        // 플레이어의 파티 모두 같이 도주
+        for (int i = partyList.Count - 1;  i >= 0; i--)
+        {
+            // 리스트에 오류가 생기지 않도록 역순으로 파괴(도주)
+            partyList[i].RunBattle();
+        }
+    }
+
+    private void RunBattle()
+    {
+        base.OnRun();
     }
 
     public void OnSelectAction(BattleAction action, int index)
@@ -91,11 +102,9 @@ public class Character : Entity
 
     public override void OnDead()
     {
-        throw new System.NotImplementedException();
-    }
+        // 기존 사망 처리 실행
+        base.OnDead();
 
-    public override void OnManaShort()
-    {
-        throw new System.NotImplementedException();
+        // 사망 모션
     }
 }

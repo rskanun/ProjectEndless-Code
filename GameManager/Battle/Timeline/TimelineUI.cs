@@ -45,7 +45,7 @@ public class TimelineUI : MonoBehaviour
         if (index.HasValue)
         {
             // 삽입 아이콘 개수 만큼 뒤로 보내기
-            iconObj.transform.SetSiblingIndex(index.Value + 2);
+            iconObj.transform.SetSiblingIndex(index.Value + 1);
         }
 
         return icon;

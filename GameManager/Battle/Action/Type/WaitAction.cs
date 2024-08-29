@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 
-[System.Serializable]
+[Serializable]
 public class WaitAction : BattleAction
 {
-    public WaitAction()
+    public WaitAction() : base(ActionType.Wait) { }
+    public WaitAction(Entity actor, float remainTurn) : base(ActionType.Wait)
     {
-        actionType = ActionType.Wait;
+        this.actor = actor;
+        this.remainTurn = remainTurn;
     }
 
     public override void OnAction()
@@ -16,6 +19,7 @@ public class WaitAction : BattleAction
     public override void SetTarget(List<Entity> targets)
     {
         // Å¸°Ù ¼³Á¤ X
+        throw new NotSupportedException();
     }
 
     public override TargetType GetTargetType()

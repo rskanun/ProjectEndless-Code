@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 
+[Serializable]
 public class RunAction : BattleAction
 {
-    public RunAction()
+    public RunAction() : base(ActionType.Run) { }
+    public RunAction(Entity actor, float remainTurn) : base(ActionType.Run)
     {
-        actionType = ActionType.Run;
+        this.actor = actor;
+        this.remainTurn = remainTurn;
     }
 
     public override void OnAction()

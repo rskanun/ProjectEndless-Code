@@ -14,9 +14,20 @@ public enum ActionType
 [Serializable]
 public abstract class BattleAction : IComparable<BattleAction>
 {
-    public ActionType actionType;
     public Entity actor;
     public float remainTurn;
+
+    private ActionType _actionType;
+    public ActionType ActionType
+    {
+        private set { _actionType = value; }
+        get { return _actionType; }
+    }
+
+    public BattleAction(ActionType type)
+    {
+        ActionType = type;
+    }
 
     public int CompareTo(BattleAction seq)
     {

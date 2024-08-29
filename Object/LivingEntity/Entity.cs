@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public enum BattlePosition
 {
@@ -18,7 +20,6 @@ public abstract class Entity : MonoBehaviour
 {
     [Header("이벤트")]
     [SerializeField] private GameEvent turnEndEvent;
-    [SerializeField] private GameEvent deadEvent;
 
     [Header("엔티티 정보")]
     [SerializeField]
@@ -81,8 +82,6 @@ public abstract class Entity : MonoBehaviour
         get { return _isDead; }
     }
 
-    // 상태 효과 관리 매니져
-
     // 전투 순서 데이터
     protected BattleData battleData { private set; get; }
 
@@ -135,7 +134,23 @@ public abstract class Entity : MonoBehaviour
         turnEndEvent.NotifyUpdate();
     }
 
-    public abstract void OnAttack(Entity target);
+    public virtual void OnAttack(Entity target)
+    {
+        // 타겟이 사망상태일 경우 다른 대상을 타겟으로 설정
+        if (target != null && target.IsDead)
+        {
+            target = OnRetarget(target);
+        }
+
+        // 타겟이 없으면 공격 종료
+        if (target == null) return;
+
+        // 타겟 공격
+        target.OnDamage(Stat.STR, Stat.MP);
+        Debug.Log($"{Name} Attack {target.Name}!!");
+    }
+
+    protected abstract Entity OnRetarget(Entity curTarget);
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
     {
@@ -154,7 +169,11 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnRun()
     {
+        // 해당 엔티티를 전투에서 영구 제외
+        battleData.RemoveEntity(this);
 
+        // 오브젝트 삭제
+        Destroy(gameObject);
     }
 
     /***************************************************************
@@ -196,11 +215,32 @@ public abstract class Entity : MonoBehaviour
         // 엔티티 사망 처리
         IsDead = true;
 
-        // 엔티티 사망 알림
-        deadEvent.NotifyUpdate();
+        // 시퀀스 삭제
+        battleData.Sequence.RemoveTurns(this);
     }
 
-    public abstract void OnManaShort();
+    public virtual void OnRevival(int hp)
+    {
+        if (hp <= 0)
+        {
+            throw new NullReferenceException("체력이 0 이하인 상태론 부활할 수 없습니다!");
+        }
+
+        // 사망 판정 철회
+        IsDead = false;
+
+        // 재생했을 때의 hp 설정
+        Stat.HP = hp;
+
+        // 전투 시퀀스에 대기 상태로 행동 예약
+        battleData.Sequence.AddTurn(new WaitAction(this, 0.0f));
+    }
+
+    public virtual void OnManaShort()
+    {
+        // 어떤 효과로 할 것인지 생각중...
+        // 마방 0 + 기절?
+    }
 
     /***************************************************************
     * [ 상태 효과 ]

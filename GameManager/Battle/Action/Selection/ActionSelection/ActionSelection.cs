@@ -93,7 +93,7 @@ public class ActionSelection : MonoBehaviour, ISelection
         WaitAction action = new WaitAction();
 
         action.actor = actor;
-        action.remainTurn = 0.0f;
+        action.remainTurn = 1.0f; // 최소 한 턴은 대기해야함
 
         // 선택한 행동 알리기
         actionManager.SelectAction(action);
@@ -101,7 +101,14 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void OnSelectRun()
     {
+        // 도주 행동 생성
+        RunAction action = new RunAction();
 
+        action.actor = actor;
+        action.remainTurn = 1.0f;
+
+        // 선택한 행동 알리기
+        actionManager.SelectAction(action);
     }
 
     private void SelectAction(BattleAction action)

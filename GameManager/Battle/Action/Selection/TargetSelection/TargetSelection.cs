@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -44,8 +45,16 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     public void InitSelectableEntities()
     {
-        AddButtonToList(BattleData.Instance.EnemyList);
-        AddButtonToList(BattleData.Instance.PartyList);
+        List<GameObject> enemyParty = GetPartyObjs(BattleData.Instance.EnemyList);
+        List<GameObject> playerParty = GetPartyObjs(BattleData.Instance.CharacterList);
+
+        AddButtonToList(enemyParty);
+        AddButtonToList(playerParty);
+    }
+
+    private List<GameObject> GetPartyObjs<T>(List<T> partyList) where T : Entity
+    {
+        return partyList.Select(entity => entity.gameObject).ToList();
     }
 
     private void AddButtonToList(List<GameObject> entityList)
@@ -105,7 +114,7 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveEnemyFront()
     {
-        if (BattleData.Instance.EnemyFrontCount <= 0)
+        if (!BattleData.Instance.IsLivingEnemyFront)
         {
             // 전위가 없다면 모든 적 선택 가능
             ActiveEnemy();

@@ -102,8 +102,8 @@ public class BattleManager : MonoBehaviour
         battleData.Clear();
 
         // 전투에 참여하는 엔티티 목록 설정
-        battleData.SetEncounterEnemy(GetPartyObjs(enemyParty));
-        battleData.SetPartyList(GetPartyObjs(playerParty));
+        battleData.SetEnemyList(enemyParty);
+        battleData.SetPartyList(playerParty);
 
         // 시퀀스 생성
         battleSeq.SetSequence(entityList);
@@ -155,11 +155,6 @@ public class BattleManager : MonoBehaviour
             }).ToList();
     }
 
-    private List<GameObject> GetPartyObjs<T>(List<T> partyList) where T : Entity
-    {
-        return partyList.Select(entity => entity.gameObject).ToList();
-    }
-
     /***************************************************************
     * [ 전투 진행 ]
     * 
@@ -178,7 +173,7 @@ public class BattleManager : MonoBehaviour
             yield return new WaitUntil(() => isTurnEnded);
 
             // 타임라인 업데이트
-            timeline.UpdateTimeline();
+            //timeline.UpdateTimeline();
         }
 
         // 전투 끝내기
@@ -216,11 +211,15 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle()
     {
-        if (battleData.PartyMemberCount > 0)
+        if (battleData.IsLivingEnemy)
         {
-            // 파티가 살아남았다면 결과창 출력
-            resultUI.OpenResult();
+            // 몬스터가 살아있을 경우 = 플레이어가 도망쳤을 경우
+            // 처치 보상 X
+            battleData.ClearReward();
         }
+
+        // 전투가 끝났다면 결과창 출력
+        resultUI.OpenResult();
     }
 
     private void UpdateEffectTimers(float turn)

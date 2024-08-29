@@ -1,8 +1,15 @@
 using System.Collections.Generic;
+using UnityEngine;
 
+[System.Serializable]
 public class BattleSequence
 {
-    // 현재 전투 순서
+    [Header("업데이트 이벤트")]
+    [SerializeField] 
+    private GameEvent seqUpdateEvent;
+
+    [Header("전투 순서")]
+    [SerializeField]
     private List<BattleAction> _sequence;
     public List<BattleAction> Sequence
     {
@@ -40,6 +47,9 @@ public class BattleSequence
         {
             turnData.remainTurn -= passedTurn;
         }
+
+        // 시퀀스 업데이트 알림
+        seqUpdateEvent.NotifyUpdate();
     }
 
     public BattleAction GetTurnAction(int index)
@@ -54,12 +64,18 @@ public class BattleSequence
 
         if (index < 0) Sequence.Insert(~index, action);
         else Sequence.Insert(index, action);
+
+        // 시퀀스 업데이트 알림
+        seqUpdateEvent.NotifyUpdate();
     }
 
     public void AddTurn(BattleAction action, int index)
     {
         if (index >= Sequence.Count) Sequence.Insert(Sequence.Count - 1, action);
         else Sequence.Insert(index, action);
+
+        // 시퀀스 업데이트 알림
+        seqUpdateEvent.NotifyUpdate();
     }
 
     public void RemoveTurns(Entity actor)
@@ -71,6 +87,9 @@ public class BattleSequence
                 Sequence.RemoveAt(i);
             }
         }
+
+        // 시퀀스 업데이트 알림
+        seqUpdateEvent.NotifyUpdate();
     }
 
     public int GetMinIndex(BattleAction action)

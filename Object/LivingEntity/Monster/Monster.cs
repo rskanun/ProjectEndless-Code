@@ -101,9 +101,40 @@ public class Monster : Entity
         EndTurn();
     }
 
-    public override void OnAttack(Entity target)
+    protected override Entity OnRetarget(Entity target)
     {
-        throw new System.NotImplementedException();
+        List<Character> targets = GetTargets();
+
+        // 일반 몬스터는 다음 타겟을 공격대상으로 지정
+        int stopIndex = targets.IndexOf((Character)target);
+        int curIndex = stopIndex;
+
+        Entity retarget = null;
+        while (target != retarget)
+        {
+            // 공격대상으로 지정 가능한 타겟이 나올 때가지 반복
+            curIndex = (curIndex + 1) % targets.Count;
+            retarget = targets[curIndex].GetComponent<Character>();
+
+            if (retarget.IsDead == false)
+            {
+                // 공격 가능한 다음 대상 리턴
+                return retarget;
+            }
+        }
+
+        // 다음 대상이 이전 대상과 동일한 경우 null 리턴
+        return null;
+    }
+
+    private List<Character> GetTargets()
+    {
+        // 근접일 경우 전방 캐릭터 목록만 리턴
+        if (AttackType == AttackType.Melee) 
+            return battleData.CharacterFrontList;
+
+        // 원거리일 경우 모든 캐릭터 목록 리턴
+        return battleData.CharacterList;
     }
 
     /***************************************************************
@@ -121,18 +152,12 @@ public class Monster : Entity
 
     public override void OnDead()
     {
-        // 현 전투에서 적 데이터 삭제 및 처지 보상 업데이트
-        battleData.AddKillReward(this);
-        battleData.RemoveEnemyData(this);
-
         // 기존 사망 처리 실행
         base.OnDead();
 
+        // 처지 보상 업데이트
+        battleData.AddKillReward(this);
+
         // 사망 모션
-    }
-
-    public override void OnManaShort()
-    {
-
     }
 }

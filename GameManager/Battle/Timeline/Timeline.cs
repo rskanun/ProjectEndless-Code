@@ -31,6 +31,7 @@ public class Timeline : MonoBehaviour
     {
         this.battleSeq = battleSeq;
 
+        // 전투 시퀀스에 따른 타임라인 목록 생성
         InitTimeLine();
 
         // 타임라인 위치 처음으로 이동

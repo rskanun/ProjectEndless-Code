@@ -1,27 +1,28 @@
+using System;
 using System.Collections.Generic;
 
+[Serializable]
 public class AttackAction : BattleAction
 {
-    private Entity _target;
-    public Entity Target
-    {
-        private set { _target = value; }
-        get { return _target; }
-    }
+    public Entity target;
 
-    public AttackAction()
+    public AttackAction() : base(ActionType.Attack) { }
+
+    public AttackAction(Entity actor, Entity target, float remainTurn) : base(ActionType.Attack)
     {
-        actionType = ActionType.Attack;
+        this.actor = actor;
+        this.target = target;
+        this.remainTurn = remainTurn;
     }
 
     public override void OnAction()
     {
-        actor.OnAttack(Target);
+        actor.OnAttack(target);
     }
 
     public override void SetTarget(List<Entity> targets)
     {
-        if (targets.Count > 0) Target = targets[0];
+        if (targets.Count > 0) target = targets[0];
     }
 
     public override TargetType GetTargetType()

@@ -1,13 +1,20 @@
+using System;
 using System.Collections.Generic;
 
+[Serializable]
 public class SkillAction : BattleAction
 {
     public Skill castSkill;
     public List<Entity> targets;
 
-    public SkillAction()
+    public SkillAction() : base(ActionType.Skill) { }
+
+    public SkillAction(Entity actor, Skill castSkill, List<Entity> targets, float remainTurn) : base(ActionType.Skill)
     {
-        actionType = ActionType.Skill;
+        this.actor = actor;
+        this.castSkill = castSkill;
+        this.targets = targets;
+        this.remainTurn = remainTurn;
     }
 
     public override void OnAction()

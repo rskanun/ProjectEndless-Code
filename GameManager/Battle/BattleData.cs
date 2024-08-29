@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class BattleData : ScriptableObject
 {
@@ -54,55 +58,39 @@ public class BattleData : ScriptableObject
     [Header("적 정보")]
     [ReadOnly]
     [SerializeField]
-    private List<GameObject> _enemyList = new List<GameObject>();
-    public List<GameObject> EnemyList
+    private List<Monster> _enemyList = new List<Monster>();
+    public List<Monster> EnemyList
     {
-        private set { _enemyList = value; }
         get { return _enemyList; }
-    }
-    public int EnemyCount
-    {
-        get { return EnemyList.Count; }
+        private set { _enemyList = value; }
     }
 
     [ReadOnly]
     [SerializeField]
-    private List<GameObject> _enemyFrontList = new List<GameObject>();
-    public List<GameObject> EnemyFrontList
+    private List<Monster> _enemyFrontList = new List<Monster>();
+    public List<Monster> EnemyFrontList
     {
-        private set { _enemyFrontList = value; }
         get { return _enemyFrontList; }
-    }
-    public int EnemyFrontCount
-    {
-        get { return EnemyFrontList.Count; }
+        private set { _enemyFrontList = value; }
     }
 
     [Header("아군 정보")]
     [ReadOnly]
     [SerializeField]
-    private List<GameObject> _partyList = new List<GameObject>();
-    public List<GameObject> PartyList
+    private List<Character> _characterList = new List<Character>();
+    public List<Character> CharacterList
     {
-        private set { _partyList = value; }
-        get { return _partyList; }
-    }
-    public int PartyMemberCount
-    {
-        get { return PartyList.Count; }
+        get { return _characterList; }
+        private set { _characterList = value; }
     }
 
     [ReadOnly]
     [SerializeField]
-    private List<GameObject> _partyFrontList = new List<GameObject>();
-    public List<GameObject> PartyFrontList
+    private List<Character> _characterFrontList = new List<Character>();
+    public List<Character> CharacterFrontList
     {
-        private set { _partyFrontList = value; }
-        get { return _partyFrontList; }
-    }
-    public int PartyMemberFrontCount
-    {
-        get { return PartyFrontList.Count; }
+        get { return _characterFrontList; }
+        private set { _characterFrontList = value; }
     }
 
     [Header("전투 정보")]
@@ -123,11 +111,44 @@ public class BattleData : ScriptableObject
     {
         get
         {
-            bool isLivingEnemy = EnemyCount > 0;
-            bool isLivingParty = PartyMemberCount > 0;
-
             // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
-            return isLivingEnemy && isLivingParty;
+            return IsLivingEnemy && IsLivingCharacter;
+        }
+    }
+    public bool IsLivingEnemy
+    {
+        get
+        {
+            List<Entity> list = new List<Entity>(EnemyList);
+
+            return IsLivingEntity(list);
+        }
+    }
+    public bool IsLivingEnemyFront
+    {
+        get
+        {
+            List<Entity> list = new List<Entity>(EnemyFrontList);
+
+            return IsLivingEntity(list);
+        }
+    }
+    public bool IsLivingCharacter
+    {
+        get
+        {
+            List<Entity> list = new List<Entity>(CharacterList);
+
+            return IsLivingEntity(list);
+        }
+    }
+    public bool IsLivingCharacterFront
+    {
+        get
+        {
+            List<Entity> list = new List<Entity>(CharacterFrontList);
+
+            return IsLivingEntity(list);
         }
     }
 
@@ -153,42 +174,45 @@ public class BattleData : ScriptableObject
         EnemyFrontList.Clear();
 
         // 아군 정보 초기화
-        PartyList.Clear();
-        PartyFrontList.Clear();
+        CharacterList.Clear();
+        CharacterFrontList.Clear();
 
         // 보상 정보 초기화
+        ClearReward();
+    }
+
+    public void ClearReward()
+    {
         TotalAmount = 0;
         DropItems.Clear();
     }
 
-    public void SetEncounterEnemy(List<GameObject> encountEnemys)
+    public void SetEnemyList(List<Monster> encountEnemys)
     {
         // 새로운 적에 대한 데이터 삽입
         EnemyList = encountEnemys;
-        foreach (GameObject enemyObj in encountEnemys)
-        {
-            BattlePosition position = enemyObj.GetComponent<Monster>().Position;
 
-            if (position.Equals(BattlePosition.Front))
+        // 전위에 대한 데이터 삽입
+        foreach (Monster enemy in encountEnemys)
+        {
+            if (enemy.Position == BattlePosition.Front)
             {
-                // 전위의 경우 전위 목록에도 추가
-                EnemyFrontList.Add(enemyObj);
+                EnemyFrontList.Add(enemy);
             }
         }
     }
 
-    public void SetPartyList(List<GameObject> party)
+    public void SetPartyList(List<Character> party)
     {
-        foreach (GameObject partyMemeber in party)
+        // 파티에 대한 데이터 삽입
+        CharacterList = party;
+
+        // 전위에 대한 데이터 삽입
+        foreach (Character character in party)
         {
-            PartyList.Add(partyMemeber);
-
-            BattlePosition position = partyMemeber.GetComponent<Character>().Position;
-
-            if (position.Equals(BattlePosition.Front))
+            if (character.Position == BattlePosition.Front)
             {
-                // 전위의 경우 전위 목록에도 추가
-                PartyFrontList.Add(partyMemeber);
+                CharacterFrontList.Add(character);
             }
         }
     }
@@ -212,19 +236,50 @@ public class BattleData : ScriptableObject
         }
     }
 
-    public void RemoveEnemyData(Monster enemy)
+    public void RemoveEntity(Entity entity)
     {
-        // 필드 몬스터 목록에서 삭제
-        EnemyList.Remove(enemy.gameObject);
+        if (entity is Monster) RemoveEnemyData((Monster) entity);
+        else RemoveCharacterData((Character) entity);
+    }
 
-        // 전투 시퀀스 내에서 예약해둔 행동 삭제
-        Sequence.RemoveTurns(enemy);
-
-        // 전위의 경우 전위 목록에서도 삭제
-        BattlePosition position = enemy.Position;
-        if (position.Equals(BattlePosition.Front))
+    private void RemoveEnemyData(Monster enemy)
+    {
+        // 전위에 포함되어 있을 경우 삭제
+        if (EnemyFrontList.Contains(enemy))
         {
-            EnemyFrontList.Remove(enemy.gameObject);
+            EnemyFrontList.Remove(enemy);
         }
+
+        // 몬스터 목록에서 삭제
+        if (EnemyList.Contains(enemy))
+        {
+            EnemyList.Remove(enemy);
+        }
+    }
+
+    private void RemoveCharacterData(Character character)
+    {
+        // 전위에 포함되어 있을 경우 삭제
+        if (CharacterFrontList.Contains(character))
+        {
+            CharacterFrontList.Remove(character);
+        }
+
+        // 캐릭터 목록에서 삭제
+        if (CharacterList.Contains(character))
+        {
+            CharacterList.Remove(character);
+        }
+    }
+
+    private bool IsLivingEntity(List<Entity> entityList)
+    {
+        foreach (Entity entity in entityList)
+        {
+            // 한 명이라도 살아있을 경우 살아있음 리턴
+            if (entity.IsDead == false) return true;
+        }
+
+        return false;
     }
 }

@@ -91,7 +91,7 @@ public class ActionManager : MonoBehaviour
         selectionData.action = action;
 
         // 다음 선택창 열기
-        ISelection nextSelection = GetNextSelection(action.actionType);
+        ISelection nextSelection = GetNextSelection(action.ActionType);
         OpenSelection(nextSelection);
     }
 
