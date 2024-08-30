@@ -7,6 +7,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 {
     public static TargetSelectButton lastSelected;
 
+    [Header("버튼 요소")]
     public bool interactable;
     private bool isSelected;
     public bool IsSelected
@@ -144,6 +145,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         isSelected = true;
 
+        // 선택 스프라이트 적용
         targetGraphic.sprite = selectedSprite;
     }
 

@@ -102,6 +102,26 @@ public class EntityStat
     }
 
     [SerializeField]
+    private int _defensiveIgnore;
+    /***************************************************************
+    * [ 방어력 무시 (Defensive Ignore) ]
+    * 
+    * 오브젝트의 방어력 무시 수치로 대상의 방어력에 영향을 끼친다.
+    * 최종 데미지 계산 시, 대상의 방어력을 방어력 무시의 %만큼 깍아내린다.
+    ****************************************************************/
+    public int DEI
+    {
+        get { return _defensiveIgnore; }
+        set
+        {
+            if (value < 0)
+                _defensiveIgnore = 0;
+            else
+                _defensiveIgnore = value;
+        }
+    }
+
+    [SerializeField]
     private int _magicPower;
     /***************************************************************
      * [ 마력 (Magic Power) ]
@@ -183,7 +203,7 @@ public class EntityStat
     * 오브젝트의 정신상태 이상에 영향을 끼친다.
     * 정신력이 높을 수록 정신상태 이상에 걸릴 확률이 낮아진다.
     ****************************************************************/
-    private int MaxSAN = 100;
+    private readonly int MaxSAN = 100;
     public int SAN
     {
         get { return _sanity; }

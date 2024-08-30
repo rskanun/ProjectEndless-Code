@@ -4,6 +4,7 @@ using UnityEngine;
 public class Character : Entity
 {
     // 참조 스크립트
+    [SerializeField] private PartyHUD hud;
     [SerializeField] private ActionManager actionSelection;
 
     protected override void Awake()
@@ -24,9 +25,6 @@ public class Character : Entity
 
         // 최종스텟 설정
         InitLastStat();
-
-        // HUD 업데이트
-        InitHUD();
 
         // 오브젝트 활성화
         gameObject.SetActive(true);
@@ -68,6 +66,14 @@ public class Character : Entity
         return null;
     }
 
+    public override void OnCast(Skill skill, List<Entity> targets)
+    {
+        base.OnCast(skill, targets);
+
+        // HUD 업데이트
+        hud.UpdateSP(Name, Stat.SP, Stat.MaxSP);
+    }
+
     public override void OnRun()
     {
         List<Character> partyList = battleData.CharacterList;
@@ -99,6 +105,14 @@ public class Character : Entity
     * 
     * 오브젝트의 이벤트에 의한 상태 처리
     ***************************************************************/
+
+    public override void OnDamage(float damage, int targetMP)
+    {
+        base.OnDamage(damage, targetMP);
+
+        // HUD 업데이트
+        hud.UpdateHP(Name, Stat.HP, Stat.MaxHP);
+    }
 
     public override void OnDead()
     {
