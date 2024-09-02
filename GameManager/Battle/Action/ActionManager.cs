@@ -100,6 +100,7 @@ public class ActionManager : MonoBehaviour
         // 선택한 스킬 등록
         SkillAction action = (SkillAction)selectionData.action;
 
+        Debug.Log(selectionData.action == null);
         action.castSkill = skill;
         action.remainTurn = skill.CostTurn;
 

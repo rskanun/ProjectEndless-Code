@@ -28,6 +28,9 @@ public class Monster : Entity
 
         // 최종스텟 설정
         InitLastStat();
+
+        // HUD 업데이트
+        InitHUD();
     }
 
     public int GetDropGold()

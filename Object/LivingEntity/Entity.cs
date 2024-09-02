@@ -71,6 +71,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     [Header("참조 스크립트")]
+    [SerializeField] private BattleHUD hud;
     [SerializeField] private StatusEffectManager effectManager;
 
     // 현재 상태
@@ -92,6 +93,14 @@ public abstract class Entity : MonoBehaviour
     private void InitData()
     {
         battleData = BattleData.Instance;
+    }
+
+    protected void InitHUD()
+    {
+        // HUD 업데이트
+        hud.UpdateHP(Stat.HP, Stat.MaxHP);
+        hud.UpdateMP(Stat.MP, Stat.MaxMP);
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
     }
 
     protected void InitLastStat()
@@ -147,6 +156,7 @@ public abstract class Entity : MonoBehaviour
     {
         // SP 소모
         Stat.SP -= skill.CostSP;
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
 
         // 스킬 시전
         skill.OnCasting(this, targets);
@@ -180,6 +190,10 @@ public abstract class Entity : MonoBehaviour
 
         // 최종 마력 수치(임시)
         Stat.MP = Stat.MP - targetMP;
+
+        // HUD 업데이트
+        hud.UpdateHP(Stat.HP, Stat.MaxHP);
+        hud.UpdateMP(Stat.MP, Stat.MaxMP);
 
         // 오브젝트 사망 처리
         if (Stat.HP <= 0)

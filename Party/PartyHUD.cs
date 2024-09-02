@@ -25,11 +25,6 @@ public class PartyHUD : MonoBehaviour
         }
     }
 
-    public void SetActive(bool isActive)
-    {
-        hudContainer.gameObject.SetActive(isActive);
-    }
-
     public void UpdateHP(string name, int hp, int maxHP)
     {
         partyHUDs[name].UpdateHP(hp, maxHP);
