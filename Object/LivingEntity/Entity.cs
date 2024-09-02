@@ -71,8 +71,8 @@ public abstract class Entity : MonoBehaviour
     }
 
     [Header("참조 스크립트")]
-    [SerializeField] private BattleHUD hud;
-    [SerializeField] private StatusEffectManager effectManager;
+    [SerializeField] protected BattleHUD hud;
+    [SerializeField] protected StatusEffectManager effectManager;
 
     // 현재 상태
     private bool _isDead;
@@ -93,14 +93,6 @@ public abstract class Entity : MonoBehaviour
     private void InitData()
     {
         battleData = BattleData.Instance;
-    }
-
-    protected void InitHUD()
-    {
-        // HUD 업데이트
-        hud.UpdateHP(Stat.HP, Stat.MaxHP);
-        hud.UpdateMP(Stat.MP, Stat.MaxMP);
-        hud.UpdateSP(Stat.SP, Stat.MaxSP);
     }
 
     protected void InitLastStat()

@@ -25,11 +25,21 @@ public class Character : Entity
         // 최종스텟 설정
         InitLastStat();
 
-        // HUD 업데이트
+        // HUD 설정
         InitHUD();
 
         // 오브젝트 활성화
         gameObject.SetActive(true);
+    }
+
+    private void InitHUD()
+    {
+        // 해당 캐릭터의 HUD 활성화
+        hud.gameObject.SetActive(true);
+
+        // HUD 정보 업데이트
+        hud.UpdateHP(Stat.HP, Stat.MaxHP);
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
     }
 
     /***************************************************************

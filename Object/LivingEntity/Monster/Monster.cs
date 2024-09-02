@@ -33,6 +33,14 @@ public class Monster : Entity
         InitHUD();
     }
 
+    private void InitHUD()
+    {
+        // HUD 업데이트
+        hud.UpdateHP(Stat.HP, Stat.MaxHP);
+        hud.UpdateMP(Stat.MP, Stat.MaxMP);
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
+    }
+
     public int GetDropGold()
     {
         int dropGold = Random.Range(minAmount, maxAmount + 1);
