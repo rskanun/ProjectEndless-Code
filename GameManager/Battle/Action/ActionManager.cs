@@ -19,6 +19,9 @@ public class ActionManager : MonoBehaviour
     [SerializeField] private TargetSelection targetSelection;
     [SerializeField] private TurnSelection turnSelection;
 
+    [Header("참조 스크립트")]
+    [SerializeField] private BattleCheckManager checkingManager;
+
     // 참조 데이터
     private BattleData battleData;
 
@@ -175,5 +178,27 @@ public class ActionManager : MonoBehaviour
 
         // 선택한 데이터를 종합한 행동 실행
         actor.OnSelectAction(action, index);
+    }
+
+    /***************************************************************
+    * [ 전황 살피기 ]
+    * 
+    * 현재 타임라인에 등록된 행동들이 어떤 행동들인지 확인
+    ***************************************************************/
+
+    public void CheckingAction()
+    {
+        // 행동 선택창을 닫지 않고 숨기기
+        actionSelection.HiddenSelection();
+
+        // 전황 살피기
+        checkingManager.OnStartChecking();
+    }
+
+    public void BackToActionSelect()
+    {
+        // 다시 행동 선택창으로 돌아오기
+        checkingManager.OnEndChecking();
+        actionSelection.ViewSelection();
     }
 }

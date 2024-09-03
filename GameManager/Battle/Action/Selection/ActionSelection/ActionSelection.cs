@@ -40,6 +40,16 @@ public class ActionSelection : MonoBehaviour, ISelection
         // 행동 선택창이 마지막이므로 되돌리기 X
     }
 
+    public void HiddenSelection()
+    {
+        actionSelectionUI.CloseSelectionWindow();
+    }
+
+    public void ViewSelection()
+    {
+        actionSelectionUI.OpenSelectionWindow();
+    }
+
     private void OpenActionSelection(Character actor)
     {
         // 선택창 열기
