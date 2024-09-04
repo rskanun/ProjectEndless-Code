@@ -88,7 +88,7 @@ public class TurnSelection : MonoBehaviour, ISelection
     private void SetMinSibling(BattleAction action)
     {
         // 위치될 수 있는 최소 값
-        minIndex = sequence.GetMinIndex(action);
+        minIndex = GetMinIndex(action);
         index = minIndex;
 
         // 아이콘 위치 설정
@@ -96,6 +96,14 @@ public class TurnSelection : MonoBehaviour, ISelection
 
         // 삽입 아이콘을 중앙에 위치
         MoveIndex(minIndex);
+    }
+
+    private int GetMinIndex(BattleAction action)
+    {
+        int min = sequence.GetMinIndex(action);
+
+        // 턴을 설정할 수 있는 최소 값은 무조건 현재 턴 다음
+        return (min > 0) ? min : 1;
     }
 
     private void DeactiveInsertIcon()

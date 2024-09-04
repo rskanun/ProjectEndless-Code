@@ -74,14 +74,6 @@ public class BattleSequence
         if (index >= Sequence.Count) Sequence.Add(action);
         else Sequence.Insert(index, action);
 
-        string str = $"{index} / ";
-        foreach (BattleAction turnData in Sequence)
-        {
-            str += $"{turnData.actor.Name} => ";
-        }
-
-        Debug.Log(str);
-
         // 시퀀스 업데이트 알림
         seqUpdateEvent.NotifyUpdate();
     }
