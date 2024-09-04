@@ -15,7 +15,7 @@ public class DottedArrowLine : MonoBehaviour
     public void DrawLine(Vector2 start, Vector2 end)
     {
         int count = lineRenderer.positionCount;
-        int segmentCount = lineRenderer.positionCount - 2;
+        int segmentCount = lineRenderer.positionCount - 1;
 
         for (int i = 0; i < segmentCount; i++)
         {
@@ -48,7 +48,7 @@ public class DottedArrowLine : MonoBehaviour
 
     private void SetEndArrow(Vector2 endPoint)
     {
-        endArrow.transform.position = lineRenderer.GetPosition(lineRenderer.positionCount - 2);
+        endArrow.transform.position = endPoint;
 
         // 화살표 회전
         Vector2 direction = endPoint - (Vector2)lineRenderer.GetPosition(lineRenderer.positionCount - 2);

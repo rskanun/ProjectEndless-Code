@@ -16,6 +16,11 @@ public class RunAction : BattleAction
         actor.OnRun();
     }
 
+    public override List<Entity> GetTargets()
+    {
+        return null;
+    }
+
     public override void SetTarget(List<Entity> targets)
     {
         // Å¸°Ù ¼³Á¤ X

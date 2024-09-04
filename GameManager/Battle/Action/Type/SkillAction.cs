@@ -22,6 +22,11 @@ public class SkillAction : BattleAction
         actor.OnCast(castSkill, targets);
     }
 
+    public override List<Entity> GetTargets()
+    {
+        return targets;
+    }
+
     public override void SetTarget(List<Entity> targets)
     {
         this.targets = targets.ConvertAll(entity => entity);

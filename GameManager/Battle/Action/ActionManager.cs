@@ -20,7 +20,7 @@ public class ActionManager : MonoBehaviour
     [SerializeField] private TurnSelection turnSelection;
 
     [Header("참조 스크립트")]
-    [SerializeField] private BattleCheckManager checkingManager;
+    [SerializeField] private SurveyManager checkingManager;
 
     // 참조 데이터
     private BattleData battleData;
@@ -123,26 +123,22 @@ public class ActionManager : MonoBehaviour
 
     private ISelection GetNextSelection(ActionType type)
     {
-        if (type == ActionType.Run || type == ActionType.Wait)
+        ISelection nextSelection = type switch
         {
             // 도망과 대기는 타겟 선택 X
-            return turnSelection;
-        }
-        else if (type == ActionType.Skill)
-        {
+            ActionType.Run or ActionType.Wait => turnSelection,
+
             // 스킬일 경우 스킬 선택창 열기
-            return skillSelection;
-        }
-        else if (type == ActionType.Item)
-        {
+            ActionType.Skill => skillSelection,
+
             // 아이템일 경우 아이템 선택창 열기
-            return itemSelection;
-        }
-        else
-        {
+            ActionType.Item => itemSelection,
+
             // 나머지는 전부 타겟 선택
-            return targetSelection;
-        }
+            _ => targetSelection
+        };
+
+        return nextSelection;
     }
 
     /***************************************************************
@@ -186,19 +182,19 @@ public class ActionManager : MonoBehaviour
     * 현재 타임라인에 등록된 행동들이 어떤 행동들인지 확인
     ***************************************************************/
 
-    public void CheckingAction()
+    public void SurveyingBattle()
     {
-        // 행동 선택창을 닫지 않고 숨기기
-        actionSelection.HiddenSelection();
+        // 행동 선택창 닫기 숨기기
+        actionSelection.CloseSelection();
 
         // 전황 살피기
-        checkingManager.OnStartChecking();
+        checkingManager.OnStartSurvey();
     }
 
-    public void BackToActionSelect()
+    public void ReturnToActionSelect()
     {
         // 다시 행동 선택창으로 돌아오기
-        checkingManager.OnEndChecking();
-        actionSelection.ViewSelection();
+        checkingManager.OnEndSurvey();
+        actionSelection.ReopenSelection();
     }
 }

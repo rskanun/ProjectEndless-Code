@@ -20,6 +20,11 @@ public class AttackAction : BattleAction
         actor.OnAttack(target);
     }
 
+    public override List<Entity> GetTargets()
+    {
+        return new List<Entity> { target };
+    }
+
     public override void SetTarget(List<Entity> targets)
     {
         if (targets.Count > 0) target = targets[0];

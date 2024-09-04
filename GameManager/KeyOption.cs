@@ -20,5 +20,5 @@ public class KeyOption
     public static string Cancel = "Cancel";
     public static string Inventory = "Inventory";
     public static string Menu = "Menu";
-    public static string Checking = "Battle Checking";
+    public static string Survey = "Survey";
 }

@@ -21,6 +21,11 @@ public class ItemAction : BattleAction
         actor.OnUseItem(usingItem, targets);
     }
 
+    public override List<Entity> GetTargets()
+    {
+        return targets;
+    }
+
     public override void SetTarget(List<Entity> targets)
     {
         this.targets = targets.ConvertAll(entity => entity);
