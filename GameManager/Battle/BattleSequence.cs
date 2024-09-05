@@ -39,17 +39,21 @@ public class BattleSequence
 
     public void NextTurn()
     {
-        float passedTurn = Sequence[0].remainTurn;
         Sequence.RemoveAt(0);
 
-        // 삭제된 턴만큼 수치 앞당기기
-        foreach (BattleAction turnData in Sequence)
-        {
-            turnData.remainTurn -= passedTurn;
-        }
+        // 다음 턴만큼 수치 앞당기기
+        PassedTurnAllActions(Sequence[0].remainTurn);
 
         // 시퀀스 업데이트 알림
         seqUpdateEvent.NotifyUpdate();
+    }
+
+    private void PassedTurnAllActions(float turn)
+    {
+        foreach (BattleAction turnData in Sequence)
+        {
+            turnData.remainTurn -= turn;
+        }
     }
 
     public BattleAction GetTurnAction(int index)

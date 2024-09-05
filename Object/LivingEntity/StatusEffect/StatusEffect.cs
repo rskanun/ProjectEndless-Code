@@ -29,9 +29,9 @@ public class StatusEffectData
     }
 }
 
-public abstract class StatusEffect : ScriptableObject
+[System.Serializable]
+public class StatusEffect
 {
-
     [SerializeField]
     private string _name;
     public string Name
@@ -44,6 +44,13 @@ public abstract class StatusEffect : ScriptableObject
     public Sprite Icon
     {
         get { return _icon; }
+    }
+
+    [SerializeField]
+    private bool _isBuff;
+    public bool IsBuff
+    {
+        get { return _isBuff; }
     }
 
     [SerializeField]
@@ -67,6 +74,4 @@ public abstract class StatusEffect : ScriptableObject
     {
         get { return _description; }
     }
-
-    public abstract bool IsBuff { get; }
 }

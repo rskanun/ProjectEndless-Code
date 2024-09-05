@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public class CharacterHUD : BattleHUD

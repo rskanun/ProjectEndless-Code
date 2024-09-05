@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class SurveyManager : MonoBehaviour
@@ -33,11 +35,11 @@ public class SurveyManager : MonoBehaviour
 
     public void OnEndSurvey()
     {
+        // 조회 정보 삭제
+        RemovePrevInfo();
+
         // 이전 인덱스 값 초기화
         prevIndex = -1;
-
-        // 화살표 삭제
-        ClearArrows();
 
         // 타임라인 정상화
         timeline.MoveIndex(0);
@@ -72,16 +74,36 @@ public class SurveyManager : MonoBehaviour
             return;
         }
 
-        prevIndex = index;
+        // 이전 내역 삭제
+        RemovePrevInfo();
 
-        // 이전 화살표 삭제
-        ClearArrows();
+        // 이전 인덱스 값에 현재 인덱스 할당
+        prevIndex = index;
 
         // 해당 행동 화면상에 띄우기
         BattleAction action = seq.GetTurnAction(index);
 
-        ActiveActionIcon(action.ActionType);
-        CreateTargetingArrow(action);
+        ActiveActionIcon(action.actor, action.ActionType);  // 현재 행동 표시
+        CreateTargetingArrow(action);   // 타겟 또는 타겟으로 가능한 엔티티 표시
+        ActiveForecastHP(action);   // 예상 체력 표시
+        ViewForecastEffect(action);     // 예상 상태효과 표시
+    }
+
+    private void RemovePrevInfo()
+    {
+        if (prevIndex < 0)
+        {
+            // 이전 값이 없다면 삭제 X
+            return;
+        }
+
+        // 이전 정보 삭제
+        BattleAction action = seq.GetTurnAction(prevIndex);
+
+        DeactiveActionIcon(action.actor);
+        ClearArrows();
+        DeactiveForecastHP(action.GetTargets());
+        HideForecaseEffect(action.GetTargets());
     }
 
     /***************************************************************
@@ -90,9 +112,14 @@ public class SurveyManager : MonoBehaviour
     * 현재 살피는 행동이 어떤 행동인지 아이콘으로 띄우기
     ***************************************************************/
 
-    private void ActiveActionIcon(ActionType type)
+    private void ActiveActionIcon(Entity actor, ActionType type)
     {
+        actor.ActiveActionIcon(type);
+    }
 
+    private void DeactiveActionIcon(Entity actor)
+    {
+        actor.HideActionIcon();
     }
 
     /***************************************************************
@@ -180,5 +207,129 @@ public class SurveyManager : MonoBehaviour
         }
 
         arrows.Clear();
+    }
+
+    /***************************************************************
+    * [ 예상 체력 표시 ]
+    * 
+    * 현재 살피는 행동으로 인해 깎이거나 깎인 체력 표시
+    ***************************************************************/
+
+    private void ActiveForecastHP(BattleAction action)
+    {
+        // 예상 체력 계산
+        Entity actor = action.actor;
+        List<Entity> targets = action.GetTargets();
+
+        if (action.actor is Monster || targets == null)
+        {
+            // 행동하는 대상이 적이거나 타겟이 없는 경우 체력 표시 X
+            return;
+        }
+
+        float attackDmg = GetAttackDmg(action);
+        foreach (Entity target in targets)
+        {
+            int lastDmg = target.GetLastDmg(attackDmg);
+
+            // 현재 턴인 경우 이번 행동에 대한 결과 이전 값을 출력
+            if (seq.GetTurnAction(0) != action) target.SetForecastHP(-lastDmg);
+            else target.SetForecastHP(lastDmg);
+        }
+    }
+
+    private void DeactiveForecastHP(List<Entity> targets)
+    {
+        if (targets == null)
+        {
+            // 해당 행동에 선택 가능한 타겟이 없다면 리턴
+            return;
+        }
+
+        foreach (Entity target in targets)
+        {
+            // 타겟 하나하나의 예상 체력 지우기
+            target.SetForecastHP(0);
+        }
+    }
+
+    private float GetAttackDmg(BattleAction action)
+    {
+        if (action is AttackAction)
+        {
+            // 일반 공격은 해당 캐릭터의 자체 데미지 가져오기
+            return action.actor.GetAttackDmg();
+        }
+        else if (action is SkillAction)
+        {
+            SkillAction skillAction = (SkillAction)action;
+            AttackSkill skill = skillAction.castSkill as AttackSkill;
+            
+            if (skill != null)
+            {
+                // 공격 스킬만 데미지 계산
+                return skill.GetSkillDmg(action.actor);
+            }
+        }
+
+        // 나머지 행동은 데미지 X
+        return 0.0f;
+    }
+
+    /***************************************************************
+    * [ 예상 상태효과 표시 ]
+    * 
+    * 현재 살피는 행동으로 인해 생기거나 생긴 상태효과 표시
+    ***************************************************************/
+
+    public void ViewForecastEffect(BattleAction action)
+    {
+        List<Entity> targets = action.GetTargets();
+        StatusEffect effect = GetStatusEffect(action);
+
+        if (effect == null)
+        {
+            // 버프 스킬 혹은 소모 아이템만 적용
+            return;
+        }
+
+        ActiveForecastEffect(targets, effect);
+    }
+
+    private StatusEffect GetStatusEffect(BattleAction action)
+    {
+        switch (action)
+        {
+            case SkillAction skillAction when skillAction.castSkill is EffectSkill skill:
+                return skill.Effect;
+
+            case ItemAction itemAction:
+                return itemAction.usingItem.Effect;
+
+            default:
+                return null;
+        }
+    }
+
+    private void ActiveForecastEffect(List<Entity> targets, StatusEffect effect)
+    {
+        foreach (Entity target in targets)
+        {
+            target.SetForecastEffect(effect);
+        }
+    }
+
+    public void HideForecaseEffect(List<Entity> targets)
+    {
+        if (targets == null)
+        {
+            // 타겟이 없다면 스킵
+            return;
+        }
+
+        foreach (Entity target in targets)
+        {
+            target.ClearForecastEffect();
+        }
     }
 }

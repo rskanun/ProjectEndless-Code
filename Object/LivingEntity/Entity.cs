@@ -1,8 +1,6 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public enum BattlePosition
 {
@@ -73,6 +71,7 @@ public abstract class Entity : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] protected BattleHUD hud;
     [SerializeField] protected StatusEffectManager effectManager;
+    [SerializeField] protected ActionIcon actionIcon;
 
     // 현재 상태
     private bool _isDead;
@@ -138,8 +137,14 @@ public abstract class Entity : MonoBehaviour
         if (target == null) return;
 
         // 타겟 공격
-        target.OnDamage(Stat.STR, Stat.MP);
+        target.OnDamage(GetAttackDmg(), Stat.MP);
         Debug.Log($"{Name} Attack {target.Name}!!");
+    }
+
+    public virtual float GetAttackDmg()
+    {
+        // 임시 데미지 공식
+        return Stat.STR;
     }
 
     protected abstract Entity OnRetarget(Entity curTarget);
@@ -176,12 +181,8 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnDamage(float damage, int targetMP)
     {
-        // 최종 데미지 수치(임시)
-        float lastDamage = damage - Stat.DEF;
-        Stat.HP -= Mathf.RoundToInt(lastDamage > 0 ? lastDamage : 0.0f);
-
-        // 최종 마력 수치(임시)
-        Stat.MP = Stat.MP - targetMP;
+        Stat.HP -= GetLastDmg(damage);
+        Stat.MP = GetLastMP(targetMP);
 
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
@@ -200,6 +201,20 @@ public abstract class Entity : MonoBehaviour
             // MP 수치가 0 이하로 떨어질 경우 마력 고갈 처리
             OnManaShort();
         }
+    }
+
+    public int GetLastDmg(float damage)
+    {
+        // 최종 데미지 수치(임시)
+        float dmg = damage - Stat.DEF;
+
+        return Mathf.RoundToInt(dmg > 0 ? dmg : 0.0f);
+    }
+
+    public int GetLastMP(int targetMP)
+    {
+        // 최종 마력 데미지 수치(임시)
+        return targetMP;
     }
 
     public virtual void OnDead()
@@ -301,5 +316,36 @@ public abstract class Entity : MonoBehaviour
     {
         float subAGI = OriginStat.AGI * range;
         Stat.AGI -= (int)Math.Round(subAGI, MidpointRounding.AwayFromZero);
+    }
+
+    /***************************************************************
+    * [ 상태 관찰 ]
+    * 
+    * 해당 오브젝트의 상태 관찰에 따른 ui 변화
+    ***************************************************************/
+
+    public void ActiveActionIcon(ActionType type)
+    {
+        actionIcon.SetIcon(type);
+    }
+
+    public void HideActionIcon()
+    {
+        actionIcon.ClearIcon();
+    }
+
+    public void SetForecastHP(int change)
+    {
+        hud.SetForecastHP(Stat.HP, Stat.MaxHP, change);
+    }
+
+    public void SetForecastEffect(StatusEffect effect)
+    {
+        effectManager.CreateForecastEffect(effect);
+    }
+
+    public void ClearForecastEffect()
+    {
+        effectManager.ClearForecastEffect();
     }
 }

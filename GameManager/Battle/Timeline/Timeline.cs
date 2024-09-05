@@ -1,10 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Timeline : MonoBehaviour
 {
     [Header("참조 스크립트")]
     [SerializeField] private TimelineUI ui;
+
+    [Header("참조 컴포넌트")]
+    [SerializeField] private HorizontalLayoutGroup layoutGroup;
 
     // 시퀀스 데이터
     private BattleSequence battleSeq;
@@ -155,5 +159,8 @@ public class Timeline : MonoBehaviour
 
         // 센터 아이콘 변경
         centerIndex = index;
+
+        // 레이아웃 업데이트
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.GetComponent<RectTransform>());
     }
 }

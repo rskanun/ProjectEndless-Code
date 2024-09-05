@@ -4,15 +4,15 @@ using UnityEngine.UI;
 public class StatusEffectIcon : MonoBehaviour
 {
     public Image icon;
+    public CanvasGroup canvasGroup;
 
-    // 상태 효과 정보
-    private StatusEffect effect;
-
-    public void SetEffect(StatusEffect effect)
+    public void SetIcon(Sprite image)
     {
-        this.effect = effect;
+        icon.sprite = image;
+    }
 
-        // 아이콘 등록
-        icon.sprite = effect.Icon;
+    public void SetAlpha(float a)
+    {
+        canvasGroup.alpha = a;
     }
 }

@@ -26,12 +26,17 @@ public class AttackSkill : Skill
 
     public override void OnCasting(Entity caster, List<Entity> targets)
     {
-        // 데미지 공식 = 기본 데미지 + 시전자 MP 계수 + 시전자 STR 계수
-        float damage = Damage + caster.Stat.MP * MpDegree + caster.Stat.STR * StrDegree;
+        float damage = GetSkillDmg(caster);
 
         foreach (Entity entity in targets)
         {
             entity.OnDamage(damage, caster.Stat.MP);
         }
+    }
+
+    public float GetSkillDmg(Entity caster)
+    {
+        // 데미지 공식 = 기본 데미지 + 시전자 MP 계수 + 시전자 STR 계수
+        return Damage + caster.Stat.MP * MpDegree + caster.Stat.STR * StrDegree;
     }
 }
