@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-public class Script
+public class TextScript
 {
     private Dictionary<int, List<Line>> _scenarios;
 
-    public Script()
+    public TextScript()
     {
         _scenarios = new Dictionary<int, List<Line>>();
     }

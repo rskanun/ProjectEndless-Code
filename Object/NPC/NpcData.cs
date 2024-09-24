@@ -12,16 +12,17 @@ public class NpcData : ScriptableObject
      * 플레이어와의 상호작용에 쓰일 고유 번호
      * 캐릭터 번호 3자리 + 순서번호 3자리로 구성
      ****************************************************************/
-    public int Id {
+    public int Id
+    {
         get
         {
             // 해당 npc가 대사를 가지고 있지 않은 경우 임시적으로 0번을 리턴
-            if(_id != 0 && !ScriptResource.Instance.HasLines(_id))
+            if (_id != 0 && !TextScriptResource.Instance.HasLines(_id))
             {
                 return 0;
             }
 
-            return _id; 
+            return _id;
         }
     }
 
@@ -33,9 +34,9 @@ public class NpcData : ScriptableObject
             if (_lines != null) return _lines;
 
             // 해당 npc의 id에 해당하는 대사가 존재할 경우에만 담기
-            if (ScriptResource.Instance.HasLines(_id))
+            if (TextScriptResource.Instance.HasLines(_id))
             {
-                Script script = ScriptResource.Instance.CurrentScript;
+                TextScript script = TextScriptResource.Instance.CurrentScript;
 
                 _lines = script.GetLines(_id);
             }

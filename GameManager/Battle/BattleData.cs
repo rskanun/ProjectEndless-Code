@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class BattleData : ScriptableObject
 {

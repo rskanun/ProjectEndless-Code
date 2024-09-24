@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameData gameData;
     [SerializeField] private PlayerData playerData;
 
-    private ScriptResource scriptResource;
+    private TextScriptResource scriptResource;
     private ControlContext controller;
 
     private static GameManager _instance;
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Init()
     {
-        scriptResource = ScriptResource.Instance;
+        scriptResource = TextScriptResource.Instance;
         controller = ControlContext.Instance;
 
         controller.NoKeyDown = false;
