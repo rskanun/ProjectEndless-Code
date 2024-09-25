@@ -2,19 +2,48 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Collections;
 
 [Serializable]
-public class CsvFile
+public class CsvFile : IEnumerable<string[]>
 {
-    public string fileName;
-    public string[] lines;
+    private List<string[]> cells;
+
+    public string[] GetLineCells(int index)
+    {
+        return cells[index];
+    }
+
+    public void AddLineCells(string[] lineCells)
+    {
+        cells.Add(lineCells);
+    }
+
+    public CsvFile MergeLines(CsvFile mergeFile)
+    {
+        // 현재 파일에 매개변수로 받은 파일 셀 값 합치기
+        cells.AddRange(mergeFile.cells);
+
+        // 현재 파일을 결과 값으로 리턴
+        return this;
+    }
+
+    public IEnumerator<string[]> GetEnumerator()
+    {
+        for (int i = 0; i < cells.Count; i++)
+        {
+            yield return cells[i];
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+       return GetEnumerator();
+    }
 }
 
 public class CsvReader
 {
-    // Select 객체 내 optionsLineNum을 위한 Dictionary
-    private Stack<Select> selectStack = new Stack<Select>();
-
     public static List<CsvFile> ReadFiles(string folderPath)
     {
         if (Directory.Exists(folderPath))
@@ -25,15 +54,10 @@ public class CsvReader
 
             foreach (string filePath in csvFiles)
             {
-                if (File.Exists(filePath))
-                {
-                    CsvFile file = new CsvFile();
+                TextAsset textAsset = GetTextAsset(filePath);
+                CsvFile file = ReadFile(textAsset);
 
-                    file.fileName = Path.GetFileName(filePath);
-                    file.lines = ReadLines(filePath);
-
-                    files.Add(file);
-                }
+                files.Add(file);
             }
 
             return files;
@@ -42,22 +66,68 @@ public class CsvReader
         return null;
     }
 
-    private static string[] ReadLines(string path)
+    public static CsvFile ReadFile(string path)
     {
-        List<string> lines = new List<string>();
-        StreamReader sr = new StreamReader(File.OpenRead(path));
+        TextAsset textAsset = GetTextAsset(path);
 
-        string str;
-        while ((str = sr.ReadLine()) != null)
+        return ReadFile(textAsset);
+    }
+
+    public static CsvFile ReadFile(TextAsset csvFile)
+    {
+        CsvFile result = new CsvFile();
+        string[] lines = csvFile.text.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (string line in lines)
         {
-            // 앞부분 공백 및 주석 제거
-            str = RemoveComment(str.TrimStart());
+            string[] lineCells = SplitLine(line);
 
-            // 리턴값에 추가
-            lines.Add(str);
+            result.AddLineCells(lineCells);
         }
 
-        return lines.ToArray();
+        return result;
+    }
+
+    private static TextAsset GetTextAsset(string path)
+    {
+        // 파일 경로의 유효성을 검사하고 오류를 던짐
+        IsCorrectPath(path);
+
+        // 파일에서 텍스트 읽기
+        string fileContent = File.ReadAllText(path);
+
+        // TextAsset을 동적으로 생성
+        TextAsset textAsset = new TextAsset(fileContent);
+
+        return textAsset;
+    }
+
+    private static bool IsCorrectPath(string path)
+    {
+        // 파일을 찾을 수 없는 경우
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException($"파일을 찾을 수 없습니다: {path}");
+        }
+
+        // 파일 확장자가 .csv가 아닐 경우
+        if (Path.GetExtension(path).ToLower() != ".csv")
+        {
+            throw new InvalidDataException($"잘못된 파일 형식입니다. csv 파일이 필요합니다: {path}");
+        }
+
+        return true;
+    }
+
+    private static string[] SplitLine(string line)
+    {
+        // 전달받은 라인의 공백 제거
+        string result = RemoveComment(line);
+
+        // CSV 라인을 셀 별로 나누기
+        string[] cells = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+        return cells;
     }
 
     private static string RemoveComment(string str)

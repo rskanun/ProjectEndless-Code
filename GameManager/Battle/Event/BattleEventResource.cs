@@ -5,6 +5,7 @@ public class BattleEventResource : ScriptableObject
 {
     // 저장 파일 위치
     private const string FILE_DIRECTORY = "Assets/Resources/Event";
+    private const string EVENT_SCRIPT_DIRECTORY = "Assets/Resources/Scenario/TextScript";
     private const string FILE_PATH = "Assets/Resources/Event/BattleEvent.asset";
 
     private static BattleEventResource _instance;
@@ -50,8 +51,8 @@ public class BattleEventResource : ScriptableObject
         }
     }
 
-    public void LoadEvnetScript()
+    public void LoadEvnetScript(TextAsset csvFile)
     {
-
+        
     }
 }

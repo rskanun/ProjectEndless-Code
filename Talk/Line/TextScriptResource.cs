@@ -10,8 +10,8 @@ using UnityEditor;
 
 public class TextScriptResource : ScriptableObject
 {
-    private const string DIALOG_FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_DIRECTORY = "Assets/Resources/Scenario";
+    private const string TEXT_SCRIPT_DIRECTORY = "Assets/Resources/Scenario/TextScript";
     private const string FILE_PATH = "Assets/Resources/Scenario/ScriptResource.asset";
 
     private static TextScriptResource _instance;
@@ -29,12 +29,18 @@ public class TextScriptResource : ScriptableObject
                 // 파일 경로가 없을 경우 폴더 생성
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
-                    if (!AssetDatabase.IsValidFolder(DIALOG_FILE_DIRECTORY))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
+                    string[] folders = FILE_DIRECTORY.Split('/');
+                    string currentPath = folders[0];
 
-                    AssetDatabase.CreateFolder("Assets/Resources", "Scenario");
+                    for (int i = 1; i < folders.Length; i++)
+                    {
+                        if (!AssetDatabase.IsValidFolder(currentPath + "/" + folders[i]))
+                        {
+                            AssetDatabase.CreateFolder(currentPath, folders[i]);
+                        }
+
+                        currentPath += "/" + folders[i];
+                    }
                 }
 
                 // Resource.Load가 실패했을 경우
@@ -63,10 +69,10 @@ public class TextScriptResource : ScriptableObject
 
         // 경로를 통한 CSV 파일 라인 구하기
         List<CsvFile> files = CsvReader.ReadFiles(path);
-        string[] lines = MergeCsvLines(files);
+        CsvFile mergeFile = MergeCsvFiles(files);
 
         // CSV 파일의 정보를 토대로 텍스트 스크립트 구현
-        CurrentScript = BuildTextScript(lines);
+        CurrentScript = BuildTextScript(mergeFile);
     }
 
     private string GetFolderPath(int chapter, int root, int subChapter)
@@ -75,38 +81,36 @@ public class TextScriptResource : ScriptableObject
         string folderName = chapter.ToString() + root.ToString()
             + ((subChapter < 10) ? "0" : "") + subChapter.ToString();
 
-        string path = FILE_DIRECTORY + "/" + folderName;
+        string path = TEXT_SCRIPT_DIRECTORY + "/" + folderName;
 
         return path;
     }
 
-    private string[] MergeCsvLines(List<CsvFile> files)
+    private CsvFile MergeCsvFiles(List<CsvFile> files)
     {
-        List<string> lines = new List<string>();
+        CsvFile result = new CsvFile();
 
+        // 매개변수로 받은 모든 CsvFile 값을 하나의 CsvFile 값으로 합치기기
         foreach (CsvFile file in files)
         {
-            // CSV 파일 내의 라인을 새 리스트에 합치기
-            lines.AddRange(file.lines);
+            result.MergeLines(file);
         }
 
-        return lines.ToArray();
+        return result;
     }
 
-    private TextScript BuildTextScript(string[] lines)
+    private TextScript BuildTextScript(CsvFile csvFile)
     {
         TextScript script = new TextScript();
 
         Dictionary<int, int> lineNum = new Dictionary<int, int>(); // ID 값에 해당하는 라인의 마지막 index값
         int id = 0; // id를 기억할 dummy int
 
-        foreach (string lineStr in lines)
+        foreach (string[] cells in csvFile)
         {
-            string[] strs = lineStr.Split(',');
-
             // 처음 부여한 ID일 경우
             int tmpID = 0;
-            if (int.TryParse(strs[0], out tmpID) && !script.ContainsKey(tmpID))
+            if (int.TryParse(cells[0], out tmpID) && !script.ContainsKey(tmpID))
             {
                 // 처음 부여한 키일 때에만 id값 변경
                 id = tmpID;
@@ -117,7 +121,7 @@ public class TextScriptResource : ScriptableObject
             }
 
             // 라인 객체 생성
-            Line line = CreateLine(strs, lineNum[id]);
+            Line line = CreateLine(cells, lineNum[id]);
 
             // 스크립트에 추가
             script.GetLines(id).Add(line);
