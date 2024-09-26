@@ -21,7 +21,7 @@ public class TurnSelection : MonoBehaviour, ISelection
 
     private void Awake()
     {
-        sequence = BattleData.Instance.Sequence;
+        sequence = CurrentBattleData.Instance.Sequence;
     }
 
     public void OpenSelection(SelectionData selectionData)

@@ -23,7 +23,7 @@ public class ActionManager : MonoBehaviour
     [SerializeField] private SurveyManager checkingManager;
 
     // 참조 데이터
-    private BattleData battleData;
+    private CurrentBattleData battleData;
 
     // 현재 열린 창
     private Stack<ISelection> selectionLog;
@@ -33,7 +33,7 @@ public class ActionManager : MonoBehaviour
 
     private void Awake()
     {
-        battleData = BattleData.Instance;
+        battleData = CurrentBattleData.Instance;
 
         selectionData = new SelectionData();
     }

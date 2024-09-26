@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[ExecuteAlways]
+[RequireComponent(typeof(Tilemap))]
 public class FieldManager : MonoBehaviour
 {
+    [Header("필드 정보")]
+    [SerializeField]
+    private BattleFieldData battleField;
     private Tilemap tilemap;
 
-    private void Start()
+    [Header("게임 데이터")]
+    [SerializeField]
+    private GameData gameData;
+
+    private void OnValidate()
     {
         tilemap = GetComponent<Tilemap>();
     }
@@ -14,7 +23,7 @@ public class FieldManager : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            FieldData.Instance.CurrentField = tilemap;
+            gameData.FieldTilemap = tilemap;
         }
     }
 }

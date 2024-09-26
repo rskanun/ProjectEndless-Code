@@ -15,7 +15,7 @@ public class PlayerTrackerCamera : MonoBehaviour
 
     public void RoomChanged()
     {
-        MapAreaSet(FieldData.Instance.CurrentField);
+        MapAreaSet(ReadOnlyGameData.Instance.FieldTilemap);
 
         // 해당 이벤트의 위치를 캐릭터에 고정
         transform.position = target.position;
@@ -24,8 +24,8 @@ public class PlayerTrackerCamera : MonoBehaviour
     private void MapAreaSet(Tilemap map)
     {
         // 맵 사이즈 및 시작점 Vector2로 변환
-        Vector2 mapSize = new Vector2(map.size.x , map.size.y);
-        Vector2 mapOrigin = new Vector2(map.origin.x , map.origin.y);
+        Vector2 mapSize = new Vector2(map.size.x, map.size.y);
+        Vector2 mapOrigin = new Vector2(map.origin.x, map.origin.y);
 
         // 맵 중심 계산
         Vector2 mapPosition = mapOrigin + mapSize / 2;

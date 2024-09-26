@@ -2,20 +2,20 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class BattleData : ScriptableObject
+public class CurrentBattleData : ScriptableObject
 {
     // 저장 파일 위치
     private const string FILE_DIRECTORY = "Assets/Resources/InGameData/Battle";
-    private const string FILE_PATH = "Assets/Resources/InGameData/Battle/BattleData.asset";
+    private const string FILE_PATH = "Assets/Resources/InGameData/Battle/CurrentBattleData.asset";
 
-    private static BattleData _instance;
-    public static BattleData Instance
+    private static CurrentBattleData _instance;
+    public static CurrentBattleData Instance
     {
         get
         {
             if (_instance != null) return _instance;
 
-            _instance = Resources.Load<BattleData>("InGameData/Battle/BattleData");
+            _instance = Resources.Load<CurrentBattleData>("InGameData/Battle/CurrentBattleData");
 
 #if UNITY_EDITOR
             if (_instance == null)
@@ -38,11 +38,11 @@ public class BattleData : ScriptableObject
                 }
 
                 // Resource.Load가 실패했을 경우
-                _instance = AssetDatabase.LoadAssetAtPath<BattleData>(FILE_PATH);
+                _instance = AssetDatabase.LoadAssetAtPath<CurrentBattleData>(FILE_PATH);
 
                 if (_instance == null)
                 {
-                    _instance = CreateInstance<BattleData>();
+                    _instance = CreateInstance<CurrentBattleData>();
                     AssetDatabase.CreateAsset(_instance, FILE_PATH);
                 }
             }
@@ -101,6 +101,14 @@ public class BattleData : ScriptableObject
 
             return _sequence;
         }
+    }
+    [ReadOnly]
+    [SerializeField]
+    private float _passedTurn;
+    public float PassedTurn
+    {
+        get { return _passedTurn; }
+        private set { _passedTurn = value; }
     }
 
     public bool IsInBattle
@@ -183,6 +191,11 @@ public class BattleData : ScriptableObject
         DropItems.Clear();
     }
 
+    public void OnPassedTurn(float turn)
+    {
+        PassedTurn += turn;
+    }
+
     public void SetEnemyList(List<Monster> encountEnemys)
     {
         // 새로운 적에 대한 데이터 삽입
@@ -234,8 +247,8 @@ public class BattleData : ScriptableObject
 
     public void RemoveEntity(Entity entity)
     {
-        if (entity is Monster) RemoveEnemyData((Monster) entity);
-        else RemoveCharacterData((Character) entity);
+        if (entity is Monster) RemoveEnemyData((Monster)entity);
+        else RemoveCharacterData((Character)entity);
     }
 
     private void RemoveEnemyData(Monster enemy)

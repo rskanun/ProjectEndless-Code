@@ -58,8 +58,6 @@ public class TextScriptResource : ScriptableObject
         }
     }
 
-    private Stack<Select> selectStack = new Stack<Select>();
-
     public TextScript CurrentScript { get; private set; }
 
     public void LoadScript(int chapter, int root, int subChapter)
@@ -103,6 +101,7 @@ public class TextScriptResource : ScriptableObject
     {
         TextScript script = new TextScript();
 
+        Stack<Select> selectStack = new Stack<Select>();
         Dictionary<int, int> lineNum = new Dictionary<int, int>(); // ID 값에 해당하는 라인의 마지막 index값
         int id = 0; // id를 기억할 dummy int
 
@@ -121,7 +120,10 @@ public class TextScriptResource : ScriptableObject
             }
 
             // 라인 객체 생성
-            Line line = CreateLine(cells, lineNum[id]);
+            Line line = CreateLine(cells);
+
+            // Select 세부 사항 설정
+            SetSelectOption(line, selectStack, lineNum[id]);
 
             // 스크립트에 추가
             script.GetLines(id).Add(line);
@@ -133,31 +135,34 @@ public class TextScriptResource : ScriptableObject
         return script;
     }
 
-    private Line CreateLine(string[] strs, int lineNum)
+    private Line CreateLine(string[] strs)
     {
         // 코드별로 분리
         LineType code = (LineType)Enum.Parse(typeof(LineType), strs[1]);
         Line line = LineFactory.Instance.CreateLine(code, strs);
 
+        return line;
+    }
+
+    private void SetSelectOption(Line line, Stack<Select> selectStack, int lineNum)
+    {
         // Select 처리
-        if (code == LineType.Select)
+        if (line.Code == LineType.Select)
         {
             selectStack.Push((Select)line);
         }
         // Case 처리
-        else if (code == LineType.Case)
+        else if (line.Code == LineType.Case)
         {
             Select select = selectStack.Peek();
             select.addOptionBookmark(((Case)line).Choice, lineNum);
         }
         // End 처리
-        else if (code == LineType.End)
+        else if (line.Code == LineType.End)
         {
             Select select = selectStack.Pop();
             select.EndLineNum = lineNum;
         }
-
-        return line;
     }
 
     public bool HasLines(int id)

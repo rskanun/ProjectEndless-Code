@@ -88,4 +88,9 @@ public class ReadOnlyGameData : ScriptableObject
     {
         get { return gameData.MapData; }
     }
+
+    public Tilemap FieldTilemap
+    {
+        get { return gameData.FieldTilemap; }
+    }
 }

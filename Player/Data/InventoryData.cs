@@ -77,6 +77,12 @@ public class InventoryData : ScriptableObject
         {
             inventory[item]--;
         }
+
+        // 만약 아이템 개수가 0개로 떨어진 경우 데이터 삭제
+        if (inventory[item] <= 0 && inventory.ContainsKey(item))
+        {
+            inventory.Remove(item);
+        }
     }
 
     public Dictionary<Item, int> GetItems(ItemType type)
@@ -102,7 +108,7 @@ public class InventoryData : ScriptableObject
     {
         Dictionary<Item, int> result = new Dictionary<Item, int>();
 
-        foreach(Item item in testConsumable)
+        foreach (Item item in testConsumable)
         {
             if (result.ContainsKey(item) == false)
                 result[item] = 1;

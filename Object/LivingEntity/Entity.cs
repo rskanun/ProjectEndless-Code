@@ -82,7 +82,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     // 전투 순서 데이터
-    protected BattleData battleData { private set; get; }
+    protected CurrentBattleData battleData { private set; get; }
 
     protected virtual void Awake()
     {
@@ -91,7 +91,7 @@ public abstract class Entity : MonoBehaviour
 
     private void InitData()
     {
-        battleData = BattleData.Instance;
+        battleData = CurrentBattleData.Instance;
     }
 
     protected void InitLastStat()
@@ -264,8 +264,8 @@ public abstract class Entity : MonoBehaviour
     {
         // 효과 적용
         effectManager.AddEffect(
-            effect, 
-            () => ApplyEffect(effect), 
+            effect,
+            () => ApplyEffect(effect),
             () => ClearEffect(effect)
         );
     }

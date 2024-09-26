@@ -26,10 +26,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private List<GameObject> allMemberObjs;
 
     [Header("테스트 필드 몬스터")]
-    [SerializeField] private FieldMobData mobData;
+    [SerializeField] private BattleFieldData fieldData;
 
     // 참조 데이터
-    private BattleData battleData;
+    private CurrentBattleData battleData;
     private BattleSequence battleSeq;
 
     // 전투 진행 상태
@@ -55,11 +55,11 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-        battleData = BattleData.Instance;
+        battleData = CurrentBattleData.Instance;
         battleSeq = battleData.Sequence;
 
         // 임시 몹 데이터 집어넣기
-        OnEncounter(mobData);
+        OnEncounter(fieldData);
     }
 
     /***************************************************************
@@ -68,23 +68,23 @@ public class BattleManager : MonoBehaviour
     * 현재 상황에 따른 전투 진행 순서 처리
     ***************************************************************/
 
-    public void OnEncounter(FieldMobData fieldMobData)
+    public void OnEncounter(BattleFieldData fieldData)
     {
         // 일반 전투 시작
-        StartBattle(fieldMobData);
+        StartBattle(fieldData);
     }
 
-    public void OnAmbushEnemy(FieldMobData fieldMobData)
+    public void OnAmbushEnemy(BattleFieldData fieldData)
     {
         // 적을 기습했을 때의 전투 시작
     }
 
-    public void OnAmushPlayer(FieldMobData fieldMobData)
+    public void OnAmushPlayer(BattleFieldData fieldData)
     {
         // 적에게 기습당했을 때의 전투 시작
     }
 
-    private void StartBattle(FieldMobData fieldMobData)
+    private void StartBattle(BattleFieldData fieldData)
     {
         // 전투 참여 엔티티 목록 초기화
         entityList.Clear();
@@ -95,7 +95,7 @@ public class BattleManager : MonoBehaviour
         entityList.AddRange(playerParty);
 
         // 적 진형 파티 설정
-        List<Monster> enemyParty = GetEnemyParty(fieldMobData);
+        List<Monster> enemyParty = GetEnemyParty(fieldData.FieldMonsters);
         entityList.AddRange(enemyParty);
 
         // 전투 데이터 초기화
@@ -142,10 +142,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private List<Monster> GetEnemyParty(FieldMobData fieldMobData)
+    private List<Monster> GetEnemyParty(List<GameObject> mobList)
     {
-        return fieldMobData.FieldMonsters
-            .Select(prefabObj =>
+        return mobList.Select(prefabObj =>
             {
                 // 적 소환
                 GameObject enemyObj = Instantiate(prefabObj);

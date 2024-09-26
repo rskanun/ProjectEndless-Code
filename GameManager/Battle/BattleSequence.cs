@@ -4,12 +4,10 @@ using UnityEngine;
 [System.Serializable]
 public class BattleSequence
 {
-    [Header("업데이트 이벤트")]
-    [SerializeField] 
-    private GameEvent seqUpdateEvent;
+    // 업데이트 이벤트
+    [SerializeField] private GameEvent seqUpdateEvent;
 
-    [Header("전투 순서")]
-    [SerializeField]
+    // 전투 순서
     private List<BattleAction> _sequence;
     public List<BattleAction> Sequence
     {
@@ -42,18 +40,21 @@ public class BattleSequence
         Sequence.RemoveAt(0);
 
         // 다음 턴만큼 수치 앞당기기
-        PassedTurnAllActions(Sequence[0].remainTurn);
+        PassedTurn(Sequence[0].remainTurn);
 
         // 시퀀스 업데이트 알림
         seqUpdateEvent.NotifyUpdate();
     }
 
-    private void PassedTurnAllActions(float turn)
+    private void PassedTurn(float turn)
     {
         foreach (BattleAction turnData in Sequence)
         {
             turnData.remainTurn -= turn;
         }
+
+        // 전투 데이터에 경과한 만큼의 턴 추가
+        CurrentBattleData.Instance.OnPassedTurn(turn);
     }
 
     public BattleAction GetTurnAction(int index)

@@ -12,7 +12,7 @@ public class SurveyManager : MonoBehaviour
     [SerializeField] private SurveyController thisController;
     [SerializeField] private BattleController mainController;
 
-    private BattleData battleData;
+    private CurrentBattleData battleData;
     private BattleSequence seq;
 
     private int prevIndex = -1;
@@ -20,7 +20,7 @@ public class SurveyManager : MonoBehaviour
 
     private void Awake()
     {
-        battleData = BattleData.Instance;
+        battleData = CurrentBattleData.Instance;
         seq = battleData.Sequence;
     }
 
@@ -148,7 +148,7 @@ public class SurveyManager : MonoBehaviour
     private List<Entity> GetTargets(BattleAction action)
     {
         // 행동자가 적 진형이라면 타겟팅이 가능한 인물만 보이기
-        if (action.actor is Monster) 
+        if (action.actor is Monster)
             return GetTargetableEntities(action.GetTargetType());
 
         // 행동자가 플레이어 진형이라면 타겟 보여주기
@@ -264,7 +264,7 @@ public class SurveyManager : MonoBehaviour
         {
             SkillAction skillAction = (SkillAction)action;
             AttackSkill skill = skillAction.castSkill as AttackSkill;
-            
+
             if (skill != null)
             {
                 // 공격 스킬만 데미지 계산

@@ -79,4 +79,10 @@ public class GameData : ScriptableObject
         get { return _mapData; }
         set { _mapData = value; }
     }
+    private Tilemap _fieldTilemap;
+    public Tilemap FieldTilemap
+    {
+        get { return _fieldTilemap; }
+        set { _fieldTilemap = value; }
+    }
 }

@@ -45,8 +45,8 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     public void InitSelectableEntities()
     {
-        List<GameObject> enemyParty = GetPartyObjs(BattleData.Instance.EnemyList);
-        List<GameObject> playerParty = GetPartyObjs(BattleData.Instance.CharacterList);
+        List<GameObject> enemyParty = GetPartyObjs(CurrentBattleData.Instance.EnemyList);
+        List<GameObject> playerParty = GetPartyObjs(CurrentBattleData.Instance.CharacterList);
 
         AddButtonToList(enemyParty);
         AddButtonToList(playerParty);
@@ -114,7 +114,7 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveEnemyFront()
     {
-        if (!BattleData.Instance.IsLivingEnemyFront)
+        if (!CurrentBattleData.Instance.IsLivingEnemyFront)
         {
             // 전위가 없다면 모든 적 선택 가능
             ActiveEnemy();

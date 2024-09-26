@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Collections;
+using System.Linq;
+using System.Text;
 
 [Serializable]
 public class CsvFile : IEnumerable<string[]>
 {
     private List<string[]> cells;
+
+    public CsvFile()
+    {
+        cells = new List<string[]>();
+    }
 
     public string[] GetLineCells(int index)
     {
@@ -38,7 +45,19 @@ public class CsvFile : IEnumerable<string[]>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-       return GetEnumerator();
+        return GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+        StringBuilder strBuilder = new StringBuilder();
+
+        foreach (string[] lineCells in cells)
+        {
+            strBuilder.AppendLine(string.Join(",", lineCells));
+        }
+
+        return strBuilder.ToString();
     }
 }
 
@@ -76,7 +95,7 @@ public class CsvReader
     public static CsvFile ReadFile(TextAsset csvFile)
     {
         CsvFile result = new CsvFile();
-        string[] lines = csvFile.text.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+        string[] lines = csvFile.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (string line in lines)
         {
@@ -121,11 +140,11 @@ public class CsvReader
 
     private static string[] SplitLine(string line)
     {
-        // 전달받은 라인의 공백 제거
+        // 전달받은 라인의 주석 제거
         string result = RemoveComment(line);
 
         // CSV 라인을 셀 별로 나누기
-        string[] cells = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        string[] cells = line.Split(',');
 
         return cells;
     }
