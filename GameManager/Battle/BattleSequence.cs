@@ -8,6 +8,7 @@ public class BattleSequence
     [SerializeField] private GameEvent seqUpdateEvent;
 
     // 전투 순서
+    [SerializeReference]
     private List<BattleAction> _sequence;
     public List<BattleAction> Sequence
     {
@@ -61,6 +62,17 @@ public class BattleSequence
     {
         if (Sequence.Count <= index) return null;
         return Sequence[index];
+    }
+
+    public BattleAction GetTurnAction(Entity actor)
+    {
+        foreach (BattleAction action in Sequence)
+        {
+            if (action.actor == actor)
+                return action;
+        }
+
+        return null;
     }
 
     public void AddTurn(BattleAction action)

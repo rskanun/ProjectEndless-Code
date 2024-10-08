@@ -62,17 +62,7 @@ public class Character : Entity
         actionSelection.OnSelect(this);
     }
 
-    public AttackAction CreateAttackAction()
-    {
-        AttackAction action = new AttackAction();
-
-        action.remainTurn = 1.0f;  // 임시 턴수
-        action.actor = this;
-
-        return action;
-    }
-
-    protected override Entity OnRetarget(Entity target)
+    protected override Entity GetRetarget(Entity target)
     {
         // 캐릭터의 성격마다 우선순위로 선택하는 타겟이 다름
         return null;
@@ -83,7 +73,7 @@ public class Character : Entity
         List<Character> partyList = battleData.CharacterList;
 
         // 플레이어의 파티 모두 같이 도주
-        for (int i = partyList.Count - 1;  i >= 0; i--)
+        for (int i = partyList.Count - 1; i >= 0; i--)
         {
             // 리스트에 오류가 생기지 않도록 역순으로 파괴(도주)
             partyList[i].RunBattle();

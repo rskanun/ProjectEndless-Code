@@ -58,7 +58,10 @@ public class ActionSelection : MonoBehaviour, ISelection
     public void OnSelectAttack()
     {
         // 공격 행동 생성
-        AttackAction action = actor.CreateAttackAction();
+        AttackAction action = new AttackAction();
+
+        action.actor = actor;
+        action.remainTurn = actor.AttackTurn;
 
         // 타겟 선택창으로 넘어가기
         actionManager.SelectAction(action);

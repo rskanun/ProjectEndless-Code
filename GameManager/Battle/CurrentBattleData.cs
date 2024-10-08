@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -111,51 +112,6 @@ public class CurrentBattleData : ScriptableObject
         private set { _passedTurn = value; }
     }
 
-    public bool IsInBattle
-    {
-        get
-        {
-            // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
-            return IsLivingEnemy && IsLivingCharacter;
-        }
-    }
-    public bool IsLivingEnemy
-    {
-        get
-        {
-            List<Entity> list = new List<Entity>(EnemyList);
-
-            return IsLivingEntity(list);
-        }
-    }
-    public bool IsLivingEnemyFront
-    {
-        get
-        {
-            List<Entity> list = new List<Entity>(EnemyFrontList);
-
-            return IsLivingEntity(list);
-        }
-    }
-    public bool IsLivingCharacter
-    {
-        get
-        {
-            List<Entity> list = new List<Entity>(CharacterList);
-
-            return IsLivingEntity(list);
-        }
-    }
-    public bool IsLivingCharacterFront
-    {
-        get
-        {
-            List<Entity> list = new List<Entity>(CharacterFrontList);
-
-            return IsLivingEntity(list);
-        }
-    }
-
     [ReadOnly]
     [SerializeField]
     private int _totalAmount;
@@ -170,6 +126,23 @@ public class CurrentBattleData : ScriptableObject
         private set { _dropItems = value; }
         get { return _dropItems; }
     }
+
+    public bool IsInBattle // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
+        => IsLivingEnemy && IsLivingCharacter;
+
+    public bool IsLivingEnemy
+        => IsLivingEntity(new List<Entity>(EnemyList));
+    public bool IsLivingEnemyFront
+        => IsLivingEntity(new List<Entity>(EnemyFrontList));
+    public bool IsLivingCharacter
+        => IsLivingEntity(new List<Entity>(CharacterList));
+    public bool IsLivingCharacterFront
+        => IsLivingEntity(new List<Entity>(CharacterFrontList));
+
+    public List<Entity> LivingCharacterFront
+        => GetLivingEntity(new List<Entity>(CharacterFrontList));
+    public List<Entity> LivingCharacter
+        => GetLivingEntity(new List<Entity>(CharacterList));
 
     public void Clear()
     {
@@ -290,5 +263,10 @@ public class CurrentBattleData : ScriptableObject
         }
 
         return false;
+    }
+
+    private List<Entity> GetLivingEntity(List<Entity> entityList)
+    {
+        return entityList.Where(entity => entity.IsDead == false).ToList();
     }
 }

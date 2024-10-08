@@ -88,28 +88,63 @@ public class Monster : Entity
         }
     }
 
-    private void SelectAction()
+    protected virtual void SelectAction()
     {
         // 임시로 상시 대기 실행
-        Invoke(nameof(OnWaitingAction), 2.0f);
+        Invoke(nameof(SelectWait), 2.0f);
     }
 
-    private void OnWaitingAction()
+    protected void SelectSkill(Skill skill, Entity target, int? index = null)
+    {
+        List<Entity> targetList = new List<Entity>() { target };
+        SelectSkill(skill, targetList, index);
+    }
+
+    protected void SelectSkill(Skill skill, List<Entity> targets, int? index = null)
+    {
+        SkillAction action = new SkillAction();
+
+        action.actor = this;
+        action.castSkill = skill;
+        action.remainTurn = skill.CostTurn;
+        action.SetTarget(targets);
+
+        OnSelectAction(action, index);
+    }
+
+    protected void SelectAttack(Entity target, int? index = null)
+    {
+        AttackAction action = new AttackAction();
+
+        action.actor = this;
+        action.target = target;
+        action.remainTurn = AttackTurn;
+
+        OnSelectAction(action);
+    }
+
+    private void SelectWait()
     {
         // 임시 대기
-        WaitAction waitAction = new WaitAction();
+        WaitAction action = new WaitAction();
 
-        waitAction.remainTurn = 10.0f;
-        waitAction.actor = this;
+        action.remainTurn = 10.0f;
+        action.actor = this;
 
-        battleData.Sequence.AddTurn(waitAction);
-        Debug.Log($"{Name}: {waitAction.remainTurn} Turn Waiting...");
+        Debug.Log($"{Name}: {action.remainTurn} Turn Waiting...");
+        OnSelectAction(action);
+    }
+
+    private void OnSelectAction(BattleAction action, int? index = null)
+    {
+        // 선택한 행동 예약
+        battleData.Sequence.AddTurn(action);
 
         // 턴 종료
         EndTurn();
     }
 
-    protected override Entity OnRetarget(Entity target)
+    protected override Entity GetRetarget(Entity target)
     {
         List<Character> targets = GetTargets();
 
@@ -138,7 +173,7 @@ public class Monster : Entity
     private List<Character> GetTargets()
     {
         // 근접일 경우 전방 캐릭터 목록만 리턴
-        if (AttackType == AttackType.Melee) 
+        if (AttackType == AttackType.Melee)
             return battleData.CharacterFrontList;
 
         // 원거리일 경우 모든 캐릭터 목록 리턴

@@ -43,6 +43,20 @@ public abstract class Entity : MonoBehaviour
         get { return _attackType; }
     }
 
+    [SerializeField]
+    private PersonalityType _personalityType;
+    private Personality _personality;
+    public Personality Personality
+    {
+        get
+        {
+            if (_personality == null)
+                _personality = PersonalityFactory.Instance.CreatePersonality(_personalityType);
+
+            return _personality;
+        }
+    }
+
     [Header("스킬 목록")]
     [SerializeField]
     private List<Skill> _skillList;
@@ -66,6 +80,17 @@ public abstract class Entity : MonoBehaviour
     {
         protected set { _lastStat = value; }
         get { return _lastStat; }
+    }
+    // 데미지 공식
+    public float AttackDmg
+    {
+        // 임시 데미지 공식
+        get { return Stat.STR; }
+    }
+    // 일반 공격 소모 턴
+    public float AttackTurn
+    {
+        get { return 1.0f - (Stat.AGI / 10) / 10.0f; }
     }
 
     [Header("참조 스크립트")]
@@ -125,29 +150,23 @@ public abstract class Entity : MonoBehaviour
         turnEndEvent.NotifyUpdate();
     }
 
+    protected abstract Entity GetRetarget(Entity curTarget);
+
     public virtual void OnAttack(Entity target)
     {
         // 타겟이 사망상태일 경우 다른 대상을 타겟으로 설정
         if (target != null && target.IsDead)
         {
-            target = OnRetarget(target);
+            target = GetRetarget(target);
         }
 
         // 타겟이 없으면 공격 종료
         if (target == null) return;
 
         // 타겟 공격
-        target.OnDamage(GetAttackDmg(), Stat.MP);
+        target.OnDamage(AttackDmg, Stat.MP);
         Debug.Log($"{Name} Attack {target.Name}!!");
     }
-
-    public virtual float GetAttackDmg()
-    {
-        // 임시 데미지 공식
-        return Stat.STR;
-    }
-
-    protected abstract Entity OnRetarget(Entity curTarget);
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
     {

@@ -30,7 +30,7 @@ public class StatusEffectData
 }
 
 [System.Serializable]
-public class StatusEffect
+public abstract class StatusEffect
 {
     [SerializeField]
     private string _name;
@@ -44,13 +44,6 @@ public class StatusEffect
     public Sprite Icon
     {
         get { return _icon; }
-    }
-
-    [SerializeField]
-    private bool _isBuff;
-    public bool IsBuff
-    {
-        get { return _isBuff; }
     }
 
     [SerializeField]
@@ -74,4 +67,6 @@ public class StatusEffect
     {
         get { return _description; }
     }
+
+    public abstract bool IsBuff { get; }
 }
