@@ -109,11 +109,29 @@ public class BattleSequence
         seqUpdateEvent.NotifyUpdate();
     }
 
-    public int GetMinIndex(BattleAction action)
+    public int GetActionMinSeq(BattleAction action)
     {
         int index = Sequence.BinarySearch(action);
         if (index < 0) index = ~index;
 
         return index;
+    }
+
+    public int GetActionMinSeq(Entity actor)
+    {
+        BattleAction action = GetTurnAction(actor);
+
+        return GetActionMinSeq(action);
+    }
+
+    public int GetActionMinSeq(Entity actor, float costTurn)
+    {
+        // 임시로 행동을 만들어 배치될 수 있는 최소 위치 리턴
+        WaitAction action = new WaitAction();
+
+        action.actor = actor;
+        action.remainTurn = costTurn;
+
+        return GetActionMinSeq(action);
     }
 }

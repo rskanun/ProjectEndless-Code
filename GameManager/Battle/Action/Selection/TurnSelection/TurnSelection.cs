@@ -100,7 +100,7 @@ public class TurnSelection : MonoBehaviour, ISelection
 
     private int GetMinIndex(BattleAction action)
     {
-        int min = sequence.GetMinIndex(action);
+        int min = sequence.GetActionMinSeq(action);
 
         // 턴을 설정할 수 있는 최소 값은 무조건 현재 턴 다음
         return (min > 0) ? min : 1;

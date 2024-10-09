@@ -68,6 +68,14 @@ public class StatusEffectManager : MonoBehaviour
         return activeEffectList.ContainsKey(effect);
     }
 
+    public float GetDuration(StatusEffect effect)
+    {
+        // 해당 버프를 가지고 있지 않다면 남은 지속턴은 0
+        if (HasEffect(effect) != false) return 0;
+
+        return activeEffectList[effect].remainDuration;
+    }
+
     public void UpdateEffectTimer(float turn)
     {
         // 지속턴이 지난 상태효과 제거 목록
@@ -128,7 +136,7 @@ public class StatusEffectManager : MonoBehaviour
 
         // 생성된 임시 아이콘 삭제
         ui.ClearTempIcons();
-        
+
         // 예상 상태효과 목록 초기화
         forecastEffects.Clear();
     }

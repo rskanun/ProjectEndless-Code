@@ -108,6 +108,7 @@ public abstract class Entity : MonoBehaviour
 
     // 전투 순서 데이터
     protected CurrentBattleData battleData { private set; get; }
+    protected BattleSequence battleSeq { private set; get; }
 
     protected virtual void Awake()
     {
@@ -117,6 +118,7 @@ public abstract class Entity : MonoBehaviour
     private void InitData()
     {
         battleData = CurrentBattleData.Instance;
+        battleSeq = battleSeq;
     }
 
     protected void InitLastStat()
@@ -242,7 +244,7 @@ public abstract class Entity : MonoBehaviour
         IsDead = true;
 
         // 시퀀스 삭제
-        battleData.Sequence.RemoveTurns(this);
+        battleSeq.RemoveTurns(this);
     }
 
     public virtual void OnRevival(int hp)
@@ -259,7 +261,7 @@ public abstract class Entity : MonoBehaviour
         Stat.HP = hp;
 
         // 전투 시퀀스에 대기 상태로 행동 예약
-        battleData.Sequence.AddTurn(new WaitAction(this, 0.0f));
+        battleSeq.AddTurn(new WaitAction(this, 0.0f));
     }
 
     public virtual void OnManaShort()
@@ -287,6 +289,16 @@ public abstract class Entity : MonoBehaviour
             () => ApplyEffect(effect),
             () => ClearEffect(effect)
         );
+    }
+
+    public bool HasEffect(StatusEffect effect)
+    {
+        return effectManager.HasEffect(effect);
+    }
+
+    public float GetEffectDuration(StatusEffect effect)
+    {
+        return effectManager.GetDuration(effect);
     }
 
     private void ApplyEffect(StatusEffect effect)

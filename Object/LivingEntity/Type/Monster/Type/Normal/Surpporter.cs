@@ -23,12 +23,12 @@ public class Surpporter : Monster
                 Entity target = action.actor;
 
                 // 공격 관련 버프 스킬 탐색
-                List<Skill> effects = FindAttackBuffSkills(target);
+                List<Skill> effects = FindUsableAttackBuffSkills(target);
 
                 // 사용할 만한 공격 관련 버프 스킬이 없는 경우 방어 관련 스킬 탐색
                 if (effects == null || effects.Count <= 0)
                 {
-                    effects = FindDefenseBuffSkills(target);
+                    effects = FindUsableDefenseBuffSkills(target);
                 }
 
                 // 사용할 만한 방어 관련 버프 스킬이 없는 경우
@@ -38,7 +38,7 @@ public class Surpporter : Monster
                     target = GetMinAttackTurn<Character>().actor;
 
                     // 디버프 스킬 탐색
-                    effects = FindDebuffSkills(target);
+                    effects = FindUsableDebuffSkills(target);
                 }
 
                 // 사용할 만한 디버프 스킬이 없는 경우
@@ -62,7 +62,7 @@ public class Surpporter : Monster
                 Entity target = action.actor;
 
                 // 디버프 스킬 탐색
-                List<Skill> effects = FindDebuffSkills(target);
+                List<Skill> effects = FindUsableDebuffSkills(target);
 
                 // 사용할 만한 디버프 스킬이 없는 경우 방어 관련 스킬 탐색
                 if (effects == null || effects.Count <= 0)
@@ -71,7 +71,7 @@ public class Surpporter : Monster
                     target = GetMinAttackTurn<Monster>().actor;
 
                     // 방어 관련 버프 스킬 탐색
-                    effects = FindDefenseBuffSkills(target);
+                    effects = FindUsableDefenseBuffSkills(target);
                 }
 
                 // 사용할 만한 방어 관련 버프 스킬이 없는 경우
@@ -101,7 +101,7 @@ public class Surpporter : Monster
 
     private BattleAction GetMinAttackTurn<T>() where T : Entity
     {
-        foreach (BattleAction action in battleData.Sequence.Sequence)
+        foreach (BattleAction action in battleSeq.Sequence)
         {
             if (action.actor is T)
             {
@@ -126,42 +126,52 @@ public class Surpporter : Monster
         return null;
     }
 
-    private List<Skill> FindAttackBuffSkills(Entity target)
+    private List<Skill> FindUsableAttackBuffSkills(Entity target)
     {
         // 소유 중인 공격 관련 버프 목록
-        List<Skill> attackBuffs = GetEffectSkills(BuffType.AttackBuff);
-        List<Skill> areaBuffs = GetAreaSkills(attackBuffs);
+        List<EffectSkill> attackBuffs = GetEffectSkills(BuffType.AttackBuff);
+
+        // 사용 가능한 범위 버프 스킬 탐색
+        List<EffectSkill> areaBuffs = GetMultiTargetEffectSkills(attackBuffs);
+        List<Skill> usableAreaBuffs = FindUsableEffectSkills(areaBuffs, target, target);
+
+        if (usableAreaBuffs == null || usableAreaBuffs.Count <= 0)
+        {
+            // 사용 가능한 범위 버프 스킬이 없는 경우 단일 버프 탐색
+            List<EffectSkill> singleBuffs = GetSingleTargetEffectSkills(attackBuffs);
+            List<Skill> usableSingleBuffs = FindUsableEffectSkills(singleBuffs, target, target);
+
+            return usableSingleBuffs;
+        }
 
         // 공격 관련 버프 중 사용 가능한 스킬
-        return FindUsableEffectSkills(attackBuffs, target);
+        return usableAreaBuffs;
     }
 
-    private List<Skill> FindDefenseBuffSkills(Entity target)
+    private List<Skill> FindUsableDefenseBuffSkills(Entity target, Entity attacker)
     {
-        List<Skill> defenseBuffs = GetEffectSkills(BuffType.DefenseBuff);
+        List<EffectSkill> defenseBuffs = GetEffectSkills(BuffType.DefenseBuff);
 
         return FindUsableEffectSkills(defenseBuffs, target);
     }
 
-    private List<Skill> GetEffectSkills(BuffType type)
+    private List<EffectSkill> GetEffectSkills(BuffType type)
     {
         return SkillList.OfType<EffectSkill>()
             .Where(skill => skill.Effect is Buff buff && buff.Type == type)
-            .Cast<Skill>()
             .ToList();
     }
 
-    private List<Skill> FindDebuffSkills(Entity target)
+    private List<Skill> FindUsableDebuffSkills(Entity target)
     {
-        List<Skill> debuffs = SkillList.OfType<EffectSkill>()
+        List<EffectSkill> debuffs = SkillList.OfType<EffectSkill>()
             .Where(skill => skill.Effect is Debuff buff)
-            .Cast<Skill>()
             .ToList();
 
         return FindUsableEffectSkills(debuffs, target);
     }
 
-    private List<Skill> GetAreaSkills(List<Skill> skillList)
+    private List<EffectSkill> GetMultiTargetEffectSkills(List<EffectSkill> skillList)
     {
         return skillList
             .Where(skill => skill.TargetType == TargetType.EnemyParty
@@ -169,19 +179,43 @@ public class Surpporter : Monster
             .ToList();
     }
 
-    private List<Skill> FindUsableEffectSkills(List<Skill> skillList, Entity target)
+    private List<EffectSkill> GetSingleTargetEffectSkills(List<EffectSkill> skillList)
     {
-        List<Skill> usableSkill = new List<Skill>();
-        foreach (Skill skill in skillList)
-        {
-            if (skill.CostSP <= Stat.SP)
-            {
-                // 남은 SP 이내에 사용 불가능한 경우 패스
-                continue;
-            }
+        return skillList
+            .Where(skill => skill.TargetType != TargetType.EnemyParty
+                && skill.TargetType != TargetType.PlayerParty)
+            .ToList();
+    }
 
-            // 전체 범위를 타겟으로 한 스킬 
-        }
+    private List<Skill> FindUsableEffectSkills(List<EffectSkill> skillList, Entity target, Entity attacker)
+    {
+        return skillList
+            .Where(skill => IsUsableEffectSkill(skill, target, attacker))
+            .Cast<Skill>()
+            .ToList();
+    }
+
+    private bool IsUsableEffectSkill(EffectSkill skill, Entity target, Entity attacker)
+    {
+        // 사용 가능할 정도의 SP 소지 여부 확인
+        if (skill.CostSP <= Stat.SP) return false;
+
+        // attacker의 턴까지 타겟의 상태이상 소유 여부 확인
+        float effectDuration = target.GetEffectDuration(skill.Effect);
+        float attackerActionTurn = battleSeq.GetTurnAction(attacker).remainTurn;
+        if (effectDuration > attackerActionTurn) return false;
+
+        // attacker의 행동 순서보다 상태이상 스킬의 발동 순서가 더 앞인지 여부 확인
+        int attackerActionIndex = battleSeq.GetActionMinSeq(attacker);
+        int casterActionIndex = battleSeq.GetActionMinSeq(this, skill.CostTurn);
+        if (attackerActionIndex < casterActionIndex) return false;
+
+        // 상태이상 지속시간 안에 attacker의 행동이 실행되는지 여부 확인
+        float effectEndTurn = skill.CostTurn + skill.Effect.Duration;
+        if (effectEndTurn <= attackerActionTurn) return false;
+
+        // 모든 조건을 만족하면 해당 스킬을 사용할 수 있음
+        return true;
     }
 
     private void SelectAttack()

@@ -77,7 +77,7 @@ public class Attacker : Monster
             Skill castSkill = null;
 
             // 타겟의 남은 턴 수 확인
-            BattleAction targetAction = battleData.Sequence.GetTurnAction(target);
+            BattleAction targetAction = battleSeq.GetTurnAction(target);
             float remainTurn = targetAction.remainTurn;
 
             // 턴 수 내에 사용 가능한 스킬 사용
@@ -118,7 +118,7 @@ public class Attacker : Monster
 
     private float GetPlayerNextTurn()
     {
-        foreach (BattleAction action in battleData.Sequence.Sequence)
+        foreach (BattleAction action in battleSeq.Sequence)
         {
             if (action.actor is Character)
             {
