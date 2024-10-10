@@ -12,6 +12,9 @@ public enum TargetType
     FrontMember,    // 파티 진형 선열 1명
     Member,         // 파티 맴버 1명
     PlayerParty,    // 모든 파티 맴버
+    One,            // 모든 엔티티 중 하나
+    Every,          // 모든 엔티티
+    Self,           // 자기 자신
     None            // 타겟 선택 X
 }
 

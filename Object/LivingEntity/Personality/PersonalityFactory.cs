@@ -18,7 +18,7 @@ public class PersonalityFactory
         {
             case PersonalityType.Belligerent: return new Belligerent();
             case PersonalityType.Cautious: return new Cautious();
-            case PersonalityType.Nervous: return new Nervous();
+            case PersonalityType.Nervous: return new Crusty();
             case PersonalityType.Brave: return new Brave();
             case PersonalityType.Analytical: return new Analytical();
         }

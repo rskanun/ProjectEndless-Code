@@ -1,4 +1,4 @@
-public class Nervous : Personality
+public class Crusty : Personality
 {
     public override Entity SelectTarget()
     {
