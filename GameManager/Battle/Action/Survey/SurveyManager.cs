@@ -218,7 +218,6 @@ public class SurveyManager : MonoBehaviour
     private void ActiveForecastHP(BattleAction action)
     {
         // 예상 체력 계산
-        Entity actor = action.actor;
         List<Entity> targets = action.GetTargets();
 
         if (action.actor is Monster || targets == null)
@@ -248,8 +247,8 @@ public class SurveyManager : MonoBehaviour
 
         foreach (Entity target in targets)
         {
-            // 타겟 하나하나의 예상 체력 지우기
-            target.SetForecastHP(0);
+            // 타겟 하나하나의 예상 체력 비활성화
+            target.SetActiveForecastHP(false);
         }
     }
 
@@ -258,7 +257,7 @@ public class SurveyManager : MonoBehaviour
         if (action is AttackAction)
         {
             // 일반 공격은 해당 캐릭터의 자체 데미지 가져오기
-            return action.actor.GetAttackDmg();
+            return action.actor.AttackDmg;
         }
         else if (action is SkillAction)
         {

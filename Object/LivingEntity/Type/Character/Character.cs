@@ -85,15 +85,6 @@ public class Character : Entity
         base.OnRun();
     }
 
-    public void OnSelectAction(BattleAction action, int index)
-    {
-        // 행동 예약
-        battleData.Sequence.AddTurn(action, index);
-
-        // 턴 종료
-        EndTurn();
-    }
-
     /***************************************************************
     * [ 상태 처리 ]
     * 

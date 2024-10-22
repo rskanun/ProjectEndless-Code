@@ -52,7 +52,14 @@ public class PartyData : ScriptableObject
     }
 
     [Header("게임 내 캐릭터 정보")]
-    [SerializeField] 
+    [SerializeField]
+    private CharacterData _player;
+    public CharacterData Player
+    {
+        get { return _player; }
+    }
+
+    [SerializeField]
     private List<CharacterData> _allMemberList;
     private Dictionary<string, CharacterData> allMemberDic;
     public List<CharacterData> AllMemberList

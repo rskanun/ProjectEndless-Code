@@ -13,13 +13,6 @@ public class CharacterData
     }
 
     [SerializeField]
-    private bool _isPlayer;
-    public bool IsPlayer
-    {
-        get { return _isPlayer; }
-    }
-
-    [SerializeField]
     private bool _isUnlocked;
     public bool IsUnlocked
     {

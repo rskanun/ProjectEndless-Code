@@ -23,7 +23,7 @@ public class SkillSelection : MonoBehaviour, ISelection
 
         // 스킬 정보 배치
         Character actor = selectionData.actor;
-        InitSkillsInfo(actor.SkillList, actor.Stat.SP);
+        InitSkillsInfo(actor.SkillList, actor, actor.Stat.SP);
 
         // 초기 스킬 선택
         SelectLastButton();
@@ -56,7 +56,7 @@ public class SkillSelection : MonoBehaviour, ISelection
     * 스킬 선택창의 구성 UI 설정
     ***************************************************************/
 
-    private void InitSkillsInfo(List<Skill> skills, int remainSP)
+    private void InitSkillsInfo(List<Skill> skills, Character actor, int remainSP)
     {
         // 기존 스킬 정보 삭제
         ClearSkillList();
@@ -65,21 +65,21 @@ public class SkillSelection : MonoBehaviour, ISelection
         foreach (Skill skill in skills)
         {
             // 스킬 정보 오브젝트 생성
-            GameObject skillInfoObj = CreateSkillInfoObject(skill, remainSP);
+            GameObject skillInfoObj = CreateSkillInfoObject(skill, actor, remainSP);
 
             // 오브젝트 리스트에 추가
             skillInfoList.Add(skillInfoObj);
         }
     }
 
-    private GameObject CreateSkillInfoObject(Skill skill, int remainSP)
+    private GameObject CreateSkillInfoObject(Skill skill, Character actor, int remainSP)
     {
         // 스킬 정보를 담은 오브젝트 생성
         GameObject skillInfoObj = ui.CreateSkillInfo(skill);
 
         // 스킬 정보 설정
         SkillInfo skillInfo = skillInfoObj.GetComponent<SkillInfo>();
-        skillInfo.SetSkill(skill);
+        skillInfo.SetSkill(skill, actor);
 
         // hover 설정
         skillInfo.SetHoverHandler(() => ui.SetDescription(skill.Description));

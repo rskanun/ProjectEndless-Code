@@ -61,7 +61,7 @@ public class ActionSelection : MonoBehaviour, ISelection
         AttackAction action = new AttackAction();
 
         action.actor = actor;
-        action.remainTurn = actor.AttackTurn;
+        action.remainTurn = actor.GetLastTurn(1.0f);
 
         // 타겟 선택창으로 넘어가기
         actionManager.SelectAction(action);
@@ -112,14 +112,5 @@ public class ActionSelection : MonoBehaviour, ISelection
 
         // 선택한 행동 알리기
         actionManager.SelectAction(action);
-    }
-
-    private void SelectAction(BattleAction action)
-    {
-        // 선택한 행동 보내기
-        actionManager.SelectAction(action);
-
-        // 선택 초기화
-        EventSystem.current.SetSelectedGameObject(null);
     }
 }

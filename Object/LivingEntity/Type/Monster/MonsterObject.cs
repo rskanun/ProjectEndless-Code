@@ -1,37 +1,30 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
-// ëª¬ìŠ¤í„° AI = ì„±í–¥ + íƒì§€ ê¸°ê´€ + ì„±ê²© + ê°œì²´ íŠ¹ì„±
+// ¸ó½ºÅÍ AI = ¼ºÇâ + Å½Áö ±â°ü + ¼º°İ + °³Ã¼ Æ¯¼º
 
-// ì„±í–¥: í”Œë ˆì´ì–´ì™€ ëŒ€ë©´ í–ˆì„ ë•Œì˜ í–‰ë™
+// ¼ºÇâ: ÇÃ·¹ÀÌ¾î¿Í ´ë¸é ÇßÀ» ¶§ÀÇ Çàµ¿
 public enum PropensityType
 {
-    Friendly,   // í”Œë ˆì´ì–´ì—ê²Œ ì´ë¡œìš´ ì˜í–¥ì„ ì£¼ì§€ë§Œ, í”¼í•´ë¥¼ ì…ì„ ì‹œ ì ëŒ€ì ìœ¼ë¡œ ë³€í•¨
-    Neutral,    // í”Œë ˆì´ì–´ì—ê²Œ ì•„ë¬´ëŸ° ì˜í–¥ì„ ë¼ì¹˜ì§€ ì•Šìœ¼ë‚˜, í”¼í•´ë¥¼ ì…ì„ ì‹œ ì ëŒ€ì ìœ¼ë¡œ ë³€í•¨
-    Hostile     // í”Œë ˆì´ì–´ì—ê²Œ í•´ë¡œìš´ ì˜í–¥ì„ ë¼ì¹¨
+    Friendly,   // ÇÃ·¹ÀÌ¾î¿¡°Ô ÀÌ·Î¿î ¿µÇâÀ» ÁÖÁö¸¸, ÇÇÇØ¸¦ ÀÔÀ» ½Ã Àû´ëÀûÀ¸·Î º¯ÇÔ
+    Neutral,    // ÇÃ·¹ÀÌ¾î¿¡°Ô ¾Æ¹«·± ¿µÇâÀ» ³¢Ä¡Áö ¾ÊÀ¸³ª, ÇÇÇØ¸¦ ÀÔÀ» ½Ã Àû´ëÀûÀ¸·Î º¯ÇÔ
+    Hostile     // ÇÃ·¹ÀÌ¾î¿¡°Ô ÇØ·Î¿î ¿µÇâÀ» ³¢Ä§
 }
-// ì„±ê²©: ì ëŒ€ì ì¼ ë•Œ ì·¨í•˜ëŠ” í–‰ë™
-public enum PersonalityType
-{
-    Bravery,    // ìì‹ ì˜ ì²´ë ¥ì— ìƒê´€ì—†ì´ ê³µê²©ë§Œì„ í–‰í•¨
-    Prudence,   // ìì‹ ì˜ ì²´ë ¥ì— ë”°ë¼ ê³µê²©ì„ í–‰í•˜ê±°ë‚˜ ìˆ˜ë¹„ì ì¸ íƒœì„¸ë¥¼ ì·¨í•¨
-    Skittish    // í”Œë ˆì´ì–´ë¡œë¶€í„° ì¼ì • ê±°ë¦¬ ì´ìƒê¹Œì§€ ë„ë§ì¹¨
-}
-// ê°œì²´ íŠ¹ì„±: ë‹¤ë¥¸ ê°œì²´ë“¤ê³¼ì˜ í–‰ë™
+// °³Ã¼ Æ¯¼º: ´Ù¸¥ °³Ã¼µé°úÀÇ Çàµ¿
 public enum QualityType
 {
-    Independent,    // ê°™ì€ ê°œì²´ì— ì˜í–¥ì„ ë°›ì§€ ì•ŠìŒ
-    Social,         // ë™ì¼í•œ ê°œì²´ë¼ë¦¬ ë‹¤ë‹ˆë©°, í•œ ë§ˆë¦¬ë¼ë„ ì ëŒ€ì ìœ¼ë¡œ ë³€í•˜ë©´ ì£¼ë³€ì˜ ë™ì¼í•œ ê°œì²´ë“¤ë„ ì ëŒ€ì ìœ¼ë¡œ ë³€í•¨
-    Protective      // ì ëŒ€ì ìœ¼ë¡œ ë³€í•  ì‹œ ì£¼ë³€ì— ìˆëŠ” ëª¨ë“  ê°œì²´ë“¤ë„ ì ëŒ€ì ìœ¼ë¡œ ë³€í•¨
+    Independent,    // °°Àº °³Ã¼¿¡ ¿µÇâÀ» ¹ŞÁö ¾ÊÀ½
+    Social,         // µ¿ÀÏÇÑ °³Ã¼³¢¸® ´Ù´Ï¸ç, ÇÑ ¸¶¸®¶óµµ Àû´ëÀûÀ¸·Î º¯ÇÏ¸é ÁÖº¯ÀÇ µ¿ÀÏÇÑ °³Ã¼µéµµ Àû´ëÀûÀ¸·Î º¯ÇÔ
+    Protective      // Àû´ëÀûÀ¸·Î º¯ÇÒ ½Ã ÁÖº¯¿¡ ÀÖ´Â ¸ğµç °³Ã¼µéµµ Àû´ëÀûÀ¸·Î º¯ÇÔ
 }
 
 public class MonsterObject : MonoBehaviour
 {
-    [Header("ëª¬ìŠ¤í„° ì„±í–¥")]
+    [Header("¸ó½ºÅÍ ¼ºÇâ")]
     [SerializeField] private PropensityType propensityType;
 
-    [Header("ëª¬ìŠ¤í„° í–‰ë™ ì •ë³´")]
-    // ì´ë™ ì •ë³´
+    [Header("¸ó½ºÅÍ Çàµ¿ Á¤º¸")]
+    // ÀÌµ¿ Á¤º¸
     [SerializeField] private float moveSpeed;
     [SerializeField] private float chasingSpeed;
     [SerializeField] private Color moveLineColor;
@@ -39,7 +32,7 @@ public class MonsterObject : MonoBehaviour
     private List<Vector2> movePoints;
     public List<Vector2> MovePoints { get { return movePoints; } }
 
-    // ê³µê²© ì •ë³´
+    // °ø°İ Á¤º¸
     [SerializeField]
     private float _attackDistance;
     public float AttackDistance
@@ -53,15 +46,15 @@ public class MonsterObject : MonoBehaviour
         get { return _attackCooldown; }
     }
 
-    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
+    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
     [SerializeField] private OrganManager organManager;
 
-    // ëª¬ìŠ¤í„° ìƒíƒœ ì •ë³´
+    // ¸ó½ºÅÍ »óÅÂ Á¤º¸
     private FSM fsm = new FSM();
 
     private void OnEnable()
     {
-        // idle ìƒíƒœ ì´ˆê¸°í™”
+        // idle »óÅÂ ÃÊ±âÈ­
         fsm.SetState(new IdleState(this));
     }
 
@@ -72,7 +65,7 @@ public class MonsterObject : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // ì´ë™ ë£¨íŠ¸
+        // ÀÌµ¿ ·çÆ®
         if (movePoints.Count > 0)
         {
             Gizmos.color = moveLineColor;
@@ -88,9 +81,9 @@ public class MonsterObject : MonoBehaviour
     }
 
     /***************************************************************
-    * [ í”Œë ˆì´ì–´ íƒì§€ ]
+    * [ ÇÃ·¹ÀÌ¾î Å½Áö ]
     * 
-    * íƒì§€ ê¸°ê´€ì„ í†µí•œ í”Œë ˆì´ì–´ íƒì§€
+    * Å½Áö ±â°üÀ» ÅëÇÑ ÇÃ·¹ÀÌ¾î Å½Áö
     ***************************************************************/
 
     public Vector3 DetectPlayer()
@@ -99,30 +92,30 @@ public class MonsterObject : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ëª¬ìŠ¤í„° ìƒíƒœ ì²˜ë¦¬ ]
+    * [ ¸ó½ºÅÍ »óÅÂ Ã³¸® ]
     * 
-    * ëª¬ìŠ¤í„°ì˜ ê³µê²© ì²˜ë¦¬
+    * ¸ó½ºÅÍÀÇ °ø°İ Ã³¸®
     ***************************************************************/
 
     public virtual void OnAttack()
     {
-        // ì „íˆ¬ ëŒì…
+        // ÀüÅõ µ¹ÀÔ
     }
 
     /***************************************************************
-    * [ ëª¬ìŠ¤í„° ì´ë™ ]
+    * [ ¸ó½ºÅÍ ÀÌµ¿ ]
     * 
-    * ëª¬ìŠ¤í„° ì´ë™ì— ë”°ë¥¸ ìœ„ì¹˜ ë° ì• ë‹ˆë©”ì´ì…˜ ë³€í™” ì²˜ë¦¬
+    * ¸ó½ºÅÍ ÀÌµ¿¿¡ µû¸¥ À§Ä¡ ¹× ¾Ö´Ï¸ŞÀÌ¼Ç º¯È­ Ã³¸®
     ***************************************************************/
 
     public void MoveTo(Vector2 movePoint)
     {
-        // movePointë¥¼ í–¥í•´ ì´ë™
+        // movePoint¸¦ ÇâÇØ ÀÌµ¿
         float speed = moveSpeed * Time.deltaTime;
 
         transform.position = Vector2.MoveTowards(transform.position, movePoint, speed);
 
-        // ì´ë™ ë°©í–¥ìœ¼ë¡œ ëª¸ íšŒì „
+        // ÀÌµ¿ ¹æÇâÀ¸·Î ¸ö È¸Àü
         RotateTo(movePoint);
     }
 
@@ -130,7 +123,7 @@ public class MonsterObject : MonoBehaviour
     {
         Vector2 rotateVec = (rotatePoint - (Vector2)transform.position).normalized;
 
-        // íƒì§€ ê¸°ê´€ íšŒì „
+        // Å½Áö ±â°ü È¸Àü
         organManager.RotateOrgans(rotateVec);
     }
 }

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Attacker : Monster
+public class NormalMonster : Monster
 {
     /***************************************************************
     * [ 행동 패턴 ]
     * 
-    * 딜러 포지션 일반 몬스터의 공격 패턴 AI
+    * 일반 몬스터의 공격 패턴 AI
     ***************************************************************/
 
     protected override void SelectAction()

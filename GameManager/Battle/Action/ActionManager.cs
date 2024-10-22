@@ -104,7 +104,7 @@ public class ActionManager : MonoBehaviour
         SkillAction action = (SkillAction)selectionData.action;
 
         action.castSkill = skill;
-        action.remainTurn = skill.CostTurn;
+        action.remainTurn = action.actor.GetLastTurn(skill.CostTurn);
 
         // 다음 선택창 열기
         OpenSelection(targetSelection);
@@ -125,13 +125,13 @@ public class ActionManager : MonoBehaviour
     {
         ISelection nextSelection = type switch
         {
-            // 도망과 대기는 타겟 선택 X
+            // 도망과 대기는 타겟 선택 없이 바로 턴 선택
             ActionType.Run or ActionType.Wait => turnSelection,
 
-            // 스킬일 경우 스킬 선택창 열기
+            // 스킬일 경우 스킬 선택
             ActionType.Skill => skillSelection,
 
-            // 아이템일 경우 아이템 선택창 열기
+            // 아이템일 경우 아이템 선택
             ActionType.Item => itemSelection,
 
             // 나머지는 전부 타겟 선택

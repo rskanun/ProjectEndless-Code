@@ -21,14 +21,14 @@ public class SkillInfo : MonoBehaviour, ISelectHandler
     private Action hoverHandler;
     private Action clickHandler;
 
-    public void SetSkill(Skill skill)
+    public void SetSkill(Skill skill, Character caster)
     {
         this.skill = skill;
 
         // 정보 적용
         icon.sprite = skill.IconSprite;
         skillName.text = skill.Name;
-        costTurn.text = skill.CostTurn.ToString("0.0");
+        costTurn.text = caster.GetLastTurn(skill.CostTurn).ToString("0.0");
         costSP.text = $"{skill.CostSP} SP";
     }
 
