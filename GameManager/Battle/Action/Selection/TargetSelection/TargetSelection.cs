@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public enum TargetType
 {
@@ -186,7 +185,6 @@ public class TargetSelection : MonoBehaviour, ISelection
             TargetSelectButton.lastSelected = firstSelectButton;
         }
 
-        GameObject prevObj = EventSystem.current.currentSelectedGameObject;
         AutoSelectedData.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
     }
 

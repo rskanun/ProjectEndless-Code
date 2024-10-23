@@ -111,7 +111,7 @@ public class BattleManager : MonoBehaviour
         // 타임라인 생성
         timeline.SetupTimeline(battleSeq);
 
-        // 선택 버튼 생성
+        // 선택 버튼 등록
         selectionManager.InitSelectableEntities();
 
         // 처음 턴 진행
@@ -170,9 +170,6 @@ public class BattleManager : MonoBehaviour
 
             // 턴이 끝날 때까지 대기
             yield return new WaitUntil(() => isTurnEnded);
-
-            // 타임라인 업데이트
-            //timeline.UpdateTimeline();
         }
 
         // 전투 끝내기

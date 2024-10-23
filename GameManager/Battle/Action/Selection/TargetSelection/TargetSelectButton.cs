@@ -14,7 +14,6 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         get { return isSelected; }
     }
 
-    [HideInInspector]
     public Entity targetEntity;
     public Image targetGraphic;
     public Sprite selectedSprite;
@@ -29,7 +28,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
             // 이전 버튼이 선택 가능한 버튼인 것만 리턴
             TargetSelectButton button = _prevButton;
 
-            while(button != this && !button.interactable)
+            while (button != this && !button.interactable)
             {
                 button = button.PrevButton;
             }

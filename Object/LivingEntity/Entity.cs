@@ -90,9 +90,8 @@ public abstract class Entity : MonoBehaviour
 
     [Header("참조 스크립트")]
     [SerializeField] protected BattleHUD hud;
-    [SerializeField] protected SurveyHUD surveyHUD;
     [SerializeField] protected StatusEffectManager effectManager;
-    [SerializeField] protected ActionIcon actionIcon;
+    [SerializeField] protected EntitySurveyManager surveyManager;
 
     // 현재 상태
     private bool _isDead;
@@ -367,31 +366,31 @@ public abstract class Entity : MonoBehaviour
 
     public void ActiveActionIcon(ActionType type)
     {
-        actionIcon.SetIcon(type);
+        surveyManager.ActiveActionIcon(type);
     }
 
     public void HideActionIcon()
     {
-        actionIcon.ClearIcon();
+        surveyManager.HideActionIcon();
     }
 
     public void SetForecastHP(int change)
     {
-        surveyHUD.SetForecastHP(Stat.HP, Stat.MaxHP, change);
+        surveyManager.SetForecastHP(Stat.HP, Stat.MaxHP, change);
     }
 
     public void SetActiveForecastHP(bool isActive)
     {
-        surveyHUD.SetHpBarActive(isActive);
+        surveyManager.SetActiveForecastHP(isActive);
     }
 
     public void SetForecastEffect(StatusEffect effect)
     {
-        effectManager.CreateForecastEffect(effect);
+        surveyManager.SetForecastEffect(effect);
     }
 
     public void ClearForecastEffect()
     {
-        effectManager.ClearForecastEffect();
+        surveyManager.ClearForecastEffect();
     }
 }

@@ -11,8 +11,10 @@ public class Consumable : Item
     {
         get { return _targetType; }
     }
-    [SerializeField]
-    private StatusEffect _effect;
+    [SerializeReference]
+    [ContextMenuItem("Buff", "SetBuff")]
+    [ContextMenuItem("Debuff", "SetDebuff")]
+    private StatusEffect _effect = new Buff();
     public StatusEffect Effect
     {
         get { return _effect; }
@@ -24,5 +26,15 @@ public class Consumable : Item
         {
             target.AddEffect(Effect);
         }
+    }
+
+    public void SetBuff()
+    {
+        _effect = new Buff();
+    }
+
+    public void SetDebuff()
+    {
+        _effect = new Debuff();
     }
 }

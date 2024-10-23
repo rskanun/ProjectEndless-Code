@@ -46,11 +46,12 @@ public abstract class StatusEffect
         get { return _icon; }
     }
 
+    [ReadOnly]
     [SerializeField]
-    private List<StatusEffectData> _effects;
-    public List<StatusEffectData> Effects
+    private bool _isBuff;
+    public bool IsBuff
     {
-        get { return _effects; }
+        get { return _isBuff; }
     }
 
     [SerializeField]
@@ -68,5 +69,15 @@ public abstract class StatusEffect
         get { return _description; }
     }
 
-    public abstract bool IsBuff { get; }
+    [SerializeField]
+    private List<StatusEffectData> _effects;
+    public List<StatusEffectData> Effects
+    {
+        get { return _effects; }
+    }
+
+    public StatusEffect(bool isBuff)
+    {
+        _isBuff = isBuff;
+    }
 }

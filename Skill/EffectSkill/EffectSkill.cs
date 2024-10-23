@@ -5,8 +5,10 @@ using UnityEngine;
 public class EffectSkill : Skill
 {
     [Header("버프 정보")]
-    [SerializeField]
-    private StatusEffect _effect;
+    [SerializeReference]
+    [ContextMenuItem("Buff", "SetBuff")]
+    [ContextMenuItem("Debuff", "SetDebuff")]
+    private StatusEffect _effect = new Buff();
     public StatusEffect Effect
     {
         get { return _effect; }
@@ -18,5 +20,15 @@ public class EffectSkill : Skill
         {
             target.AddEffect(Effect);
         }
+    }
+
+    public void SetBuff()
+    {
+        _effect = new Buff();
+    }
+
+    public void SetDebuff()
+    {
+        _effect = new Debuff();
     }
 }
