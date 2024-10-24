@@ -14,7 +14,7 @@ public class SkillSelection : MonoBehaviour, ISelection
     // 마지막 선택 버튼
     private GameObject lastSelected;
 
-    public void OpenSelection(SelectionData selectionData)
+    public void OpenSelection()
     {
         lastSelected = null;
 
@@ -22,7 +22,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         ui.SetActiveWindow(true);
 
         // 스킬 정보 배치
-        Character actor = selectionData.actor;
+        Character actor = CurrentBattleData.Instance.SelectionData.actor;
         InitSkillsInfo(actor.SkillList, actor, actor.Stat.SP);
 
         // 초기 스킬 선택

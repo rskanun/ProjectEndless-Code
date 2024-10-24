@@ -10,6 +10,7 @@ public class TurnSelection : MonoBehaviour, ISelection
     [SerializeField] private TurnSelectionController controller;
 
     // 참조 데이터
+    private CurrentBattleData battleData;
     private BattleSequence sequence;
 
     // 현재 선택된 행동
@@ -21,12 +22,13 @@ public class TurnSelection : MonoBehaviour, ISelection
 
     private void Awake()
     {
-        sequence = CurrentBattleData.Instance.Sequence;
+        battleData = CurrentBattleData.Instance;
+        sequence = battleData.Sequence;
     }
 
-    public void OpenSelection(SelectionData selectionData)
+    public void OpenSelection()
     {
-        action = selectionData.action;
+        action = battleData.SelectionData.action;
 
         // 타임라인 삽입 아이콘 활성화
         ActiveInsertIcon();

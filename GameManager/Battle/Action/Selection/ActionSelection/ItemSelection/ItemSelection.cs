@@ -14,7 +14,7 @@ public class ItemSelection : MonoBehaviour, ISelection
     // 마지막 선택 버튼
     private GameObject lastSelected;
 
-    public void OpenSelection(SelectionData selectionData)
+    public void OpenSelection()
     {
         // 아이템창 열기
         ui.SetActiveWindow(true);
@@ -125,7 +125,7 @@ public class ItemSelection : MonoBehaviour, ISelection
     private void RemoveItemInfoObject(GameObject itemInfoObj)
     {
         // 만약 마지막으로 선택한 아이템일 경우
-        if (lastSelected ==  itemInfoObj)
+        if (lastSelected == itemInfoObj)
         {
             // 마지막 선택 아이템에서 삭제
             lastSelected = null;

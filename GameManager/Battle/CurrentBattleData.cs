@@ -112,6 +112,18 @@ public class CurrentBattleData : ScriptableObject
         private set { _passedTurn = value; }
     }
 
+    private SelectionData _selectionData;
+    public SelectionData SelectionData
+    {
+        get
+        {
+            if (_selectionData == null)
+                _selectionData = new SelectionData();
+
+            return _selectionData;
+        }
+    }
+
     [ReadOnly]
     [SerializeField]
     private int _totalAmount;

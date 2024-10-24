@@ -22,9 +22,6 @@ public class ActionManager : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private SurveyManager checkingManager;
 
-    // 참조 데이터
-    private CurrentBattleData battleData;
-
     // 현재 열린 창
     private Stack<ISelection> selectionLog;
 
@@ -33,9 +30,7 @@ public class ActionManager : MonoBehaviour
 
     private void Awake()
     {
-        battleData = CurrentBattleData.Instance;
-
-        selectionData = new SelectionData();
+        selectionData = CurrentBattleData.Instance.SelectionData;
     }
 
     public void OpenSelection(ISelection selection)
@@ -51,7 +46,7 @@ public class ActionManager : MonoBehaviour
         selectionLog.Push(selection);
 
         // 다음 선택창 열기
-        selection.OpenSelection(selectionData);
+        selection.OpenSelection();
     }
 
     public void UndoSelection()

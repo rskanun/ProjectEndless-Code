@@ -74,7 +74,7 @@ public abstract class Entity : MonoBehaviour
         protected set { _originStat = value; }
         get { return _originStat; }
     }
-    [SerializeField]
+    [ReadOnly, SerializeField]
     private EntityStat _lastStat;  // 상태 효과에 따른 최종 스탯값
     public EntityStat Stat
     {

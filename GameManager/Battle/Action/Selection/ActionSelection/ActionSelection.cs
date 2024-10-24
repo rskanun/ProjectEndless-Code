@@ -11,10 +11,12 @@ public class ActionSelection : MonoBehaviour, ISelection
     // 현재 턴인 캐릭터
     private Character actor;
 
-    public void OpenSelection(SelectionData selectionData)
+    public void OpenSelection()
     {
+        CurrentBattleData battleData = CurrentBattleData.Instance;
+
         // 현재 턴인 캐릭터 설정
-        actor = selectionData.actor;
+        actor = battleData.SelectionData.actor;
 
         // 행동 선택창 열기
         OpenActionSelection(actor);

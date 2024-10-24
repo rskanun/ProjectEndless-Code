@@ -29,11 +29,13 @@ public class TargetSelection : MonoBehaviour, ISelection
     private Dictionary<TargetType, Action> targetSelectActions;
     private List<TargetSelectButton> selectButtons = new List<TargetSelectButton>();
 
-    // 현재 타겟 타입
+    // 현재 변수
+    CurrentBattleData battleData;
     private TargetType target;
 
     private void Awake()
     {
+        battleData = CurrentBattleData.Instance;
         targetSelectActions = new Dictionary<TargetType, Action>
         {
             { TargetType.FrontEnemy, ActiveEnemyFront },
@@ -70,9 +72,10 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
     }
 
-    public void OpenSelection(SelectionData selectionData)
+    public void OpenSelection()
     {
-        target = selectionData.action.GetTargetType();
+        BattleAction action = battleData.SelectionData.action;
+        target = action.GetTargetType();
 
         // 타겟 활성화
         ActiveTarget(target);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -76,7 +77,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         OnClick();
     }
 
-    public void OnClick()
+    private void OnClick()
     {
         if (interactable)
         {
@@ -129,6 +130,9 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
         // 버튼 선택
         SelectedButton();
+
+        // 예상 체력 보여주기
+        ForecastHP(CurrentBattleData.Instance.SelectionData.action);
     }
 
     public void MultiSelected()
@@ -136,7 +140,11 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         // 이미 선택된 경우 무시
         if (isSelected) return;
 
+        // 버튼 선택
         SelectedButton();
+
+        // 예상 체력 보여주기
+        ForecastHP(CurrentBattleData.Instance.SelectionData.action);
     }
 
     private void SelectedButton()
@@ -144,6 +152,37 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         isSelected = true;
 
         targetGraphic.sprite = selectedSprite;
+    }
+
+    private void ForecastHP(BattleAction action)
+    {
+        float attackDmg = GetAttackDmg(action);
+        int lastDmg = targetEntity.GetLastDmg(attackDmg);
+
+        targetEntity.SetForecastHP(-lastDmg);
+    }
+
+    private float GetAttackDmg(BattleAction action)
+    {
+        if (action is AttackAction)
+        {
+            // 일반 공격은 해당 캐릭터의 자체 데미지 가져오기
+            return action.actor.AttackDmg;
+        }
+        else if (action is SkillAction)
+        {
+            SkillAction skillAction = (SkillAction)action;
+            AttackSkill skill = skillAction.castSkill as AttackSkill;
+
+            if (skill != null)
+            {
+                // 공격 스킬만 데미지 계산
+                return skill.GetSkillDmg(action.actor);
+            }
+        }
+
+        // 나머지 행동은 데미지 X
+        return 0.0f;
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -158,17 +197,20 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
         // 그래픽 변경
         targetGraphic.sprite = originSprite;
+
+        // 예상 체력바 비활성화
+        targetEntity.SetActiveForecastHP(false);
     }
 
     public void OnMove(AxisEventData eventData)
     {
         if (eventData.moveDir == MoveDirection.Left)
         {
-            PrevButton.Selected();
+            AutoSelectedData.SetSelectedObject(PrevButton.gameObject);
         }
         else if (eventData.moveDir == MoveDirection.Right)
         {
-            NextButton.Selected();
+            AutoSelectedData.SetSelectedObject(NextButton.gameObject);
         }
     }
 }
