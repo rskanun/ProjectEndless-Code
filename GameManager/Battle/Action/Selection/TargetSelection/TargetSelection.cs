@@ -236,7 +236,9 @@ public class TargetSelection : MonoBehaviour, ISelection
         foreach (TargetSelectButton button in selectButtons)
         {
             button.interactable = false;
-            button.Deselected();
+
+            // 멀티 선택된 버튼도 전부 초기화
+            button.DeselectedMultiButton();
         }
 
         // 선택 버튼 초기화

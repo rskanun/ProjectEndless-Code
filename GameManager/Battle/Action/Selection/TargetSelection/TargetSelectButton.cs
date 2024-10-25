@@ -9,6 +9,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     public static TargetSelectButton lastSelected;
 
     public bool interactable;
+    private bool isMultiSelected;
     private bool isSelected;
     public bool IsSelected
     {
@@ -140,7 +141,8 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         // 이미 선택된 경우 무시
         if (isSelected) return;
 
-        // 버튼 선택
+        // 멀티로 버튼 선택
+        isMultiSelected = true;
         SelectedButton();
 
         // 예상 체력 보여주기
@@ -192,6 +194,12 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
     public void Deselected()
     {
+        if (isMultiSelected)
+        {
+            // 멀티 선택 중이라면 선택해제 X
+            return;
+        }
+
         // 선택 해제
         isSelected = false;
 
@@ -200,6 +208,15 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
         // 예상 체력바 비활성화
         targetEntity.SetActiveForecastHP(false);
+    }
+
+    public void DeselectedMultiButton()
+    {
+        // 멀티 선택 해제
+        isMultiSelected = false;
+
+        // 기존 선택 해제 실행
+        Deselected();
     }
 
     public void OnMove(AxisEventData eventData)
