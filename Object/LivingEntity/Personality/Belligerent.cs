@@ -1,6 +1,8 @@
-public class Belligerent : Personality
+using System.Collections.Generic;
+
+public class Belligerent : IPersonality
 {
-    public override Entity SelectTarget()
+    public List<Entity> GetPriorityTargetList()
     {
         throw new System.NotImplementedException();
     }

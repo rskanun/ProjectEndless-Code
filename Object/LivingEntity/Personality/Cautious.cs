@@ -1,6 +1,8 @@
-public class Cautious : Personality
+using System.Collections.Generic;
+
+public class Cautious : IPersonality
 {
-    public override Entity SelectTarget()
+    public List<Entity> GetPriorityTargetList()
     {
         throw new System.NotImplementedException();
     }

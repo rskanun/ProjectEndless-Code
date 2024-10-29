@@ -45,13 +45,13 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     private PersonalityType _personalityType;
-    private Personality _personality;
-    public Personality Personality
+    private IPersonality _personality;
+    public IPersonality Personality
     {
         get
         {
             if (_personality == null)
-                _personality = PersonalityFactory.Instance.CreatePersonality(_personalityType);
+                _personality = IPersonality.OfType(_personalityType);
 
             return _personality;
         }

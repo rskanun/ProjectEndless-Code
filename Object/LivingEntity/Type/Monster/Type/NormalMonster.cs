@@ -60,7 +60,7 @@ public class NormalMonster : Monster
     private void SelectMultiCharacterAction()
     {
         // 성격(우선 순위)에 따른 타겟 선택
-        Entity target = Personality.SelectTarget();
+        Entity target = IPersonality.GetPriorityTargetList();
 
         int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg);
         if (remainHP <= 0)

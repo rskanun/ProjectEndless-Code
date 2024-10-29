@@ -1,6 +1,8 @@
-public class Crusty : Personality
+using System.Collections.Generic;
+
+public class Crusty : IPersonality
 {
-    public override Entity SelectTarget()
+    public List<Entity> GetPriorityTargetList()
     {
         throw new System.NotImplementedException();
     }

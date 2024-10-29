@@ -1,6 +1,8 @@
-public class Brave : Personality
+using System.Collections.Generic;
+
+public class Brave : IPersonality
 {
-    public override Entity SelectTarget()
+    public List<Entity> GetPriorityTargetList()
     {
         throw new System.NotImplementedException();
     }
