@@ -25,7 +25,7 @@ public class TextManager : MonoBehaviour
         ui.TextSkip();
     }
 
-    public void TextDestroy()
+    public void CloseDialogue()
     {
         ui.SetDialogView(false);
     }

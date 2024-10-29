@@ -4,7 +4,7 @@ using UnityEngine;
 public class MessengerApp : App
 {
     [Header("참조 스크립트")]
-    [SerializeField] private MenuController menuManager;
+    [SerializeField] private MenuManager menuManager;
 
     private PhoneOptionSetting setting;
     private Coroutine networkChecking;

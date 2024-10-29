@@ -1,10 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     [Header("참조 데이터")]
     [SerializeField] private GameData gameData;
     [SerializeField] private PlayerData playerData;
+
+    [Header("Map")]
+    public bool player;
+    public bool ui;
+    public bool menu;
+    public bool battle;
 
     private TextScriptResource scriptResource;
     private ControlContext controller;
@@ -15,7 +22,7 @@ public class GameManager : MonoBehaviour
         get { return _instance; }
     }
 
-    private void Start()
+    private void Awake()
     {
         if (_instance == null)
         {
@@ -33,14 +40,17 @@ public class GameManager : MonoBehaviour
         scriptResource = TextScriptResource.Instance;
         controller = ControlContext.Instance;
 
-        controller.NoKeyDown = false;
+        controller.Init();
 
         StartGame();
     }
 
     private void Update()
     {
-        controller.OnKeyPressed();
+        player = controller.KeyInput.Player.enabled;
+        ui = controller.KeyInput.UI.enabled;
+        menu = controller.KeyInput.Menu.enabled;
+        battle = controller.KeyInput.Battle.enabled;
     }
 
     public void StartGame()

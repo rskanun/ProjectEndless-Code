@@ -5,7 +5,7 @@ public class EventManager : MonoBehaviour
     [Header("게임 데이터")]
     [SerializeField] private PlayerData playerData;
 
-    public void getCommandEvent(string str)
+    public void GetCommandEvent(string str)
     {
         string[] commands = str.Split(' ');
         string command = commands[0];

@@ -188,7 +188,7 @@ public class TargetSelection : MonoBehaviour, ISelection
             TargetSelectButton.lastSelected = firstSelectButton;
         }
 
-        AutoSelectedData.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
+        AutoSelector.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
     }
 
     private void MultiSelectButtons(Func<Entity, bool> selectCondition)
@@ -215,7 +215,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         // 활성화 된 버튼 중 아무(첫번째) 버튼 선택
-        AutoSelectedData.SetSelectedObject(firstSelectButton.gameObject);
+        AutoSelector.SetSelectedObject(firstSelectButton.gameObject);
     }
 
     public void OnSelect()
@@ -242,6 +242,6 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         // 선택 버튼 초기화
-        AutoSelectedData.SetSelectedObject(null);
+        AutoSelector.SetSelectedObject(null);
     }
 }

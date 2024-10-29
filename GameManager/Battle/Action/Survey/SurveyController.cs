@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SurveyController : MonoBehaviour, IControlState
 {
@@ -8,6 +9,28 @@ public class SurveyController : MonoBehaviour, IControlState
 
     private bool isMoveKeyPressed;
 
+    public void OnConnected()
+    {
+        MainInput.BattleActions input = ControlContext.Instance.KeyInput.Battle;
+
+        input.Navigate.performed += OnNavigateKeyPressed;
+    }
+
+    public void OnDisconnected()
+    {
+        MainInput.BattleActions input = ControlContext.Instance.KeyInput.Battle;
+
+        input.Navigate.performed -= OnNavigateKeyPressed;
+    }
+
+    public void OnNavigateKeyPressed(InputAction.CallbackContext context)
+    {
+        Vector2 moveInput = context.ReadValue<Vector2>();
+
+        if (moveInput.x > 0) manager.SurveyNext();
+        else if (moveInput.x < 0) manager.SurveyPrev();
+    }
+
     public void OnControlKeyPressed()
     {
         OnTimelineMoveKeyPressed();
@@ -15,7 +38,7 @@ public class SurveyController : MonoBehaviour, IControlState
 
     public void OnTimelineMoveKeyPressed()
     {
-        float h = Input.GetAxisRaw(KeyOption.AxisH);
+        float h = 0; //Input.GetAxisRaw(KeyOption.AxisH);
 
         if (h != 0 && !isMoveKeyPressed)
         {

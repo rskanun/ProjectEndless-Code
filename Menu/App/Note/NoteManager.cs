@@ -15,7 +15,7 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private SaveManager saveManager;
     [SerializeField] private LoadManager loadManager;
     [SerializeField] private LoadSaveFileManager loadFileManager;
-    [SerializeField] private MenuController menuController;
+    [SerializeField] private MenuManager menuManager;
     [SerializeField] private NoteUI ui;
 
     public void InitSaveFile()
@@ -173,8 +173,7 @@ public class NoteManager : MonoBehaviour
 
     private void LoadGame(SaveData data)
     {
-        menuController.CloseAllApps();
-        menuController.CloseMenu();
+        menuManager.CloseMenu();
 
         loadFileManager.LoadSaveFile(data);
     }

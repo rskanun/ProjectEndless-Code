@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class TurnSelectionController : MonoBehaviour, IControlState
 {
@@ -8,15 +9,34 @@ public class TurnSelectionController : MonoBehaviour, IControlState
 
     private bool isMoveKeyPressed;
 
-    public void OnControlKeyPressed()
+    public void OnConnected()
     {
-        OnTimelineMoveKeyPressed();
-        OnTimelineInsertKeyPressed();
+        MainInput.BattleActions input = ControlContext.Instance.KeyInput.Battle;
+
+        input.Navigate.performed += OnNavigateKeyPressed;
+        input.Select.performed += OnSelectKeyPressed;
+    }
+
+    public void OnDisconnected()
+    {
+        MainInput.BattleActions input = ControlContext.Instance.KeyInput.Battle;
+
+        input.Navigate.performed -= OnNavigateKeyPressed;
+        input.Select.performed -= OnSelectKeyPressed;
+    }
+
+    public void OnNavigateKeyPressed(InputAction.CallbackContext context)
+    {
+        Vector2 moveInput = context.ReadValue<Vector2>();
+
+        // 키보드 좌우키로 삽입할 타임라인 선택
+        if (moveInput.x > 0) selection.MoveNext();
+        else if (moveInput.x < 0) selection.MovePrev();
     }
 
     public void OnTimelineMoveKeyPressed()
     {
-        float h = Input.GetAxisRaw(KeyOption.AxisH);
+        float h = 0;
 
         if (h != 0 && !isMoveKeyPressed)
         {
@@ -39,11 +59,9 @@ public class TurnSelectionController : MonoBehaviour, IControlState
         }
     }
 
-    public void OnTimelineInsertKeyPressed()
+    public void OnSelectKeyPressed(InputAction.CallbackContext context)
     {
-        if (Input.GetButtonDown(KeyOption.Select))
-        {
-            selection.InsertAction();
-        }
+        // 현재 칸에 타임라인 삽입
+        selection.InsertAction();
     }
 }

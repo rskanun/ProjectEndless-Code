@@ -1,95 +1,60 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MenuController : MonoBehaviour, IControlState
 {
     [Header("참조 스크립트")]
     [SerializeField]
-    private PlayerController playerController; 
-    private MenuUI ui;
-    private App currentApp;
+    private MenuManager menuManager;
     private PopupManager popupManager;
 
-    private bool keyPressBlock = false;
+    private MainInput.MenuActions menuInput;
+    private MainInput.UIActions uiInput;
+
+    private void Awake()
+    {
+        menuInput = ControlContext.Instance.KeyInput.Menu;
+        uiInput = ControlContext.Instance.KeyInput.UI;
+    }
 
     private void Start()
     {
-        ui = GetComponent<MenuUI>();
         popupManager = PopupManager.Instance;
     }
 
-    public void OnControlKeyPressed()
+    public void OnConnected()
     {
-        OnCancelKeyPressed();
+        menuInput.Enable();
+        uiInput.Enable();
+
+        menuInput.Menu.performed += OnMenuKeyPressed;
+        uiInput.Cancel.performed += OnCancelKeyPressed;
     }
 
-    private void OnCancelKeyPressed()
+    public void OnDisconnected()
     {
-        if (Input.GetButtonDown("Cancel") && !keyPressBlock && !popupManager.isActive)
+        menuInput.Disable();
+        uiInput.Disable();
+
+        menuInput.Menu.performed -= OnMenuKeyPressed;
+        uiInput.Cancel.performed -= OnCancelKeyPressed;
+    }
+
+    private void OnMenuKeyPressed(InputAction.CallbackContext context)
+    {
+        // 메뉴 닫기
+        menuManager.CloseMenu();
+    }
+
+    private void OnCancelKeyPressed(InputAction.CallbackContext context)
+    {
+        // 메뉴 혹은 앱 닫기
+        if (!popupManager.isActive)
         {
-            if (currentApp != null) CloseApp();
-            else CloseMenu();
-        }
-    }
-
-    /************************************************************
-    * [메뉴 제어]
-    * 
-    * 메뉴의 열고 닫기를 제어
-    ************************************************************/
-
-    public void OpenMenu()
-    {
-        keyPressBlock = true;
-
-        ui.OpenMenu()
-            .OnComplete(() => keyPressBlock = false);
-    }
-
-    public void CloseMenu()
-    {
-        keyPressBlock = true;
-
-        ui.CloseMenu()
-            .OnComplete(() =>
-            {
-                keyPressBlock = false;
-
-                ControlContext.Instance.SetState(playerController);
-            });
-    }
-
-    /************************************************************
-    * [앱 제어]
-    * 
-    * 메뉴에 존재하는 앱들을 제어
-    ************************************************************/
-
-    public void OpenApp(App app)
-    {
-        currentApp = app;
-
-        app.Open();
-    }
-
-    public void CloseApp()
-    {
-        if (currentApp != null)
-        {
-            currentApp.Close();
-
-            if (!currentApp.IsActive)
-            {
-                currentApp = null;
-            }
-        }
-    }
-
-    public void CloseAllApps()
-    {
-        while (currentApp != null)
-        {
-            CloseApp();
+            // 앱이 열려있다면 앱부터 삭제
+            if (menuManager.IsOpenedApp) menuManager.CloseApp();
+            else menuManager.CloseMenu();
         }
     }
 }

@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -30,7 +31,7 @@ public class ActionSelectionUI : MonoBehaviour
         if (lastSelectedButton == null)
             lastSelectedButton = firstSelectedButton;
 
-        AutoSelectedData.SetSelectedObject(lastSelectedButton.gameObject);
+        AutoSelector.SetSelectedObject(lastSelectedButton.gameObject);
     }
 
     public void SetLastSelectedButton(Button button)

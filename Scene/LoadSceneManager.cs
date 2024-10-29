@@ -48,7 +48,7 @@ public class LoadSceneManager : MonoBehaviour
             {
                 background.blocksRaycasts = true;
 
-                ControlContext.Instance.NoKeyDown = true;
+                ControlContext.Instance.KeyLock();
             })
             .Append(background.DOFade(1, delay))
             .Join(DOTween.To(() => blurMaterial.GetFloat("_Radius"), x => blurMaterial.SetFloat("_Radius", x), 10f, delay))
@@ -77,7 +77,7 @@ public class LoadSceneManager : MonoBehaviour
                 {
                     background.blocksRaycasts = false;
 
-                    ControlContext.Instance.NoKeyDown = false;
+                    ControlContext.Instance.KeyUnlock();
                 });
         });
     }

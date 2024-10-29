@@ -113,7 +113,7 @@ public abstract class Entity : MonoBehaviour
     private void InitData()
     {
         battleData = CurrentBattleData.Instance;
-        battleSeq = battleSeq;
+        battleSeq = battleData.Sequence;
     }
 
     protected void InitLastStat()

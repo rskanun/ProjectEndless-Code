@@ -1,43 +1,55 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 public class PlayerController : MonoBehaviour, IControlState
 {
-    // 현재 플레이어 캐릭터 상태
-    private bool isRunning = false;
-
-    // 플레이어 입력 키 벡터
-    private Vector2 arrowKeyVec;
-
-    // 현재 상호작용 가능한 NPC
-    private Npc npc;
-
-    [Header("이동속도")]
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float runSpeed;
-
-    [Header("관련 오브젝트")]
-    [SerializeField] private Rigidbody2D rigid;
-    [SerializeField] private PlayerData player;
-
     [Header("참조 스크립트")]
-    [SerializeField] private PlayerAnimation playerAnima;
-    [SerializeField] private TalkController talkController;
-    [SerializeField] private MenuController menuController;
+    [SerializeField] private PlayerManager player;
+    [SerializeField] private InteractManager interactManager;
+    [SerializeField] private MenuManager menuManager;
+
+    // 컨트롤러
+    private MainInput.PlayerActions input;
+
+    private void Awake()
+    {
+        input = ControlContext.Instance.KeyInput.Player;
+    }
 
     private void Start()
     {
-        ControlContext.Instance.SetState(this);
+        ControlContext context = ControlContext.Instance;
 
-        transform.position = player.Position;
+        // 플레이어 컨트롤러를 초기값으로 설정
+        context.SetInitState(this);
+        context.SetState(this);
+
+        // transform.position = player.Position;
     }
 
-    public void OnControlKeyPressed()
+    public void OnConnected()
     {
-        OnMoveKeyPressed();
-        OnRunKeyPressed();
-        OnTalkKeyPressed();
-        OnMenuKeyPressed();
+        input.Enable();
+
+        input.Movement.performed += OnMoveKeyPressed;
+        input.Movement.canceled += OnMoveKeyPressed;
+        input.Running.performed += OnRunKeyPressed;
+        input.Running.canceled += OnRunKeyPressed;
+        input.Interact.performed += OnTalkKeyPressed;
+        input.Menu.performed += OnMenuKeyPressed;
+    }
+
+    public void OnDisconnected()
+    {
+        input.Disable();
+
+        input.Movement.performed -= OnMoveKeyPressed;
+        input.Movement.canceled -= OnMoveKeyPressed;
+        input.Running.performed -= OnRunKeyPressed;
+        input.Running.canceled -= OnRunKeyPressed;
+        input.Interact.performed -= OnTalkKeyPressed;
+        input.Menu.performed -= OnMenuKeyPressed;
     }
 
     /************************************************************
@@ -46,147 +58,39 @@ public class PlayerController : MonoBehaviour, IControlState
      * 플레이어의 이동을 제어
      ************************************************************/
 
-    private void OnMoveKeyPressed()
+    private void OnMoveKeyPressed(InputAction.CallbackContext context)
     {
-        Vector2 vec = Vector2.zero;
-
         // 패드 및 키보드의 움직임(패드의 경우 경도)에 따른 백터 변화
-        vec.x = Input.GetAxisRaw("Horizontal");
-        vec.y = Input.GetAxisRaw("Vertical");
+        Vector2 direction = input.Movement.ReadValue<Vector2>();
 
-        arrowKeyVec = vec;
-
-        // 걷는 정도의 스피드인지 판단
-        CheckingWalk(arrowKeyVec.x, arrowKeyVec.y);
-
-        // 키보드 누른 방향으로 애니메이션 움직임 제어
-        playerAnima.SetPlayerAngleAnim(arrowKeyVec);
+        // 해당 벡터로 플레이어 움직이기
+        player.MoveTo(direction);
     }
 
-    private void CheckingWalk(float x, float y)
+    private void OnRunKeyPressed(InputAction.CallbackContext context)
     {
-        float absX = Mathf.Abs(x);
-        float absY = Mathf.Abs(y);
-
-        bool isWalkSpeed = absX <= 0.5f && absY <= 0.5f;
-
-        // 움직임 정도가 일정 이하면 걷기
-        if (!isRunning && isWalkSpeed)
-        {
-            isRunning = false;
-        }
-        else if (!isRunning)
-        {
-            isRunning = true;
-        }
+        player.SetRunning(input.Running.WasPressedThisFrame());
     }
 
     /************************************************************
-     * [달리기 키]
-     * 
-     * 플레이어의 달리기를 제어
-     ************************************************************/
-
-    private void OnRunKeyPressed()
-    {
-        if(Input.GetButtonDown("Running"))
-        {
-            isRunning = true;
-        }
-    }
-
-    /************************************************************
-    * [대화키]
+    * [상호작용 키]
     * 
-    * 바라보는 대상과 대화 시작
+    * 바라보는 대상과 상호작용
     ************************************************************/
 
-    private void OnTalkKeyPressed()
+    private void OnTalkKeyPressed(InputAction.CallbackContext context)
     {
-        if(npc != null && Input.GetButtonDown("Talking"))
-        {
-            arrowKeyVec = Vector2.zero;
-
-            ControlContext.Instance.SetState(talkController);
-            talkController.StartTalk(npc);
-        }
-    }
-
-    private void EnterNpcArea(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // 해당 NPC의 정보를 가져오기
-            npc = collision.gameObject.GetComponent<Npc>();
-            Debug.Log("keydown spacebar");
-        }
-    }
-
-    private void ExitNpcArea(Collider2D collision)
-    {
-        // 맞닿은 오브젝트가 NPC일 시
-        if (collision.CompareTag("NPC"))
-        {
-            // NPC의 정보를 초기화
-            npc = null;
-            Debug.Log("exit");
-        }
+        interactManager.OnInteract();
     }
 
     /************************************************************
     * [메뉴키]
     * 
-    * 메뉴창을 열음
+    * 메뉴창을 열기
     ************************************************************/
 
-    private void OnMenuKeyPressed()
+    private void OnMenuKeyPressed(InputAction.CallbackContext context)
     {
-        if (Input.GetButtonDown("Menu"))
-        {
-            arrowKeyVec = Vector2.zero;
-
-            ControlContext.Instance.SetState(menuController);
-            menuController.OpenMenu();
-        }
-    }
-
-    /************************************************************
-    * [물리 시스템]
-    * 
-    * 실제 게임 내의 캐릭터의 행동에 따른 변화
-    ************************************************************/
-
-    private void Update()
-    {
-        player.Position = transform.position;
-    }
-
-    private void FixedUpdate()
-    {
-        float speed = (isRunning) ? runSpeed : moveSpeed;
-        rigid.velocity = arrowKeyVec.normalized * speed * Time.deltaTime;
-
-        // 달리기를 멈추면 걷기로 전환
-        if (CheckRunning(rigid.velocity) == false)
-        {
-            isRunning = false;
-        }
-    }
-
-    private bool CheckRunning(Vector2 vec)
-    {
-        return isRunning
-            && vec != Vector2.zero;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        EnterNpcArea(collision);
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        ExitNpcArea(collision);
+        menuManager.OpenMenu();
     }
 }

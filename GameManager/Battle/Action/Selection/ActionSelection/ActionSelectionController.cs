@@ -6,9 +6,14 @@ public class ActionSelectionController : MonoBehaviour, IControlState
     [SerializeField] private ActionSelection selection;
     [SerializeField] private ActionManager actionManager;
 
-    public void OnControlKeyPressed()
+    public void OnConnected()
     {
-        OnActionSelectKeyPressed();
+
+    }
+
+    public void OnDisconnected()
+    {
+
     }
 
     public void OnActionSelectKeyPressed()
