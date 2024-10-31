@@ -1,18 +1,37 @@
-/***************************************************************
-* [ 분석적인 성격 (Analytical) ]
-* 
-* 체력이 적은 적과 전방에 있는 적을 우선시 한다.
-* 
-* <가중치>
-* 체력이 없는 적부터 +1, +0.9,…
-* 전방에 있는 적 +1
-****************************************************************/
 using System.Collections.Generic;
+using System.Linq;
 
-public class Analytical : IPersonality
+public class Analytical : Personality
 {
-    public List<Entity> GetPriorityTargetList()
+    public Analytical() : base(PersonalityType.Analytical) { }
+
+    public override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
     {
-        throw new System.NotImplementedException();
+        Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
+
+        // 체력이 낮은 순으로 재정렬
+        targetList.OrderBy(entity => entity.Stat.HP);
+
+        float hpWeight = 1.0f; // 체력에 따른 가중치 값
+        foreach (Entity target in targetList)
+        {
+            // 가중치 초기값 설정
+            weightData[target] = 0.0f;
+
+            // 체력이 낮은 적부터 높은 가중치 부여
+            weightData[target] += hpWeight;
+
+            // 전방에 위치한 적인 경우
+            if (target.Position == BattlePosition.Front)
+            {
+                // 가중치 부여
+                weightData[target] += 1.0f;
+            }
+
+            // 체력 가중치 낮추기
+            hpWeight -= 0.1f;
+        }
+
+        return weightData;
     }
 }

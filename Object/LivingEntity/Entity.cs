@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum BattlePosition
@@ -16,9 +17,6 @@ public enum AttackType
 
 public abstract class Entity : MonoBehaviour
 {
-    [Header("이벤트")]
-    [SerializeField] private GameEvent turnEndEvent;
-
     [Header("엔티티 정보")]
     [SerializeField]
     private string _name;
@@ -45,13 +43,13 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     private PersonalityType _personalityType;
-    private IPersonality _personality;
-    public IPersonality Personality
+    private Personality _personality;
+    public Personality Personality
     {
         get
         {
-            if (_personality == null)
-                _personality = IPersonality.OfType(_personalityType);
+            if (_personality == null || _personality.type != _personalityType)
+                _personality = Personality.OfType(_personalityType);
 
             return _personality;
         }
@@ -138,6 +136,12 @@ public abstract class Entity : MonoBehaviour
         return originTurn * (1.0f - ((Stat.AGI / 10) / 10.0f));
     }
 
+    public void GatherCurTurnInfo()
+    {
+        // 턴 시작 시 현재 턴 정보 수집
+        Personality.OnTurnStart();
+    }
+
     /***************************************************************
     * [ 턴 진행 ]
     * 
@@ -149,7 +153,7 @@ public abstract class Entity : MonoBehaviour
     public void EndTurn()
     {
         // 턴이 끝났음을 알림
-        turnEndEvent.NotifyUpdate();
+        GameEventResource.Instance.EndTurnEvent.NotifyUpdate();
     }
 
     public void OnSelectAction(BattleAction action, int? index = null)
@@ -160,8 +164,6 @@ public abstract class Entity : MonoBehaviour
         // 턴 종료
         EndTurn();
     }
-
-    protected abstract Entity GetRetarget(Entity curTarget);
 
     public virtual void OnAttack(Entity target)
     {
@@ -177,6 +179,32 @@ public abstract class Entity : MonoBehaviour
         // 타겟 공격
         target.OnDamage(AttackDmg, Stat.MP);
         Debug.Log($"{Name} Attack {target.Name}!!");
+    }
+
+    private Entity GetRetarget(Entity curTarget)
+    {
+        List<Entity> targetableList = GetTargetableList();
+        List<Entity> priorityTargetList = Personality.GetPriorityTargetList(targetableList);
+
+        // 성격에 따른 우선순위대로 다음 타겟 탐색
+        foreach (Entity target in priorityTargetList)
+        {
+            // 만약 해당 타겟이 현재와 다른 타겟일 경우
+            if (curTarget != target)
+            {
+                // 해당 타겟을 다음 타겟으로 설정
+                return target;
+            }
+        }
+
+        // 어떠한 타겟도 고를 수 없는 경우 null 리턴
+        return null;
+    }
+
+    private List<Entity> GetTargetableList()
+    {
+        if (this is Monster) return battleData.LivingCharacters;
+        else return battleData.LivingEnemies;
     }
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
@@ -211,6 +239,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnDamage(float damage, int targetMP)
     {
+        Debug.Log($"{Name} {GetLastDmg(damage)}({damage}) Damage!!!");
         Stat.HP -= GetLastDmg(damage);
         Stat.MP = GetLastMP(targetMP);
 
@@ -292,6 +321,12 @@ public abstract class Entity : MonoBehaviour
 
     public void AddEffect(StatusEffect effect)
     {
+        if (effect == null)
+        {
+            // 상태이상이 null값인 경우 상태이상 적용 X
+            return;
+        }
+
         // 효과 적용
         effectManager.AddEffect(
             effect,

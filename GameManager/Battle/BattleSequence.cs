@@ -4,9 +4,6 @@ using UnityEngine;
 [System.Serializable]
 public class BattleSequence
 {
-    // 업데이트 이벤트
-    [SerializeField] private GameEvent seqUpdateEvent;
-
     // 전투 순서
     [SerializeReference]
     private List<BattleAction> _sequence;
@@ -15,6 +12,10 @@ public class BattleSequence
         private set { _sequence = value; }
         get { return _sequence; }
     }
+
+    // 시퀀스 업데이트
+    private GameEvent SeqUpdateEvent
+        => GameEventResource.Instance.SequenceUpdateEvent;
 
     public void SetSequence(List<Entity> entityList)
     {
@@ -44,7 +45,7 @@ public class BattleSequence
         PassedTurn(Sequence[0].remainTurn);
 
         // 시퀀스 업데이트 알림
-        seqUpdateEvent.NotifyUpdate();
+        SeqUpdateEvent.NotifyUpdate();
     }
 
     private void PassedTurn(float turn)
@@ -64,7 +65,7 @@ public class BattleSequence
         return Sequence[index];
     }
 
-    public BattleAction GetTurnAction(Entity actor)
+    public BattleAction GetEntityAction(Entity actor)
     {
         foreach (BattleAction action in Sequence)
         {
@@ -83,7 +84,7 @@ public class BattleSequence
         else Sequence.Insert(index, action);
 
         // 시퀀스 업데이트 알림
-        seqUpdateEvent.NotifyUpdate();
+        SeqUpdateEvent.NotifyUpdate();
     }
 
     public void AddTurn(BattleAction action, int index)
@@ -92,7 +93,7 @@ public class BattleSequence
         else Sequence.Insert(index, action);
 
         // 시퀀스 업데이트 알림
-        seqUpdateEvent.NotifyUpdate();
+        SeqUpdateEvent.NotifyUpdate();
     }
 
     public void RemoveTurns(Entity actor)
@@ -106,7 +107,7 @@ public class BattleSequence
         }
 
         // 시퀀스 업데이트 알림
-        seqUpdateEvent.NotifyUpdate();
+        SeqUpdateEvent.NotifyUpdate();
     }
 
     public int GetActionMinSeq(BattleAction action)
@@ -119,7 +120,7 @@ public class BattleSequence
 
     public int GetActionMinSeq(Entity actor)
     {
-        BattleAction action = GetTurnAction(actor);
+        BattleAction action = GetEntityAction(actor);
 
         return GetActionMinSeq(action);
     }

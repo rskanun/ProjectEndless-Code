@@ -151,10 +151,10 @@ public class CurrentBattleData : ScriptableObject
     public bool IsLivingCharacterFront
         => IsLivingEntity(new List<Entity>(CharacterFrontList));
 
-    public List<Entity> LivingCharacterFront
-        => GetLivingEntity(new List<Entity>(CharacterFrontList));
-    public List<Entity> LivingCharacter
+    public List<Entity> LivingCharacters
         => GetLivingEntity(new List<Entity>(CharacterList));
+    public List<Entity> LivingEnemies
+        => GetLivingEntity(new List<Entity>(EnemyList));
 
     public void Clear()
     {

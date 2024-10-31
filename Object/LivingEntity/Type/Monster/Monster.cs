@@ -104,6 +104,7 @@ public class Monster : Entity
 
     protected void SelectSkill(Skill skill, List<Entity> targets, int? index = null)
     {
+        Debug.Log($"{Name}: Select Skill");
         SkillAction action = new SkillAction();
 
         action.actor = this;
@@ -116,6 +117,7 @@ public class Monster : Entity
 
     protected void SelectAttack(Entity target, int? index = null)
     {
+        Debug.Log($"{Name}: Select Attack to {target.Name}");
         AttackAction action = new AttackAction();
 
         action.actor = this;
@@ -137,54 +139,11 @@ public class Monster : Entity
         OnSelectAction(action);
     }
 
-    protected override Entity GetRetarget(Entity target)
-    {
-        List<Character> targets = GetTargets();
-
-        // 일반 몬스터는 다음 타겟을 공격대상으로 지정
-        int stopIndex = targets.IndexOf((Character)target);
-        int curIndex = stopIndex;
-
-        Entity retarget = null;
-        while (target != retarget)
-        {
-            // 공격대상으로 지정 가능한 타겟이 나올 때가지 반복
-            curIndex = (curIndex + 1) % targets.Count;
-            retarget = targets[curIndex].GetComponent<Character>();
-
-            if (retarget.IsDead == false)
-            {
-                // 공격 가능한 다음 대상 리턴
-                return retarget;
-            }
-        }
-
-        // 다음 대상이 이전 대상과 동일한 경우 null 리턴
-        return null;
-    }
-
-    private List<Character> GetTargets()
-    {
-        // 근접일 경우 전방 캐릭터 목록만 리턴
-        if (AttackType == AttackType.Melee)
-            return battleData.CharacterFrontList;
-
-        // 원거리일 경우 모든 캐릭터 목록 리턴
-        return battleData.CharacterList;
-    }
-
     /***************************************************************
     * [ 상태 처리 ]
     * 
     * 오브젝트의 이벤트에 의한 상태 처리
     ***************************************************************/
-
-    public override void OnDamage(float damage, int targetMP)
-    {
-        int curHP = Stat.HP;
-        base.OnDamage(damage, targetMP);
-        Debug.Log($"{Name} {curHP - Stat.HP} Damage!!");
-    }
 
     public override void OnDead()
     {

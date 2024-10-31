@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Scriptable Object/Game Event", fileName ="GameEvent")]
+[CreateAssetMenu(menuName = "Scriptable Object/Game Event", fileName = "GameEvent")]
 public class GameEvent : ScriptableObject
 {
     private List<GameEventListener> listeners = new List<GameEventListener>();
 
     public void NotifyUpdate()
     {
-        foreach(GameEventListener listener in listeners)
+        foreach (GameEventListener listener in listeners)
         {
             listener.EventHandler();
         }

@@ -13,8 +13,8 @@ public enum TargetType
     PlayerParty,    // 모든 파티 맴버
     One,            // 모든 엔티티 중 하나
     Every,          // 모든 엔티티
-    Self,           // 자기 자신
-    None            // 타겟 선택 X
+    Self,            // 자기 자신
+    None,           // 타겟 선택 패스
 }
 
 public class TargetSelection : MonoBehaviour, ISelection
@@ -43,6 +43,7 @@ public class TargetSelection : MonoBehaviour, ISelection
             { TargetType.EnemyParty, ActiveEnemyParty },
             { TargetType.Member, ActivePartyMember },
             { TargetType.PlayerParty, ActiveParty },
+            { TargetType.Self, ActiveSelf },
             { TargetType.None, ActiveNone }
         };
     }
@@ -108,6 +109,7 @@ public class TargetSelection : MonoBehaviour, ISelection
     private bool IsEnemy(Entity target) => target is Monster;
     private bool IsMember(Entity target) => target is Character;
     private bool IsFront(Entity target) => target.Position == BattlePosition.Front;
+    private bool IsTargetSelf(Entity target) => target.Equals(battleData.SelectionData.actor);
 
     private void ActiveTarget(TargetType targetType)
     {
@@ -155,9 +157,15 @@ public class TargetSelection : MonoBehaviour, ISelection
         MultiSelectButtons(target => !IsEnemy(target));
     }
 
+    private void ActiveSelf()
+    {
+        // 자기 자신만 선택
+        ActiveButtons((target) => IsTargetSelf(target));
+    }
+
     private void ActiveNone()
     {
-        // 선택 스킵
+        // 타겟을 선택하지 않는 경우 스킵
         actionManager.SelectTargets(null);
     }
 

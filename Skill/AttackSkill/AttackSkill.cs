@@ -24,6 +24,14 @@ public class AttackSkill : Skill
         get { return _strDegree; }
     }
 
+    [Header("피격시 디버프")]
+    [SerializeField]
+    private Debuff _debuff;
+    public Debuff Debuff
+    {
+        get { return _debuff; }
+    }
+
     public override void OnCasting(Entity caster, List<Entity> targets)
     {
         float damage = GetSkillDmg(caster);
@@ -31,6 +39,12 @@ public class AttackSkill : Skill
         foreach (Entity entity in targets)
         {
             entity.OnDamage(damage, caster.Stat.MP);
+
+            if (Debuff != null)
+            {
+                // 적용할 디버프가 있으면 디버프 적용
+                entity.AddEffect(Debuff);
+            }
         }
     }
 

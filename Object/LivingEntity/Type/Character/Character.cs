@@ -62,12 +62,6 @@ public class Character : Entity
         actionSelection.OnSelect(this);
     }
 
-    protected override Entity GetRetarget(Entity target)
-    {
-        // 캐릭터의 성격마다 우선순위로 선택하는 타겟이 다름
-        return null;
-    }
-
     public override void OnRun()
     {
         List<Character> partyList = battleData.CharacterList;
