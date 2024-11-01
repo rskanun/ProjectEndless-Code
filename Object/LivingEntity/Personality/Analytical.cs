@@ -9,11 +9,11 @@ public class Analytical : Personality
     {
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // 체력이 낮은 순으로 재정렬
-        targetList.OrderBy(entity => entity.Stat.HP);
+        // 체력에 따른 가중치 값
+        float hpWeight = 1.0f;
 
-        float hpWeight = 1.0f; // 체력에 따른 가중치 값
-        foreach (Entity target in targetList)
+        // 체력이 낮은 순서부터 순회
+        foreach (Entity target in targetList.OrderBy(entity => entity.Stat.HP))
         {
             // 가중치 초기값 설정
             weightData[target] = 0.0f;

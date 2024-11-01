@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class NormalMonster : Monster
 {
+    [Header("테스트용 타겟 선정 디스플레이")]
+    public TestAiDisplay testDisplay;
     /***************************************************************
     * [ 행동 패턴 ]
     * 
@@ -31,6 +34,8 @@ public class NormalMonster : Monster
 
     private void SelectAction(Entity target)
     {
+        testDisplay.SetPriorityTarget(target);
+
         // 플레이어의 다음 턴에 맞춰 해당 턴 안에 사용 가능한 스킬 찾기
         List<Skill> usableSkills = GetUsableSkills(SkillList, target);
 
@@ -61,6 +66,7 @@ public class NormalMonster : Monster
         // 성격(우선 순위)에 따른 타겟 정렬 리스트
         List<Entity> sortList = Personality.GetPriorityTargetList(targetList);
 
+        testDisplay.SetPriorityTargets(sortList);
         foreach (Entity target in sortList)
         {
             int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg);
@@ -116,15 +122,12 @@ public class NormalMonster : Monster
             }
 
             // 사용 가능한 스킬이 없는 경우
-            if (IsAttackTargetable(target) == false)
+            if (IsAttackTargetable(target))
             {
-                // 일반 공격을 할 수 없는 대상일 경우 다음 대상에 대하여 행동 선택
-                continue;
+                // 일반 공격이 가능한 경우엔 일반 공격 실행
+                SelectAttack(target);
+                return;
             }
-
-            // 일반 공격이 가능한 경우 일반 공격 실행
-            SelectAttack(target);
-            return;
         }
     }
 
@@ -261,5 +264,19 @@ public class NormalMonster : Monster
         }
 
         return finishingSkill;
+    }
+
+
+    // 테스트용 디스플레이 함수
+    protected override void SelectAttack(Entity target, int? index = null)
+    {
+        testDisplay.SetSelectTarget(target);
+        base.SelectAttack(target, index);
+    }
+
+    protected override void SelectSkill(Skill skill, List<Entity> targets, int? index = null)
+    {
+        testDisplay.SetSelectTarget(targets[0]);
+        base.SelectSkill(skill, targets, index);
     }
 }

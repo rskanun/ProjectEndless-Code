@@ -135,4 +135,9 @@ public class BattleSequence
 
         return GetActionMinSeq(action);
     }
+
+    public int GetSeqIndex(Entity actor)
+    {
+        return Sequence.FindIndex(seq => seq.actor == actor);
+    }
 }

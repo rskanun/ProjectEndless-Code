@@ -102,7 +102,7 @@ public class Monster : Entity
         SelectSkill(skill, targetList, index);
     }
 
-    protected void SelectSkill(Skill skill, List<Entity> targets, int? index = null)
+    protected virtual void SelectSkill(Skill skill, List<Entity> targets, int? index = null)
     {
         Debug.Log($"{Name}: Select Skill");
         SkillAction action = new SkillAction();
@@ -115,7 +115,7 @@ public class Monster : Entity
         OnSelectAction(action, index);
     }
 
-    protected void SelectAttack(Entity target, int? index = null)
+    protected virtual void SelectAttack(Entity target, int? index = null)
     {
         Debug.Log($"{Name}: Select Attack to {target.Name}");
         AttackAction action = new AttackAction();

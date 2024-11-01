@@ -180,6 +180,9 @@ public class BattleManager : MonoBehaviour
     {
         isTurnEnded = false;
 
+        // 턴 시작 알림
+        GameEventResource.Instance.StartTurnEvent.NotifyUpdate();
+
         // 이전에 입력한 행동 실행
         BattleAction curAction = battleSeq.GetTurnAction(0);
         curAction.OnAction();

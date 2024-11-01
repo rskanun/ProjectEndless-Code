@@ -18,11 +18,11 @@ public class Crusty : Personality
         BattleSequence seq = CurrentBattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // 가장 빨리 행동하는 순서대로 재정렬
-        targetList.OrderBy(entity => seq.GetEntityAction(entity));
+        // 공격 순서에 따른 가중치 값
+        float actionWeight = 1.0f;
 
-        float actionWeight = 1.0f; // 체력에 따른 가중치 값
-        foreach (Entity target in targetList)
+        // 가장 빨리 행동하는 순서대로 재정렬
+        foreach (Entity target in targetList.OrderBy(entity => seq.GetSeqIndex(entity)))
         {
             // 가중치 초기값 설정
             weightData[target] = 0.0f;
@@ -33,6 +33,7 @@ public class Crusty : Personality
             // 일반 공격이나 스킬을 쓸 예정이라면 가중치 증가
             if (action is AttackAction || action is SkillAction)
             {
+                Debug.Log($"{target.Name}) {actionWeight}");
                 weightData[target] += actionWeight;
 
                 // 다음 행동자는 가중치 증가량 감소
@@ -96,7 +97,7 @@ public class Crusty : Personality
             if (!statusEffectCasters.Contains(attacker))
             {
                 statusEffectCasters.Add(attacker);
-                Debug.Log($"Memory: {attacker} is Ranger");
+                Debug.Log($"Memory: {attacker.Name} is Ranger");
             }
         }
     }

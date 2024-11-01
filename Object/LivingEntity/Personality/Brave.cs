@@ -10,11 +10,11 @@ public class Brave : Personality
         BattleSequence seq = CurrentBattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // 힘과 마력의 합이 높은 순으로 재정렬
-        targetList.OrderBy(entity => entity.Stat.STR + entity.Stat.MaxMP);
+        // 공격력에 따른 가중치 값
+        float atkWeight = 2.0f;
 
-        float atkWeight = 2.0f; // 공격력에 따른 가중치 값
-        foreach (Entity target in targetList)
+        // 힘과 마력의 합이 높은 순서부터 순회
+        foreach (Entity target in targetList.OrderBy(entity => entity.Stat.STR + entity.Stat.MaxMP))
         {
             // 가중치 초기값 설정
             weightData[target] = 0.0f;
@@ -33,11 +33,11 @@ public class Brave : Personality
             atkWeight -= 0.1f;
         }
 
-        // 가장 빨리 행동하는 순서대로 재정렬
-        targetList.OrderBy(entity => seq.GetEntityAction(entity));
+        // 행동에 따른 가중치 값
+        float actionWeight = 0.5f;
 
-        float actionWeight = 0.5f; // 행동에 따른 가중치 값
-        foreach (Entity target in targetList)
+        // 가장 빨리 행동하는 타겟부터 순회
+        foreach (Entity target in targetList.OrderBy(entity => seq.GetEntityAction(entity)))
         {
             // 해당 엔티티의 예정된 행동 가져오기
             BattleAction action = seq.GetEntityAction(target);

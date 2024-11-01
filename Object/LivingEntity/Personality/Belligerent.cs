@@ -10,11 +10,11 @@ public class Belligerent : Personality
         BattleSequence seq = CurrentBattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // 가장 빨리 행동하는 순서대로 재정령
-        targetList.OrderBy(entity => seq.GetEntityAction(entity));
+        // 공격 순서에 따른 가중치 값
+        float actionWeight = 1.0f;
 
-        float actionWeight = 1.0f; // 행동에 따른 가중치 값
-        foreach (Entity target in targetList)
+        // 가장 빨리 행동하는 순서대로 재정렬
+        foreach (Entity target in targetList.OrderBy(entity => seq.GetSeqIndex(entity)))
         {
             // 가중치 초기값 설정
             weightData[target] = 0.0f;
