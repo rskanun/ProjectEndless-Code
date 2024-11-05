@@ -152,7 +152,25 @@ public class Monster : Entity
 
         // 처지 보상 업데이트
         battleData.AddKillReward(this);
+    }
 
-        // 사망 모션
+    public void EnableParry()
+    {
+        battleData.IsParryEnabled = true;
+    }
+
+    public void DisableParry()
+    {
+        battleData.IsParryEnabled = false;
+    }
+
+    public void EnableDodge()
+    {
+        battleData.IsDodgeEnabled = true;
+    }
+
+    public void DisableDodge()
+    {
+        battleData.IsDodgeEnabled = false;
     }
 }

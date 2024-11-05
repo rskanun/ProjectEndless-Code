@@ -39,6 +39,7 @@ public class BattleController : MonoBehaviour, IControlState
 
         input.Cancel.performed += OnCancelKeyPressed;
         input.Survey.performed += OnSurveyKeyPressed;
+        input.Parry.performed += OnParryKeyPressed;
     }
 
     public void OnDisconnected()
@@ -47,6 +48,7 @@ public class BattleController : MonoBehaviour, IControlState
 
         input.Cancel.performed -= OnCancelKeyPressed;
         input.Survey.performed -= OnSurveyKeyPressed;
+        input.Parry.performed -= OnParryKeyPressed;
     }
 
     public void OnCancelKeyPressed(InputAction.CallbackContext context)
@@ -74,5 +76,13 @@ public class BattleController : MonoBehaviour, IControlState
         else actionManager.ReturnToActionSelect();
 
         isSurvey = !isSurvey;
+    }
+
+    public void OnParryKeyPressed(InputAction.CallbackContext context)
+    {
+        if (CurrentBattleData.Instance.IsParryEnabled)
+        {
+            Debug.Log("Parry!!");
+        }
     }
 }

@@ -400,6 +400,15 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Parry"",
+                    ""type"": ""Button"",
+                    ""id"": ""54ca987a-ffaf-4772-abb8-f14e2fadc6f3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -501,6 +510,17 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""action"": ""Option"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a7f86f4d-2471-4526-aea7-f6a684e979b4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Parry"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -549,6 +569,7 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         m_Battle_Cancel = m_Battle.FindAction("Cancel", throwIfNotFound: true);
         m_Battle_Survey = m_Battle.FindAction("Survey", throwIfNotFound: true);
         m_Battle_Option = m_Battle.FindAction("Option", throwIfNotFound: true);
+        m_Battle_Parry = m_Battle.FindAction("Parry", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -784,6 +805,7 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Battle_Cancel;
     private readonly InputAction m_Battle_Survey;
     private readonly InputAction m_Battle_Option;
+    private readonly InputAction m_Battle_Parry;
     public struct BattleActions
     {
         private @MainInput m_Wrapper;
@@ -793,6 +815,7 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         public InputAction @Cancel => m_Wrapper.m_Battle_Cancel;
         public InputAction @Survey => m_Wrapper.m_Battle_Survey;
         public InputAction @Option => m_Wrapper.m_Battle_Option;
+        public InputAction @Parry => m_Wrapper.m_Battle_Parry;
         public InputActionMap Get() { return m_Wrapper.m_Battle; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -817,6 +840,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 @Option.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Option.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Option.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
+                @Parry.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
+                @Parry.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
+                @Parry.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
             }
             m_Wrapper.m_BattleActionsCallbackInterface = instance;
             if (instance != null)
@@ -836,6 +862,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 @Option.started += instance.OnOption;
                 @Option.performed += instance.OnOption;
                 @Option.canceled += instance.OnOption;
+                @Parry.started += instance.OnParry;
+                @Parry.performed += instance.OnParry;
+                @Parry.canceled += instance.OnParry;
             }
         }
     }
@@ -877,5 +906,6 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnSurvey(InputAction.CallbackContext context);
         void OnOption(InputAction.CallbackContext context);
+        void OnParry(InputAction.CallbackContext context);
     }
 }

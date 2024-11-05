@@ -86,6 +86,9 @@ public abstract class Entity : MonoBehaviour
         get { return Stat.STR; }
     }
 
+    [Header("애니메이션")]
+    [SerializeField] protected Animator animator;
+
     [Header("참조 스크립트")]
     [SerializeField] protected BattleHUD hud;
     [SerializeField] protected StatusEffectManager effectManager;
@@ -176,6 +179,9 @@ public abstract class Entity : MonoBehaviour
         // 타겟이 없으면 공격 종료
         if (target == null) return;
 
+        // 공격 모션
+        animator.SetTrigger("atk");
+
         // 타겟 공격
         target.OnDamage(AttackDmg, Stat.MP);
         Debug.Log($"{Name} Attack {target.Name}!!");
@@ -243,6 +249,9 @@ public abstract class Entity : MonoBehaviour
         Stat.HP -= GetLastDmg(damage);
         Stat.MP = GetLastMP(targetMP);
 
+        // 데미지 모션
+        animator.SetTrigger("hit");
+
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
         hud.UpdateMP(Stat.MP, Stat.MaxMP);
@@ -283,6 +292,9 @@ public abstract class Entity : MonoBehaviour
 
         // 시퀀스 삭제
         battleSeq.RemoveTurns(this);
+
+        // 사망 모션
+        animator.SetTrigger("death");
     }
 
     public virtual void OnRevival(int hp)
