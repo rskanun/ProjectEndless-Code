@@ -80,9 +80,22 @@ public class BattleController : MonoBehaviour, IControlState
 
     public void OnParryKeyPressed(InputAction.CallbackContext context)
     {
-        if (CurrentBattleData.Instance.IsParryEnabled)
+        CurrentBattleData battleData = CurrentBattleData.Instance;
+
+        // 패링을 사용할 수 있는 경우에만 사용
+        if (battleData.IsUsedParrying)
         {
-            Debug.Log("Parry!!");
+            // 공격 방어 기능을 한 번 사용하면 다른 기능 사용 X
+            battleData.IsUsedParrying = false;
+            battleData.IsUsedDodge = false;
+
+            if (battleData.IsParryingFrame)
+            {
+                Debug.Log("Success Parrying!!");
+                BattleAction curAction = battleData.Sequence.GetTurnAction(0);
+
+                curAction.actor.OnParried();
+            }
         }
     }
 }

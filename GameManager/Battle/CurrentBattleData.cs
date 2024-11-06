@@ -141,21 +141,41 @@ public class CurrentBattleData : ScriptableObject
 
     [ReadOnly]
     [SerializeField]
-    private bool _isParryEnabled;
-    public bool IsParryEnabled
+    private bool _isParryingFrame;
+    public bool IsParryingFrame
     {
-        get { return _isParryEnabled; }
-        set { _isParryEnabled = value; }
+        get { return _isParryingFrame; }
+        set
+        {
+            _isParryingFrame = value;
+
+            // 패링 가능 여부가 비활성화 되면 패링 사용도 비활성화
+            if (_isParryingFrame == false)
+            {
+                IsUsedParrying = false;
+            }
+        }
     }
+    public bool IsUsedParrying { get; set; }
 
     [ReadOnly]
     [SerializeField]
-    private bool _isDodgeEnabled;
-    public bool IsDodgeEnabled
+    private bool _isDodgeFrame;
+    public bool IsDodgeFrame
     {
-        get { return _isDodgeEnabled; }
-        set { _isDodgeEnabled = value; }
+        get { return _isDodgeFrame; }
+        set
+        {
+            _isDodgeFrame = value;
+
+            // 회피 가능 여부가 비활성화 되면 회피 사용도 비활성화
+            if (_isDodgeFrame == false)
+            {
+                IsUsedDodge = false;
+            }
+        }
     }
+    public bool IsUsedDodge { get; set; }
 
     public bool IsInBattle // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
         => IsLivingEnemy && IsLivingCharacter;

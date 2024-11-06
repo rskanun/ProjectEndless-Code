@@ -9,7 +9,7 @@ public class DropItem
     public int maxCount;
     public Item dropItem;
 }
-public class Monster : Entity
+public abstract class Monster : Entity
 {
     [Header("획득 보상")]
     [SerializeField] private int minAmount;
@@ -71,6 +71,22 @@ public class Monster : Entity
     }
 
     /***************************************************************
+    * [ 모션 ]
+    * 
+    * 오브젝트의 모션 실행 관리
+    ***************************************************************/
+
+    public void OnParryingUsed()
+    {
+        battleData.IsUsedParrying = true;
+    }
+
+    public void OnDodgeUsed()
+    {
+        battleData.IsUsedDodge = true;
+    }
+
+    /***************************************************************
     * [ 턴 진행 ]
     * 
     * 해당 오브젝트의 턴 진행
@@ -90,11 +106,7 @@ public class Monster : Entity
         }
     }
 
-    protected virtual void SelectAction()
-    {
-        // 임시로 상시 대기 실행
-        Invoke(nameof(SelectWait), 2.0f);
-    }
+    protected abstract void SelectAction();
 
     protected void SelectSkill(Skill skill, Entity target, int? index = null)
     {
@@ -156,21 +168,21 @@ public class Monster : Entity
 
     public void EnableParry()
     {
-        battleData.IsParryEnabled = true;
+        battleData.IsParryingFrame = true;
     }
 
     public void DisableParry()
     {
-        battleData.IsParryEnabled = false;
+        battleData.IsParryingFrame = false;
     }
 
     public void EnableDodge()
     {
-        battleData.IsDodgeEnabled = true;
+        battleData.IsDodgeFrame = true;
     }
 
     public void DisableDodge()
     {
-        battleData.IsDodgeEnabled = false;
+        battleData.IsDodgeFrame = false;
     }
 }

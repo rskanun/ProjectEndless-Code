@@ -166,7 +166,7 @@ public class BattleManager : MonoBehaviour
         while (battleData.IsInBattle)
         {
             // 턴 진행
-            TakeTurn();
+            StartCoroutine(TakeTurn());
 
             // 턴이 끝날 때까지 대기
             yield return new WaitUntil(() => isTurnEnded);
@@ -176,7 +176,7 @@ public class BattleManager : MonoBehaviour
         EndBattle();
     }
 
-    private void TakeTurn()
+    private IEnumerator TakeTurn()
     {
         isTurnEnded = false;
 
@@ -186,6 +186,9 @@ public class BattleManager : MonoBehaviour
         // 이전에 입력한 행동 실행
         BattleAction curAction = battleSeq.GetTurnAction(0);
         curAction.OnAction();
+
+        // 이전 행동 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => !curAction.actor.IsActiveMotion);
 
         // 다음 턴에 진행할 행동 선택
         curAction.actor.TakeTurn();

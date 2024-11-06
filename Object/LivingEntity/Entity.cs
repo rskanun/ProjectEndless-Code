@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public enum BattlePosition
@@ -101,6 +101,13 @@ public abstract class Entity : MonoBehaviour
         private set { _isDead = value; }
         get { return _isDead; }
     }
+    private bool _isActiveMotion;
+    public bool IsActiveMotion
+    {
+        private set { _isActiveMotion = value; }
+        get { return _isActiveMotion; }
+    }
+    private bool isParried;
 
     // 전투 순서 데이터
     protected CurrentBattleData battleData { private set; get; }
@@ -146,6 +153,23 @@ public abstract class Entity : MonoBehaviour
     }
 
     /***************************************************************
+    * [ 모션 ]
+    * 
+    * 오브젝트의 모션 실행 관리
+    ***************************************************************/
+
+    private void PlayMotion(string motion)
+    {
+        IsActiveMotion = true;
+        animator.SetTrigger(motion);
+    }
+
+    public void OnMotionEnd()
+    {
+        IsActiveMotion = false;
+    }
+
+    /***************************************************************
     * [ 턴 진행 ]
     * 
     * 해당 오브젝트의 턴 진행
@@ -176,15 +200,37 @@ public abstract class Entity : MonoBehaviour
             target = GetRetarget(target);
         }
 
-        // 타겟이 없으면 공격 종료
-        if (target == null) return;
+        // 타겟이 있는 경우에만 계속해서 공격
+        if (target != null)
+        {
+            // 공격 모션 실행
+            StartCoroutine(OnAttackAction(target));
+        }
+    }
 
-        // 공격 모션
-        animator.SetTrigger("atk");
+    private IEnumerator OnAttackAction(Entity target)
+    {
+        // 공격 모션 실행
+        PlayMotion("atk");
 
-        // 타겟 공격
+        // 모션 체크
+        while (IsActiveMotion)
+        {
+            // 공격 모션 중간 패링을 당했을 경우
+            if (isParried)
+            {
+                isParried = false;
+
+                // 패링 당하는 모션 실행
+                PlayMotion("isParried");
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        // 공격 모션이 끝까지 진행되었을 경우 데미지
         target.OnDamage(AttackDmg, Stat.MP);
-        Debug.Log($"{Name} Attack {target.Name}!!");
     }
 
     private Entity GetRetarget(Entity curTarget)
@@ -318,6 +364,21 @@ public abstract class Entity : MonoBehaviour
     {
         // 어떤 효과로 할 것인지 생각중...
         // 마방 0 + 기절?
+    }
+
+    public void OnParried()
+    {
+        // 공격이 패링 당했을 경우
+        isParried = true;
+
+        // 회피 및 패링 가능 비활성화
+        battleData.IsDodgeFrame = false;
+        battleData.IsParryingFrame = false;
+    }
+
+    public void OnParrying()
+    {
+        // 패링에 성공했을 경우
     }
 
     /***************************************************************
