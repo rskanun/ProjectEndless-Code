@@ -7,7 +7,7 @@ public class Nose : DetectionOrgan
 
     public override Vector3 DetectPlayer()
     {
-        ReadOnlyPlayerData playerData = ReadOnlyPlayerData.Instance;
+        ReadOnlyGameData playerData = ReadOnlyGameData.Instance;
 
         // 일정 반경 안에 있는 플레이어 무조건 탐색
         Vector2 playerVec = playerData.Position - (Vector2)transform.position;

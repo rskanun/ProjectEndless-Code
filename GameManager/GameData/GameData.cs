@@ -11,7 +11,6 @@ public class GameData : ScriptableObject
     * 현재 플레이어가 진행 중인 챕터(1~9), 분기 번호, 챕터 내
     * 구간을 나눈 서브 챕터 번호 데이터
     ************************************************************/
-
     [SerializeField]
     private Chapter _chapter = new Chapter(9, 0, 0);
     public Chapter Chapter
@@ -25,7 +24,6 @@ public class GameData : ScriptableObject
     * 
     * 현재 게임 내 날짜와 게임의 $&%와 관련된 데이터
     ************************************************************/
-
     [SerializeField]
     private Date _date = new Date(11, 19);
     public Date Date
@@ -57,7 +55,6 @@ public class GameData : ScriptableObject
     * 
     * 현재 플레이어가 진행 중인 퀘스트 관련 데이터
     ************************************************************/
-
     [SerializeField]
     private QuestData _questData;
     public QuestData MainQuest
@@ -67,11 +64,10 @@ public class GameData : ScriptableObject
     }
 
     /************************************************************
-    * [맵 데이터]
+    * [위치 데이터]
     * 
-    * 현재 플레이어가 있는 지형 관련 데이터
+    * 현재 플레이어가 있는 지형 및 위치 관련 데이터
     ************************************************************/
-
     [SerializeField]
     private MapData _mapData;
     public MapData MapData
@@ -84,5 +80,42 @@ public class GameData : ScriptableObject
     {
         get { return _fieldTilemap; }
         set { _fieldTilemap = value; }
+    }
+
+    [SerializeField]
+    private Vector2 _pos;
+    public Vector2 Position
+    {
+        get { return _pos; }
+        set { _pos = value; }
+    }
+
+    /************************************************************
+    * [각성치 데이터]
+    * 
+    * 주인공의 각성 수치로 시나리오에 벗어나는 행동을 할 시 올라간다.
+     * 50% 달성 시 플레이어 제어권을 잃으며, 100%를 달성할 시
+     * 강제 루프를 진행한다.
+    ************************************************************/
+    private readonly int MaxAP = 100;
+    [SerializeField]
+    private int _awakenPoint;
+    public int AP
+    {
+        get { return _awakenPoint; }
+        set
+        {
+            if (_awakenPoint != value)
+            {
+                // 입력값이 음수일 경우
+                if (value < 0)
+                    _awakenPoint = 0;
+                // 입력값이 최대치를 초과한 경우
+                else if (value > MaxAP)
+                    _awakenPoint = MaxAP;
+                else
+                    _awakenPoint = value;
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@ public class OrganManager : MonoBehaviour
         foreach (DetectionOrgan organ in organs)
         {
             Vector3 vec = organ.DetectPlayer();
-            if ((Vector2)vec == ReadOnlyPlayerData.Instance.Position)
+            if ((Vector2)vec == ReadOnlyGameData.Instance.Position)
             {
                 return vec;
             }

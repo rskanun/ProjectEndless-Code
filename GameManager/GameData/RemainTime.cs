@@ -41,6 +41,11 @@ namespace Endless.GameData
             SetRemainTime(seconds);
         }
 
+        public RemainTime Clone()
+        {
+            return new RemainTime(hour, minute, second);
+        }
+
         private void SetTime(int hour, int minute, int second)
         {
             this.hour = hour;

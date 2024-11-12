@@ -44,7 +44,7 @@ public class SaveManager : MonoBehaviour
     {
         SavePlayerData data = new SavePlayerData();
 
-        ReadOnlyPlayerData playerData = ReadOnlyPlayerData.Instance;
+        ReadOnlyGameData playerData = ReadOnlyGameData.Instance;
 
         data.pos = playerData.Position;
         data.ap = playerData.AP;

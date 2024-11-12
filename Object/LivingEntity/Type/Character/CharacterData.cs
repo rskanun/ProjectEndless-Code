@@ -4,7 +4,6 @@ using UnityEngine;
 [System.Serializable]
 public class CharacterData
 {
-    [Header("캐릭터 정보")]
     [SerializeField]
     private string _name;
     public string Name
@@ -14,7 +13,7 @@ public class CharacterData
 
     [SerializeField]
     private bool _isUnlocked;
-    public bool IsUnlocked
+    public virtual bool IsUnlocked
     {
         get { return _isUnlocked; }
         set { _isUnlocked = value; }
@@ -22,12 +21,12 @@ public class CharacterData
 
     [SerializeField]
     private bool _isParty;
-    public bool IsParty
+    public virtual bool IsParty
     {
         get { return _isParty; }
         set
         {
-            if (IsUnlocked != false)
+            if (IsUnlocked)
             {
                 _isParty = value;
             }
@@ -46,6 +45,13 @@ public class CharacterData
     public AttackType AttackType
     {
         get { return _attackType; }
+    }
+
+    [SerializeField]
+    private PersonalityType _personality;
+    public PersonalityType Personality
+    {
+        get { return _personality; }
     }
 
     [Header("스킬 정보")]

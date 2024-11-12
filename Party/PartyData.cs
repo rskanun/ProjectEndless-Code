@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -53,85 +54,86 @@ public class PartyData : ScriptableObject
 
     [Header("게임 내 캐릭터 정보")]
     [SerializeField]
-    private CharacterData _player;
-    public CharacterData Player
+    private PlayerData _player;
+    public PlayerData Player
     {
         get { return _player; }
     }
-
     [SerializeField]
     private List<CharacterData> _allMemberList;
-    private Dictionary<string, CharacterData> allMemberDic;
     public List<CharacterData> AllMemberList
     {
         get { return _allMemberList; }
     }
 
-    private void OnEnable()
+    private List<CharacterData> _allCharacterList;
+    public List<CharacterData> AllCharacterList
     {
-        List2Dic();
+        get
+        {
+            if (_allCharacterList == null)
+                _allCharacterList = new List<CharacterData>();
+
+            return _allCharacterList;
+        }
+    }
+    private Dictionary<string, CharacterData> allCharacterDict;
+
+    private void OnValidate()
+    {
+        UpdateCharacterList();
+        ChrList2Dict();
     }
 
-    private void List2Dic()
+    private void UpdateCharacterList()
     {
-        allMemberDic = new Dictionary<string, CharacterData>();
+        AllCharacterList.Clear();
+        AllCharacterList.Add(Player);
 
-        foreach (CharacterData member in _allMemberList)
+        foreach (CharacterData member in AllMemberList)
         {
-            allMemberDic[member.Name] = member;
+            AllCharacterList.Add(member);
+        }
+    }
+
+    private void ChrList2Dict()
+    {
+        allCharacterDict = new Dictionary<string, CharacterData>();
+
+        // 인스펙터창을 통해 받은 맴버 리스트를 찾기 쉬운 딕셔너리로 변경
+        foreach (CharacterData member in AllCharacterList)
+        {
+            allCharacterDict[member.Name] = member;
         }
     }
 
     public CharacterData GetCharacter(string name)
     {
-        return allMemberDic[name];
+        return allCharacterDict[name];
     }
 
     public void AddMember(string name)
     {
-        CharacterData addMember = allMemberDic[name];
+        CharacterData addMember = allCharacterDict[name];
 
         addMember.IsUnlocked = true;
     }
 
-    public void RemoveMember(string name)
-    {
-        CharacterData removeMember = allMemberDic[name];
-
-        removeMember.IsUnlocked = false;
-    }
-
     public List<CharacterData> GetPartyMembers()
     {
-        List<CharacterData> partyList = new List<CharacterData>();
-
-        foreach (CharacterData member in AllMemberList)
-        {
-            if (member.IsParty)
-            {
-                partyList.Add(member);
-            }
-        }
-
-        return partyList;
+        return AllCharacterList.Where((chr) => chr.IsParty).ToList();
     }
 
-    public void AddParty(string name)
+    public void JoinParty(string name)
     {
-        CharacterData addMember = allMemberDic[name];
-
-        if (addMember.IsUnlocked == false)
-        {
-            // 파티 편성 가능 맴버에 없다면 추가
-            AddMember(name);
-        }
+        CharacterData addMember = allCharacterDict[name];
 
         addMember.IsParty = true;
     }
 
-    public void RemoveParty(string name)
+    public void KickParty(string name)
     {
-        CharacterData removeMember = allMemberDic[name];
+        CharacterData removeMember = allCharacterDict[name];
 
         removeMember.IsParty = false;
     }

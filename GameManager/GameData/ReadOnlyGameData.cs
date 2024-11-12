@@ -65,32 +65,26 @@ public class ReadOnlyGameData : ScriptableObject
     private GameData gameData;
 
     public Chapter Chapter
-    {
-        get { return gameData.Chapter; }
-    }
+        => gameData.Chapter;
 
     public Date Date
-    {
-        get { return gameData.Date; }
-    }
+        => gameData.Date;
 
     public RemainTime Time
-    {
-        get { return gameData.Time; }
-    }
+        => gameData.Time;
 
     public QuestData MainQuest
-    {
-        get { return gameData.MainQuest; }
-    }
+        => gameData.MainQuest;
 
     public MapData MapData
-    {
-        get { return gameData.MapData; }
-    }
+        => gameData.MapData;
 
     public Tilemap FieldTilemap
-    {
-        get { return gameData.FieldTilemap; }
-    }
+        => gameData.FieldTilemap;
+
+    public Vector2 Position
+        => gameData.Position;
+
+    public int AP
+        => gameData.AP;
 }

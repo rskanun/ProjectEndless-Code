@@ -11,7 +11,7 @@ public class Eye : DetectionOrgan
 
     public override Vector3 DetectPlayer()
     {
-        ReadOnlyPlayerData playerData = ReadOnlyPlayerData.Instance;
+        ReadOnlyGameData playerData = ReadOnlyGameData.Instance;
 
         // 플레이어와 거리 계산
         Vector2 playerVec = playerData.Position - (Vector2)transform.position;

@@ -13,7 +13,7 @@ public class ChaseState : IMonsterState
 
     public void OnEnterState()
     {
-        lastPlayerPos = ReadOnlyPlayerData.Instance.Position;
+        lastPlayerPos = ReadOnlyGameData.Instance.Position;
     }
 
     public void OnAction(FSM fsm)
@@ -29,7 +29,7 @@ public class ChaseState : IMonsterState
         {
             float distance = ((Vector2)(playerPos - monster.transform.position)).magnitude;
             float attackDistance = monster.AttackDistance;
-            
+
             if (distance <= attackDistance)
             {
                 // 공격 범위 안에 있으면 공격
@@ -59,7 +59,7 @@ public class ChaseState : IMonsterState
             lastPlayerPos = playerPos;
             return playerPos;
         }
-        
+
         return lastPlayerPos;
     }
 

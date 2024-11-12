@@ -10,6 +10,7 @@ public class DottedArrowLine : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.widthMultiplier = 108;
     }
 
     public void DrawLine(Vector2 start, Vector2 end)

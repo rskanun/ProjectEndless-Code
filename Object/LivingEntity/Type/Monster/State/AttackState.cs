@@ -47,7 +47,7 @@ public class AttackState : IMonsterState
 
     private bool IsAttackable()
     {
-        Vector2 playerPos = ReadOnlyPlayerData.Instance.Position;
+        Vector2 playerPos = ReadOnlyGameData.Instance.Position;
         float distance = (playerPos - (Vector2)monster.transform.position).magnitude;
 
         return distance <= monster.AttackDistance;

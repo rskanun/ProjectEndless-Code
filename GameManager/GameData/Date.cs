@@ -25,15 +25,15 @@ namespace Endless.GameData
             SetDate(month, day);
         }
 
+        public Date Clone()
+        {
+            return new Date(month, day);
+        }
+
         public void SetDate(int month, int day)
         {
             this.month = month;
             this.day = day;
-        }
-
-        public override string ToString()
-        {
-            return date.ToString("O");
         }
 
         public bool IsPastDate(DateTime date)
@@ -41,11 +41,9 @@ namespace Endless.GameData
             return date < this.date;
         }
 
-        public static Date StrToDate(string date)
+        public override string ToString()
         {
-            DateTime dateTime = DateTime.Parse(date);
-
-            return new Date(dateTime.Month, dateTime.Day);
+            return date.ToString("O");
         }
 
         public override bool Equals(object obj)
@@ -58,6 +56,13 @@ namespace Endless.GameData
             }
 
             return false;
+        }
+
+        public static Date StrToDate(string date)
+        {
+            DateTime dateTime = DateTime.Parse(date);
+
+            return new Date(dateTime.Month, dateTime.Day);
         }
 
         public override int GetHashCode()

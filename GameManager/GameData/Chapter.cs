@@ -9,7 +9,7 @@ public class Chapter
     public int ChapterNum
     {
         get { return _chapterNum; }
-        set
+        internal set
         {
             if (value < 0) _chapterNum = 0;
             else _chapterNum = value;
@@ -21,7 +21,7 @@ public class Chapter
     public int RootNum
     {
         get { return _rootNum; }
-        set
+        internal set
         {
             if (value < 0) _rootNum = 0;
             else _rootNum = value;
@@ -33,7 +33,7 @@ public class Chapter
     public int SubChapterNum
     {
         get { return _subChapterNum; }
-        set
+        internal set
         {
             if (value < 0) _subChapterNum = 0;
             else _subChapterNum = value;
@@ -55,5 +55,9 @@ public class Chapter
         ChapterNum = chapterNum;
         RootNum = rootNum;
         SubChapterNum = subChapterNum;
+    }
+    public Chapter Clone()
+    {
+        return new Chapter(ChapterNum, RootNum, SubChapterNum);
     }
 }

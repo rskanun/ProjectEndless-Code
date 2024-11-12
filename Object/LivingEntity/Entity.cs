@@ -43,6 +43,10 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     private PersonalityType _personalityType;
+    protected PersonalityType PersonalityType
+    {
+        set { _personalityType = value; }
+    }
     private Personality _personality;
     public Personality Personality
     {
@@ -158,7 +162,7 @@ public abstract class Entity : MonoBehaviour
     * 오브젝트의 모션 실행 관리
     ***************************************************************/
 
-    private void PlayMotion(string motion)
+    public void OnActiveMotion(string motion)
     {
         IsActiveMotion = true;
         animator.SetTrigger(motion);
@@ -203,6 +207,10 @@ public abstract class Entity : MonoBehaviour
         // 타겟이 있는 경우에만 계속해서 공격
         if (target != null)
         {
+            // 타겟에게 방어 유형 전달
+            // 원거리는 패링 X
+            target.OnAttackTargeted(this, AttackType == AttackType.Melee, true);
+
             // 공격 모션 실행
             StartCoroutine(OnAttackAction(target));
         }
@@ -211,7 +219,7 @@ public abstract class Entity : MonoBehaviour
     private IEnumerator OnAttackAction(Entity target)
     {
         // 공격 모션 실행
-        PlayMotion("atk");
+        OnActiveMotion("atk");
 
         // 모션 체크
         while (IsActiveMotion)
@@ -222,7 +230,7 @@ public abstract class Entity : MonoBehaviour
                 isParried = false;
 
                 // 패링 당하는 모션 실행
-                PlayMotion("isParried");
+                OnActiveMotion("isParried");
                 yield break;
             }
 
@@ -366,6 +374,22 @@ public abstract class Entity : MonoBehaviour
         // 마방 0 + 기절?
     }
 
+    public virtual void OnAttackTargeted(Entity attacker, bool isUsedParry, bool isUsedDodge)
+    {
+        // 플레이어가 아닌 엔티티의 경우 확률적
+        // 민첩의 차이가 많이 날 수록 확률이 높아짐
+
+        // 제일 리턴이 큰 패링부터 확률 계산
+        if (isUsedParry)
+        {
+            // 패링이 가능하면, 패링 확률 계산하여 패링 실행 유무 결정
+        }
+        else if (isUsedDodge)
+        {
+            // 회피가 가능하면, 회피 확률 계산하여 회피 실행 유무 결정
+        }
+    }
+
     public void OnParried()
     {
         // 공격이 패링 당했을 경우
@@ -373,7 +397,7 @@ public abstract class Entity : MonoBehaviour
 
         // 회피 및 패링 가능 비활성화
         battleData.IsDodgeFrame = false;
-        battleData.IsParryingFrame = false;
+        battleData.IsParryFrame = false;
     }
 
     public void OnParrying()

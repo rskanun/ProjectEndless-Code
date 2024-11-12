@@ -126,7 +126,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
             }
 
             // 해당 버튼을 선택된 버튼으로 선택
-            AutoSelector.SetSelectedObject(gameObject);
+            EventSystem.current.SetSelectedGameObject(gameObject);
         }
 
         // 버튼 선택
@@ -223,11 +223,11 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (eventData.moveDir == MoveDirection.Left)
         {
-            AutoSelector.SetSelectedObject(PrevButton.gameObject);
+            EventSystem.current.SetSelectedGameObject(PrevButton.gameObject);
         }
         else if (eventData.moveDir == MoveDirection.Right)
         {
-            AutoSelector.SetSelectedObject(NextButton.gameObject);
+            EventSystem.current.SetSelectedGameObject(NextButton.gameObject);
         }
     }
 }

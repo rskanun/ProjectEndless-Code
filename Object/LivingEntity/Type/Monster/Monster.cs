@@ -71,22 +71,6 @@ public abstract class Monster : Entity
     }
 
     /***************************************************************
-    * [ 모션 ]
-    * 
-    * 오브젝트의 모션 실행 관리
-    ***************************************************************/
-
-    public void OnParryingUsed()
-    {
-        battleData.IsUsedParrying = true;
-    }
-
-    public void OnDodgeUsed()
-    {
-        battleData.IsUsedDodge = true;
-    }
-
-    /***************************************************************
     * [ 턴 진행 ]
     * 
     * 해당 오브젝트의 턴 진행
@@ -168,12 +152,7 @@ public abstract class Monster : Entity
 
     public void EnableParry()
     {
-        battleData.IsParryingFrame = true;
-    }
-
-    public void DisableParry()
-    {
-        battleData.IsParryingFrame = false;
+        battleData.IsParryFrame = true;
     }
 
     public void EnableDodge()
@@ -181,8 +160,11 @@ public abstract class Monster : Entity
         battleData.IsDodgeFrame = true;
     }
 
-    public void DisableDodge()
+    public void DisableDefensive()
     {
+        battleData.IsParryFrame = false;
         battleData.IsDodgeFrame = false;
+        battleData.IsUsedParry = false;
+        battleData.IsUsedDodge = false;
     }
 }

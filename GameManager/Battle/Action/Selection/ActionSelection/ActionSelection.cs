@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ActionSelection : MonoBehaviour, ISelection
 {
@@ -56,6 +57,11 @@ public class ActionSelection : MonoBehaviour, ISelection
     * 
     * 현재 턴인 캐릭터가 어떤 행동을 취할 지 선택창 생성 및 처리
     ***************************************************************/
+
+    public void OnSelectButton(GameObject buttonObj)
+    {
+        EventSystem.current.SetSelectedGameObject(buttonObj);
+    }
 
     public void OnSelectAttack()
     {

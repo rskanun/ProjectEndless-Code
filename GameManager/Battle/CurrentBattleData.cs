@@ -141,22 +141,25 @@ public class CurrentBattleData : ScriptableObject
 
     [ReadOnly]
     [SerializeField]
-    private bool _isParryingFrame;
-    public bool IsParryingFrame
+    private bool _isParryFrame;
+    public bool IsParryFrame
     {
-        get { return _isParryingFrame; }
+        get { return _isParryFrame; }
         set
         {
-            _isParryingFrame = value;
+            _isParryFrame = value;
 
             // 패링 가능 여부가 비활성화 되면 패링 사용도 비활성화
-            if (_isParryingFrame == false)
+            if (_isParryFrame == false)
             {
-                IsUsedParrying = false;
+                IsUsedParry = false;
             }
         }
     }
-    public bool IsUsedParrying { get; set; }
+    [ReadOnly]
+    [SerializeField]
+    private bool _isUsedParry;
+    public bool IsUsedParry { get => _isUsedParry; set => _isUsedParry = value; }
 
     [ReadOnly]
     [SerializeField]
@@ -175,7 +178,10 @@ public class CurrentBattleData : ScriptableObject
             }
         }
     }
-    public bool IsUsedDodge { get; set; }
+    [ReadOnly]
+    [SerializeField]
+    private bool _isUsedDodge;
+    public bool IsUsedDodge { get => _isUsedDodge; set => _isUsedDodge = value; }
 
     public bool IsInBattle // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
         => IsLivingEnemy && IsLivingCharacter;

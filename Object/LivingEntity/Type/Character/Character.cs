@@ -19,6 +19,7 @@ public class Character : Entity
         // µ¥ÀÌÅÍ µ¤¾î¾º¿ì±â
         Position = data.Position;
         AttackType = data.AttackType;
+        PersonalityType = data.Personality;
         SkillList = data.Skills;
         OriginStat = data.Stat;
 

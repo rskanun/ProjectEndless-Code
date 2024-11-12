@@ -83,13 +83,13 @@ public class BattleController : MonoBehaviour, IControlState
         CurrentBattleData battleData = CurrentBattleData.Instance;
 
         // 패링을 사용할 수 있는 경우에만 사용
-        if (battleData.IsUsedParrying)
+        if (battleData.IsUsedParry)
         {
             // 공격 방어 기능을 한 번 사용하면 다른 기능 사용 X
-            battleData.IsUsedParrying = false;
+            battleData.IsUsedParry = false;
             battleData.IsUsedDodge = false;
 
-            if (battleData.IsParryingFrame)
+            if (battleData.IsParryFrame)
             {
                 Debug.Log("Success Parrying!!");
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
@@ -97,5 +97,10 @@ public class BattleController : MonoBehaviour, IControlState
                 curAction.actor.OnParried();
             }
         }
+    }
+
+    public void OnDodgeKeyPressed(InputAction.CallbackContext context)
+    {
+
     }
 }

@@ -7,7 +7,6 @@ public class LoadManager : MonoBehaviour
 {
     [Header("저장 데이터")]
     [SerializeField] private PartyData partyData;
-    [SerializeField] private PlayerData playerData;
     [SerializeField] private GameData gameData;
 
     /************************************************************
@@ -46,8 +45,8 @@ public class LoadManager : MonoBehaviour
 
     private void SetPlayerData(SavePlayerData data)
     {
-        playerData.Position = data.pos;
-        playerData.AP = data.ap;
+        gameData.Position = data.pos;
+        gameData.AP = data.ap;
     }
 
     private void SetPartyData(List<SaveMemberData> data)

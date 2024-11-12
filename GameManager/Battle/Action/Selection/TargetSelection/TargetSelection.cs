@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum TargetType
 {
@@ -196,7 +197,7 @@ public class TargetSelection : MonoBehaviour, ISelection
             TargetSelectButton.lastSelected = firstSelectButton;
         }
 
-        AutoSelector.SetSelectedObject(TargetSelectButton.lastSelected.gameObject);
+        EventSystem.current.SetSelectedGameObject(TargetSelectButton.lastSelected.gameObject);
     }
 
     private void MultiSelectButtons(Func<Entity, bool> selectCondition)
@@ -223,7 +224,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         // 활성화 된 버튼 중 아무(첫번째) 버튼 선택
-        AutoSelector.SetSelectedObject(firstSelectButton.gameObject);
+        EventSystem.current.SetSelectedGameObject(firstSelectButton.gameObject);
     }
 
     public void OnSelect()
@@ -250,6 +251,6 @@ public class TargetSelection : MonoBehaviour, ISelection
         }
 
         // 선택 버튼 초기화
-        AutoSelector.SetSelectedObject(null);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }
