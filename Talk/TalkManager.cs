@@ -32,7 +32,7 @@ public class TalkManager : MonoBehaviour
         selectStack = new Stack<Select>();
 
         // 대화 전용 컨트롤러로 변경
-        ControlContext.Instance.SetState(controller);
+        ControlContext.Instance.SetController(controller);
 
         isTalking = true;
         StartCoroutine(ReadLines(lines));
@@ -98,7 +98,7 @@ public class TalkManager : MonoBehaviour
         textManager.CloseDialogue();
 
         // 초기 컨트롤러로 변경
-        ControlContext.Instance.ResetState();
+        ControlContext.Instance.ResetController();
     }
 
     /************************************************************

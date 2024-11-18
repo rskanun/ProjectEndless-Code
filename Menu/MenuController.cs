@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MenuController : MonoBehaviour, IControlState
+public class MenuController : MonoBehaviour, IController
 {
     [Header("참조 스크립트")]
     [SerializeField]

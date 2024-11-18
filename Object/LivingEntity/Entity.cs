@@ -105,11 +105,17 @@ public abstract class Entity : MonoBehaviour
         private set { _isDead = value; }
         get { return _isDead; }
     }
-    private bool _isActiveMotion;
-    public bool IsActiveMotion
+    private bool _isActionable;
+    public bool IsActionable
     {
-        private set { _isActiveMotion = value; }
-        get { return _isActiveMotion; }
+        private set { _isActionable = value; }
+        get { return _isActionable; }
+    }
+    private bool _hasStun;
+    public bool HasStun
+    {
+        private set { _hasStun = value; }
+        get { return _hasStun; }
     }
     private bool isParried;
 
@@ -164,13 +170,13 @@ public abstract class Entity : MonoBehaviour
 
     public void OnActiveMotion(string motion)
     {
-        IsActiveMotion = true;
+        HasStun = true;
         animator.SetTrigger(motion);
     }
 
     public void OnMotionEnd()
     {
-        IsActiveMotion = false;
+        HasStun = false;
     }
 
     /***************************************************************
@@ -207,12 +213,12 @@ public abstract class Entity : MonoBehaviour
         // 타겟이 있는 경우에만 계속해서 공격
         if (target != null)
         {
-            // 타겟에게 방어 유형 전달
-            // 원거리는 패링 X
-            target.OnAttackTargeted(this, AttackType == AttackType.Melee, true);
-
             // 공격 모션 실행
             StartCoroutine(OnAttackAction(target));
+
+            // 타겟에게 방어 유형 전달
+            // 원거리는 패링 X
+            target.OnTargetedAttack(this, AttackType == AttackType.Melee, true);
         }
     }
 
@@ -222,7 +228,7 @@ public abstract class Entity : MonoBehaviour
         OnActiveMotion("atk");
 
         // 모션 체크
-        while (IsActiveMotion)
+        while (HasStun)
         {
             // 공격 모션 중간 패링을 당했을 경우
             if (isParried)
@@ -265,6 +271,13 @@ public abstract class Entity : MonoBehaviour
     {
         if (this is Monster) return battleData.LivingCharacters;
         else return battleData.LivingEnemies;
+    }
+
+    public void OnAssistAttack(Entity target)
+    {
+        // 확정 치명타인 일반 공격 실행
+        // 임시로 일반 공격
+        OnAttack(target);
     }
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
@@ -374,7 +387,7 @@ public abstract class Entity : MonoBehaviour
         // 마방 0 + 기절?
     }
 
-    public virtual void OnAttackTargeted(Entity attacker, bool isUsedParry, bool isUsedDodge)
+    public virtual void OnTargetedAttack(Entity attacker, bool isUsedParry, bool isUsedDodge)
     {
         // 플레이어가 아닌 엔티티의 경우 확률적
         // 민첩의 차이가 많이 날 수록 확률이 높아짐
@@ -390,17 +403,13 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public void OnParried()
+    public virtual void OnParried()
     {
         // 공격이 패링 당했을 경우
         isParried = true;
-
-        // 회피 및 패링 가능 비활성화
-        battleData.IsDodgeFrame = false;
-        battleData.IsParryFrame = false;
     }
 
-    public void OnParrying()
+    public virtual void OnParrying()
     {
         // 패링에 성공했을 경우
     }
@@ -418,7 +427,7 @@ public abstract class Entity : MonoBehaviour
 
     public void AddEffect(StatusEffect effect)
     {
-        if (effect == null)
+        if (effect == null || effect.IsEmpty())
         {
             // 상태이상이 null값인 경우 상태이상 적용 X
             return;

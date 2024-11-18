@@ -28,7 +28,7 @@ public class MenuManager : MonoBehaviour
     public void OpenMenu()
     {
         // 컨트롤러 변경
-        control.SetState(menuController);
+        control.SetController(menuController);
 
         // 메뉴가 열리는 동안 키 입력 무시
         control.KeyLock();
@@ -57,7 +57,7 @@ public class MenuManager : MonoBehaviour
                 control.KeyUnlock();
 
                 // 메뉴가 닫히면 초기 컨트롤러로 변경
-                control.ResetState();
+                control.ResetController();
             });
     }
 

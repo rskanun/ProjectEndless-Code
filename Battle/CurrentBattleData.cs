@@ -74,6 +74,15 @@ public class CurrentBattleData : ScriptableObject
     [Header("아군 정보")]
     [ReadOnly]
     [SerializeField]
+    private Player _player;
+    public Player Player
+    {
+        get { return _player; }
+        private set { _player = value; }
+    }
+
+    [ReadOnly]
+    [SerializeField]
     private List<Character> _characterList = new List<Character>();
     public List<Character> CharacterList
     {
@@ -245,9 +254,16 @@ public class CurrentBattleData : ScriptableObject
         // 파티에 대한 데이터 삽입
         CharacterList = party;
 
-        // 전위에 대한 데이터 삽입
+        // 전위 및 플레이어에 대한 데이터 삽입
         foreach (Character character in party)
         {
+            // 플레이어 데이터 삽입
+            if (character is Player playerChr)
+            {
+                Player = playerChr;
+            }
+
+            // 전위 데이터 삽입
             if (character.Position == BattlePosition.Front)
             {
                 CharacterFrontList.Add(character);

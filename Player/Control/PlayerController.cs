@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
-public class PlayerController : MonoBehaviour, IControlState
+public class PlayerController : MonoBehaviour, IController
 {
     [Header("참조 스크립트")]
     [SerializeField] private PlayerManager player;
@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour, IControlState
         ControlContext context = ControlContext.Instance;
 
         // 플레이어 컨트롤러를 초기값으로 설정
-        context.SetInitState(this);
-        context.SetState(this);
+        context.SetInitController(this);
+        context.SetController(this);
 
         // transform.position = player.Position;
     }

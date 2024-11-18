@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -79,5 +80,10 @@ public abstract class StatusEffect
     public StatusEffect(bool isBuff)
     {
         _isBuff = isBuff;
+    }
+
+    public bool IsEmpty()
+    {
+        return string.IsNullOrEmpty(Name);
     }
 }

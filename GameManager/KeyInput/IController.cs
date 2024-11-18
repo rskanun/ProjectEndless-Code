@@ -1,4 +1,4 @@
-﻿public interface IControlState
+﻿public interface IController
 {
     public void OnConnected();
     public void OnDisconnected();

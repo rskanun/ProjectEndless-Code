@@ -4,7 +4,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Skill/AttackSkill", fileName = "Attack_Skill")]
 public class AttackSkill : Skill
 {
-    [Header("데미지 정보")]
+    [Header("공격 정보")]
+    [SerializeField]
+    private bool _isAssistable;
+    public bool IsAssistable
+    {
+        get { return _isAssistable; }
+    }
     [SerializeField]
     private float _damage;
     public float Damage
@@ -24,7 +30,6 @@ public class AttackSkill : Skill
         get { return _strDegree; }
     }
 
-    [Header("피격시 디버프")]
     [SerializeField]
     private Debuff _debuff;
     public Debuff Debuff
@@ -40,7 +45,7 @@ public class AttackSkill : Skill
         {
             entity.OnDamage(damage, caster.Stat.MP);
 
-            if (Debuff != null)
+            if (Debuff.IsEmpty())
             {
                 // 적용할 디버프가 있으면 디버프 적용
                 entity.AddEffect(Debuff);

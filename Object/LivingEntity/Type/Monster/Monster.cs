@@ -150,6 +150,14 @@ public abstract class Monster : Entity
         battleData.AddKillReward(this);
     }
 
+    public override void OnParried()
+    {
+        base.OnParried();
+
+        // 몬스터가 패링 당했을 경우 관련 변수 초기화
+        DisableDefensive();
+    }
+
     public void EnableParry()
     {
         battleData.IsParryFrame = true;

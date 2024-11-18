@@ -53,18 +53,18 @@ public class ControlContext : ScriptableObject
     [SerializeField]
     private InputActionAsset inputAction;
 
-    private IControlState _initControl;
-    public IControlState InitControl
+    private IController _initController;
+    public IController InitController
     {
-        private set { _initControl = value; }
-        get { return _initControl; }
+        private set { _initController = value; }
+        get { return _initController; }
     }
 
-    private IControlState _currentControl;
-    public IControlState CurrentControl
+    private IController _currentController;
+    public IController CurrentController
     {
-        private set { _currentControl = value; }
-        get { return _currentControl; }
+        private set { _currentController = value; }
+        get { return _currentController; }
     }
 
     private MainInput _keyInput;
@@ -92,33 +92,31 @@ public class ControlContext : ScriptableObject
         KeyBlock = false;
     }
 
-
-
-    public void SetInitState(IControlState state)
+    public void SetInitController(IController controller)
     {
-        _initControl = state;
+        _initController = controller;
     }
 
-    public void ResetState()
+    public void ResetController()
     {
-        if (_initControl == null)
+        if (_initController == null)
         {
             // 초기값이 정해져있지 않으면 실행X
             return;
         }
 
         // 초기 컨트롤러로 설정
-        SetState(_initControl);
+        SetController(_initController);
     }
 
-    public void SetState(IControlState state)
+    public void SetController(IController controller)
     {
         // 기존 컨트롤러 연결 끊기
-        CurrentControl?.OnDisconnected();
+        CurrentController?.OnDisconnected();
 
         // 새 컨트롤러 연결
-        CurrentControl = state;
-        CurrentControl?.OnConnected();
+        CurrentController = controller;
+        CurrentController?.OnConnected();
     }
 
     public void KeyLock()
@@ -126,7 +124,7 @@ public class ControlContext : ScriptableObject
         KeyBlock = true;
 
         // 현재 연결된 컨트롤러 연결 끊기
-        CurrentControl.OnDisconnected();
+        CurrentController.OnDisconnected();
     }
 
     public void KeyUnlock()
@@ -134,6 +132,6 @@ public class ControlContext : ScriptableObject
         KeyBlock = false;
 
         // 현재 연결된 컨트롤러 다시 재연결
-        CurrentControl.OnConnected();
+        CurrentController.OnConnected();
     }
 }

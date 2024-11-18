@@ -357,42 +357,6 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
             ""id"": ""749cee67-28f5-489b-b234-44d8101bffa1"",
             ""actions"": [
                 {
-                    ""name"": ""Navigate"",
-                    ""type"": ""Value"",
-                    ""id"": ""9ad71e25-8ddb-4a26-bd93-d2b16d1e9885"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Select"",
-                    ""type"": ""Button"",
-                    ""id"": ""3095e40b-63c3-4d4d-b66e-01a6e8c8f970"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Cancel"",
-                    ""type"": ""Button"",
-                    ""id"": ""722025a2-fbc0-473f-90ad-163ecedeb361"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Survey"",
-                    ""type"": ""Button"",
-                    ""id"": ""e04db565-30bb-417f-ae80-e1339e5815d2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Option"",
                     ""type"": ""Button"",
                     ""id"": ""80579851-b1df-48dc-ac07-645c4a0e6c26"",
@@ -409,97 +373,54 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Survey"",
+                    ""type"": ""Button"",
+                    ""id"": ""e04db565-30bb-417f-ae80-e1339e5815d2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AssistAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""48c71670-3eba-436d-ad21-d8552a9a207c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AssistA"",
+                    ""type"": ""Button"",
+                    ""id"": ""b366f7cb-dda0-48aa-a7f6-169a4ffa63ac"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AssistB"",
+                    ""type"": ""Button"",
+                    ""id"": ""45ec1096-50e9-457e-a9f4-76d0a980be99"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AssistC"",
+                    ""type"": ""Button"",
+                    ""id"": ""5c499033-23dc-4d9a-8913-944a94a21a9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""d71dffce-1bc0-41f2-9c52-96ec3ca2f168"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""4af19a60-8d1a-4594-94bd-c0406bfeb208"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""be742f1b-5e17-45e4-98b3-a2fb88048e02"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""4c9947cc-be49-49fa-9448-23bbf788e985"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""a93681f1-1e8a-40da-995d-242e64cbdb34"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""473362e3-232f-44f0-afc4-aa441dae6d73"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""913ca36b-50f3-4357-8846-8b2b2e726992"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Cancel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f6ea150d-50a8-4d9c-aae0-243f8955de99"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Survey"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""23f41a81-d092-4d76-af60-3fcefcaa49f8"",
@@ -519,6 +440,61 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Parry"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f6ea150d-50a8-4d9c-aae0-243f8955de99"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Survey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1bf303d7-36f9-4aa9-8306-3ce0d0c28331"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""AssistA"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9cce3b6-de3a-48ba-b2f1-e97e2b78c1a3"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""AssistB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f5b2371d-c8d2-4ee5-8a43-544a7075c58f"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""AssistC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bdef33f6-0a13-4b64-bdc8-e25d4e8b6e3d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""AssistAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -564,12 +540,13 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         m_Menu_Menu = m_Menu.FindAction("Menu", throwIfNotFound: true);
         // Battle
         m_Battle = asset.FindActionMap("Battle", throwIfNotFound: true);
-        m_Battle_Navigate = m_Battle.FindAction("Navigate", throwIfNotFound: true);
-        m_Battle_Select = m_Battle.FindAction("Select", throwIfNotFound: true);
-        m_Battle_Cancel = m_Battle.FindAction("Cancel", throwIfNotFound: true);
-        m_Battle_Survey = m_Battle.FindAction("Survey", throwIfNotFound: true);
         m_Battle_Option = m_Battle.FindAction("Option", throwIfNotFound: true);
         m_Battle_Parry = m_Battle.FindAction("Parry", throwIfNotFound: true);
+        m_Battle_Survey = m_Battle.FindAction("Survey", throwIfNotFound: true);
+        m_Battle_AssistAttack = m_Battle.FindAction("AssistAttack", throwIfNotFound: true);
+        m_Battle_AssistA = m_Battle.FindAction("AssistA", throwIfNotFound: true);
+        m_Battle_AssistB = m_Battle.FindAction("AssistB", throwIfNotFound: true);
+        m_Battle_AssistC = m_Battle.FindAction("AssistC", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -800,22 +777,24 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     // Battle
     private readonly InputActionMap m_Battle;
     private IBattleActions m_BattleActionsCallbackInterface;
-    private readonly InputAction m_Battle_Navigate;
-    private readonly InputAction m_Battle_Select;
-    private readonly InputAction m_Battle_Cancel;
-    private readonly InputAction m_Battle_Survey;
     private readonly InputAction m_Battle_Option;
     private readonly InputAction m_Battle_Parry;
+    private readonly InputAction m_Battle_Survey;
+    private readonly InputAction m_Battle_AssistAttack;
+    private readonly InputAction m_Battle_AssistA;
+    private readonly InputAction m_Battle_AssistB;
+    private readonly InputAction m_Battle_AssistC;
     public struct BattleActions
     {
         private @MainInput m_Wrapper;
         public BattleActions(@MainInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Navigate => m_Wrapper.m_Battle_Navigate;
-        public InputAction @Select => m_Wrapper.m_Battle_Select;
-        public InputAction @Cancel => m_Wrapper.m_Battle_Cancel;
-        public InputAction @Survey => m_Wrapper.m_Battle_Survey;
         public InputAction @Option => m_Wrapper.m_Battle_Option;
         public InputAction @Parry => m_Wrapper.m_Battle_Parry;
+        public InputAction @Survey => m_Wrapper.m_Battle_Survey;
+        public InputAction @AssistAttack => m_Wrapper.m_Battle_AssistAttack;
+        public InputAction @AssistA => m_Wrapper.m_Battle_AssistA;
+        public InputAction @AssistB => m_Wrapper.m_Battle_AssistB;
+        public InputAction @AssistC => m_Wrapper.m_Battle_AssistC;
         public InputActionMap Get() { return m_Wrapper.m_Battle; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -825,46 +804,52 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_BattleActionsCallbackInterface != null)
             {
-                @Navigate.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnNavigate;
-                @Navigate.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnNavigate;
-                @Navigate.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnNavigate;
-                @Select.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSelect;
-                @Select.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSelect;
-                @Select.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSelect;
-                @Cancel.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnCancel;
-                @Cancel.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnCancel;
-                @Cancel.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnCancel;
-                @Survey.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
-                @Survey.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
-                @Survey.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
                 @Option.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Option.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Option.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Parry.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
                 @Parry.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
                 @Parry.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
+                @Survey.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
+                @Survey.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
+                @Survey.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
+                @AssistAttack.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistAttack;
+                @AssistAttack.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistAttack;
+                @AssistAttack.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistAttack;
+                @AssistA.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistA;
+                @AssistA.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistA;
+                @AssistA.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistA;
+                @AssistB.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistB;
+                @AssistB.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistB;
+                @AssistB.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistB;
+                @AssistC.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistC;
+                @AssistC.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistC;
+                @AssistC.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistC;
             }
             m_Wrapper.m_BattleActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Navigate.started += instance.OnNavigate;
-                @Navigate.performed += instance.OnNavigate;
-                @Navigate.canceled += instance.OnNavigate;
-                @Select.started += instance.OnSelect;
-                @Select.performed += instance.OnSelect;
-                @Select.canceled += instance.OnSelect;
-                @Cancel.started += instance.OnCancel;
-                @Cancel.performed += instance.OnCancel;
-                @Cancel.canceled += instance.OnCancel;
-                @Survey.started += instance.OnSurvey;
-                @Survey.performed += instance.OnSurvey;
-                @Survey.canceled += instance.OnSurvey;
                 @Option.started += instance.OnOption;
                 @Option.performed += instance.OnOption;
                 @Option.canceled += instance.OnOption;
                 @Parry.started += instance.OnParry;
                 @Parry.performed += instance.OnParry;
                 @Parry.canceled += instance.OnParry;
+                @Survey.started += instance.OnSurvey;
+                @Survey.performed += instance.OnSurvey;
+                @Survey.canceled += instance.OnSurvey;
+                @AssistAttack.started += instance.OnAssistAttack;
+                @AssistAttack.performed += instance.OnAssistAttack;
+                @AssistAttack.canceled += instance.OnAssistAttack;
+                @AssistA.started += instance.OnAssistA;
+                @AssistA.performed += instance.OnAssistA;
+                @AssistA.canceled += instance.OnAssistA;
+                @AssistB.started += instance.OnAssistB;
+                @AssistB.performed += instance.OnAssistB;
+                @AssistB.canceled += instance.OnAssistB;
+                @AssistC.started += instance.OnAssistC;
+                @AssistC.performed += instance.OnAssistC;
+                @AssistC.canceled += instance.OnAssistC;
             }
         }
     }
@@ -901,11 +886,12 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     }
     public interface IBattleActions
     {
-        void OnNavigate(InputAction.CallbackContext context);
-        void OnSelect(InputAction.CallbackContext context);
-        void OnCancel(InputAction.CallbackContext context);
-        void OnSurvey(InputAction.CallbackContext context);
         void OnOption(InputAction.CallbackContext context);
         void OnParry(InputAction.CallbackContext context);
+        void OnSurvey(InputAction.CallbackContext context);
+        void OnAssistAttack(InputAction.CallbackContext context);
+        void OnAssistA(InputAction.CallbackContext context);
+        void OnAssistB(InputAction.CallbackContext context);
+        void OnAssistC(InputAction.CallbackContext context);
     }
 }

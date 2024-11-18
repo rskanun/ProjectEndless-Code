@@ -188,7 +188,7 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        yield return new WaitUntil(() => !curAction.actor.IsActiveMotion);
+        yield return new WaitUntil(() => !curAction.actor.HasStun);
 
         // 다음 턴에 진행할 행동 선택
         curAction.actor.TakeTurn();

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ActionSelectionController : MonoBehaviour, IControlState
+public class ActionSelectionController : MonoBehaviour, IController
 {
     [Header("참조 스크립트")]
     [SerializeField] private ActionSelection selection;

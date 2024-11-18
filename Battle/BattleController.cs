@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BattleController : MonoBehaviour, IControlState
+public class BattleController : MonoBehaviour, IController
 {
     [Header("참조 스크립트")]
     [SerializeField] private ActionManager actionManager;
@@ -10,20 +10,22 @@ public class BattleController : MonoBehaviour, IControlState
     private bool isSurvey;
 
     // 각각의 선택창에 따른 추가적인 키조작
-    private IControlState subController;
+    private IController subController;
 
     // 조작키
-    private MainInput.BattleActions input;
+    private MainInput.BattleActions battleInput;
+    private MainInput.UIActions uiInput;
 
     private void Awake()
     {
-        input = ControlContext.Instance.KeyInput.Battle;
+        battleInput = ControlContext.Instance.KeyInput.Battle;
+        uiInput = ControlContext.Instance.KeyInput.UI;
 
         // 전투 돌입 시 해당 컨트롤러로 전환
-        ControlContext.Instance.SetState(this);
+        ControlContext.Instance.SetController(this);
     }
 
-    public void SetSubController(IControlState subController)
+    public void SetSubController(IController subController)
     {
         // 이전 컨트롤러 비활성화
         this.subController?.OnDisconnected();
@@ -35,23 +37,29 @@ public class BattleController : MonoBehaviour, IControlState
 
     public void OnConnected()
     {
-        input.Enable();
+        // Connect Battle Input
+        battleInput.Enable();
+        battleInput.Survey.performed += OnSurveyKeyPressed;
+        battleInput.Parry.performed += OnParryKeyPressed;
 
-        input.Cancel.performed += OnCancelKeyPressed;
-        input.Survey.performed += OnSurveyKeyPressed;
-        input.Parry.performed += OnParryKeyPressed;
+        // Connect UI Input
+        uiInput.Enable();
+        uiInput.Cancel.performed += OnCancelKeyPressed;
     }
 
     public void OnDisconnected()
     {
-        input.Disable();
+        // Disable Battle Input
+        battleInput.Disable();
+        battleInput.Survey.performed -= OnSurveyKeyPressed;
+        battleInput.Parry.performed -= OnParryKeyPressed;
 
-        input.Cancel.performed -= OnCancelKeyPressed;
-        input.Survey.performed -= OnSurveyKeyPressed;
-        input.Parry.performed -= OnParryKeyPressed;
+        // Disable UI Input
+        uiInput.Disable();
+        uiInput.Cancel.performed -= OnCancelKeyPressed;
     }
 
-    public void OnCancelKeyPressed(InputAction.CallbackContext context)
+    private void OnCancelKeyPressed(InputAction.CallbackContext context)
     {
         // 전황 체크 상태일 경우 행동 선택창으로 돌아가기
         if (isSurvey)
@@ -63,7 +71,7 @@ public class BattleController : MonoBehaviour, IControlState
         else actionManager.UndoSelection();
     }
 
-    public void OnSurveyKeyPressed(InputAction.CallbackContext context)
+    private void OnSurveyKeyPressed(InputAction.CallbackContext context)
     {
         // 행동 선택창에서만 전황 확인이 가능
         if (subController is ActionSelectionController == false)
@@ -78,7 +86,7 @@ public class BattleController : MonoBehaviour, IControlState
         isSurvey = !isSurvey;
     }
 
-    public void OnParryKeyPressed(InputAction.CallbackContext context)
+    private void OnParryKeyPressed(InputAction.CallbackContext context)
     {
         CurrentBattleData battleData = CurrentBattleData.Instance;
 
@@ -92,14 +100,16 @@ public class BattleController : MonoBehaviour, IControlState
             if (battleData.IsParryFrame)
             {
                 Debug.Log("Success Parrying!!");
+
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
 
                 curAction.actor.OnParried();
+                battleData.Player.OnParrying();
             }
         }
     }
 
-    public void OnDodgeKeyPressed(InputAction.CallbackContext context)
+    private void OnDodgeKeyPressed(InputAction.CallbackContext context)
     {
 
     }

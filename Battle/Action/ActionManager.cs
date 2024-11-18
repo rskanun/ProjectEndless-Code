@@ -62,7 +62,7 @@ public class ActionManager : MonoBehaviour
         }
     }
 
-    public void SetSubController(IControlState subController)
+    public void SetSubController(IController subController)
     {
         controller.SetSubController(subController);
     }
