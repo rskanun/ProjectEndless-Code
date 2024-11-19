@@ -159,7 +159,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     private void ForecastHP(BattleAction action)
     {
         float attackDmg = GetAttackDmg(action);
-        int lastDmg = targetEntity.GetLastDmg(attackDmg);
+        int lastDmg = targetEntity.GetLastDmg(attackDmg, targetEntity.Stat.DEI);
 
         targetEntity.SetForecastHP(-lastDmg);
     }

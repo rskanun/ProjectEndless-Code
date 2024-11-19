@@ -71,7 +71,7 @@ public class NormalMonster : Monster
         testDisplay.SetPriorityTargets(sortList);
         foreach (Entity target in sortList)
         {
-            int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg);
+            int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg, Stat.DEI);
             if (IsAttackTargetable(target) && remainHP <= 0)
             {
                 // 대상이 일반 공격으로 해치울 수 있는 피일 경우 일반 공격

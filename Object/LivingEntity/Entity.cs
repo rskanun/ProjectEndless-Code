@@ -170,13 +170,13 @@ public abstract class Entity : MonoBehaviour
 
     public void OnActiveMotion(string motion)
     {
-        HasStun = true;
+        IsActionable = true;
         animator.SetTrigger(motion);
     }
 
     public void OnMotionEnd()
     {
-        HasStun = false;
+        IsActionable = false;
     }
 
     /***************************************************************
@@ -213,8 +213,11 @@ public abstract class Entity : MonoBehaviour
         // 타겟이 있는 경우에만 계속해서 공격
         if (target != null)
         {
+            // 치명타 여부 구하기
+            float criticalChance = (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
+
             // 공격 모션 실행
-            StartCoroutine(OnAttackAction(target));
+            StartCoroutine(OnAttackAction(target, criticalChance));
 
             // 타겟에게 방어 유형 전달
             // 원거리는 패링 X
@@ -222,13 +225,13 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    private IEnumerator OnAttackAction(Entity target)
+    private IEnumerator OnAttackAction(Entity target, float criticalChance)
     {
         // 공격 모션 실행
         OnActiveMotion("atk");
 
         // 모션 체크
-        while (HasStun)
+        while (IsActionable)
         {
             // 공격 모션 중간 패링을 당했을 경우
             if (isParried)
@@ -244,7 +247,7 @@ public abstract class Entity : MonoBehaviour
         }
 
         // 공격 모션이 끝까지 진행되었을 경우 데미지
-        target.OnDamage(AttackDmg, Stat.MP);
+        target.OnDamage(AttackDmg, Stat.MP, Stat.DEI, criticalChance);
     }
 
     private Entity GetRetarget(Entity curTarget)
@@ -276,8 +279,19 @@ public abstract class Entity : MonoBehaviour
     public void OnAssistAttack(Entity target)
     {
         // 확정 치명타인 일반 공격 실행
-        // 임시로 일반 공격
-        OnAttack(target);
+        StartCoroutine(OnAssistAttackAction(target));
+    }
+
+    private IEnumerator OnAssistAttackAction(Entity target)
+    {
+        // 공격 모션 실행
+        OnActiveMotion("atk");
+
+        // 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => IsActionable);
+
+        // 공격 모션이 끝까지 진행되었을 경우 치명타 데미지
+        target.OnDamage(AttackDmg, Stat.MP, Stat.DEI, 1.0f);
     }
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
@@ -310,11 +324,15 @@ public abstract class Entity : MonoBehaviour
     * 오브젝트의 이벤트에 의한 상태 처리
     ***************************************************************/
 
-    public virtual void OnDamage(float damage, int targetMP)
+    public virtual void OnDamage(float damage, int attackerMP, float attackerDEI, float criticalChance)
     {
-        Debug.Log($"{Name} {GetLastDmg(damage)}({damage}) Damage!!!");
-        Stat.HP -= GetLastDmg(damage);
-        Stat.MP = GetLastMP(targetMP);
+        // 크리티컬 여부 확인
+        float random = UnityEngine.Random.Range(0f, 1f);
+        bool isCritical = random < criticalChance;
+
+        // 크리티컬일 경우 기존 데미지의 1.2배 + 방어력 수치 무시
+        Stat.HP -= isCritical ? GetLastDmg(damage * 1.2f, 100.0f) : GetLastDmg(damage, attackerDEI);
+        Stat.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
         animator.SetTrigger("hit");
@@ -338,10 +356,10 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public int GetLastDmg(float damage)
+    public int GetLastDmg(float damage, float attackerDEI)
     {
         // 최종 데미지 수치(임시)
-        float dmg = damage - Stat.DEF;
+        float dmg = damage - Stat.DEF * (1.0f - attackerDEI / 100.0f);
 
         return Mathf.RoundToInt(dmg > 0 ? dmg : 0.0f);
     }
@@ -349,7 +367,7 @@ public abstract class Entity : MonoBehaviour
     public int GetLastMP(int targetMP)
     {
         // 최종 마력 데미지 수치(임시)
-        return targetMP;
+        return 0;
     }
 
     public virtual void OnDead()

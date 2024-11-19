@@ -26,7 +26,7 @@ public class AssistAttackManager : MonoBehaviour
         // 주인공에게 포커싱을 맞춰 카메라 이동
 
         // 선택을 고르는 동안 시간 배율이 빠르게 느려짐
-        DOTween.To(() => Time.timeScale, t => Time.timeScale = t, 0.001f, 1f)
+        DOTween.To(() => Time.timeScale, t => Time.timeScale = t, 0.001f, 0.85f)
             .SetEase(Ease.OutQuint)
             .SetUpdate(true)
             .OnComplete(() => ActiveAssistSelection());

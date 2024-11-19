@@ -99,8 +99,6 @@ public class BattleController : MonoBehaviour, IController
 
             if (battleData.IsParryFrame)
             {
-                Debug.Log("Success Parrying!!");
-
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
 
                 curAction.actor.OnParried();
