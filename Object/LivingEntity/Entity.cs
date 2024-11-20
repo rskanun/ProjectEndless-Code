@@ -123,6 +123,9 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    // 회피 여부
+    private bool isDodge;
+
     // 전투 순서 데이터
     protected CurrentBattleData battleData { private set; get; }
     protected BattleSequence battleSeq { private set; get; }
@@ -309,6 +312,13 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnDamage(float damage, int attackerMP, float criticalChance)
     {
+        if (isDodge)
+        {
+            // 회피에 성공했다면, 데미지 무시
+            isDodge = false;
+            return;
+        }
+
         // 크리티컬 여부 확인
         // 흐트러진 상태라면 무조건 크리티컬
         float random = UnityEngine.Random.Range(0f, 1f);
@@ -423,9 +433,28 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnParrying(Entity attacker)
     {
-        // 패링에 성공했을 경우
-        // 통상적인 엔티티는 자신이 한 번 더 공격
+        // 패링에 성공했을 경우 패링 모션 실행
+        StartCoroutine(OnParryAction(attacker));
+    }
+
+    private IEnumerator OnParryAction(Entity attacker)
+    {
+        // 패링 모션 실행
+        OnActiveMotion("parrying");
+
+        // 모션 체크
+        yield return new WaitUntil(() => IsActionable == false);
+
+        // 패링 모션이 끝까지 진행되었을 경우 통상적인 엔티티는 자신이 한 번 더 공격
         OnAttack(attacker);
+    }
+
+    public virtual void OnDodge()
+    {
+        isDodge = true;
+
+        // 회피 모션 실행
+        OnActiveMotion("dodge");
     }
 
     /***************************************************************

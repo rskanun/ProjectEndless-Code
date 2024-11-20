@@ -55,7 +55,6 @@ public class Character : Entity
         {
             // 전투가 끝났을 경우 행동을 하지 않고 종료
             EndTurn();
-
             return;
         }
 

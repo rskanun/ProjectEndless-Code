@@ -6,6 +6,10 @@ public class BattleController : MonoBehaviour, IController
     [Header("참조 스크립트")]
     [SerializeField] private ActionManager actionManager;
 
+    // 참조 데이터
+    private CurrentBattleData battleData
+        => CurrentBattleData.Instance;
+
     // 현재 전황 체크 상태인지
     private bool isSurvey;
 
@@ -41,6 +45,7 @@ public class BattleController : MonoBehaviour, IController
         battleInput.Enable();
         battleInput.Survey.performed += OnSurveyKeyPressed;
         battleInput.Parry.performed += OnParryKeyPressed;
+        battleInput.Dodge.performed += OnDodgeKeyPressed;
 
         // Connect UI Input
         uiInput.Enable();
@@ -53,6 +58,7 @@ public class BattleController : MonoBehaviour, IController
         battleInput.Disable();
         battleInput.Survey.performed -= OnSurveyKeyPressed;
         battleInput.Parry.performed -= OnParryKeyPressed;
+        battleInput.Dodge.performed -= OnDodgeKeyPressed;
 
         // Disable UI Input
         uiInput.Disable();
@@ -88,14 +94,11 @@ public class BattleController : MonoBehaviour, IController
 
     private void OnParryKeyPressed(InputAction.CallbackContext context)
     {
-        CurrentBattleData battleData = CurrentBattleData.Instance;
-
         // 패링을 사용할 수 있는 경우에만 사용
         if (battleData.IsUsedParry)
         {
             // 공격 방어 기능을 한 번 사용하면 다른 기능 사용 X
-            battleData.IsUsedParry = false;
-            battleData.IsUsedDodge = false;
+            DisableDefensive();
 
             if (battleData.IsParryFrame)
             {
@@ -109,6 +112,23 @@ public class BattleController : MonoBehaviour, IController
 
     private void OnDodgeKeyPressed(InputAction.CallbackContext context)
     {
+        Debug.Log("Dodge Action");
+        if (battleData.IsUsedDodge)
+        {
+            // 공격 방어 기능을 한 번 사용하면 다른 기능 사용 X
+            DisableDefensive();
 
+            if (battleData.IsDodgeFrame)
+            {
+                Debug.Log("Success!!");
+                battleData.Player.OnDodge();
+            }
+        }
+    }
+
+    private void DisableDefensive()
+    {
+        battleData.IsUsedParry = false;
+        battleData.IsUsedDodge = false;
     }
 }

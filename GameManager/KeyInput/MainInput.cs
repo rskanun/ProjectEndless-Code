@@ -366,6 +366,15 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Survey"",
+                    ""type"": ""Button"",
+                    ""id"": ""e04db565-30bb-417f-ae80-e1339e5815d2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Parry"",
                     ""type"": ""Button"",
                     ""id"": ""54ca987a-ffaf-4772-abb8-f14e2fadc6f3"",
@@ -375,9 +384,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Survey"",
+                    ""name"": ""Dodge"",
                     ""type"": ""Button"",
-                    ""id"": ""e04db565-30bb-417f-ae80-e1339e5815d2"",
+                    ""id"": ""7cd46a03-61d8-4a6f-801c-83ed3c9d15de"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -445,17 +454,6 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f6ea150d-50a8-4d9c-aae0-243f8955de99"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Survey"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1bf303d7-36f9-4aa9-8306-3ce0d0c28331"",
                     ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
@@ -495,6 +493,28 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""AssistAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8680708-e6cc-4aba-a1da-f29c8b99f642"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f6ea150d-50a8-4d9c-aae0-243f8955de99"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Survey"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -541,8 +561,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         // Battle
         m_Battle = asset.FindActionMap("Battle", throwIfNotFound: true);
         m_Battle_Option = m_Battle.FindAction("Option", throwIfNotFound: true);
-        m_Battle_Parry = m_Battle.FindAction("Parry", throwIfNotFound: true);
         m_Battle_Survey = m_Battle.FindAction("Survey", throwIfNotFound: true);
+        m_Battle_Parry = m_Battle.FindAction("Parry", throwIfNotFound: true);
+        m_Battle_Dodge = m_Battle.FindAction("Dodge", throwIfNotFound: true);
         m_Battle_AssistAttack = m_Battle.FindAction("AssistAttack", throwIfNotFound: true);
         m_Battle_AssistA = m_Battle.FindAction("AssistA", throwIfNotFound: true);
         m_Battle_AssistB = m_Battle.FindAction("AssistB", throwIfNotFound: true);
@@ -778,8 +799,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Battle;
     private IBattleActions m_BattleActionsCallbackInterface;
     private readonly InputAction m_Battle_Option;
-    private readonly InputAction m_Battle_Parry;
     private readonly InputAction m_Battle_Survey;
+    private readonly InputAction m_Battle_Parry;
+    private readonly InputAction m_Battle_Dodge;
     private readonly InputAction m_Battle_AssistAttack;
     private readonly InputAction m_Battle_AssistA;
     private readonly InputAction m_Battle_AssistB;
@@ -789,8 +811,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         private @MainInput m_Wrapper;
         public BattleActions(@MainInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Option => m_Wrapper.m_Battle_Option;
-        public InputAction @Parry => m_Wrapper.m_Battle_Parry;
         public InputAction @Survey => m_Wrapper.m_Battle_Survey;
+        public InputAction @Parry => m_Wrapper.m_Battle_Parry;
+        public InputAction @Dodge => m_Wrapper.m_Battle_Dodge;
         public InputAction @AssistAttack => m_Wrapper.m_Battle_AssistAttack;
         public InputAction @AssistA => m_Wrapper.m_Battle_AssistA;
         public InputAction @AssistB => m_Wrapper.m_Battle_AssistB;
@@ -807,12 +830,15 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 @Option.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Option.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
                 @Option.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnOption;
-                @Parry.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
-                @Parry.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
-                @Parry.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
                 @Survey.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
                 @Survey.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
                 @Survey.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSurvey;
+                @Parry.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
+                @Parry.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
+                @Parry.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnParry;
+                @Dodge.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnDodge;
                 @AssistAttack.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistAttack;
                 @AssistAttack.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistAttack;
                 @AssistAttack.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnAssistAttack;
@@ -832,12 +858,15 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 @Option.started += instance.OnOption;
                 @Option.performed += instance.OnOption;
                 @Option.canceled += instance.OnOption;
-                @Parry.started += instance.OnParry;
-                @Parry.performed += instance.OnParry;
-                @Parry.canceled += instance.OnParry;
                 @Survey.started += instance.OnSurvey;
                 @Survey.performed += instance.OnSurvey;
                 @Survey.canceled += instance.OnSurvey;
+                @Parry.started += instance.OnParry;
+                @Parry.performed += instance.OnParry;
+                @Parry.canceled += instance.OnParry;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
                 @AssistAttack.started += instance.OnAssistAttack;
                 @AssistAttack.performed += instance.OnAssistAttack;
                 @AssistAttack.canceled += instance.OnAssistAttack;
@@ -887,8 +916,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     public interface IBattleActions
     {
         void OnOption(InputAction.CallbackContext context);
-        void OnParry(InputAction.CallbackContext context);
         void OnSurvey(InputAction.CallbackContext context);
+        void OnParry(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
         void OnAssistAttack(InputAction.CallbackContext context);
         void OnAssistA(InputAction.CallbackContext context);
         void OnAssistB(InputAction.CallbackContext context);
