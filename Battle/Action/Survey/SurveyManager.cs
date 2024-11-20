@@ -228,7 +228,7 @@ public class SurveyManager : MonoBehaviour
         float attackDmg = GetAttackDmg(action);
         foreach (Entity target in targets)
         {
-            int lastDmg = target.GetLastDmg(attackDmg, action.actor.Stat.DEI);
+            int lastDmg = target.GetLastDmg(attackDmg, false);
 
             // 현재 턴인 경우 이번 행동에 대한 결과 이전 값을 출력
             if (seq.GetTurnAction(0) != action) target.SetForecastHP(-lastDmg);

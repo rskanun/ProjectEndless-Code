@@ -111,13 +111,17 @@ public abstract class Entity : MonoBehaviour
         private set { _isActionable = value; }
         get { return _isActionable; }
     }
-    private bool _hasStun;
-    public bool HasStun
+    private EntityStateManager _stateManager;
+    protected EntityStateManager State
     {
-        private set { _hasStun = value; }
-        get { return _hasStun; }
+        get
+        {
+            if (_stateManager == null)
+                _stateManager = new EntityStateManager();
+
+            return _stateManager;
+        }
     }
-    private bool isParried;
 
     // 전투 순서 데이터
     protected CurrentBattleData battleData { private set; get; }
@@ -132,23 +136,6 @@ public abstract class Entity : MonoBehaviour
     {
         battleData = CurrentBattleData.Instance;
         battleSeq = battleData.Sequence;
-    }
-
-    protected void InitLastStat()
-    {
-        if (Stat == null)
-            Stat = new EntityStat();
-
-        Stat.MaxHP = OriginStat.MaxHP;
-        Stat.HP = OriginStat.HP;
-        Stat.STR = OriginStat.STR;
-        Stat.DEF = OriginStat.DEF;
-        Stat.AGI = OriginStat.AGI;
-        Stat.MaxMP = OriginStat.MaxMP;
-        Stat.MP = OriginStat.MP;
-        Stat.MaxSP = OriginStat.MaxSP;
-        Stat.SP = OriginStat.SP;
-        Stat.SAN = OriginStat.SAN;
     }
 
     public float GetLastTurn(float originTurn)
@@ -185,7 +172,16 @@ public abstract class Entity : MonoBehaviour
     * 해당 오브젝트의 턴 진행
     ***************************************************************/
 
-    public abstract void TakeTurn();
+    public void TakeTurn()
+    {
+        // 패링 상태 해제
+        State.Remove(EntityState.Stagger);
+
+        // 행동 선택
+        OnSelectAction();
+    }
+
+    protected abstract void OnSelectAction();
 
     public void EndTurn()
     {
@@ -196,7 +192,8 @@ public abstract class Entity : MonoBehaviour
     public void OnSelectAction(BattleAction action, int? index = null)
     {
         // 선택한 행동 예약
-        battleData.Sequence.AddTurn(action);
+        if (index.HasValue) battleData.Sequence.AddTurn(action, index.Value);
+        else battleData.Sequence.AddTurn(action);
 
         // 턴 종료
         EndTurn();
@@ -214,7 +211,7 @@ public abstract class Entity : MonoBehaviour
         if (target != null)
         {
             // 치명타 여부 구하기
-            float criticalChance = (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
+            float criticalChance = GetCriticalChance(target);
 
             // 공격 모션 실행
             StartCoroutine(OnAttackAction(target, criticalChance));
@@ -223,6 +220,12 @@ public abstract class Entity : MonoBehaviour
             // 원거리는 패링 X
             target.OnTargetedAttack(this, AttackType == AttackType.Melee, true);
         }
+    }
+
+    public virtual float GetCriticalChance(Entity target)
+    {
+        // 크리티컬 확률 코드
+        return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 
     private IEnumerator OnAttackAction(Entity target, float criticalChance)
@@ -234,10 +237,8 @@ public abstract class Entity : MonoBehaviour
         while (IsActionable)
         {
             // 공격 모션 중간 패링을 당했을 경우
-            if (isParried)
+            if (State.HasState(EntityState.Stagger))
             {
-                isParried = false;
-
                 // 패링 당하는 모션 실행
                 OnActiveMotion("isParried");
                 yield break;
@@ -247,7 +248,7 @@ public abstract class Entity : MonoBehaviour
         }
 
         // 공격 모션이 끝까지 진행되었을 경우 데미지
-        target.OnDamage(AttackDmg, Stat.MP, Stat.DEI, criticalChance);
+        target.OnDamage(AttackDmg, Stat.MP, criticalChance);
     }
 
     private Entity GetRetarget(Entity curTarget)
@@ -274,24 +275,6 @@ public abstract class Entity : MonoBehaviour
     {
         if (this is Monster) return battleData.LivingCharacters;
         else return battleData.LivingEnemies;
-    }
-
-    public void OnAssistAttack(Entity target)
-    {
-        // 확정 치명타인 일반 공격 실행
-        StartCoroutine(OnAssistAttackAction(target));
-    }
-
-    private IEnumerator OnAssistAttackAction(Entity target)
-    {
-        // 공격 모션 실행
-        OnActiveMotion("atk");
-
-        // 모션이 끝날 때까지 대기
-        yield return new WaitUntil(() => IsActionable);
-
-        // 공격 모션이 끝까지 진행되었을 경우 치명타 데미지
-        target.OnDamage(AttackDmg, Stat.MP, Stat.DEI, 1.0f);
     }
 
     public virtual void OnCast(Skill skill, List<Entity> targets)
@@ -324,14 +307,16 @@ public abstract class Entity : MonoBehaviour
     * 오브젝트의 이벤트에 의한 상태 처리
     ***************************************************************/
 
-    public virtual void OnDamage(float damage, int attackerMP, float attackerDEI, float criticalChance)
+    public virtual void OnDamage(float damage, int attackerMP, float criticalChance)
     {
         // 크리티컬 여부 확인
+        // 흐트러진 상태라면 무조건 크리티컬
         float random = UnityEngine.Random.Range(0f, 1f);
-        bool isCritical = random < criticalChance;
+        bool isStaggerState = State.HasState(EntityState.Stagger);
+        bool isCritical = isStaggerState || random < criticalChance;
 
         // 크리티컬일 경우 기존 데미지의 1.2배 + 방어력 수치 무시
-        Stat.HP -= isCritical ? GetLastDmg(damage * 1.2f, 100.0f) : GetLastDmg(damage, attackerDEI);
+        Stat.HP -= isCritical ? GetLastDmg(damage * 1.2f, true) : GetLastDmg(damage, false);
         Stat.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
@@ -356,12 +341,16 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public int GetLastDmg(float damage, float attackerDEI)
+    public int GetLastDmg(float damage, bool isTrueDmg)
     {
-        // 최종 데미지 수치(임시)
-        float dmg = damage - Stat.DEF * (1.0f - attackerDEI / 100.0f);
+        // 최종 데미지 수치
+        if (isTrueDmg == false)
+        {
+            // 고정 데미지가 아닐 경우 원래 데미지에 방어력 수치만큼 경감
+            damage -= Stat.DEF;
+        }
 
-        return Mathf.RoundToInt(dmg > 0 ? dmg : 0.0f);
+        return Mathf.RoundToInt(damage > 0 ? damage : 0.0f);
     }
 
     public int GetLastMP(int targetMP)
@@ -376,7 +365,7 @@ public abstract class Entity : MonoBehaviour
         IsDead = true;
 
         // 시퀀스 삭제
-        battleSeq.RemoveTurns(this);
+        battleSeq.RemoveTurn(this);
 
         // 사망 모션
         animator.SetTrigger("death");
@@ -384,16 +373,11 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnRevival(int hp)
     {
-        if (hp <= 0)
-        {
-            throw new NullReferenceException("체력이 0 이하인 상태론 부활할 수 없습니다!");
-        }
-
         // 사망 판정 철회
         IsDead = false;
 
-        // 재생했을 때의 hp 설정
-        Stat.HP = hp;
+        // 재생했을 때의 hp 설정(최소 1 이상의 HP로 부활)
+        Stat.HP = (hp > 0) ? hp : 1;
 
         // 전투 시퀀스에 대기 상태로 행동 예약
         battleSeq.AddTurn(new WaitAction(this, 0.0f));
@@ -405,31 +389,43 @@ public abstract class Entity : MonoBehaviour
         // 마방 0 + 기절?
     }
 
-    public virtual void OnTargetedAttack(Entity attacker, bool isUsedParry, bool isUsedDodge)
+    public void OnTargetedAttack(Entity attacker, bool isUsedParry, bool isUsedDodge)
+    {
+        if (State.HasState(EntityState.Stagger))
+        {
+            // 현재 흐트러진 상태면 공격 방어 불가
+            return;
+        }
+
+        // 제일 리턴이 큰 패링부터 행동
+        if (isUsedParry) OnParryAction();
+        if (isUsedDodge) OnDodgeAction();
+    }
+
+    protected virtual void OnParryAction()
     {
         // 플레이어가 아닌 엔티티의 경우 확률적
-        // 민첩의 차이가 많이 날 수록 확률이 높아짐
+        // 패링이 가능하면, 패링 확률 계산하여 패링 실행 유무 결정
+    }
 
-        // 제일 리턴이 큰 패링부터 확률 계산
-        if (isUsedParry)
-        {
-            // 패링이 가능하면, 패링 확률 계산하여 패링 실행 유무 결정
-        }
-        else if (isUsedDodge)
-        {
-            // 회피가 가능하면, 회피 확률 계산하여 회피 실행 유무 결정
-        }
+    protected virtual void OnDodgeAction()
+    {
+        // 플레이어가 아닌 엔티티의 경우 확률적
+        // 회피가 가능하면, 회피 확률 계산하여 회피 실행 유무 결정
     }
 
     public virtual void OnParried()
     {
         // 공격이 패링 당했을 경우
-        isParried = true;
+        // 해당 엔티티에게 흐트러짐 상태 추가
+        State.Add(EntityState.Stagger);
     }
 
-    public virtual void OnParrying()
+    public virtual void OnParrying(Entity attacker)
     {
         // 패링에 성공했을 경우
+        // 통상적인 엔티티는 자신이 한 번 더 공격
+        OnAttack(attacker);
     }
 
     /***************************************************************
@@ -462,6 +458,11 @@ public abstract class Entity : MonoBehaviour
     public bool HasEffect(StatusEffect effect)
     {
         return effectManager.HasEffect(effect);
+    }
+
+    public bool HasState(EntityState state)
+    {
+        return State.HasState(state);
     }
 
     public float GetEffectDuration(StatusEffect effect)

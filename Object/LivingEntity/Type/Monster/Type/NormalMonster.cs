@@ -71,7 +71,7 @@ public class NormalMonster : Monster
         testDisplay.SetPriorityTargets(sortList);
         foreach (Entity target in sortList)
         {
-            int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg, Stat.DEI);
+            int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg, false);
             if (IsAttackTargetable(target) && remainHP <= 0)
             {
                 // 대상이 일반 공격으로 해치울 수 있는 피일 경우 일반 공격
@@ -253,7 +253,7 @@ public class NormalMonster : Monster
 
             // 해당 스킬이 대상을 해치울 수 있는 스킬인지 체크
             float skillDmg = attackSkill.GetSkillDmg(this);
-            int lastDmg = target.GetLastDmg(skillDmg);
+            int lastDmg = target.GetLastDmg(skillDmg, false);
             if (target.Stat.HP - lastDmg <= 0)
             {
                 // 대상을 해치울 스킬이 복수일 경우 더 효율적인 스킬 사용

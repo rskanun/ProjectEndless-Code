@@ -102,7 +102,7 @@ public class BattleController : MonoBehaviour, IController
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
 
                 curAction.actor.OnParried();
-                battleData.Player.OnParrying();
+                battleData.Player.OnParrying(curAction.actor);
             }
         }
     }

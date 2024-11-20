@@ -4,18 +4,26 @@ public class Player : Character
 {
     [SerializeField] private AssistAttackManager assistManager;
 
-    public override void OnTargetedAttack(Entity attacker, bool isUsedParry, bool isUsedDodge)
+    public override sealed float GetCriticalChance(Entity target)
     {
-        battleData.IsUsedParry = isUsedParry;
-        battleData.IsUsedDodge = isUsedDodge;
+        // 주인공의 경우 기교(DEX) 수치에 상관 없이
+        // 모든 공격이 크리티컬 값을 띄움
+        return 1.0f;
     }
 
-    public override void OnParrying()
+    protected override void OnParryAction()
     {
-        // 플레이어가 패링에 성공했을 경우
-        BattleAction curAction = battleData.Sequence.GetTurnAction(0);
+        battleData.IsUsedParry = true;
+    }
 
-        // 추가타를 넣을 대상 선택
-        assistManager.OnSelectExtraAttacker(curAction.actor);
+    protected override void OnDodgeAction()
+    {
+        battleData.IsUsedDodge = true;
+    }
+
+    public override void OnParrying(Entity attacker)
+    {
+        // 플레이어가 패링에 성공했을 경우 추가타를 넣을 대상 선택
+        assistManager.OnSelectExtraAttacker(attacker);
     }
 }

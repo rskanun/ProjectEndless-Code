@@ -54,7 +54,7 @@ public class AssistAttackManager : MonoBehaviour
         foreach (Character chr in livingChrs)
         {
             // 경직된 상태일 경우 지원 X
-            if (chr.HasStun) return;
+            if (chr.HasState(EntityState.Stun)) return;
 
             // 해당 캐릭터의 다음 행동이 지원 가능 스킬 사용인 경우 나누기
 
@@ -72,7 +72,25 @@ public class AssistAttackManager : MonoBehaviour
 
         // 지원 공격
         Entity attacker = assistMembers[index];
+        BattleAction attackerAction = CurrentBattleData.Instance.Sequence.GetEntityAction(attacker);
 
-        attacker.OnAssistAttack(target);
+        if (attackerAction is SkillAction skillAction && skillAction.castSkill is AttackSkill skill)
+        {
+            // 지원 가능한 공격 스킬일 경우 앞당겨 사용
+            if (skill.IsAssistable) OnActionAssistSkill(skillAction);
+            return;
+        }
+
+        // 지원 가능한 스킬이 아닌 경우 지원 공격 사용
+        attacker.OnAttack(target);
+    }
+
+    private void OnActionAssistSkill(SkillAction skillAction)
+    {
+        BattleSequence sequence = CurrentBattleData.Instance.Sequence;
+
+        // 본래 사용할 행동 대신 대기 모션 예약
+        sequence.RemoveTurn(skillAction.actor);
+        sequence.AddTurn(new WaitAction(skillAction.actor, 0f), 1);
     }
 }

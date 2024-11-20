@@ -31,7 +31,9 @@ public class EntityStat
         get { return _maxHP; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _maxHP = 99;
+            else if (value <= 0)
                 _maxHP = 1;
             else
                 _maxHP = value;
@@ -51,7 +53,9 @@ public class EntityStat
         get { return _strength; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _strength = 99;
+            else if (value < 0)
                 _strength = 0;
             else
                 _strength = value;
@@ -71,7 +75,9 @@ public class EntityStat
         get { return _defensive; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _defensive = 99;
+            else if (value < 0)
                 _defensive = 0;
             else
                 _defensive = value;
@@ -96,30 +102,12 @@ public class EntityStat
         get { return _agility; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _agility = 99;
+            else if (value < 0)
                 _agility = 0;
             else
                 _agility = value;
-        }
-    }
-
-    [SerializeField]
-    private int _defensiveIgnore;
-    /***************************************************************
-    * [ 방어력 무시 (Defensive Ignore) ]
-    * 
-    * 오브젝트의 방어력 무시 수치로 대상의 방어력에 영향을 끼친다.
-    * 최종 데미지 계산 시, 대상의 방어력을 방어력 무시의 %만큼 깍아내린다.
-    ****************************************************************/
-    public int DEI
-    {
-        get { return _defensiveIgnore; }
-        set
-        {
-            if (value < 0)
-                _defensiveIgnore = 0;
-            else
-                _defensiveIgnore = value;
         }
     }
 
@@ -138,7 +126,9 @@ public class EntityStat
         get { return _dexterity; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _dexterity = 99;
+            else if (value < 0)
                 _dexterity = 0;
             else
                 _dexterity = value;
@@ -176,7 +166,9 @@ public class EntityStat
         get { return _maxMP; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _maxMP = 99;
+            else if (value <= 0)
                 _maxMP = 1;
             else
                 _maxMP = value;
@@ -212,7 +204,9 @@ public class EntityStat
         get { return _maxSP; }
         set
         {
-            if (value < 0)
+            if (value > 99)
+                _maxSP = 99;
+            else if (value <= 0)
                 _maxSP = 1;
             else
                 _maxSP = value;
@@ -227,7 +221,7 @@ public class EntityStat
     * 오브젝트의 정신력 수치로 정신상태 이상에 영향을 끼친다.
     * 정신력이 높을 수록 정신상태 이상에 걸릴 확률이 낮아진다.
     ****************************************************************/
-    private int MaxSAN = 100;
+    private int MaxSAN = 99;
     public int SAN
     {
         get { return _sanity; }
@@ -240,5 +234,24 @@ public class EntityStat
             else
                 _sanity = value;
         }
+    }
+
+    public EntityStat Clone()
+    {
+        EntityStat clone = new EntityStat();
+
+        clone.MaxHP = MaxHP;
+        clone.HP = HP;
+        clone.STR = STR;
+        clone.DEF = DEF;
+        clone.AGI = AGI;
+        clone.DEX = DEX;
+        clone.MaxMP = MaxMP;
+        clone.MP = MP;
+        clone.MaxSP = MaxSP;
+        clone.SP = SP;
+        clone.SAN = SAN;
+
+        return clone;
     }
 }

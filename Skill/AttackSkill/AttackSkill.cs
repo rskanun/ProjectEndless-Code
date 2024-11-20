@@ -44,7 +44,7 @@ public class AttackSkill : Skill
         foreach (Entity target in targets)
         {
             float criticalChance = (caster.Stat.DEX - target.Stat.AGI) / (2.0f * caster.Stat.DEX);
-            target.OnDamage(damage, caster.Stat.MP, caster.Stat.DEI, criticalChance);
+            target.OnDamage(damage, caster.Stat.MP, criticalChance);
 
             if (Debuff.IsEmpty())
             {

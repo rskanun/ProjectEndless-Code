@@ -14,14 +14,6 @@ public class EffectSkill : Skill
         get { return _effect; }
     }
 
-    public override void OnCasting(Entity caster, List<Entity> targets)
-    {
-        foreach (Entity target in targets)
-        {
-            target.AddEffect(Effect);
-        }
-    }
-
     public void SetBuff()
     {
         _effect = new Buff();
@@ -30,5 +22,13 @@ public class EffectSkill : Skill
     public void SetDebuff()
     {
         _effect = new Debuff();
+    }
+
+    public override void OnCasting(Entity caster, List<Entity> targets)
+    {
+        foreach (Entity target in targets)
+        {
+            target.AddEffect(Effect);
+        }
     }
 }

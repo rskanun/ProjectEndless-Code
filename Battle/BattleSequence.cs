@@ -79,12 +79,9 @@ public class BattleSequence
     public void AddTurn(BattleAction action)
     {
         int index = Sequence.BinarySearch(action);
+        if (index < 0) index = ~index;
 
-        if (index < 0) Sequence.Insert(~index, action);
-        else Sequence.Insert(index, action);
-
-        // 시퀀스 업데이트 알림
-        SeqUpdateEvent.NotifyUpdate();
+        AddTurn(action, index);
     }
 
     public void AddTurn(BattleAction action, int index)
@@ -96,18 +93,19 @@ public class BattleSequence
         SeqUpdateEvent.NotifyUpdate();
     }
 
-    public void RemoveTurns(Entity actor)
+    public void RemoveTurn(Entity actor)
     {
-        for (int i = Sequence.Count - 1; i >= 0; i--)
+        foreach (BattleAction action in Sequence)
         {
-            if (Sequence[i].actor == actor)
+            if (action.actor == actor)
             {
-                Sequence.RemoveAt(i);
+                Sequence.Remove(action);
+
+                // 시퀀스 업데이트 알림
+                SeqUpdateEvent.NotifyUpdate();
+                return;
             }
         }
-
-        // 시퀀스 업데이트 알림
-        SeqUpdateEvent.NotifyUpdate();
     }
 
     public int GetActionMinSeq(BattleAction action)

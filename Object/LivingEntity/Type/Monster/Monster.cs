@@ -29,7 +29,7 @@ public abstract class Monster : Entity
         base.Awake();
 
         // 최종스텟 설정
-        InitLastStat();
+        Stat = OriginStat.Clone();
 
         // HUD 업데이트
         InitHUD();
@@ -76,7 +76,7 @@ public abstract class Monster : Entity
     * 해당 오브젝트의 턴 진행
     ***************************************************************/
 
-    public override void TakeTurn()
+    protected override void OnSelectAction()
     {
         if (battleData.IsInBattle)
         {

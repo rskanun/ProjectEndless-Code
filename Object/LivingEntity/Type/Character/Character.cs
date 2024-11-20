@@ -24,7 +24,7 @@ public class Character : Entity
         OriginStat = data.Stat;
 
         // 최종스텟 설정
-        InitLastStat();
+        Stat = OriginStat.Clone();
 
         // HUD 설정
         InitHUD();
@@ -49,7 +49,7 @@ public class Character : Entity
     * 해당 오브젝트의 턴 진행
     ***************************************************************/
 
-    public override void TakeTurn()
+    protected override void OnSelectAction()
     {
         if (battleData.IsInBattle == false)
         {
