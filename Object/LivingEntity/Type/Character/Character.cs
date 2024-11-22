@@ -5,6 +5,7 @@ public class Character : Entity
 {
     // 참조 스크립트
     [SerializeField] private ActionManager actionSelection;
+    [SerializeField] private AssistAttackManager assistManager;
 
     protected override void Awake()
     {
@@ -84,5 +85,21 @@ public class Character : Entity
         base.OnDead();
 
         // 사망 모션
+    }
+
+    protected override void OnParryAction()
+    {
+        battleData.IsUsedParry = true;
+    }
+
+    protected override void OnDodgeAction()
+    {
+        battleData.IsUsedDodge = true;
+    }
+
+    public override void OnParrying(Entity attacker)
+    {
+        // 플레이어가 패링에 성공했을 경우 추가타를 넣을 대상 선택
+        assistManager.OnSelectExtraAttacker(attacker, this);
     }
 }

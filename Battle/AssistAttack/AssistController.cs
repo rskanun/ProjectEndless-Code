@@ -17,34 +17,31 @@ public class AssistController : MonoBehaviour, IController
     {
         input.Enable();
 
-        input.AssistAttack.performed += OnAssistAttackKeyPressed;
-        input.AssistA.performed += OnAssistAttackKeyPressed;
-        input.AssistB.performed += OnAssistAttackKeyPressed;
-        input.AssistC.performed += OnAssistAttackKeyPressed;
+        input.AssistAttack.performed += OnExtraAttackKeyPressed;
+        input.AssistA.performed += ctx => OnAssistAttackKeyPressed(0);
+        input.AssistB.performed += ctx => OnAssistAttackKeyPressed(1);
+        input.AssistC.performed += ctx => OnAssistAttackKeyPressed(2);
     }
 
     public void OnDisconnected()
     {
         input.Disable();
 
-        input.AssistAttack.performed -= OnAssistAttackKeyPressed;
-        input.AssistA.performed -= OnAssistAttackKeyPressed;
-        input.AssistB.performed -= OnAssistAttackKeyPressed;
-        input.AssistC.performed -= OnAssistAttackKeyPressed;
+        input.AssistAttack.performed -= OnExtraAttackKeyPressed;
+        input.AssistA.performed -= ctx => OnAssistAttackKeyPressed(0);
+        input.AssistB.performed -= ctx => OnAssistAttackKeyPressed(1);
+        input.AssistC.performed -= ctx => OnAssistAttackKeyPressed(2);
     }
 
-    public void OnAssistAttackKeyPressed(InputAction.CallbackContext context)
+    public void OnExtraAttackKeyPressed(InputAction.CallbackContext context)
     {
-        string pressKey = context.action.name;
+        // 공격을 막아낸 캐릭터의 지원 공격
+        manager.OnAssisAttack();
+    }
 
-        if (pressKey.Equals(input.AssistAttack.name))
-        {
-            // 플레이어의 지원 공격
-            manager.OnAssisAttack(0);
-        }
-        else if (pressKey.Equals(input.AssistA.name))
-        {
-            manager.OnAssisAttack(1);
-        }
+    public void OnAssistAttackKeyPressed(int index)
+    {
+        // 지원 가능한 index번째 캐릭터에게 지원 호출
+        manager.OnAssisAttack(index);
     }
 }

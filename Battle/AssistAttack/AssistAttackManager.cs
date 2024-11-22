@@ -14,11 +14,13 @@ public class AssistAttackManager : MonoBehaviour
     private Entity target;
 
     // 지원 가능한 캐릭터 목록
+    private Entity defender;
     private List<Entity> assistMembers = new List<Entity>();
 
-    public void OnSelectExtraAttacker(Entity target)
+    public void OnSelectExtraAttacker(Entity target, Entity defender)
     {
         this.target = target;
+        this.defender = defender;
 
         // 시간 배율 조정동안 조작 금지
         ControlContext.Instance.KeyLock();
@@ -54,7 +56,10 @@ public class AssistAttackManager : MonoBehaviour
         foreach (Character chr in livingChrs)
         {
             // 경직된 상태일 경우 지원 X
-            if (chr.HasState(EntityState.Stun)) return;
+            if (chr.HasState(EntityState.Stun)) continue;
+
+            // 공격을 막아낸 본인은 지원 목록에 추가 X
+            if (chr.Equals(defender)) continue;
 
             // 해당 캐릭터의 다음 행동이 지원 가능 스킬 사용인 경우 나누기
 
@@ -62,9 +67,9 @@ public class AssistAttackManager : MonoBehaviour
         }
     }
 
-    public void OnAssisAttack(int index)
+    public void OnAssisAttack(int? index = null)
     {
-        if (assistMembers.Count <= index)
+        if (index.HasValue && assistMembers.Count <= index.Value)
         {
             // 지원 가능 맴버 수를 초과한 순서의 맴버 호출 시, 다시 선택
             return;
@@ -77,7 +82,7 @@ public class AssistAttackManager : MonoBehaviour
         Time.timeScale = 1.0f;
 
         // 지원 공격
-        Entity attacker = assistMembers[index];
+        Entity attacker = index.HasValue ? assistMembers[index.Value] : defender;
         BattleAction action = CurrentBattleData.Instance.Sequence.GetEntityAction(attacker);
 
         if (IsAssistableSkill(action, out SkillAction skillAction))

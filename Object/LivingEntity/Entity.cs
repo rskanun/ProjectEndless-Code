@@ -322,6 +322,9 @@ public abstract class Entity : MonoBehaviour
         {
             // 회피에 성공했다면, 데미지 무시
             State.Remove(EntityState.Dodge);
+
+            // 회피 모션 실행
+            OnActiveMotion("dodge");
             return;
         }
 
@@ -458,9 +461,6 @@ public abstract class Entity : MonoBehaviour
     public virtual void OnDodge()
     {
         State.Add(EntityState.Dodge);
-
-        // 회피 모션 실행
-        OnActiveMotion("dodge");
     }
 
     /***************************************************************

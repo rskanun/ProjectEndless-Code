@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -103,9 +104,10 @@ public class BattleController : MonoBehaviour, IController
             if (battleData.IsParryFrame)
             {
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
+                Entity defender = curAction.GetTargets()[0]; // 타겟 중 한 명이 대표로 패링
 
                 curAction.actor.OnParried();
-                battleData.Player.OnParrying(curAction.actor);
+                defender.OnParrying(curAction.actor);
             }
         }
     }
@@ -120,8 +122,12 @@ public class BattleController : MonoBehaviour, IController
 
             if (battleData.IsDodgeFrame)
             {
-                Debug.Log("Success!!");
-                battleData.Player.OnDodge();
+                BattleAction curAction = battleData.Sequence.GetTurnAction(0);
+                foreach (Entity target in curAction.GetTargets())
+                {
+                    // 현재 타겟이 된 모든 캐릭터들이 공격 회피
+                    target.OnDodge();
+                }
             }
         }
     }
