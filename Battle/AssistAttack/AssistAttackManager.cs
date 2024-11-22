@@ -64,6 +64,12 @@ public class AssistAttackManager : MonoBehaviour
 
     public void OnAssisAttack(int index)
     {
+        if (assistMembers.Count <= index)
+        {
+            // 지원 가능 맴버 수를 초과한 순서의 맴버 호출 시, 다시 선택
+            return;
+        }
+
         // 기존 컨트롤러로 다시 변경
         ControlContext.Instance.SetController(mainController);
 
@@ -72,17 +78,27 @@ public class AssistAttackManager : MonoBehaviour
 
         // 지원 공격
         Entity attacker = assistMembers[index];
-        BattleAction attackerAction = CurrentBattleData.Instance.Sequence.GetEntityAction(attacker);
+        BattleAction action = CurrentBattleData.Instance.Sequence.GetEntityAction(attacker);
 
-        if (attackerAction is SkillAction skillAction && skillAction.castSkill is AttackSkill skill)
+        if (IsAssistableSkill(action, out SkillAction skillAction))
         {
+            skillAction.SetTarget(new List<Entity> {target});
+
             // 지원 가능한 공격 스킬일 경우 앞당겨 사용
-            if (skill.IsAssistable) OnActionAssistSkill(skillAction);
+            OnActionAssistSkill(skillAction);
             return;
         }
 
         // 지원 가능한 스킬이 아닌 경우 지원 공격 사용
         attacker.OnAttack(target);
+    }
+
+    private bool IsAssistableSkill(BattleAction action, out SkillAction skillAction)
+    {
+        skillAction = action as SkillAction;
+
+        // 스킬을 사용하는 행동인지, 그렇다면 해당 스킬이 지원가능한지 여부 리턴
+        return skillAction?.castSkill is AttackSkill skill && skill.IsAssistable;
     }
 
     private void OnActionAssistSkill(SkillAction skillAction)
@@ -92,5 +108,8 @@ public class AssistAttackManager : MonoBehaviour
         // 본래 사용할 행동 대신 대기 모션 예약
         sequence.RemoveTurn(skillAction.actor);
         sequence.AddTurn(new WaitAction(skillAction.actor, 0f), 1);
+
+        // 지원 스킬 실행
+        skillAction.OnAction();
     }
 }

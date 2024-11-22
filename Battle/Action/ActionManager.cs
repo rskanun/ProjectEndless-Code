@@ -168,7 +168,7 @@ public class ActionManager : MonoBehaviour
         action.remainTurn = turn;
 
         // 선택한 데이터를 종합한 행동 실행
-        actor.OnSelectAction(action, index);
+        actor.OnSelectedAction(action, index);
     }
 
     /***************************************************************

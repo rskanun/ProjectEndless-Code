@@ -123,9 +123,6 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    // 회피 여부
-    private bool isDodge;
-
     // 전투 순서 데이터
     protected CurrentBattleData battleData { private set; get; }
     protected BattleSequence battleSeq { private set; get; }
@@ -178,13 +175,22 @@ public abstract class Entity : MonoBehaviour
     public void TakeTurn()
     {
         // 패링 상태 해제
+        // 임시적으로 턴이 시작될 때 흐트러진 상태를 제거하도록 했으나,
+        // 추후 흐트러진 상태로 만드는 스킬이 나올 수도 있으니 수정
         State.Remove(EntityState.Stagger);
 
+        if (battleData.IsInBattle == false)
+        {
+            // 전투가 끝났을 경우 행동을 하지 않고 종료
+            EndTurn();
+            return;
+        }
+
         // 행동 선택
-        OnSelectAction();
+        SelectAction();
     }
 
-    protected abstract void OnSelectAction();
+    protected abstract void SelectAction();
 
     public void EndTurn()
     {
@@ -192,7 +198,7 @@ public abstract class Entity : MonoBehaviour
         GameEventResource.Instance.EndTurnEvent.NotifyUpdate();
     }
 
-    public void OnSelectAction(BattleAction action, int? index = null)
+    public void OnSelectedAction(BattleAction action, int? index = null)
     {
         // 선택한 행동 예약
         if (index.HasValue) battleData.Sequence.AddTurn(action, index.Value);
@@ -312,10 +318,10 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnDamage(float damage, int attackerMP, float criticalChance)
     {
-        if (isDodge)
+        if (State.HasState(EntityState.Dodge))
         {
             // 회피에 성공했다면, 데미지 무시
-            isDodge = false;
+            State.Remove(EntityState.Dodge);
             return;
         }
 
@@ -451,7 +457,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnDodge()
     {
-        isDodge = true;
+        State.Add(EntityState.Dodge);
 
         // 회피 모션 실행
         OnActiveMotion("dodge");

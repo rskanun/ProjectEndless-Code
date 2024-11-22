@@ -76,22 +76,6 @@ public abstract class Monster : Entity
     * 해당 오브젝트의 턴 진행
     ***************************************************************/
 
-    protected override void OnSelectAction()
-    {
-        if (battleData.IsInBattle)
-        {
-            // AI에 따른 행동 처리
-            SelectAction();
-        }
-        else
-        {
-            // 전투가 끝났을 경우 행동을 하지 않고 종료
-            EndTurn();
-        }
-    }
-
-    protected abstract void SelectAction();
-
     protected void SelectSkill(Skill skill, Entity target, int? index = null)
     {
         List<Entity> targetList = new List<Entity>() { target };
@@ -108,7 +92,7 @@ public abstract class Monster : Entity
         action.remainTurn = skill.CostTurn;
         action.SetTarget(targets);
 
-        OnSelectAction(action, index);
+        OnSelectedAction(action, index);
     }
 
     protected virtual void SelectAttack(Entity target, int? index = null)
@@ -120,7 +104,7 @@ public abstract class Monster : Entity
         action.target = target;
         action.remainTurn = AttackTurn;
 
-        OnSelectAction(action);
+        OnSelectedAction(action);
     }
 
     private void SelectWait()
@@ -132,7 +116,7 @@ public abstract class Monster : Entity
         action.actor = this;
 
         Debug.Log($"{Name}: {action.remainTurn} Turn Waiting...");
-        OnSelectAction(action);
+        OnSelectedAction(action);
     }
 
     /***************************************************************

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
@@ -42,6 +44,13 @@ public class GameManager : MonoBehaviour
         controller.Init();
 
         StartGame();
+    }
+
+    private void Start()
+    {
+        // 총 스크립트 개수
+        string[] files = Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories);
+        Debug.Log("Total Scripts: " + files.Count());
     }
 
     private void Update()

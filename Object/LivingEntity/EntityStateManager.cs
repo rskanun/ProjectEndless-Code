@@ -6,6 +6,7 @@ public enum EntityState
 
     Stun,   // 행동 불가 상태
     Stagger,    // 행동이 흐트러진 상태 -> 무조건 치명타 + 공격 방어 X
+    Dodge,  // 공격 회피 상태
 }
 
 public class EntityStateManager

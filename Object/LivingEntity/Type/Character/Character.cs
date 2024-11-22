@@ -49,15 +49,8 @@ public class Character : Entity
     * 해당 오브젝트의 턴 진행
     ***************************************************************/
 
-    protected override void OnSelectAction()
+    protected override void SelectAction()
     {
-        if (battleData.IsInBattle == false)
-        {
-            // 전투가 끝났을 경우 행동을 하지 않고 종료
-            EndTurn();
-            return;
-        }
-
         // 행동 선택창 열기
         actionSelection.OnSelect(this);
     }

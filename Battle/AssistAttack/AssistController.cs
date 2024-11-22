@@ -42,5 +42,9 @@ public class AssistController : MonoBehaviour, IController
             // 플레이어의 지원 공격
             manager.OnAssisAttack(0);
         }
+        else if (pressKey.Equals(input.AssistA.name))
+        {
+            manager.OnAssisAttack(1);
+        }
     }
 }

@@ -6,9 +6,10 @@ public class Player : Character
 
     public override sealed float GetCriticalChance(Entity target)
     {
-        // 주인공의 경우 기교(DEX) 수치에 상관 없이
+        // 주인공의 경우 마력이 더 높으면,
         // 모든 공격이 크리티컬 값을 띄움
-        return 1.0f;
+        if (target.Stat.MP < Stat.MP) return 1.0f;
+        return base.GetCriticalChance(target);
     }
 
     protected override void OnParryAction()
