@@ -99,6 +99,9 @@ public class Character : Entity
 
     public override void OnParrying(Entity attacker)
     {
+        // 패링 모션 실행
+        OnActiveMotion("parrying");
+        
         // 플레이어가 패링에 성공했을 경우 추가타를 넣을 대상 선택
         assistManager.OnSelectExtraAttacker(attacker, this);
     }
