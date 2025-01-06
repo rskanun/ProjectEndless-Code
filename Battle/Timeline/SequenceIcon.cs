@@ -21,6 +21,9 @@ public class SequenceIcon : TimelineIcon
     {
         Action = action;
 
+        // 임시
+        name = $"{action.actor.Name} Timeline";
+
         // 해당 행동을 하는 행위자의 외형을 타임라인의 이미지로 사용
         GameObject actor = action.actor.gameObject;
         SpriteRenderer actorImg = actor.GetComponent<SpriteRenderer>();

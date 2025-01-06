@@ -18,9 +18,9 @@ public class AssistController : MonoBehaviour, IController
         input.Enable();
 
         input.AssistAttack.performed += OnExtraAttackKeyPressed;
-        input.AssistA.performed += ctx => OnAssistAttackKeyPressed(0);
-        input.AssistB.performed += ctx => OnAssistAttackKeyPressed(1);
-        input.AssistC.performed += ctx => OnAssistAttackKeyPressed(2);
+        input.AssistA.performed += OnAssistAKeyPressed;
+        input.AssistB.performed += OnAssistBKeyPressed;
+        input.AssistC.performed += OnAssistCKeyPressed;
     }
 
     public void OnDisconnected()
@@ -28,20 +28,29 @@ public class AssistController : MonoBehaviour, IController
         input.Disable();
 
         input.AssistAttack.performed -= OnExtraAttackKeyPressed;
-        input.AssistA.performed -= ctx => OnAssistAttackKeyPressed(0);
-        input.AssistB.performed -= ctx => OnAssistAttackKeyPressed(1);
-        input.AssistC.performed -= ctx => OnAssistAttackKeyPressed(2);
+        input.AssistA.performed -= OnAssistAKeyPressed;
+        input.AssistB.performed -= OnAssistBKeyPressed;
+        input.AssistC.performed -= OnAssistCKeyPressed;
     }
 
-    public void OnExtraAttackKeyPressed(InputAction.CallbackContext context)
+    private void OnExtraAttackKeyPressed(InputAction.CallbackContext context)
     {
         // 공격을 막아낸 캐릭터의 지원 공격
         manager.OnAssisAttack();
     }
 
-    public void OnAssistAttackKeyPressed(int index)
+    private void OnAssistAKeyPressed(InputAction.CallbackContext context)
     {
-        // 지원 가능한 index번째 캐릭터에게 지원 호출
-        manager.OnAssisAttack(index);
+        manager.OnAssisAttack(0);
+    }
+
+    private void OnAssistBKeyPressed(InputAction.CallbackContext context)
+    {
+        manager.OnAssisAttack(1);
+    }
+
+    private void OnAssistCKeyPressed(InputAction.CallbackContext context)
+    {
+        manager.OnAssisAttack(2);
     }
 }

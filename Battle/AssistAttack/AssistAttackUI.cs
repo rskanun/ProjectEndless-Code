@@ -7,7 +7,7 @@ public class AssistAttackUI : MonoBehaviour
 
     }
 
-    private void DeactiveTimer()
+    public void DeactiveTimer()
     {
 
     }

@@ -28,8 +28,8 @@ public class AssistAttackManager : MonoBehaviour
         // 주인공에게 포커싱을 맞춰 카메라 이동
 
         // 선택을 고르는 동안 시간 배율이 빠르게 느려짐
-        DOTween.To(() => Time.timeScale, t => Time.timeScale = t, 0.001f, 3f)
-            .SetEase(Ease.OutQuint)
+        DOTween.To(() => Time.timeScale, t => Time.timeScale = t, 0.05f, 0.8f)
+            .SetEase(Ease.InOutSine)
             .SetUpdate(true)
             .OnComplete(() => ActiveAssistSelection());
     }
@@ -75,8 +75,8 @@ public class AssistAttackManager : MonoBehaviour
             return;
         }
 
-        // 기존 컨트롤러로 다시 변경
-        ControlContext.Instance.SetController(mainController);
+        // 지원 UI 지우기
+        DeactiveAssistSelection();
 
         // 시간 배율 초기화
         Time.timeScale = 1.0f;
@@ -87,7 +87,7 @@ public class AssistAttackManager : MonoBehaviour
 
         if (IsAssistableSkill(action, out SkillAction skillAction))
         {
-            skillAction.SetTarget(new List<Entity> {target});
+            skillAction.SetTarget(new List<Entity> { target });
 
             // 지원 가능한 공격 스킬일 경우 앞당겨 사용
             OnActionAssistSkill(skillAction);
@@ -96,6 +96,26 @@ public class AssistAttackManager : MonoBehaviour
 
         // 지원 가능한 스킬이 아닌 경우 지원 공격 사용
         attacker.OnAttack(target);
+    }
+
+    private void DeactiveAssistSelection()
+    {
+        // 컨트롤러 변경
+        ControlContext.Instance.SetController(mainController);
+
+        // 타이머 종료
+        ui.DeactiveTimer();
+
+        // 플레이어 선택키 지우기
+        ui.SetActivePlayerSelectIcon(false);
+
+        // 지원가능한 캐릭터 목록 지우기기
+        DeactiveAssistableChr();
+    }
+
+    private void DeactiveAssistableChr()
+    {
+        // 지원가능한 캐릭터 목록 지우기기
     }
 
     private bool IsAssistableSkill(BattleAction action, out SkillAction skillAction)

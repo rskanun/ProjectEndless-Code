@@ -448,6 +448,7 @@ public abstract class Entity : MonoBehaviour
 
     private IEnumerator OnParryAction(Entity attacker)
     {
+        Debug.Log("Parrying");
         // 패링 모션 실행
         OnActiveMotion("parrying");
 

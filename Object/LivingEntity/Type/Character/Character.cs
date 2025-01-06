@@ -52,6 +52,7 @@ public class Character : Entity
 
     protected override void SelectAction()
     {
+        Debug.Log("Open Selection");
         // 행동 선택창 열기
         actionSelection.OnSelect(this);
     }
@@ -101,7 +102,7 @@ public class Character : Entity
     {
         // 패링 모션 실행
         OnActiveMotion("parrying");
-        
+
         // 플레이어가 패링에 성공했을 경우 추가타를 넣을 대상 선택
         assistManager.OnSelectExtraAttacker(attacker, this);
     }

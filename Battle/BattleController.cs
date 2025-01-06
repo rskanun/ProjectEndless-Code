@@ -108,6 +108,7 @@ public class BattleController : MonoBehaviour, IController
 
                 curAction.actor.OnParried();
                 defender.OnParrying(curAction.actor);
+                Debug.Log($"{defender.Name}/{curAction.actor.Name}");
             }
         }
     }
