@@ -25,7 +25,7 @@ public class TalkManager : MonoBehaviour
     * 대사를 읽어 그에 따른 인게임 이벤트 제어
     ************************************************************/
 
-    public void StartTalk(NPC npc)
+    public void StartTalk(Npc npc)
     {
         // 대화 처음 시작 시 해당되는 대화목록 가져오기
         List<Line> lines = npc.GetLines();

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -18,6 +19,21 @@ public class PlayerManager : MonoBehaviour
     [Header("이동속도")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
+
+    private void Awake()
+    {
+        // 현재 플레이어가 있는 구역을 카메라 이동 범위로 등록
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, new Vector2(0.01f, 0.01f), 0);
+        foreach (Collider2D collider in colliders)
+        {
+            Debug.Log(collider.name);
+            if (collider is TilemapCollider2D tilemap && collider.CompareTag("Area"))
+            {
+                MapManager.SetCurrentArea(tilemap);
+                break;
+            }
+        }
+    }
 
     /************************************************************
      * [이동]
@@ -95,7 +111,7 @@ public class PlayerManager : MonoBehaviour
      * 플레이어와의 상호작용 제어
      ************************************************************/
 
-    public void OnTalking(NPC npc)
+    public void OnTalking(Npc npc)
     {
         talkManager.StartTalk(npc);
     }

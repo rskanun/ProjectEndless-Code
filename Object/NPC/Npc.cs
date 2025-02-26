@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC : MonoBehaviour
+public class Npc : MonoBehaviour
 {
     [SerializeField]
     private NpcData npc;
 
     public int GetID()
     {
-        return npc.Id;
+        return npc.ID;
     }
 
     public List<Line> GetLines()

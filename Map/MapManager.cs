@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MapManager
 {
+    public static TilemapCollider2D CurrentArea { get; private set; }
     public static MapData FindMap(string id)
     {
         MapData[] mapDataArray = Resources.LoadAll<MapData>("Map");
@@ -22,5 +24,14 @@ public class MapManager
         MapData mapData = FindMap(id);
 
         LoadSceneManager.Instance.OnSceneClosed(mapData.SceneName);
+    }
+
+    public static void SetCurrentArea(TilemapCollider2D collider)
+    {
+        CurrentArea = collider;
+
+        // 구역 이동 알림
+        Debug.Log($"Change {collider.name}");
+        GameEventResource.Instance.AreaMoveEvent.NotifyUpdate();
     }
 }

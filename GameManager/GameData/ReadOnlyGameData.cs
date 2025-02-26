@@ -79,9 +79,6 @@ public class ReadOnlyGameData : ScriptableObject
     public MapData MapData
         => gameData.MapData;
 
-    public Tilemap FieldTilemap
-        => gameData.FieldTilemap;
-
     public Vector2 Position
         => gameData.Position;
 

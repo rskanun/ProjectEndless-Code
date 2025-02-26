@@ -7,7 +7,7 @@ public class InteractManager : MonoBehaviour
     [SerializeField] private TalkManager talkManager;
 
     // 상호작용이 가능한 오브젝트 목록
-    private List<NPC> npcs = new List<NPC>();
+    private List<Npc> npcs = new List<Npc>();
 
     public void RotateEyes(Vector2 direction)
     {
@@ -40,7 +40,7 @@ public class InteractManager : MonoBehaviour
         if (collision.CompareTag("NPC"))
         {
             // 해당 오브젝트의 정보를 가져오기
-            NPC npc = collision.gameObject.GetComponent<NPC>();
+            Npc npc = collision.gameObject.GetComponent<Npc>();
             npcs.Add(npc);
 
             Debug.Log($"keydown Space");
@@ -51,7 +51,7 @@ public class InteractManager : MonoBehaviour
     {
         if (collision.CompareTag("NPC"))
         {
-            NPC npc = collision.gameObject.GetComponent<NPC>();
+            Npc npc = collision.gameObject.GetComponent<Npc>();
 
             // 범위에서 벗어난 오브젝트가 현재 상호작용 가능한 오브젝트일 경우
             if (npcs.Contains(npc))

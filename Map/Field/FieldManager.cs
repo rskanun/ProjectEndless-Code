@@ -1,29 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[ExecuteAlways]
-[RequireComponent(typeof(Tilemap))]
+[RequireComponent(typeof(TilemapCollider2D))]
 public class FieldManager : MonoBehaviour
 {
     [Header("필드 정보")]
     [SerializeField]
     private BattleFieldData battleField;
-    private Tilemap tilemap;
-
-    [Header("게임 데이터")]
     [SerializeField]
-    private GameData gameData;
+    private TilemapCollider2D cameraArea;
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
-        tilemap = GetComponent<Tilemap>();
+        cameraArea = GetComponent<TilemapCollider2D>();
     }
+#endif
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            gameData.FieldTilemap = tilemap;
+            MapManager.SetCurrentArea(cameraArea);
         }
     }
 }

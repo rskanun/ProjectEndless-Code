@@ -50,6 +50,13 @@ public class GameEventResource : ScriptableObject
             return _instance;
         }
     }
+    [Header("필드 이벤트")]
+    [SerializeField]
+    private GameEvent _areaMoveEvent;
+    public GameEvent AreaMoveEvent
+    {
+        get { return _areaMoveEvent; }
+    }
 
     [Header("전투 이벤트")]
     [SerializeField]
