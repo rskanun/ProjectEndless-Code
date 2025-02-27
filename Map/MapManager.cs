@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class MapManager
 {
-    public static TilemapCollider2D CurrentArea { get; private set; }
+    public static PolygonCollider2D CurrentArea { get; private set; }
     public static MapData FindMap(string id)
     {
         MapData[] mapDataArray = Resources.LoadAll<MapData>("Map");
@@ -26,7 +26,7 @@ public class MapManager
         LoadSceneManager.Instance.OnSceneClosed(mapData.SceneName);
     }
 
-    public static void SetCurrentArea(TilemapCollider2D collider)
+    public static void SetCurrentArea(PolygonCollider2D collider)
     {
         CurrentArea = collider;
 

@@ -16,5 +16,6 @@ public class PlayerTrackerCamera : MonoBehaviour
     public void OnUpdateArea()
     {
         cinemachine.m_BoundingShape2D = MapManager.CurrentArea;
+        cinemachine.InvalidateCache();
     }
 }

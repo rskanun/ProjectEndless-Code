@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(TilemapCollider2D))]
-public class FieldManager : MonoBehaviour
+[RequireComponent(typeof(PolygonCollider2D))]
+public class AreaManager : MonoBehaviour
 {
-    [Header("필드 정보")]
+    [Header("구역 정보")]
     [SerializeField]
     private BattleFieldData battleField;
     [SerializeField]
-    private TilemapCollider2D cameraArea;
+    private PolygonCollider2D cameraArea;
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        cameraArea = GetComponent<TilemapCollider2D>();
+        cameraArea = GetComponent<PolygonCollider2D>();
     }
 #endif
 

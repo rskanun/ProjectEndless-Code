@@ -22,12 +22,15 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        BoxCollider2D mCollider = GetComponent<BoxCollider2D>();
+
         // 현재 플레이어가 있는 구역을 카메라 이동 범위로 등록
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, new Vector2(0.01f, 0.01f), 0);
+        Physics2D.SyncTransforms();
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(mCollider.bounds.center, mCollider.bounds.size, 0);
         foreach (Collider2D collider in colliders)
         {
             Debug.Log(collider.name);
-            if (collider is TilemapCollider2D tilemap && collider.CompareTag("Area"))
+            if (collider is PolygonCollider2D tilemap && collider.CompareTag("Area"))
             {
                 MapManager.SetCurrentArea(tilemap);
                 break;
