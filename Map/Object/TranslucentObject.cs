@@ -10,7 +10,6 @@ public class TranslucentObject : MonoBehaviour
 
     // 알파값 변화
     private float targetAlpha;
-    private float unit = 0.05f;
     private float delay = 0.05f;
 
 #if UNITY_EDITOR
@@ -24,7 +23,7 @@ public class TranslucentObject : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            targetAlpha = 0.5f;
+            targetAlpha = 0.2f;
 
             if (colorChange == null)
             {
@@ -51,6 +50,8 @@ public class TranslucentObject : MonoBehaviour
         while (tilemap.color.a != targetAlpha)
         {
             float a = tilemap.color.a;
+            float unit = Mathf.Min(0.05f, Mathf.Abs(targetAlpha - a));
+
             if (a > targetAlpha) SetAlpha(a - unit);
             else if (a < targetAlpha) SetAlpha(a + unit);
 

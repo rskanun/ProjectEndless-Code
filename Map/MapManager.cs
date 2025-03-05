@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class MapManager
 {
@@ -31,7 +30,6 @@ public class MapManager
         CurrentArea = collider;
 
         // 구역 이동 알림
-        Debug.Log($"Change {collider.name}");
         GameEventResource.Instance.AreaMoveEvent.NotifyUpdate();
     }
 }
