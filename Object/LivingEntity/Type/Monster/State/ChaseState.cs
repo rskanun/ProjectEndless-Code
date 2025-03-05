@@ -11,57 +11,51 @@ public class ChaseState : IMonsterState
         this.monster = monster;
     }
 
-    public void OnEnterState()
-    {
-        lastPlayerPos = ReadOnlyGameData.Instance.Position;
-    }
-
     public void OnAction(FSM fsm)
     {
+        // 플레이어 좌표 갱신
+        UpdatePlayerPos();
+
         // 플레이어 추적
         ChasePlayer(fsm);
     }
 
     private void ChasePlayer(FSM fsm)
     {
-        Vector3 playerPos = GetPlayerPos();
-        if (playerPos != monster.transform.position)
+        // 마지막으로 탐지된 플레이어의 좌표에 도달한 경우
+        if (lastPlayerPos == monster.transform.position)
         {
-            float distance = ((Vector2)(playerPos - monster.transform.position)).magnitude;
-            float attackDistance = monster.AttackDistance;
+            // 탐지 상태로 전환
+            // #임시로 일반 상태로 전환
+            fsm.SetState(new IdleState(monster));
+            return;
+        }
 
-            if (distance <= attackDistance)
-            {
-                // 공격 범위 안에 있으면 공격
-                fsm.SetState(new AttackState(monster));
-            }
-            else
-            {
-                // 공격 범위 밖이면 플레이어 추적
-                monster.MoveTo(playerPos);
-            }
+        // 공격 가능한 거리인지 계산
+        float distance = Vector2.Distance(lastPlayerPos, monster.transform.position);
+        if (distance <= monster.AttackDistance)
+        {
+            // 공격 범위 안에 있으면 공격
+            fsm.SetState(new AttackState(monster));
         }
         else
         {
-            // 플레이어가 범위 밖으로 벗어나면 탐지 상태로 전환
-            fsm.SetState(new IdleState(monster));
+            // 공격 범위 밖이면 계속해서 플레이어 추적
+            monster.MoveTo(lastPlayerPos);
         }
     }
 
-    private Vector3 GetPlayerPos()
+    private void UpdatePlayerPos()
     {
         // 플레이어 탐지
-        Vector3 playerPos = monster.DetectPlayer();
-
-        if (playerPos != monster.transform.position)
+        if (monster.GetPlayerPos() is Vector3 playerPos)
         {
-            // 플레이어가 탐지 범위 안이면 리턴
+            // 플레이어가 탐지 범위 안이면 새 좌표 갱신
             lastPlayerPos = playerPos;
-            return playerPos;
         }
-
-        return lastPlayerPos;
     }
+
+    public void OnEnterState() { }
 
     public void OnTakeDamage(FSM fsm) { }
 }

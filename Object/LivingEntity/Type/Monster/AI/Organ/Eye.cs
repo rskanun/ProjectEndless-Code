@@ -3,13 +3,13 @@
 public class Eye : DetectionOrgan
 {
     [Header("시야각")]
-    [SerializeField]
+    [SerializeField, Range(0, 360)]
     protected float viewAngle;
 
     [Header("탐지 거리")]
     [SerializeField] protected float detectDistance;
 
-    public override Vector3 DetectPlayer()
+    public override Vector3? DetectPlayer()
     {
         ReadOnlyGameData playerData = ReadOnlyGameData.Instance;
 
@@ -24,8 +24,7 @@ public class Eye : DetectionOrgan
             return playerData.Position;
         }
 
-        // 범위 안에 플레이어가 없으면 본인 위치 리턴
-        return transform.position;
+        return null;
     }
 
     private bool PlayerInAngle(Vector2 playerVec)

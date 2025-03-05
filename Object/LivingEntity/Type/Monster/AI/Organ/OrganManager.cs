@@ -4,29 +4,35 @@ using UnityEngine;
 public class OrganManager : MonoBehaviour
 {
     // 해당 몬스터의 탐지 기관 목록
+    [ReadOnly, SerializeField]
     private List<DetectionOrgan> organs;
 
-    private void Awake()
+#if UNITY_EDITOR
+    [ContextMenu("Reload Organs")]
+    private void OnValidate()
     {
-        organs = new List<DetectionOrgan>();
+        if (organs == null)
+            organs = new List<DetectionOrgan>();
 
-        // Init organs in components
-        DetectionOrgan[] findOrgans = gameObject.GetComponents<DetectionOrgan>();
-        organs.AddRange(findOrgans);
+        DetectionOrgan[] finds = gameObject.GetComponents<DetectionOrgan>();
+        organs.AddRange(finds);
     }
+#endif
 
-    public Vector3 DetectPlayer()
+    public Vector3? DetectPlayer()
     {
+        // 모든 신체기관에서 플레이어 탐지
         foreach (DetectionOrgan organ in organs)
         {
-            Vector3 vec = organ.DetectPlayer();
-            if ((Vector2)vec == ReadOnlyGameData.Instance.Position)
+            // 플레이어 위치 탐색에 성공했다면 좌표 보내기
+            if (organ.DetectPlayer() is Vector3 vec)
             {
                 return vec;
             }
         }
 
-        return transform.position;
+        // 찾지 못했다면 빈 값 리턴
+        return null;
     }
 
     public void RotateOrgans(Vector2 vec)

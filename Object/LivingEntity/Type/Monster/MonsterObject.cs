@@ -1,28 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 몬스터 AI = 성향 + 탐지 기관 + 성격 + 개체 특성
-
-// 성향: 플레이어와 대면 했을 때의 행동
-public enum PropensityType
-{
-    Friendly,   // 플레이어에게 이로운 영향을 주지만, 피해를 입을 시 적대적으로 변함
-    Neutral,    // 플레이어에게 아무런 영향을 끼치지 않으나, 피해를 입을 시 적대적으로 변함
-    Hostile     // 플레이어에게 해로운 영향을 끼침
-}
-// 개체 특성: 다른 개체들과의 행동
-public enum QualityType
-{
-    Independent,    // 같은 개체에 영향을 받지 않음
-    Social,         // 동일한 개체끼리 다니며, 한 마리라도 적대적으로 변하면 주변의 동일한 개체들도 적대적으로 변함
-    Protective      // 적대적으로 변할 시 주변에 있는 모든 개체들도 적대적으로 변함
-}
-
 public class MonsterObject : MonoBehaviour
 {
-    [Header("몬스터 성향")]
-    [SerializeField] private PropensityType propensityType;
-
     [Header("몬스터 행동 정보")]
     // 이동 정보
     [SerializeField] private float moveSpeed;
@@ -86,7 +66,7 @@ public class MonsterObject : MonoBehaviour
     * 탐지 기관을 통한 플레이어 탐지
     ***************************************************************/
 
-    public Vector3 DetectPlayer()
+    public Vector3? GetPlayerPos()
     {
         return organManager.DetectPlayer();
     }
@@ -108,20 +88,25 @@ public class MonsterObject : MonoBehaviour
     * 몬스터 이동에 따른 위치 및 애니메이션 변화 처리
     ***************************************************************/
 
-    public void MoveTo(Vector2 movePoint)
+    public void MoveTo(Vector2 target)
     {
-        // movePoint를 향해 이동
         float speed = moveSpeed * Time.deltaTime;
 
-        transform.position = Vector2.MoveTowards(transform.position, movePoint, speed);
+        // 현재 위치에서 움직일 위치와 목표까지의 거리 계산
+        Vector2 movePoint = Vector2.MoveTowards(transform.position, target, speed);
+        float cur2Move = Vector2.Distance(transform.position, movePoint); // 현재 좌표에서 움직인 뒤까지의 
+        float cur2Target = Vector2.Distance(transform.position, target); // 현재 좌표에서 목표까지의 거리
+
+        // 현재 위치에서 목표까지 갈 수 있다면 목표로 이동
+        transform.position = (cur2Move > cur2Target) ? target : movePoint;
 
         // 이동 방향으로 몸 회전
         RotateTo(movePoint);
     }
 
-    public void RotateTo(Vector2 rotatePoint)
+    public void RotateTo(Vector2 target)
     {
-        Vector2 rotateVec = (rotatePoint - (Vector2)transform.position).normalized;
+        Vector2 rotateVec = (target - (Vector2)transform.position).normalized;
 
         // 탐지 기관 회전
         organManager.RotateOrgans(rotateVec);

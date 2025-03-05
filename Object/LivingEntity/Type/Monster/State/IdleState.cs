@@ -16,20 +16,23 @@ public class IdleState : IMonsterState
 
     public void OnEnterState()
     {
-        // 첫 목표 설정
+        // 첫 이동 목표지 설정
         targetPos = monster.MovePoints[pointIndex++];
     }
 
     public void OnAction(FSM fsm)
     {
+        // 주위 플레이어가 있는 지 탐지
         OnDetected(fsm);
-        OnMove();
+
+        // 다음 포인트까지 이동 후 딜레이 가지기
+        if (thinkDelay <= 0) OnMove();
+        else OnPassedDelay();
     }
 
     private void OnDetected(FSM fsm)
     {
-        Vector3 playerPos = monster.DetectPlayer();
-        if (playerPos != monster.transform.position)
+        if (monster.GetPlayerPos() != null)
         {
             // 탐지에 성공하면 플레이어 추적
             fsm.SetState(new ChaseState(monster));
@@ -38,29 +41,27 @@ public class IdleState : IMonsterState
 
     private void OnMove()
     {
-        if (thinkDelay <= 0)
-        {
-            // targetPos 까지 움직임
-            monster.MoveTo(targetPos);
+        // targetPos 까지 움직임
+        monster.MoveTo(targetPos);
 
-            // 목표(+오차) 도달 확인
-            if (Vector2.Distance(targetPos, monster.transform.position) <= 0.5f)
+        // 목표 도달 확인
+        if (targetPos == (Vector2)monster.transform.position)
+        {
+            // 다음 포인트 설정
+            targetPos = monster.MovePoints[pointIndex++];
+            if (pointIndex >= monster.MovePoints.Count)
             {
-                // 다음 포인트 설정
-                targetPos = monster.MovePoints[pointIndex++];
-                if (pointIndex >= monster.MovePoints.Count)
-                {
-                    pointIndex = 0;
-                }
-
-                // 다음 행동까지 딜레이
-                thinkDelay = Random.Range(1, 5);
+                pointIndex = 0;
             }
+
+            // 다음 행동까지 딜레이
+            thinkDelay = Random.Range(1, 5);
         }
-        else
-        {
-            thinkDelay -= Time.deltaTime;
-        }
+    }
+
+    private void OnPassedDelay()
+    {
+        thinkDelay -= Time.deltaTime;
     }
 
     public void OnTakeDamage(FSM fsm) { }
