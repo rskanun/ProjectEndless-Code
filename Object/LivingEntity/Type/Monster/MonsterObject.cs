@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class MonsterObject : MonoBehaviour
 {
+    [Header("참조 스크립트")]
+    [SerializeField] private OrganManager organManager;
+
     [Header("몬스터 행동 정보")]
     // 이동 정보
     [SerializeField] private float moveSpeed;
@@ -25,9 +28,6 @@ public class MonsterObject : MonoBehaviour
     {
         get { return _attackCooldown; }
     }
-
-    [Header("참조 스크립트")]
-    [SerializeField] private OrganManager organManager;
 
     // 몬스터 상태 정보
     private FSM fsm = new FSM();

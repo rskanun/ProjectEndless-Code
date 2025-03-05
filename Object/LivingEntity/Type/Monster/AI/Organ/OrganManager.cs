@@ -11,8 +11,7 @@ public class OrganManager : MonoBehaviour
     [ContextMenu("Reload Organs")]
     private void OnValidate()
     {
-        if (organs == null)
-            organs = new List<DetectionOrgan>();
+        organs.Clear();
 
         DetectionOrgan[] finds = gameObject.GetComponents<DetectionOrgan>();
         organs.AddRange(finds);

@@ -12,6 +12,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private InteractManager interactManager;
     [SerializeField] private TalkManager talkManager;
 
+    [Header("게임 데이터")]
+    [SerializeField] private GameData gameData;
+
     [Header("플레이어 구성 요소")]
     [SerializeField] private Rigidbody2D rigid;
     [SerializeField] private Animator playerAnimator;
@@ -88,24 +91,25 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         // 걷기 체크
-        CheckingWalk(direction);
+        isRunning = IsCanRunning(direction);
 
+        // 현재 플레이어가 누른 방향으로 이동
         float speed = isRunning ? runSpeed : moveSpeed;
         rigid.velocity = direction.normalized * speed * Time.deltaTime;
+
+        // 플레이어 위치 데이터 갱신
+        gameData.Position = transform.position;
     }
 
-    private void CheckingWalk(Vector2 moveVec)
+    private bool IsCanRunning(Vector2 moveVec)
     {
         float absX = Mathf.Abs(moveVec.x);
         float absY = Mathf.Abs(moveVec.y);
 
         bool isWalkAxis = absX <= 0.5f && absY <= 0.5f;
 
-        // 달리기 키가 눌려져 있지 않은 상태에서 조이스틱 기울기가 걷는 정도일 경우 달리기 종료
-        if (!isRunKeyPressed && isWalkAxis)
-        {
-            isRunning = false;
-        }
+        // 달리기 키가 눌러져 있거나 조이스틱 기울기가 뛰는 정도일 경우 뛰는 걸로 판정
+        return isRunKeyPressed || !isWalkAxis;
     }
 
     /************************************************************
