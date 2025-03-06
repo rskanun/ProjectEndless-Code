@@ -6,6 +6,9 @@ public class MonsterObject : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private OrganManager organManager;
 
+    [Header("구성 요소")]
+    [ReadOnly, SerializeField] private Animator anim;
+
     [Header("몬스터 행동 정보")]
     // 이동 정보
     [SerializeField] private float moveSpeed;
@@ -14,6 +17,8 @@ public class MonsterObject : MonoBehaviour
     [SerializeField]
     private List<Vector2> movePoints;
     public List<Vector2> MovePoints { get { return movePoints; } }
+    private bool isStop = true;
+    private Vector3 prevPos;
 
     // 공격 정보
     [SerializeField]
@@ -32,6 +37,15 @@ public class MonsterObject : MonoBehaviour
     // 몬스터 상태 정보
     private FSM fsm = new FSM();
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        anim = GetComponent<Animator>();
+
+        prevPos = transform.position;
+    }
+#endif
+
     private void OnEnable()
     {
         // idle 상태 초기화
@@ -41,6 +55,7 @@ public class MonsterObject : MonoBehaviour
     private void FixedUpdate()
     {
         fsm.OnAction();
+        CheckToStop();
     }
 
     private void OnDrawGizmos()
@@ -97,8 +112,14 @@ public class MonsterObject : MonoBehaviour
         float cur2Move = Vector2.Distance(transform.position, movePoint); // 현재 좌표에서 움직인 뒤까지의 
         float cur2Target = Vector2.Distance(transform.position, target); // 현재 좌표에서 목표까지의 거리
 
+        movePoint = (cur2Move > cur2Target) ? target : movePoint;
+
+        // 움직임 애니메이션 제어
+        Vector2 dir = movePoint - (Vector2)transform.position;
+        SetMoveAnim(dir.normalized);
+
         // 현재 위치에서 목표까지 갈 수 있다면 목표로 이동
-        transform.position = (cur2Move > cur2Target) ? target : movePoint;
+        transform.position = movePoint;
 
         // 이동 방향으로 몸 회전
         RotateTo(movePoint);
@@ -110,5 +131,34 @@ public class MonsterObject : MonoBehaviour
 
         // 탐지 기관 회전
         organManager.RotateOrgans(rotateVec);
+    }
+
+    private void SetMoveAnim(Vector2 direction)
+    {
+        int h = direction.x > 0 ? Mathf.CeilToInt(direction.x) : Mathf.FloorToInt(direction.x);
+        int v = direction.y > 0 ? Mathf.CeilToInt(direction.y) : Mathf.FloorToInt(direction.y);
+
+        if (h == 0 || v == 0)
+        {
+            Debug.Log($"{direction} => {h}, {v}");
+            anim.SetInteger("axisH", h);
+            anim.SetInteger("axisV", v);
+        }
+    }
+
+    private void CheckToStop()
+    {
+        bool isMoved = prevPos != transform.position;
+        if (isStop != !isMoved)
+        {
+            isStop = !isMoved;
+            if (isStop)
+            {
+                // 이동을 멈춘 경우 정지 애니메이션 실행
+                SetMoveAnim(Vector2.zero);
+            }
+        }
+
+        prevPos = transform.position;
     }
 }

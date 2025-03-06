@@ -16,12 +16,20 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameData gameData;
 
     [Header("플레이어 구성 요소")]
-    [SerializeField] private Rigidbody2D rigid;
-    [SerializeField] private Animator playerAnimator;
+    [ReadOnly, SerializeField] private Rigidbody2D rigid;
+    [ReadOnly, SerializeField] private Animator playerAnimator;
 
     [Header("이동속도")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        rigid = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<Animator>();
+    }
+#endif
 
     private void Awake()
     {
@@ -32,7 +40,6 @@ public class PlayerManager : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapBoxAll(mCollider.bounds.center, mCollider.bounds.size, 0);
         foreach (Collider2D collider in colliders)
         {
-            Debug.Log(collider.name);
             if (collider is PolygonCollider2D tilemap && collider.CompareTag("Area"))
             {
                 MapManager.SetCurrentArea(tilemap);
@@ -82,6 +89,7 @@ public class PlayerManager : MonoBehaviour
 
     private void SetSightDirection(Vector2 direction)
     {
+        // 좌우 또는 앞뒤만 입력받은 경우 시야 돌리기
         if (direction.x == 0 ^ direction.y == 0)
         {
             interactManager.RotateEyes(direction);
