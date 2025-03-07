@@ -1,4 +1,6 @@
-﻿public class FSM
+﻿using UnityEngine;
+
+public class FSM
 {
     // 현재 몬스터 상태
     private IMonsterState curState;

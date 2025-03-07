@@ -22,18 +22,12 @@ public class ChaseState : IMonsterState
 
     private void ChasePlayer(FSM fsm)
     {
-        // 마지막으로 탐지된 플레이어의 좌표에 도달한 경우
-        if (lastPlayerPos == monster.transform.position)
-        {
-            // 탐지 상태로 전환
-            // #임시로 일반 상태로 전환
-            fsm.SetState(new IdleState(monster));
-            return;
-        }
+        bool isMiss = (Vector2)lastPlayerPos != ReadOnlyGameData.Instance.Position;
+        bool isArrive = monster.transform.position == lastPlayerPos;
 
         // 공격 가능한 거리인지 계산
         float distance = Vector2.Distance(lastPlayerPos, monster.transform.position);
-        if (distance <= monster.AttackDistance)
+        if (!isMiss && distance <= monster.AttackDistance)
         {
             // 공격 범위 안에 있으면 공격
             fsm.SetState(new AttackState(monster));
@@ -42,6 +36,12 @@ public class ChaseState : IMonsterState
         {
             // 공격 범위 밖이면 계속해서 플레이어 추적
             monster.MoveTo(lastPlayerPos);
+            if (isArrive)
+            {
+                // 마지막으로 탐지된 플레이어의 좌표에 도달한 경우 탐지 상태로 전환
+                // #임시로 일반 상태로 전환
+                fsm.SetState(new IdleState(monster));
+            }
         }
     }
 

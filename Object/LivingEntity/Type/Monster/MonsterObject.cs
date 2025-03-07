@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +18,16 @@ public class MonsterObject : MonoBehaviour
     [SerializeField]
     private List<Vector2> movePoints;
     public List<Vector2> MovePoints { get { return movePoints; } }
-    private bool isStop = true;
+    private bool _isMove;
+    public bool IsMove
+    {
+        get { return _isMove; }
+        set
+        {
+            _isMove = value;
+            anim.SetBool("IsMove", value);
+        }
+    }
     private Vector3 prevPos;
 
     // 공격 정보
@@ -27,11 +37,12 @@ public class MonsterObject : MonoBehaviour
     {
         get { return _attackDistance; }
     }
-    [SerializeField]
-    private float _attackCooldown;
-    public float AttackCooldown
+    [ReadOnly, SerializeField]
+    private bool _isAttacked;
+    public bool IsAttacked
     {
-        get { return _attackCooldown; }
+        private set { _isAttacked = value; }
+        get { return _isAttacked; }
     }
 
     // 몬스터 상태 정보
@@ -55,7 +66,6 @@ public class MonsterObject : MonoBehaviour
     private void FixedUpdate()
     {
         fsm.OnAction();
-        CheckToStop();
     }
 
     private void OnDrawGizmos()
@@ -94,7 +104,14 @@ public class MonsterObject : MonoBehaviour
 
     public virtual void OnAttack()
     {
-        // 전투 돌입
+        // 공격 모션 실행
+        IsAttacked = true;
+        anim.SetTrigger("Attack");
+    }
+
+    public void OnEndMotion()
+    {
+        IsAttacked = false;
     }
 
     /***************************************************************
@@ -112,53 +129,36 @@ public class MonsterObject : MonoBehaviour
         float cur2Move = Vector2.Distance(transform.position, movePoint); // 현재 좌표에서 움직인 뒤까지의 
         float cur2Target = Vector2.Distance(transform.position, target); // 현재 좌표에서 목표까지의 거리
 
+        // 현재 위치에서 목표까지 갈 수 있다면 이동 목표를 목적지로 설정
         movePoint = (cur2Move > cur2Target) ? target : movePoint;
 
-        // 움직임 애니메이션 제어
-        Vector2 dir = movePoint - (Vector2)transform.position;
-        SetMoveAnim(dir.normalized);
-
-        // 현재 위치에서 목표까지 갈 수 있다면 목표로 이동
-        transform.position = movePoint;
-
-        // 이동 방향으로 몸 회전
+        // 이동 방향으로 회전
         RotateTo(movePoint);
+
+        // 목표로 이동
+        transform.position = movePoint;
     }
 
     public void RotateTo(Vector2 target)
     {
-        Vector2 rotateVec = (target - (Vector2)transform.position).normalized;
+        Vector2 dir = (target - (Vector2)transform.position).normalized;
 
         // 탐지 기관 회전
-        organManager.RotateOrgans(rotateVec);
+        organManager.RotateOrgans(dir);
+
+        // 방향에 따른 애니메이션 변경
+        SetMoveAnim(dir);
     }
 
-    private void SetMoveAnim(Vector2 direction)
+    private void SetMoveAnim(Vector2 dir)
     {
-        int h = direction.x > 0 ? Mathf.CeilToInt(direction.x) : Mathf.FloorToInt(direction.x);
-        int v = direction.y > 0 ? Mathf.CeilToInt(direction.y) : Mathf.FloorToInt(direction.y);
+        if (Mathf.Abs(dir.x) < Mathf.Abs(dir.y)) dir.x = 0;
+        else dir.y = 0;
 
-        if (h == 0 || v == 0)
-        {
-            Debug.Log($"{direction} => {h}, {v}");
-            anim.SetInteger("axisH", h);
-            anim.SetInteger("axisV", v);
-        }
-    }
+        int h = Mathf.RoundToInt(dir.x + 0.5f * Mathf.Sign(dir.x));
+        int v = Mathf.RoundToInt(dir.y + 0.5f * Mathf.Sign(dir.y));
 
-    private void CheckToStop()
-    {
-        bool isMoved = prevPos != transform.position;
-        if (isStop != !isMoved)
-        {
-            isStop = !isMoved;
-            if (isStop)
-            {
-                // 이동을 멈춘 경우 정지 애니메이션 실행
-                SetMoveAnim(Vector2.zero);
-            }
-        }
-
-        prevPos = transform.position;
+        anim.SetInteger("axisH", h);
+        anim.SetInteger("axisV", v);
     }
 }
