@@ -8,6 +8,10 @@ public class AttackState : IMonsterState
     {
         this.monster = monster;
     }
+    public void OnEnterState()
+    {
+        monster.IsMove = false;
+    }
 
     public void OnAction(FSM fsm)
     {
@@ -37,6 +41,5 @@ public class AttackState : IMonsterState
         return distance <= monster.AttackDistance;
     }
 
-    public void OnEnterState() { }
     public void OnTakeDamage(FSM fsm) { }
 }

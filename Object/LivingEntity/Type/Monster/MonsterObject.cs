@@ -66,6 +66,19 @@ public class MonsterObject : MonoBehaviour
     private void FixedUpdate()
     {
         fsm.OnAction();
+        CheckToStop();
+    }
+
+    private void CheckToStop()
+    {
+        if (IsMove && prevPos == transform.position)
+        {
+            // 현재 몬스터가 움직이지 않는 상태인지 확인
+            IsMove = false;
+        }
+
+        // 이전 좌표 업데이트
+        prevPos = transform.position;
     }
 
     private void OnDrawGizmos()
@@ -136,6 +149,7 @@ public class MonsterObject : MonoBehaviour
         RotateTo(movePoint);
 
         // 목표로 이동
+        IsMove = true;
         transform.position = movePoint;
     }
 
