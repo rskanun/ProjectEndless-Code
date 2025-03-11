@@ -1,7 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AttackManager))]
 public class MonsterObject : MonoBehaviour
 {
     [Header("참조 스크립트")]
@@ -31,6 +32,7 @@ public class MonsterObject : MonoBehaviour
     private Vector3 prevPos;
 
     // 공격 정보
+    private AttackManager atkManager;
     [SerializeField]
     private float _attackDistance;
     public float AttackDistance
@@ -52,6 +54,7 @@ public class MonsterObject : MonoBehaviour
     private void OnValidate()
     {
         anim = GetComponent<Animator>();
+        atkManager = GetComponent<AttackManager>();
 
         prevPos = transform.position;
     }
@@ -110,7 +113,7 @@ public class MonsterObject : MonoBehaviour
     }
 
     /***************************************************************
-    * [ 몬스터 상태 처리 ]
+    * [ 공격 ]
     * 
     * 몬스터의 공격 처리
     ***************************************************************/
@@ -125,6 +128,14 @@ public class MonsterObject : MonoBehaviour
     public void OnEndMotion()
     {
         IsAttacked = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (IsAttacked && collision.CompareTag("Player"))
+        {
+            // 전투 돌입
+        }
     }
 
     /***************************************************************

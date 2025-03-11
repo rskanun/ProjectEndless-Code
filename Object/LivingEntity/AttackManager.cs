@@ -1,32 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PolygonCollider2D))]
 public class AttackManager : MonoBehaviour
 {
-    [Header("공격 범위")]
-    [SerializeField] private AttackArea downArea;
-    [SerializeField] private AttackArea leftArea;
-    [SerializeField] private AttackArea upArea;
-    [SerializeField] private AttackArea rightArea;
-
-    private BoxCollider2D collider;
+    private PolygonCollider2D atkCollider;
+    private SpriteRenderer spriteRenderer;
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        collider = GetComponent<BoxCollider2D>();
+        atkCollider = GetComponent<PolygonCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 #endif
 
-    public void SetRotate(Vector2 dir)
+    public void UpdateAttackCollider()
     {
-        여기
-    }
+        // 현재 프레임의 공격 범위(콜라이더) 가져오기
+        List<Vector2> shapes = new List<Vector2>();
+        spriteRenderer.sprite.GetPhysicsShape(0, shapes);
 
-    [System.Serializable]
-    private class AttackArea
-    {
-        public Vector2 pos;
-        public Vector2 size;
+        // 해당 콜라이더를 이에 맞게 변형
+        atkCollider.SetPath(0, shapes);
     }
 }
