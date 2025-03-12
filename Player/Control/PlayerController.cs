@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour, IController
         input.Movement.canceled += OnMoveKeyPressed;
         input.Running.performed += OnRunKeyPressed;
         input.Running.canceled += OnRunKeyPressed;
-        input.Interact.performed += OnTalkKeyPressed;
         input.Menu.performed += OnMenuKeyPressed;
     }
 
@@ -48,7 +47,6 @@ public class PlayerController : MonoBehaviour, IController
         input.Movement.canceled -= OnMoveKeyPressed;
         input.Running.performed -= OnRunKeyPressed;
         input.Running.canceled -= OnRunKeyPressed;
-        input.Interact.performed -= OnTalkKeyPressed;
         input.Menu.performed -= OnMenuKeyPressed;
     }
 
@@ -70,17 +68,6 @@ public class PlayerController : MonoBehaviour, IController
     private void OnRunKeyPressed(InputAction.CallbackContext context)
     {
         player.SetRunning(input.Running.WasPressedThisFrame());
-    }
-
-    /************************************************************
-    * [상호작용 키]
-    * 
-    * 바라보는 대상과 상호작용
-    ************************************************************/
-
-    private void OnTalkKeyPressed(InputAction.CallbackContext context)
-    {
-        interactManager.OnInteract();
     }
 
     /************************************************************

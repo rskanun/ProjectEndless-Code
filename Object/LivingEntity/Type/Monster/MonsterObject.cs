@@ -135,6 +135,7 @@ public class MonsterObject : MonoBehaviour
         if (IsAttacked && collision.CompareTag("Player"))
         {
             // 전투 돌입
+
         }
     }
 

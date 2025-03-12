@@ -8,7 +8,6 @@ public class TalkManager : MonoBehaviour
     [SerializeField] private TalkController controller;
     [SerializeField] private TextManager textManager;
     [SerializeField] private SelectManager selectManager;
-    [SerializeField] private EventManager eventManager;
 
     [Space]
     // 현재 라인 진행 상황
@@ -171,7 +170,8 @@ public class TalkManager : MonoBehaviour
 
     private void ActiveEvent(EventLine line)
     {
+        // 이벤트 일시 사용 중지
         string command = line.Command;
-        eventManager.GetCommandEvent(command);
+        // eventManager.GetCommandEvent(command);
     }
 }

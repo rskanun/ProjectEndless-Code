@@ -3,11 +3,27 @@ using UnityEngine;
 
 public class InteractManager : MonoBehaviour
 {
-    [Header("참조 스크립트")]
-    [SerializeField] private TalkManager talkManager;
-
     // 상호작용이 가능한 오브젝트 목록
     private List<Npc> npcs = new List<Npc>();
+
+    private void OnEnable()
+    {
+        // 다른 씬의 스크립트에서 상호작용 가능 오브젝트를 가져오기 위해
+        // 해당 매니져를 이어줄 브릿지에 등록
+        InteractionBridge.Instance.RegisterManager(this);
+    }
+
+    private void OnDisable()
+    {
+        // 해당 스크립트가 비활성화되면
+        // 일시적으로 연결 끊기
+        InteractionBridge.Instance.RemoveManager();
+    }
+
+    public List<Npc> GetInteractableObjects()
+    {
+        return npcs;
+    }
 
     public void RotateEyes(Vector2 direction)
     {
@@ -20,18 +36,6 @@ public class InteractManager : MonoBehaviour
         // 해당 방향으로 시야각 돌리기
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90.0f;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-    }
-
-    public void OnInteract()
-    {
-        if (npcs.Count <= 0)
-        {
-            // 상호작용 할 오브젝트가 없다면 무시
-            return;
-        }
-
-        // 가장 처음 접근한 오브젝트와 상호작용
-        talkManager.StartTalk(npcs[0]);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

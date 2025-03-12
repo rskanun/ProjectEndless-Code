@@ -9,7 +9,6 @@ public class PlayerManager : MonoBehaviour
 
     [Header("참조 스크립트")]
     [SerializeField] private InteractManager interactManager;
-    [SerializeField] private TalkManager talkManager;
 
     [Header("게임 데이터")]
     [SerializeField] private GameData gameData;
@@ -117,16 +116,5 @@ public class PlayerManager : MonoBehaviour
 
         // 달리기 키가 눌러져 있거나 조이스틱 기울기가 뛰는 정도일 경우 뛰는 걸로 판정
         return isRunKeyPressed || !isWalkAxis;
-    }
-
-    /************************************************************
-     * [상호작용]
-     * 
-     * 플레이어와의 상호작용 제어
-     ************************************************************/
-
-    public void OnTalking(Npc npc)
-    {
-        talkManager.StartTalk(npc);
     }
 }
