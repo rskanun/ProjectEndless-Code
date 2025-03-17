@@ -5,13 +5,13 @@ public class MenuManager : MonoBehaviour
 {
     [Header("참조 스크립트")]
     [SerializeField] private MenuUI ui;
-    [SerializeField] private MenuController menuController;
 
     private ControlContext control;
     private PopupManager popupManager;
 
-    // 현재 열려있는 앱
+    // 앱 상태
     private App currentApp;
+    private bool _isOpenedApp;
     public bool IsOpenedApp => currentApp != null;
 
     private void Awake()
@@ -27,8 +27,8 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu()
     {
-        // 컨트롤러 변경
-        control.SetController(menuController);
+        // 플레이어 컨트롤러 비활성화
+        control.DisableController(typeof(PlayerController));
 
         // 메뉴가 열리는 동안 키 입력 무시
         control.KeyLock();
@@ -43,21 +43,22 @@ public class MenuManager : MonoBehaviour
         // 메뉴가 닫히는 동안 키 입력 무시
         control.KeyLock();
 
-        // 열려있는 앱이 있을 경우
-        if (currentApp != null)
-        {
-            // 열려있는 모든 앱 닫기
-            CloseAllApps();
-        }
-
         // 메뉴 닫기 애니메이션
         ui.CloseMenu()
             .OnComplete(() =>
             {
+                // 열려있는 앱이 있을 경우
+                if (currentApp != null)
+                {
+                    // 열려있는 모든 앱 닫기
+                    CloseAllApps(false);
+                }
+
+                // 키 입력 활성화
                 control.KeyUnlock();
 
-                // 메뉴가 닫히면 초기 컨트롤러로 변경
-                control.ResetController();
+                // 플레이어 컨트롤러 활성화
+                control.EnableController(typeof(PlayerController));
             });
     }
 
@@ -71,14 +72,14 @@ public class MenuManager : MonoBehaviour
     {
         currentApp = app;
 
-        app.Open();
+        app.Open(true);
     }
 
-    public void CloseApp()
+    public void CloseApp(bool isPlayAnimation = true)
     {
         if (currentApp != null)
         {
-            currentApp.Close();
+            currentApp.Close(isPlayAnimation);
 
             if (!currentApp.IsActive)
             {
@@ -87,11 +88,13 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void CloseAllApps()
+    public void CloseAllApps(bool isPlayAnimation = true)
     {
         while (currentApp != null)
         {
-            CloseApp();
+            CloseApp(isPlayAnimation);
         }
     }
+
+
 }

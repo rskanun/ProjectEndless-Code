@@ -1,71 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-public class ControlContext : ScriptableObject
+public class ControlContext
 {
-    // 저장 파일 위치
-    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
-    private const string FILE_DIRECTORY = "Assets/Resources/Option";
-    private const string FILE_PATH = "Assets/Resources/Option/ControlContext.asset";
-
     private static ControlContext _instance;
     public static ControlContext Instance
     {
         get
         {
-            if (_instance != null) return _instance;
-
-            _instance = Resources.Load<ControlContext>("Option/ControlContext");
-
-#if UNITY_EDITOR
             if (_instance == null)
-            {
-                // 파일 경로가 없을 경우 폴더 생성
-                if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
-                {
-                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
+                _instance = new ControlContext();
 
-                    AssetDatabase.CreateFolder(OPTION_FILE_DIRECTORY, "Option");
-                }
-
-                // Resource.Load가 실패했을 경우
-                _instance = AssetDatabase.LoadAssetAtPath<ControlContext>(FILE_PATH);
-
-                if (_instance == null)
-                {
-                    _instance = CreateInstance<ControlContext>();
-                    AssetDatabase.CreateAsset(_instance, FILE_PATH);
-                }
-            }
-#endif
             return _instance;
         }
     }
 
-    [SerializeField]
-    private InputActionAsset inputAction;
-
-    private IController _initController;
-    public IController InitController
-    {
-        private set { _initController = value; }
-        get { return _initController; }
-    }
-
-    private IController _currentController;
-    public IController CurrentController
-    {
-        private set { _currentController = value; }
-        get { return _currentController; }
-    }
+    // 현재 등록된 컨트롤러 목록
+    private Dictionary<Type, IController> controllers = new Dictionary<Type, IController>();
+    private HashSet<IController> activeControllers = new HashSet<IController>();
 
     private MainInput _keyInput;
     public MainInput KeyInput
@@ -79,59 +34,125 @@ public class ControlContext : ScriptableObject
         }
     }
 
-    private bool _keyBlock;
-    public bool KeyBlock
+    private bool _isKeyBlocked;
+    public bool IsKeyBlocked
     {
-        private set { _keyBlock = value; }
-        get { return _keyBlock; }
+        private set { _isKeyBlocked = value; }
+        get { return _isKeyBlocked; }
     }
 
-    public void Init()
+    public ControlContext()
     {
-        // 변수 초기화
-        KeyBlock = false;
+        KeyInput.Player.Enable();
+        KeyInput.UI.Enable();
+        KeyInput.Battle.Enable();
     }
 
-    public void SetInitController(IController controller)
+    public void RegisterController(IController controller)
     {
-        _initController = controller;
+        // 컨트롤러 등록
+        controllers.Add(controller.GetType(), controller);
     }
 
-    public void ResetController()
+    public void RemoveController(IController controller)
     {
-        if (_initController == null)
+        controller.ControlDisconnect();
+
+        // 컨트롤러 삭제
+        controllers.Remove(controller.GetType());
+    }
+
+    public void EnableController(IController controller)
+    {
+        // 컨트롤러 등록이 되어있지 않은 경우
+        if (!controllers.ContainsValue(controller))
         {
-            // 초기값이 정해져있지 않으면 실행X
-            return;
+            // 해당 컨트롤러 등록
+            controllers.Add(controller.GetType(), controller);
         }
 
-        // 초기 컨트롤러로 설정
-        SetController(_initController);
+        // 컨트롤러 연결
+        EnableController(controller.GetType());
     }
 
-    public void SetController(IController controller)
+    public void EnableController(Type type)
     {
-        // 기존 컨트롤러 연결 끊기
-        CurrentController?.OnDisconnected();
+        // 등록된 컨트롤러가 아니면 무시
+        if (!controllers.ContainsKey(type)) return;
 
-        // 새 컨트롤러 연결
-        CurrentController = controller;
-        CurrentController?.OnConnected();
+        // 모종의 이유로 컨트롤러가 파괴된 경우
+        if (controllers[type] == null || controllers[type] as UnityEngine.Object == null)
+        {
+            // 해당 컨트롤러 삭제
+            controllers.Remove(type);
+        }
+
+        // 컨트롤러 활성화
+        activeControllers.Add(controllers[type]);
+        controllers[type].ControlConnect();
+    }
+
+    public void DisableController(IController controller)
+    {
+        // 컨트롤러 등록이 되어있지 않은 경우
+        if (!controllers.ContainsValue(controller))
+        {
+            // 해당 컨트롤러 등록
+            controllers.Add(controller.GetType(), controller);
+        }
+
+        // 컨트롤러 해제
+        DisableController(controller.GetType());
+    }
+
+    public void DisableController(Type type)
+    {
+        // 등록된 컨트롤러가 아니면 무시
+        if (!controllers.ContainsKey(type)) return;
+
+        // 컨트롤러 비활성화
+        activeControllers.Remove(controllers[type]);
+        controllers[type].ControlDisconnect();
+    }
+
+    public void SetController(IController enableController)
+    {
+        // 현재 활성화된 모든 컨트롤러 비활성화
+        foreach (IController controller in activeControllers.ToList())
+        {
+            DisableController(controller);
+        }
+
+        // 해당 컨트롤러만 활성화
+        EnableController(enableController);
+    }
+
+    public void SetController(Type type)
+    {
+        // 등록된 컨트롤러가 아니면 무시
+        if (!controllers.ContainsKey(type)) return;
+
+        // 해당 컨트롤러만 활성화를 한 후 나머진 전부 비활성화
+        SetController(controllers[type]);
     }
 
     public void KeyLock()
     {
-        KeyBlock = true;
+        IsKeyBlocked = true;
 
-        // 현재 연결된 컨트롤러 연결 끊기
-        CurrentController.OnDisconnected();
+        // 모든 키 맵 비활성화
+        KeyInput.Player.Disable();
+        KeyInput.UI.Disable();
+        KeyInput.Battle.Disable();
     }
 
     public void KeyUnlock()
     {
-        KeyBlock = false;
+        IsKeyBlocked = false;
 
-        // 현재 연결된 컨트롤러 다시 재연결
-        CurrentController.OnConnected();
+        // 모든 키 맵 다시 활성화
+        KeyInput.Player.Enable();
+        KeyInput.UI.Enable();
+        KeyInput.Battle.Enable();
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class TalkController : MonoBehaviour, IController
@@ -8,23 +6,26 @@ public class TalkController : MonoBehaviour, IController
     [Header("참조 스크립트")]
     [SerializeField] private TalkManager talkManager;
 
-    // 컨트롤러
-    private MainInput.UIActions input;
-
     private void Awake()
     {
-        input = ControlContext.Instance.KeyInput.UI;
+        ControlContext.Instance.RegisterController(this);
     }
-    public void OnConnected()
+
+    private void OnDestroy()
     {
-        input.Enable();
+        ControlContext.Instance.RemoveController(this);
+    }
+
+    public void ControlConnect()
+    {
+        MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;
 
         input.Select.performed += OnSelectKeyPressed;
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
-        input.Disable();
+        MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;
 
         input.Select.performed -= OnSelectKeyPressed;
     }

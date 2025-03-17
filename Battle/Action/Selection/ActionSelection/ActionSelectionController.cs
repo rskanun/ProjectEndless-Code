@@ -6,12 +6,12 @@ public class ActionSelectionController : MonoBehaviour, IController
     [SerializeField] private ActionSelection selection;
     [SerializeField] private ActionManager actionManager;
 
-    public void OnConnected()
+    public void ControlConnect()
     {
 
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
 
     }

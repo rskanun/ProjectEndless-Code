@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public class HomeScreenUI : MonoBehaviour
 {
@@ -13,16 +14,20 @@ public class HomeScreenUI : MonoBehaviour
     [SerializeField] private GameObject callButton;
     [SerializeField] private GameObject messageButton;
 
-    public void DisabledHomeScreen()
+    public Sequence DisabledHomeScreen(bool isPlayAnimation)
     {
         SetAllAppButton(false);
-        MenuAnimation.HomeScreenHideAnimation(homeScreen);
+
+        if (isPlayAnimation) return MenuAnimation.HomeScreenHideAnimation(homeScreen);
+        else return DOTween.Sequence();
     }
 
-    public void EnabledHomeScreen()
+    public Sequence EnabledHomeScreen(bool isPlayAnimation)
     {
         SetAllAppButton(true);
-        MenuAnimation.HomeScreenShowAnimation(homeScreen);
+
+        if (isPlayAnimation) return MenuAnimation.HomeScreenShowAnimation(homeScreen);
+        else return DOTween.Sequence();
     }
 
     public void SetAllAppButton(bool isActive)

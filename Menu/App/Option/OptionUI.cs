@@ -1,14 +1,32 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
 
 public class OptionUI : SubWindowUI
 {
-    protected override void AppCloseAnimation(GameObject window)
+    protected override Sequence AppCloseAnimation(bool isPlayAnimation)
     {
-        MenuAnimation.AppCloseAnimation(window, appBackground, homeScreen);
+        if (!isPlayAnimation)
+        {
+            // 애니메이션 스킵
+            window.SetActive(false);
+            appBackground.SetActive(false);
+
+            return DOTween.Sequence();
+        }
+
+        return MenuAnimation.AppCloseAnimation(window, appBackground);
     }
 
-    protected override void AppOpenAnimation(GameObject window)
+    protected override Sequence AppOpenAnimation(bool isPlayAnimation)
     {
-        MenuAnimation.AppToastOpenAnimation(window, appBackground, homeScreen);
+        if (!isPlayAnimation)
+        {
+            // 애니메이션 스킵
+            window.SetActive(true);
+            appBackground.SetActive(true);
+
+            return DOTween.Sequence();
+        }
+
+        return MenuAnimation.AppToastOpenAnimation(window, appBackground);
     }
 }

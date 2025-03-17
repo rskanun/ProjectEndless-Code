@@ -9,14 +9,14 @@ public class SurveyController : MonoBehaviour, IController
 
     private bool isMoveKeyPressed;
 
-    public void OnConnected()
+    public void ControlConnect()
     {
         MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;
 
         input.Navigate.performed += OnNavigateKeyPressed;
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
         MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;
 

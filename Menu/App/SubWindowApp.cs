@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class SubWindowApp : App
@@ -16,7 +17,7 @@ public abstract class SubWindowApp : App
         subWindowUI.setCancelPanel(true);
     }
 
-    public override void Close()
+    public override void Close(bool isPlayAnimation)
     {
         if (subWindows.Count > 0)
         {
@@ -29,7 +30,7 @@ public abstract class SubWindowApp : App
         else
         {
             // 모든 서브창이 닫혔을 경우 앱 종료
-            base.Close();
+            base.Close(isPlayAnimation);
         }
     }
 }

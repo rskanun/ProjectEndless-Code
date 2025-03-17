@@ -7,10 +7,11 @@ public class MenuUI : MonoBehaviour
     [Header("캐릭터 얼굴")]
     [SerializeField] private GameObject face;
 
-    [Header("메뉴")]
+    [Header("메뉴 UI")]
     [SerializeField] private GameObject menu;
-    [SerializeField] private GameObject window;
+    [SerializeField] private GameObject appGroup;
     [SerializeField] private GameObject displayUI;
+    [SerializeField] private GameObject screenPanel;
 
     [Header("WiFi")]
     [SerializeField] private GameObject wifiIcon;
@@ -39,7 +40,7 @@ public class MenuUI : MonoBehaviour
     {
         InitUI();
 
-        return MenuAnimation.MenuOpenAnimation(menu, window, displayUI, face);
+        return MenuAnimation.MenuOpenAnimation(menu, screenPanel, appGroup, face);
     }
 
     private void InitUI()
@@ -51,7 +52,7 @@ public class MenuUI : MonoBehaviour
 
     public Sequence CloseMenu()
     {
-        return MenuAnimation.MenuCloseAnimation(menu, window, displayUI, face);
+        return MenuAnimation.MenuCloseAnimation(menu, screenPanel, face);
     }
 
     /************************************************************

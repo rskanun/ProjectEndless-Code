@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,60 +10,33 @@ public class GameManager : MonoBehaviour
     [Header("Map")]
     public bool player;
     public bool ui;
-    public bool menu;
     public bool battle;
 
-    private TextScriptResource scriptResource;
-    private ControlContext controller;
-
-    private static GameManager _instance;
-    public static GameManager Instance
+    private void Update()
     {
-        get { return _instance; }
+        ControlContext controller = ControlContext.Instance;
+
+        player = controller.KeyInput.Player.enabled;
+        ui = controller.KeyInput.UI.enabled;
+        battle = controller.KeyInput.Battle.enabled;
     }
 
     private void Awake()
     {
-        if (_instance == null)
-        {
-            _instance = this;
-
-            Init();
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-            DestroyImmediate(gameObject);
-    }
-
-    private void Init()
-    {
-        scriptResource = TextScriptResource.Instance;
-        controller = ControlContext.Instance;
-
-        controller.Init();
-
-        StartGame();
-    }
-
-    private void Start()
-    {
         // 총 스크립트 개수
         string[] files = Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories);
         Debug.Log("Total Scripts: " + files.Count());
-    }
 
-    private void Update()
-    {
-        player = controller.KeyInput.Player.enabled;
-        ui = controller.KeyInput.UI.enabled;
-        menu = controller.KeyInput.Menu.enabled;
-        battle = controller.KeyInput.Battle.enabled;
+        // 게임 시작 전 설정
+        StartGame();
     }
 
     public void StartGame()
     {
+        // 시나리오 불러오기
         LoadScript(gameData.Chapter);
 
+        // 플레이어 위치 초기화
         gameData.Position = new Vector2(0, 0);
     }
 
@@ -74,6 +46,6 @@ public class GameManager : MonoBehaviour
         int root = data.RootNum;
         int subChapter = data.SubChapterNum;
 
-        scriptResource.LoadScript(chapter, root, subChapter);
+        TextScriptResource.Instance.LoadScript(chapter, root, subChapter);
     }
 }

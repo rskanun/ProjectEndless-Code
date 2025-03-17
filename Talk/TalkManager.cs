@@ -5,7 +5,6 @@ using UnityEngine;
 public class TalkManager : MonoBehaviour
 {
     [Header("참조 스크립트")]
-    [SerializeField] private TalkController controller;
     [SerializeField] private TextManager textManager;
     [SerializeField] private SelectManager selectManager;
 
@@ -16,7 +15,17 @@ public class TalkManager : MonoBehaviour
     [SerializeField] private int lineNum;
 
     // Select 관련 변수
-    private Stack<Select> selectStack;
+    private Stack<Select> selectStack = new Stack<Select>();
+
+    private void OnEnable()
+    {
+        TalkContext.Instance.RegisterManager(this);
+    }
+
+    private void OnDisable()
+    {
+        TalkContext.Instance.RemoveManager();
+    }
 
     /************************************************************
     * [대사 관리]
@@ -28,10 +37,10 @@ public class TalkManager : MonoBehaviour
     {
         // 대화 처음 시작 시 해당되는 대화목록 가져오기
         List<Line> lines = npc.GetLines();
-        selectStack = new Stack<Select>();
 
-        // 대화 전용 컨트롤러로 변경
-        ControlContext.Instance.SetController(controller);
+        // 캐릭터 이동 컨트롤러 비활성화 및 대화 컨트롤러 활성화
+        ControlContext.Instance.DisableController(typeof(PlayerController));
+        ControlContext.Instance.EnableController(typeof(TalkController));
 
         isTalking = true;
         StartCoroutine(ReadLines(lines));
@@ -89,15 +98,22 @@ public class TalkManager : MonoBehaviour
     private void EndTalk()
     {
         // 대사 읽기에 쓰이는 변수 초기화
-        isPrinting = false;
-        isTalking = false;
-        lineNum = 0;
+        InitValue();
 
         // 대화창 UI 끄기
         textManager.CloseDialogue();
 
-        // 초기 컨트롤러로 변경
-        ControlContext.Instance.ResetController();
+        // 플레이어 컨트롤러로 변경
+        ControlContext.Instance.DisableController(typeof(TalkController));
+        ControlContext.Instance.EnableController(typeof(PlayerController));
+    }
+
+    private void InitValue()
+    {
+        selectStack.Clear();
+        isPrinting = false;
+        isTalking = false;
+        lineNum = 0;
     }
 
     /************************************************************

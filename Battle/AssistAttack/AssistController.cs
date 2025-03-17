@@ -6,16 +6,9 @@ public class AssistController : MonoBehaviour, IController
     [Header("참조 스크립트")]
     [SerializeField] private AssistAttackManager manager;
 
-    private MainInput.BattleActions input;
-
-    private void Awake()
+    public void ControlConnect()
     {
-        input = ControlContext.Instance.KeyInput.Battle;
-    }
-
-    public void OnConnected()
-    {
-        input.Enable();
+        MainInput.BattleActions input = ControlContext.Instance.KeyInput.Battle;
 
         input.AssistAttack.performed += OnExtraAttackKeyPressed;
         input.AssistA.performed += OnAssistAKeyPressed;
@@ -23,9 +16,9 @@ public class AssistController : MonoBehaviour, IController
         input.AssistC.performed += OnAssistCKeyPressed;
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
-        input.Disable();
+        MainInput.BattleActions input = ControlContext.Instance.KeyInput.Battle;
 
         input.AssistAttack.performed -= OnExtraAttackKeyPressed;
         input.AssistA.performed -= OnAssistAKeyPressed;

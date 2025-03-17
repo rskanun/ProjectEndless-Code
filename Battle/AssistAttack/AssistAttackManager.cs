@@ -39,7 +39,7 @@ public class AssistAttackManager : MonoBehaviour
         ControlContext.Instance.KeyUnlock();
 
         // 컨트롤러 변경
-        ControlContext.Instance.SetController(controller);
+        ControlContext.Instance.SetController(mainController);
 
         // 타이머 띄우기(타이머 종료 시 플레이어 자동 선택)
         ui.ActiveTimer(selectTimer);

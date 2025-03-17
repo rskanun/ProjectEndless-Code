@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,52 +16,54 @@ public class BattleController : MonoBehaviour, IController
     // 각각의 선택창에 따른 추가적인 키조작
     private IController subController;
 
-    // 조작키
-    private MainInput.BattleActions battleInput;
-    private MainInput.UIActions uiInput;
-
-    private void Awake()
+    private void OnEnable()
     {
-        battleInput = ControlContext.Instance.KeyInput.Battle;
-        uiInput = ControlContext.Instance.KeyInput.UI;
+        ControlContext.Instance.EnableController(this);
+    }
 
-        // 전투 돌입 시 해당 컨트롤러로 전환
-        ControlContext.Instance.SetController(this);
+    private void OnDisable()
+    {
+        ControlContext.Instance.DisableController(this);
+    }
+
+    private void OnDestroy()
+    {
+        ControlContext.Instance.RemoveController(this);
     }
 
     public void SetSubController(IController subController)
     {
         // 이전 컨트롤러 비활성화
-        this.subController?.OnDisconnected();
+        this.subController?.ControlDisconnect();
 
         // 다음 컨트롤러 활성화
         this.subController = subController;
-        this.subController?.OnConnected();
+        this.subController?.ControlConnect();
     }
 
-    public void OnConnected()
+    public void ControlConnect()
     {
         // Connect Battle Input
-        battleInput.Enable();
+        MainInput.BattleActions battleInput = ControlContext.Instance.KeyInput.Battle;
         battleInput.Survey.performed += OnSurveyKeyPressed;
         battleInput.Parry.performed += OnParryKeyPressed;
         battleInput.Dodge.performed += OnDodgeKeyPressed;
 
         // Connect UI Input
-        uiInput.Enable();
+        MainInput.UIActions uiInput = ControlContext.Instance.KeyInput.UI;
         uiInput.Cancel.performed += OnCancelKeyPressed;
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
         // Disable Battle Input
-        battleInput.Disable();
+        MainInput.BattleActions battleInput = ControlContext.Instance.KeyInput.Battle;
         battleInput.Survey.performed -= OnSurveyKeyPressed;
         battleInput.Parry.performed -= OnParryKeyPressed;
         battleInput.Dodge.performed -= OnDodgeKeyPressed;
 
         // Disable UI Input
-        uiInput.Disable();
+        MainInput.UIActions uiInput = ControlContext.Instance.KeyInput.UI;
         uiInput.Cancel.performed -= OnCancelKeyPressed;
     }
 

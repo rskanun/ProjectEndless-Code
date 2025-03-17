@@ -7,30 +7,30 @@ public class MenuAnimation
     // 메뉴 열리고 닫히는 각도
     private const float closeRotate = 70, openRotate = 0;
 
-    public static Sequence AppToastOpenAnimation(GameObject window, GameObject background, GameObject homeScreen)
+    public static Sequence AppToastOpenAnimation(GameObject window, GameObject background)
     {
         return BiggerOpenSeq(background, 0.1f, 0.08f)
                 .AppendInterval(0.12f)
                 .Append(ToastWindowSeq(window, 0.2f));
     }
 
-    public static Sequence AppCloseAnimation(GameObject window, GameObject background, GameObject homeScreen)
+    public static Sequence AppCloseAnimation(GameObject window, GameObject background)
     {
         return SmallerCloseSeq(window, 0.1f, 0.08f)
             .Join(SmallerCloseSeq(background, 0.1f, 0.08f));
     }
 
-    public static Sequence MenuOpenAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face)
+    public static Sequence MenuOpenAnimation(GameObject phone, GameObject screenPanel, GameObject appGroup, GameObject face)
     {
-        return OpenMenuSeq(phone, window, displayUI, face);
+        return OpenMenuSeq(phone, screenPanel, appGroup, face);
     }
 
-    public static Sequence MenuCloseAnimation(GameObject phone, GameObject window, GameObject displayUI, GameObject face)
+    public static Sequence MenuCloseAnimation(GameObject phone, GameObject screenPanel, GameObject face)
     {
-        return CloseMenuSeq(phone, window, displayUI, face);
+        return CloseMenuSeq(phone, screenPanel, face);
     }
 
-    public static Sequence AppOpenAnimation(GameObject window, GameObject background, GameObject homeScreen)
+    public static Sequence AppOpenAnimation(GameObject window, GameObject background)
     {
         return BiggerOpenSeq(background, 0.1f, 0.08f)
                 .AppendInterval(0.12f)
@@ -80,7 +80,7 @@ public class MenuAnimation
             .Append(window.transform.DOLocalMoveY(loc.y, t).SetEase(Ease.OutQuad));
     }
 
-    private static Sequence OpenMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face)
+    private static Sequence OpenMenuSeq(GameObject phone, GameObject screenPanel, GameObject appGroup, GameObject face)
     {
         float delay = 0.16f;
         float menuOpenDelay = 0.19f;
@@ -91,8 +91,7 @@ public class MenuAnimation
         Vector2 oriPos = face.transform.position;
         Vector3 oriRotate = face.transform.rotation.eulerAngles;
 
-        CanvasGroup homeDisplay = window.GetComponent<CanvasGroup>();
-        CanvasGroup uiDisplay = displayUI.GetComponent<CanvasGroup>();
+        Image darkPanel = screenPanel.GetComponent<Image>();
 
         // 휴대폰을 꺼내드는 모션
         Sequence retrievePhoneSeq = DOTween.Sequence()
@@ -110,13 +109,12 @@ public class MenuAnimation
         Sequence turnOnScreenSeq = DOTween.Sequence()
             .OnStart(() =>
             {
-                window.transform.localScale = new Vector3(startScale, startScale, 1);
-                window.SetActive(true);
-                displayUI.SetActive(true);
+                appGroup.transform.localScale = new Vector3(startScale, startScale, 1);
+                appGroup.SetActive(true);
+                screenPanel.SetActive(true);
             })
-            .Append(homeDisplay.DOFade(1f, screenOpenDelay))
-            .Join(uiDisplay.DOFade(1f, screenOpenDelay))
-            .Append(window.transform.DOScale(new Vector3(resultScale, resultScale, 1), loadAppDelay).SetEase(Ease.OutSine));
+            .Append(darkPanel.DOFade(0f, screenOpenDelay))
+            .Append(appGroup.transform.DOScale(new Vector3(resultScale, resultScale, 1), loadAppDelay).SetEase(Ease.OutSine));
 
         return DOTween.Sequence()
             .Append(retrievePhoneSeq)
@@ -124,7 +122,7 @@ public class MenuAnimation
             .Append(turnOnScreenSeq);
     }
 
-    private static Sequence CloseMenuSeq(GameObject phone, GameObject window, GameObject displayUI, GameObject face)
+    private static Sequence CloseMenuSeq(GameObject phone, GameObject screenPanel, GameObject face)
     {
         float delay = 0.16f;
         float screenCloseDelay = 0.1f;
@@ -133,24 +131,18 @@ public class MenuAnimation
         Vector2 oriPos = face.transform.position;
         Vector3 oriRotate = face.transform.rotation.eulerAngles;
 
-        CanvasGroup homeDisplay = window.GetComponent<CanvasGroup>();
-        CanvasGroup uiDisplay = displayUI.GetComponent<CanvasGroup>();
+        Image darkPanel = screenPanel.GetComponent<Image>();
 
         // 화면을 끄는 모션
         Sequence turnOffScreenSeq = DOTween.Sequence()
-            .Append(homeDisplay.DOFade(0f, screenCloseDelay))
-            .Join(uiDisplay.DOFade(0f, screenCloseDelay))
-            .OnComplete(() =>
-            {
-                window.SetActive(false);
-                displayUI.SetActive(false);
-            });
+            .Append(darkPanel.DOFade(1f, screenCloseDelay));
 
         // 휴대폰을 집어넣는 모션
         Sequence insertPhoneSeq = DOTween.Sequence()
             .Append(phone.transform.DORotate(new Vector3(0, 0, closeRotate), menuCloseDelay).SetEase(Ease.InQuad))
             .Join(RotateFace(face, oriPos, oriRotate, menuCloseDelay))
-            .OnComplete(() => {
+            .OnComplete(() =>
+            {
                 phone.SetActive(false);
                 phone.transform.localRotation = Quaternion.Euler(0, 0, openRotate);
                 face.transform.position = oriPos;
@@ -257,7 +249,6 @@ public class MenuAnimation
     {
         window.SetActive(true);
         return BiggerSeq(window, startSize, 1f, t);
-
     }
 
     private static Sequence SmallerSeq(GameObject window, float startSize, float resultSize, float t)

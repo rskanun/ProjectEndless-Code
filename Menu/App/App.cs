@@ -1,10 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public abstract class App : MonoBehaviour
 {
-    [Header("실행할 앱 창")]
-    [SerializeField] private GameObject window;
-
     // 앱 현재상황
     private bool _isActive;
     public bool IsActive
@@ -16,20 +14,20 @@ public abstract class App : MonoBehaviour
     [Header("참조 스크립트")]
     [SerializeField] private AppUI ui;
 
-    public virtual void Open()
+    public virtual void Open(bool isPlayAnimation)
     {
         IsActive = true;
 
-        ui.OpenApp(window);
+        ui.OpenApp(isPlayAnimation);
         LoadData();
     }
 
     protected virtual void LoadData() { }
 
-    public virtual void Close()
+    public virtual void Close(bool isPlayAnimation)
     {
         SaveData();
-        ui.CloseApp(window);
+        ui.CloseApp(isPlayAnimation);
 
         IsActive = false;
     }

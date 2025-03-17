@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class MessengerApp : App
@@ -55,11 +56,11 @@ public class MessengerApp : App
         // 홈 화면 출력
     }
 
-    public override void Close()
+    public override void Close(bool isPlayAnimation)
     {
         if (networkChecking != null)
             StopCoroutine(networkChecking);
 
-        base.Close();
+        base.Close(isPlayAnimation);
     }
 }

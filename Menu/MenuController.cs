@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MenuController : MonoBehaviour, IController
@@ -7,54 +6,65 @@ public class MenuController : MonoBehaviour, IController
     [Header("참조 스크립트")]
     [SerializeField]
     private MenuManager menuManager;
-    private PopupManager popupManager;
 
-    private MainInput.MenuActions menuInput;
-    private MainInput.UIActions uiInput;
+    // 메뉴 상태
+    private bool isOpened;
 
     private void Awake()
     {
-        menuInput = ControlContext.Instance.KeyInput.Menu;
-        uiInput = ControlContext.Instance.KeyInput.UI;
+        ControlContext.Instance.EnableController(this);
     }
 
-    private void Start()
+    private void OnDestroy()
     {
-        popupManager = PopupManager.Instance;
+        ControlContext.Instance.RemoveController(this);
     }
 
-    public void OnConnected()
+    public void ControlConnect()
     {
-        menuInput.Enable();
-        uiInput.Enable();
+        MainInput.UIActions uiInput = ControlContext.Instance.KeyInput.UI;
 
-        menuInput.Menu.performed += OnMenuKeyPressed;
         uiInput.Cancel.performed += OnCancelKeyPressed;
+        uiInput.Menu.performed += OnMenuKeyPressed;
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
-        menuInput.Disable();
-        uiInput.Disable();
+        MainInput.UIActions uiInput = ControlContext.Instance.KeyInput.UI;
 
-        menuInput.Menu.performed -= OnMenuKeyPressed;
         uiInput.Cancel.performed -= OnCancelKeyPressed;
+        uiInput.Menu.performed -= OnMenuKeyPressed;
     }
 
     private void OnMenuKeyPressed(InputAction.CallbackContext context)
     {
-        // 메뉴 닫기
-        menuManager.CloseMenu();
+        if (menuManager.IsOpenedApp)
+        {
+            // 앱이 열린 상태면 무시
+            return;
+        }
+
+        // 현재 메뉴 상태에 따라 열기 or 닫기
+        if (isOpened) menuManager.CloseMenu();
+        else menuManager.OpenMenu();
+
+        // 메뉴 상태 변경
+        isOpened = !isOpened;
     }
 
     private void OnCancelKeyPressed(InputAction.CallbackContext context)
     {
-        // 메뉴 혹은 앱 닫기
-        if (!popupManager.isActive)
+        if (!isOpened || PopupManager.Instance.isActive)
         {
-            // 앱이 열려있다면 앱부터 삭제
-            if (menuManager.IsOpenedApp) menuManager.CloseApp();
-            else menuManager.CloseMenu();
+            // 메뉴가 열린 상태가 아니거나 팝업 창이 열려있다면 무시
+            return;
+        }
+
+        // 앱 닫기
+        if (menuManager.IsOpenedApp)
+        {
+            // 앱이 열린 상태에서만 작동
+            menuManager.CloseApp();
         }
     }
 }

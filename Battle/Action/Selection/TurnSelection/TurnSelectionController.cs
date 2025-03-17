@@ -9,7 +9,7 @@ public class TurnSelectionController : MonoBehaviour, IController
 
     private bool isMoveKeyPressed;
 
-    public void OnConnected()
+    public void ControlConnect()
     {
         MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;
 
@@ -17,7 +17,7 @@ public class TurnSelectionController : MonoBehaviour, IController
         input.Select.performed += OnSelectKeyPressed;
     }
 
-    public void OnDisconnected()
+    public void ControlDisconnect()
     {
         MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;
 

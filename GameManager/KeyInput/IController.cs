@@ -1,5 +1,5 @@
 ﻿public interface IController
 {
-    public void OnConnected();
-    public void OnDisconnected();
+    public void ControlConnect();
+    public void ControlDisconnect();
 }

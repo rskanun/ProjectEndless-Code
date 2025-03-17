@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using DG.Tweening;
+using UnityEngine;
 
 public abstract class AppUI : MonoBehaviour
 {
+    [SerializeField] protected GameObject window;
+
     [Header("참조 오브젝트")]
     [SerializeField] protected GameObject appBackground;
     [SerializeField] protected GameObject homeScreen;
@@ -15,19 +19,19 @@ public abstract class AppUI : MonoBehaviour
     * 애니메이션 조작 관리
     ************************************************************/
 
-    public void OpenApp(GameObject window)
+    public void OpenApp(bool isPlayAnimation)
     {
-        homeScreenUI.DisabledHomeScreen();
-        AppOpenAnimation(window);
+        homeScreenUI.DisabledHomeScreen(isPlayAnimation);
+        AppOpenAnimation(isPlayAnimation);
     }
 
-    protected abstract void AppOpenAnimation(GameObject window);
+    protected abstract Sequence AppOpenAnimation(bool isPlayAnimation);
 
-    public void CloseApp(GameObject window)
+    public void CloseApp(bool isPlayAnimation)
     {
-        homeScreenUI.EnabledHomeScreen();
-        AppCloseAnimation(window);
+        homeScreenUI.EnabledHomeScreen(isPlayAnimation);
+        AppCloseAnimation(isPlayAnimation);
     }
 
-    protected abstract void AppCloseAnimation(GameObject window);
+    protected abstract Sequence AppCloseAnimation(bool isPlayAnimation);
 }

@@ -6,23 +6,16 @@ public class InteractManager : MonoBehaviour
     // 상호작용이 가능한 오브젝트 목록
     private List<Npc> npcs = new List<Npc>();
 
-    private void OnEnable()
+    public void OnInteract()
     {
-        // 다른 씬의 스크립트에서 상호작용 가능 오브젝트를 가져오기 위해
-        // 해당 매니져를 이어줄 브릿지에 등록
-        InteractionBridge.Instance.RegisterManager(this);
-    }
+        if (npcs.Count <= 0)
+        {
+            // 범위 안에 대화할 대상이 없는 경우 무시
+            return;
+        }
 
-    private void OnDisable()
-    {
-        // 해당 스크립트가 비활성화되면
-        // 일시적으로 연결 끊기
-        InteractionBridge.Instance.RemoveManager();
-    }
-
-    public List<Npc> GetInteractableObjects()
-    {
-        return npcs;
+        // 현재 상호작용 가능한 범위에 있는 대상 중 가장 먼저 범위에 들어온 대상과 대화
+        TalkContext.Instance.ActiveDialogue(npcs[0]);
     }
 
     public void RotateEyes(Vector2 direction)
