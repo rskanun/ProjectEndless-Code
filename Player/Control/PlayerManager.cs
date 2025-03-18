@@ -2,24 +2,23 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    // 이동 제어 변수
-    private Vector2 direction;
-    private bool isRunKeyPressed;
-    private bool isRunning;
-
-    [Header("참조 스크립트")]
     [SerializeField] private InteractManager interactManager;
 
     [Header("게임 데이터")]
     [SerializeField] private GameData gameData;
 
-    [Header("플레이어 구성 요소")]
-    [ReadOnly, SerializeField] private Rigidbody2D rigid;
-    [ReadOnly, SerializeField] private Animator playerAnimator;
-
     [Header("이동속도")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
+
+    // 플레이어 구성 컴포넌트
+    private Rigidbody2D rigid;
+    private Animator playerAnimator;
+
+    // 이동 제어 변수
+    private Vector2 direction;
+    private bool isRunKeyPressed;
+    private bool isRunning;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -28,23 +27,6 @@ public class PlayerManager : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
     }
 #endif
-
-    private void Awake()
-    {
-        BoxCollider2D mCollider = GetComponent<BoxCollider2D>();
-
-        // 현재 플레이어가 있는 구역을 카메라 이동 범위로 등록
-        Physics2D.SyncTransforms();
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(mCollider.bounds.center, mCollider.bounds.size, 0);
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider is PolygonCollider2D tilemap && collider.CompareTag("Area"))
-            {
-                MapManager.SetCurrentArea(tilemap);
-                break;
-            }
-        }
-    }
 
     /************************************************************
      * [상호작용]

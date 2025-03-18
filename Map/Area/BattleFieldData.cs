@@ -4,12 +4,12 @@ using UnityEngine;
 [System.Serializable]
 public class BattleFieldData
 {
-    // 현재 필드 내 있는 몬스터 정보
+    // 전투 시 등장할 몬스터
     [SerializeField]
-    private List<GameObject> _fieldMonsters;
-    public List<GameObject> FieldMonsters
+    private List<GameObject> _encountMonsters;
+    public List<GameObject> EncountMonsters
     {
-        get { return _fieldMonsters; }
+        get { return _encountMonsters; }
     }
 
     // 전투 시 발생할 수 있는 이벤트 스크립트

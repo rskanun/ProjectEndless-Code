@@ -95,7 +95,7 @@ public class BattleManager : MonoBehaviour
         entityList.AddRange(playerParty);
 
         // 적 진형 파티 설정
-        List<Monster> enemyParty = GetEnemyParty(fieldData.FieldMonsters);
+        List<Monster> enemyParty = GetEnemyParty(fieldData.EncountMonsters);
         entityList.AddRange(enemyParty);
 
         // 전투 데이터 초기화

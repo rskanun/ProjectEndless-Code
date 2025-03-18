@@ -7,16 +7,20 @@ using UnityEngine;
 
 public class NoteManager : MonoBehaviour
 {
+    private SaveLoadManager saveManager;
+
     // 파일 함수
     private Dictionary<int, SaveData> saveFiles;
     private int latestFileNum;
 
     [Header("참조 스크립트")]
-    [SerializeField] private SaveManager saveManager;
-    [SerializeField] private LoadManager loadManager;
-    [SerializeField] private LoadSaveFileManager loadFileManager;
     [SerializeField] private MenuManager menuManager;
     [SerializeField] private NoteUI ui;
+
+    private void Awake()
+    {
+        saveManager = SaveLoadManager.Instance;
+    }
 
     public void InitSaveFile()
     {
@@ -47,7 +51,7 @@ public class NoteManager : MonoBehaviour
                         latestFileNum = fileNum;
                     }
 
-                    saveFiles[fileNum] = loadManager.ReadSaveFile(file.FullName);
+                    saveFiles[fileNum] = saveManager.ReadSaveFile(file.FullName);
                 }
                 catch (Exception e)
                 {
@@ -175,6 +179,6 @@ public class NoteManager : MonoBehaviour
     {
         menuManager.CloseMenu();
 
-        loadFileManager.LoadSaveFile(data);
+        saveManager.LoadSaveFile(data);
     }
 }

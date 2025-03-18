@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-public class SaveFileManager : MonoBehaviour
+public class SaveDataManager : MonoBehaviour
 {
     [Header("참조 스크립트")]
-    [SerializeField] private SaveFileUI ui;
+    [SerializeField] private SaveDataUI ui;
 
     public delegate void SaveFileCallBack();
     private event SaveFileCallBack callBack;

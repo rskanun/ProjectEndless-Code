@@ -54,17 +54,14 @@ public class MenuController : MonoBehaviour, IController
 
     private void OnCancelKeyPressed(InputAction.CallbackContext context)
     {
-        if (!isOpened || PopupManager.Instance.isActive)
+        if (!isOpened)
         {
-            // 메뉴가 열린 상태가 아니거나 팝업 창이 열려있다면 무시
+            // 메뉴가 열린 상태가 아니라라면 무시
             return;
         }
 
-        // 앱 닫기
-        if (menuManager.IsOpenedApp)
-        {
-            // 앱이 열린 상태에서만 작동
-            menuManager.CloseApp();
-        }
+        // 앱 또는 팝업창 닫기
+        if (PopupManager.Instance.isActive) PopupManager.Instance.Close();
+        else if (menuManager.IsOpenedApp) menuManager.CloseApp();
     }
 }

@@ -25,7 +25,7 @@ public class NoteUI : MonoBehaviour
 
     private void DestroySaveFiles()
     {
-        foreach(GameObject obj in saveFileObjs.Values)
+        foreach (GameObject obj in saveFileObjs.Values)
         {
             Destroy(obj);
         }
@@ -56,7 +56,7 @@ public class NoteUI : MonoBehaviour
     public void AddSaveFile(int id, SaveData data)
     {
         GameObject saveFileObj = Instantiate(saveFilePrifab, prifabParentTransform);
-        SaveFileManager manager = saveFileObj.GetComponent<SaveFileManager>();
+        SaveDataManager manager = saveFileObj.GetComponent<SaveDataManager>();
 
         manager.SetData(data);
         manager.SetCallBack(() => NoteContext.Instance.OnClickNote(id));
@@ -89,7 +89,7 @@ public class NoteUI : MonoBehaviour
     public void ReloadSaveFileObjInfo(int id, SaveData data)
     {
         GameObject reloadObj = saveFileObjs[id];
-        SaveFileManager manager = reloadObj.GetComponent<SaveFileManager>();
+        SaveDataManager manager = reloadObj.GetComponent<SaveDataManager>();
 
         manager.SetData(data);
     }

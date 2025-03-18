@@ -1,84 +1,66 @@
-﻿using DG.Tweening;
+﻿using System;
+using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LoadSceneManager : MonoBehaviour
+public enum SceneAnimationType
 {
-    [Header("관련 오브젝트")]
-    [SerializeField] private CanvasGroup background;
-    [SerializeField] private Material blurMaterial;
+    BlurClose,
+    NormalSaveDataLoading,
+    TimePassSaveDataLoading
+}
 
-    private ILoadAnimation loadingAnimation;
-
-    public static LoadSceneManager _instance;
+public class LoadSceneManager
+{
+    private static LoadSceneManager _instance;
     public static LoadSceneManager Instance
     {
-        get { return _instance; }
-    }
-
-    private void Awake()
-    {
-        if (_instance == null)
+        get
         {
-            _instance = this;
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            if (_instance == null)
+                _instance = new LoadSceneManager();
 
-            DontDestroyOnLoad(gameObject);
+            return _instance;
         }
-        else
-            DestroyImmediate(gameObject);
     }
 
-    private void OnDestroy()
+    private SceneAnimationManager animationManager;
+
+    public void RegisterManager(SceneAnimationManager manager)
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        animationManager = manager;
     }
 
-    public void SetAnimation(ILoadAnimation animation)
+    public void RemoveManager()
     {
-        loadingAnimation = animation;
+        animationManager = null;
     }
 
-    public void OnSceneClosed(string sceneName)
+    public void LoadBattleScene(SceneAnimationType animationType)
     {
-        float delay = 1f;
-
-        DOTween.Sequence()
-            .OnStart(() =>
-            {
-                background.blocksRaycasts = true;
-
-                ControlContext.Instance.KeyLock();
-            })
-            .Append(background.DOFade(1, delay))
-            .Join(DOTween.To(() => blurMaterial.GetFloat("_Radius"), x => blurMaterial.SetFloat("_Radius", x), 10f, delay))
-            .OnComplete(() =>
-            {
-                blurMaterial.SetFloat("_Radius", 0);
-
-                SceneManager.LoadScene(sceneName);
-            });
+        // 전투 돌입 애니메이션 띄우기
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public void LoadFieldScene(SceneAnimationType startAnimation, SceneAnimationType loadAnimation, SceneAnimationType endAnimation)
     {
-        loadingAnimation?.OnLoadAnimation(() =>
-        {
-            float delay = 1f;
+        // 전환용 애니메이션이 실행될 씬 열기
+        // -> 전환용 애니메이션의 시작 애니메이션 실행
+        // -> 
 
-            DOTween.Sequence()
-                .OnStart(() =>
-                {
-                    blurMaterial.SetFloat("_Radius", 10f);
-                })
-                .Append(background.DOFade(0, delay))
-                .Join(DOTween.To(() => blurMaterial.GetFloat("_Radius"), x => blurMaterial.SetFloat("_Radius", x), 0, delay))
-                .OnComplete(() =>
-                {
-                    background.blocksRaycasts = false;
 
-                    ControlContext.Instance.KeyUnlock();
-                });
-        });
+        // 전환 애니메이션 띄우기
+        PlayAnimation(startAnimation);
+    }
+
+    public void LoadTitleScene(SceneAnimationType animationType)
+    {
+
+    }
+
+    private void PlayAnimation(SceneAnimationType animationType, Action completeAction = null)
+    {
+        // 해당 타입의 애니메이션 실행
+        animationManager?.PlayAnimation(animationType, completeAction);
     }
 }

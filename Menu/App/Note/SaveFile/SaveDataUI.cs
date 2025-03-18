@@ -3,7 +3,7 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 
-public class SaveFileUI : MonoBehaviour
+public class SaveDataUI : MonoBehaviour
 {
     [Header("연관 오브젝트")]
     [SerializeField] private TextMeshProUGUI date;

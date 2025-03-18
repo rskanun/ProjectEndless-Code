@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AttackManager))]
 public class MonsterObject : MonoBehaviour
@@ -60,7 +61,7 @@ public class MonsterObject : MonoBehaviour
     }
 #endif
 
-    private void OnEnable()
+    private void Start()
     {
         // idle 상태 초기화
         fsm.SetState(new IdleState(this));
@@ -135,7 +136,7 @@ public class MonsterObject : MonoBehaviour
         if (IsAttacked && collision.CompareTag("Player"))
         {
             // 전투 돌입
-
+            SceneManager.LoadScene("BattleScene");
         }
     }
 
