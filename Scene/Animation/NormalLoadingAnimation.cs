@@ -24,6 +24,11 @@ public class NormalLoadingAnimation : MonoBehaviour, ILoadAnimation
         }
     }
 
+    private void OnEnable()
+    {
+
+    }
+
     private void Start()
     {
         percent = percentObj.GetComponent<TextMeshProUGUI>();
