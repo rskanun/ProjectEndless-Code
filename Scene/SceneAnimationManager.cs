@@ -18,6 +18,8 @@ public class SceneAnimationManager : MonoBehaviour
         LoadSceneManager.Instance.RemoveManager();
     }
 
+    public void
+
     public void PlayAnimation(LoadAnimationType effectType, Action completeAction = null)
     {
 
