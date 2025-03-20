@@ -10,12 +10,16 @@ using System.Linq;
 using UnityEditor;
 #endif
 
-public enum LoadAnimationType
+public enum SceneFadeEffect
 {
     BlurFadeIn,
     BlurFadeOut,
+}
+
+public enum LoadingScreen
+{
     Loading,
-    TimePassLoading
+    ClockLoading
 }
 
 public class LoadSceneManager : ScriptableObject
@@ -79,7 +83,7 @@ public class LoadSceneManager : ScriptableObject
     private List<SceneAsset> titleRequireSceneAssets;
     private List<string> titleRequireScenes = new List<string>();
 
-    private SceneAnimationManager animationManager;
+    private SceneLoadingScreen loadingScreen;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -96,14 +100,14 @@ public class LoadSceneManager : ScriptableObject
     }
 #endif
 
-    public void RegisterManager(SceneAnimationManager manager)
+    public void RegisterManager(SceneLoadingScreen loadingScreen)
     {
-        animationManager = manager;
+        this.loadingScreen = loadingScreen;
     }
 
     public void RemoveManager()
     {
-        animationManager = null;
+        loadingScreen = null;
     }
 
     /************************************************************
@@ -112,54 +116,24 @@ public class LoadSceneManager : ScriptableObject
      * 상황에 따른 씬 전환 시 띄울 애니메이션과 활성화 할 씬 관리
      ************************************************************/
 
-    public void LoadTitleSceneToField()
+    public void LoadTitleScene(SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        // 타이틀에서 게임을 시작하고자 필드 씬을 불러올 때
+        LoadScene(titleRequireScenes, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects, startEffect, endEffect, screen);
     }
 
-    public void LoadFieldSceneToTitle(string loadMap)
-    {
-        // 필드에서 게임을 종료하고자 타이틀 씬을 불러올 때
-    }
-
-    public void LoadFieldSceneToPast(string loadMap)
-    {
-        // 필드에서 동일한 세계의 다른 데이터를 가져오고자 새로운 필드 씬을 불러올 때
-    }
-
-    public void LoadFieldSceneToParallel(string loadMap)
-    {
-        // 필드에서 다른 평행 세계의 데이터를 가져오고자 새로운 필드 씬을 불러올 때
-    }
-
-    public void LoadBattleSceneToField(string loadMap)
-    {
-        // 필드에서 전투 돌입 시 전투 씬을 불러올 때
-    }
-
-    public void LoadFieldSceneToBattle(string loadMap)
-    {
-        // 전투에서 한 쪽의 승리로 끝나 다시 본래있던 필드 씬을 불러올 때
-    }
-
-    private void LoadTitleScene(LoadAnimationType startAnimation, LoadAnimationType loadAnimation, LoadAnimationType endAnimation)
-    {
-        LoadScene(titleRequireScenes, startAnimation, loadAnimation, endAnimation);
-    }
-
-    private void LoadFieldScene(string loadMap, LoadAnimationType startAnimation, LoadAnimationType loadAnimation, LoadAnimationType endAnimation)
+    public void LoadFieldScene(string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         List<string> requireScenes = fieldRequireScenes.Append(loadMap).ToList();
-        LoadScene(requireScenes, startAnimation, loadAnimation, endAnimation);
+        LoadScene(requireScenes, unloadOptions, startEffect, endEffect, screen);
     }
 
-    private void LoadBattleScene(string loadMap, LoadAnimationType startAnimation, LoadAnimationType loadAnimation, LoadAnimationType endAnimation)
+    public void LoadBattleScene(string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         List<string> requireScenes = battleRequireScenes.Append(loadMap).ToList();
-        LoadScene(requireScenes, startAnimation, loadAnimation, endAnimation);
+        LoadScene(requireScenes, unloadOptions, startEffect, endEffect, screen);
     }
 
-    private void LoadScene(List<string> requireScenes, LoadAnimationType startAnimation, LoadAnimationType loadAnimation, LoadAnimationType endAnimation)
+    private void LoadScene(List<string> requireScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         // 로딩씬 불러오기
         // -> 로딩씬 전환 애니메이션 띄우기
@@ -183,7 +157,8 @@ public class LoadSceneManager : ScriptableObject
         // 로딩씬 불러오기
         SceneManager.LoadSceneAsync(loadingScene.name, LoadSceneMode.Additive);
 
-
+        // 로딩화면 띄우기
+        loadingScreen.EnableScreen(loadScenes, unloadScenes, startEffect, endEffect, screen);
     }
 
     private List<string> FindActiveScenes()

@@ -163,13 +163,13 @@ public class NoteManager : MonoBehaviour
                 Confirm.CreateMsg("해당 시간대는 현재보다 과거입니다. 그래도 불러오시겠습니까?", "계속", "취소")
                 .SetYesHandler(() =>
                 {
-                    LoadSceneManager.Instance.SetAnimation(TimePassLoadingAnimation.Instance);
+                    LoadSceneManager.Instance.SetAnimation(ClockLoadingAnimation.Instance);
                     LoadGame(data);
                 }).Show();
             }
             else
             {
-                LoadSceneManager.Instance.SetAnimation(NormalLoadingAnimation.Instance);
+                LoadSceneManager.Instance.SetAnimation(LoadingAnimation.Instance);
                 LoadGame(data);
             }
         }
