@@ -18,13 +18,6 @@ public class MapManager
         return null;
     }
 
-    public static void LoadMap(string id)
-    {
-        MapData mapData = FindMap(id);
-
-        LoadSceneManager.Instance.OnSceneClosed(mapData.SceneName);
-    }
-
     public static void SetCurrentArea(PolygonCollider2D collider)
     {
         CurrentArea = collider;

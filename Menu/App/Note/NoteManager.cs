@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class NoteManager : MonoBehaviour
 {
-    private SaveLoadManager saveManager;
-
     // 파일 함수
     private Dictionary<int, SaveData> saveFiles;
     private int latestFileNum;
@@ -17,10 +15,8 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private MenuManager menuManager;
     [SerializeField] private NoteUI ui;
 
-    private void Awake()
-    {
-        saveManager = SaveLoadManager.Instance;
-    }
+    private SaveLoadManager SaveManager
+        => SaveLoadManager.Instance;
 
     public void InitSaveFile()
     {
@@ -51,7 +47,7 @@ public class NoteManager : MonoBehaviour
                         latestFileNum = fileNum;
                     }
 
-                    saveFiles[fileNum] = saveManager.ReadSaveFile(file.FullName);
+                    saveFiles[fileNum] = SaveManager.ReadSaveFile(file.FullName);
                 }
                 catch (Exception e)
                 {
@@ -104,7 +100,7 @@ public class NoteManager : MonoBehaviour
         string filePath = Path.Combine(fileInfo.FilePath, name);
 
         // 현재상황 세이브
-        SaveData data = saveManager.SaveGameData(filePath);
+        SaveData data = SaveManager.SaveGameData(filePath);
 
         // 세이브 파일 업데이트
         UpdateSaveFile(id, data);
@@ -163,14 +159,16 @@ public class NoteManager : MonoBehaviour
                 Confirm.CreateMsg("해당 시간대는 현재보다 과거입니다. 그래도 불러오시겠습니까?", "계속", "취소")
                 .SetYesHandler(() =>
                 {
-                    LoadSceneManager.Instance.SetAnimation(ClockLoadingAnimation.Instance);
                     LoadGame(data);
                 }).Show();
             }
             else
             {
-                LoadSceneManager.Instance.SetAnimation(LoadingAnimation.Instance);
-                LoadGame(data);
+                Confirm.CreateMsg("해당 데이터를 불러오시겠습니까? 저장하지 않은 데이터는 사라집니다.", "계속", "취소")
+                .SetYesHandler(() =>
+                {
+                    LoadGame(data);
+                }).Show();
             }
         }
     }
@@ -179,6 +177,6 @@ public class NoteManager : MonoBehaviour
     {
         menuManager.CloseMenu();
 
-        saveManager.LoadSaveFile(data);
+        SaveManager.LoadSaveFile(data);
     }
 }

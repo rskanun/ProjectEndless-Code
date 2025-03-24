@@ -136,7 +136,9 @@ public class MonsterObject : MonoBehaviour
         if (IsAttacked && collision.CompareTag("Player"))
         {
             // 전투 돌입
-            SceneManager.LoadScene("BattleScene");
+            // #임시로 로드 시의 애니메이션과 동일하게 설정
+            LoadSceneManager.Instance.LoadBattleScene(null, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
+            Time.timeScale = 0.02f;
         }
     }
 

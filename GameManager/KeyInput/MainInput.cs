@@ -169,15 +169,6 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
             ""id"": ""c79cd5c0-3d26-4581-b062-66e85fe60a1e"",
             ""actions"": [
                 {
-                    ""name"": ""Menu"",
-                    ""type"": ""Button"",
-                    ""id"": ""1f166987-1d3a-478e-bb4e-b421ab5daaf2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Navigate"",
                     ""type"": ""Value"",
                     ""id"": ""44d9db1d-5a51-4139-8226-b96fe34efe88"",
@@ -221,6 +212,15 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""1f166987-1d3a-478e-bb4e-b421ab5daaf2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -265,17 +265,6 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""faf1124d-c4c8-4c7f-8f1d-9bbfc55cdfa5"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -333,6 +322,17 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""faf1124d-c4c8-4c7f-8f1d-9bbfc55cdfa5"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -533,12 +533,12 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Menu = m_UI.FindAction("Menu", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Select = m_UI.FindAction("Select", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
         m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
+        m_UI_Menu = m_UI.FindAction("Menu", throwIfNotFound: true);
         // Battle
         m_Battle = asset.FindActionMap("Battle", throwIfNotFound: true);
         m_Battle_Option = m_Battle.FindAction("Option", throwIfNotFound: true);
@@ -673,22 +673,22 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
-    private readonly InputAction m_UI_Menu;
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Select;
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_Click;
     private readonly InputAction m_UI_Point;
+    private readonly InputAction m_UI_Menu;
     public struct UIActions
     {
         private @MainInput m_Wrapper;
         public UIActions(@MainInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Menu => m_Wrapper.m_UI_Menu;
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Select => m_Wrapper.m_UI_Select;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @Click => m_Wrapper.m_UI_Click;
         public InputAction @Point => m_Wrapper.m_UI_Point;
+        public InputAction @Menu => m_Wrapper.m_UI_Menu;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -698,9 +698,6 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
-                @Menu.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
-                @Menu.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
-                @Menu.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
                 @Navigate.started -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
                 @Navigate.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
                 @Navigate.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
@@ -716,13 +713,13 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 @Point.started -= m_Wrapper.m_UIActionsCallbackInterface.OnPoint;
                 @Point.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnPoint;
                 @Point.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnPoint;
+                @Menu.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
+                @Menu.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
+                @Menu.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMenu;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Menu.started += instance.OnMenu;
-                @Menu.performed += instance.OnMenu;
-                @Menu.canceled += instance.OnMenu;
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
@@ -738,6 +735,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 @Point.started += instance.OnPoint;
                 @Point.performed += instance.OnPoint;
                 @Point.canceled += instance.OnPoint;
+                @Menu.started += instance.OnMenu;
+                @Menu.performed += instance.OnMenu;
+                @Menu.canceled += instance.OnMenu;
             }
         }
     }
@@ -850,12 +850,12 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
     }
     public interface IUIActions
     {
-        void OnMenu(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
         void OnPoint(InputAction.CallbackContext context);
+        void OnMenu(InputAction.CallbackContext context);
     }
     public interface IBattleActions
     {

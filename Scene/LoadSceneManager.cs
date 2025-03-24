@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-
-
+using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -69,7 +68,9 @@ public class LoadSceneManager : ScriptableObject
     }
 
     [SerializeField]
-    private SceneAsset loadingScene;
+    private SceneAsset _loadingScene;
+    public SceneAsset LoadingScene
+        => _loadingScene;
 
     [SerializeField]
     private List<SceneAsset> fieldRequireSceneAssets;
@@ -96,7 +97,10 @@ public class LoadSceneManager : ScriptableObject
     private List<string> SceneAssetsToString(List<SceneAsset> sceneAssets)
     {
         // Scene Asset 리스트에서 이름만 추출하여 내보내기
-        return sceneAssets.Select(scene => scene.name).ToList();
+        return sceneAssets
+            .Where(scene => scene != null)
+            .Select(scene => scene.name)
+            .ToList();
     }
 #endif
 
@@ -118,47 +122,46 @@ public class LoadSceneManager : ScriptableObject
 
     public void LoadTitleScene(SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        LoadScene(titleRequireScenes, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects, startEffect, endEffect, screen);
+        LoadScene(titleRequireScenes, null, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects, startEffect, endEffect, screen);
     }
 
     public void LoadFieldScene(string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        List<string> requireScenes = fieldRequireScenes.Append(loadMap).ToList();
-        LoadScene(requireScenes, unloadOptions, startEffect, endEffect, screen);
+        LoadScene(fieldRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen);
     }
 
     public void LoadBattleScene(string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        List<string> requireScenes = battleRequireScenes.Append(loadMap).ToList();
-        LoadScene(requireScenes, unloadOptions, startEffect, endEffect, screen);
+        LoadScene(battleRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen);
     }
 
-    private void LoadScene(List<string> requireScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
+    private async void LoadScene(List<string> requireScenes, string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        // 로딩씬 불러오기
-        // -> 로딩씬 전환 애니메이션 띄우기
-        // -> 종료 시 로딩화면 띄우기
-        // -> 필요없는 씬 제거
-        // -> 제거 후 필요한 씬 불러오기
-        // -> 모든 씬을 불러왔다면 씬제거 애니메이션 띄우기
-
         List<string> activeScenes = FindActiveScenes();
 
-        // 현재 활성화되어 있는 씬 중에서 제거할 씬 찾기
-        List<string> unloadScenes = activeScenes
-            .Where(scene => !requireScenes.Contains(scene))
-            .ToList();
+        // 활성화된 씬과 필요한 씬 비교 후 각각 로드할 씬, 언로드할 씬 리스트 생성
+        List<string> unloadScenes = activeScenes.Except(requireScenes).ToList();
+        List<string> loadScenes = requireScenes.Except(activeScenes).ToList();
 
-        // 활성화해야 할 씬 중에서 현재 활성화되어 있지 않는 씬 찾기
-        List<string> loadScenes = requireScenes
-            .Where(scene => !activeScenes.Contains(scene))
-            .ToList();
+        // 같은 맵이어도 다시 로드하기 위해 활성화 할 목록에 추가
+        if (!string.IsNullOrEmpty(loadMap)) loadScenes.Add(loadMap);
 
         // 로딩씬 불러오기
-        SceneManager.LoadSceneAsync(loadingScene.name, LoadSceneMode.Additive);
+        await LoadSceneAsyncTask(LoadingScene.name, LoadSceneMode.Additive);
 
         // 로딩화면 띄우기
-        loadingScreen.EnableScreen(loadScenes, unloadScenes, startEffect, endEffect, screen);
+        loadingScreen.EnableScreen(loadScenes, unloadScenes, unloadOptions, startEffect, endEffect, screen);
+    }
+
+    private async Task LoadSceneAsyncTask(string sceneName, LoadSceneMode mode)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, mode);
+        if (asyncLoad == null) return;
+
+        // TaskCompletionSource를 사용하여 완료될 때까지 대기
+        TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+        asyncLoad.completed += _ => tcs.SetResult(true);
+        await tcs.Task;
     }
 
     private List<string> FindActiveScenes()

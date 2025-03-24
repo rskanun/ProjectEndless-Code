@@ -23,6 +23,7 @@ public class BlurFadeInEffect : MonoBehaviour, ITransitionEffect
             .OnComplete(() =>
             {
                 completeAction?.Invoke();
-            });
+            })
+            .SetUpdate(true);
     }
 }

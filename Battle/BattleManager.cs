@@ -58,6 +58,8 @@ public class BattleManager : MonoBehaviour
         battleData = CurrentBattleData.Instance;
         battleSeq = battleData.Sequence;
 
+        Time.timeScale = 1.0f;
+
         // 임시 몹 데이터 집어넣기
         OnEncounter(fieldData);
     }

@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour, IController
 
     // 메뉴 상태
     private bool isOpened;
+    private bool isOpenedApp;
 
     private void Awake()
     {
@@ -24,21 +25,23 @@ public class MenuController : MonoBehaviour, IController
     {
         MainInput.UIActions uiInput = ControlContext.Instance.KeyInput.UI;
 
-        uiInput.Cancel.performed += OnCancelKeyPressed;
         uiInput.Menu.performed += OnMenuKeyPressed;
+        uiInput.Cancel.performed += OnCancelKeyPressed;
+        uiInput.Cancel.started += UpdateAppOpend;
     }
 
     public void ControlDisconnect()
     {
         MainInput.UIActions uiInput = ControlContext.Instance.KeyInput.UI;
 
-        uiInput.Cancel.performed -= OnCancelKeyPressed;
         uiInput.Menu.performed -= OnMenuKeyPressed;
+        uiInput.Cancel.performed -= OnCancelKeyPressed;
+        uiInput.Cancel.started -= UpdateAppOpend;
     }
 
     private void OnMenuKeyPressed(InputAction.CallbackContext context)
     {
-        if (menuManager.IsOpenedApp)
+        if (isOpenedApp)
         {
             // 앱이 열린 상태면 무시
             return;
@@ -63,5 +66,10 @@ public class MenuController : MonoBehaviour, IController
         // 앱 또는 팝업창 닫기
         if (PopupManager.Instance.isActive) PopupManager.Instance.Close();
         else if (menuManager.IsOpenedApp) menuManager.CloseApp();
+    }
+
+    private void UpdateAppOpend(InputAction.CallbackContext context)
+    {
+        isOpenedApp = menuManager.IsOpenedApp;
     }
 }

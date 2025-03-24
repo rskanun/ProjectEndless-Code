@@ -19,17 +19,20 @@ public class LoadingAnimation : MonoBehaviour, ILoadAnimation
         // 이미 로딩중이면 무시
         if (isLoading) return;
 
-        StartCoroutine(SceneLoadCoroutine(loadScenes, unloadScenes, unloadOptions, completeAction));
-        StartCoroutine(LoadingCoroutine());
+        StartCoroutine(SceneLoadCoroutine(loadScenes, unloadScenes, unloadOptions));
+        StartCoroutine(LoadingCoroutine(completeAction));
     }
 
-    private IEnumerator LoadingCoroutine()
+    private IEnumerator LoadingCoroutine(Action completeAction)
     {
         int[] dotCounts = { 3, 0, 1, 2 }; // 점 개수 패턴
         int index = 0;
         float delay = 0.5f;
-
         float timer = 0.0f;
+
+        // 로딩 텍스트 활성화
+        textObj.SetActive(true);
+
         while (isLoading || timer < minTime)
         {
             loadingText.text = "Loading" + new string('.', dotCounts[index]);
@@ -40,9 +43,14 @@ public class LoadingAnimation : MonoBehaviour, ILoadAnimation
             // 딜레이 만큼 경과 시간 추가
             timer += delay;
         }
+
+        // 로딩이 끝났다면 텍스트 비활성화
+        textObj.SetActive(false);
+
+        completeAction?.Invoke();
     }
 
-    private IEnumerator SceneLoadCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action completeAction)
+    private IEnumerator SceneLoadCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions)
     {
         isLoading = true;
 

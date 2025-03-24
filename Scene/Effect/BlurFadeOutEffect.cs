@@ -24,6 +24,7 @@ public class BlurFadeOutEffect : MonoBehaviour, ITransitionEffect
             {
                 blurMaterial.SetFloat("_Radius", 0);
                 completeAction?.Invoke();
-            });
+            })
+            .SetUpdate(true);
     }
 }

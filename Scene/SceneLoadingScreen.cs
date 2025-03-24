@@ -51,7 +51,7 @@ public class SceneLoadingScreen : MonoBehaviour
      * 현재 활성화 된 씬 중에 필요없는 씬을 지우고 필요한 씬 불러오기
      ************************************************************/
 
-    public void EnableScreen(List<string> loadScenes, List<string> unloadScenes, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
+    public void EnableScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         if (loadingCoroutine != null)
         {
@@ -59,10 +59,10 @@ public class SceneLoadingScreen : MonoBehaviour
             return;
         }
 
-        loadingCoroutine = StartCoroutine(SceneLoading(loadScenes, unloadScenes, startEffect, endEffect, screen));
+        loadingCoroutine = StartCoroutine(SceneLoading(loadScenes, unloadScenes, unloadOptions, startEffect, endEffect, screen));
     }
 
-    private IEnumerator SceneLoading(List<string> loadScenes, List<string> unloadScenes, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
+    private IEnumerator SceneLoading(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         // 로딩 중엔 어떠한 키 입력도 받지 않기
         ControlContext.Instance.KeyLock();
@@ -71,12 +71,19 @@ public class SceneLoadingScreen : MonoBehaviour
         PlayTransitionEffect(startEffect);
         yield return new WaitWhile(() => isPlayAnimation);
 
-        // 
+        // 씬 로딩 애니메이션 띄우기
+        EnableLoadingScreen(loadScenes, unloadScenes, unloadOptions, screen);
+        yield return new WaitWhile(() => isPlayAnimation);
+
+        // 로딩 이후 전환 연출 실행
+        PlayTransitionEffect(endEffect);
+        yield return new WaitWhile(() => isPlayAnimation);
 
         // 로딩이 끝났다면 키 입력 받기
         ControlContext.Instance.KeyUnlock();
 
         loadingCoroutine = null;
+        SceneManager.UnloadSceneAsync(LoadSceneManager.Instance.LoadingScene.name);
     }
 
     /************************************************************
@@ -97,9 +104,9 @@ public class SceneLoadingScreen : MonoBehaviour
      * 씬을 불러올 동안의 로딩 간에 띄울 애니메이션 관리
      ************************************************************/
 
-    private void EnableLoadingScreen(List<string> loadScenes, List<string> unloadScenes, LoadingScreen screen)
+    private void EnableLoadingScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, LoadingScreen screen)
     {
         isPlayAnimation = true;
-        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, () => isPlayAnimation = false);
+        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, unloadOptions, () => isPlayAnimation = false);
     }
 }

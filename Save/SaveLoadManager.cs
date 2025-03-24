@@ -261,19 +261,18 @@ public class SaveLoadManager : ScriptableObject
 
     public void LoadSaveFile(SaveData data)
     {
-        loadData = data;
-        SceneManager.sceneLoaded += LoadData;
+        // 회귀 여부에 따라 로딩 연출을 다르게 함
+        LoadingScreen screen = IsRequireReturn(data) ? LoadingScreen.ClockLoading : LoadingScreen.Loading;
+        MapData map = MapManager.FindMap(data.mapData.id);
 
-        // 씬 이동
-        MapManager.LoadMap(data.mapData.id);
+        LoadSceneManager.Instance.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
     }
 
-    private void LoadData(Scene scene, LoadSceneMode mode)
+    private bool IsRequireReturn(SaveData data)
     {
-        if (loadData != null)
-        {
-            LoadGameData(loadData);
-            SceneManager.sceneLoaded -= LoadData;
-        }
+        // 현재 데이터와 불러올 데이터를 대조하여 회귀할 필요가 있는지 판단
+        // #지금 단계에선 시간대가 과거인지만 판단
+        Date loadDate = Date.StrToDate(data.storyData.date);
+        return loadDate < ReadOnlyGameData.Instance.Date;
     }
 }
