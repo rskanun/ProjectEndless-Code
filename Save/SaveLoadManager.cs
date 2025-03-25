@@ -152,6 +152,8 @@ public class SaveLoadManager : ScriptableObject
 
         data.id = gameData.MapData.ID;
         data.name = gameData.MapData.Name;
+        data.currentArea = gameData.MapData.GetCurrentAreaID();
+        data.areas = gameData.MapData.GetAreaDatas();
 
         return data;
     }
@@ -248,6 +250,8 @@ public class SaveLoadManager : ScriptableObject
         MapData map = MapManager.FindMap(data.id);
 
         gameData.MapData = map;
+        gameData.MapData.SetCurrentArea(data.currentArea);
+        gameData.MapData.SetAreaDatas(data.areas);
     }
 
     private void SetQuestData(SaveQuestData data)

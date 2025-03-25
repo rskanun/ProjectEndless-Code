@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
     public void UpdateLocation()
     {
         // 현재 게임 데이터에 저장된 값의 위치 데이터 불러오기
-        rigid.MovePosition(ReadOnlyGameData.Instance.Position);
+        transform.position = ReadOnlyGameData.Instance.Position;
     }
 
     public void MoveTo(Vector2 direction)

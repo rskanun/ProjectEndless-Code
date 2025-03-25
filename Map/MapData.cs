@@ -47,7 +47,8 @@ public class MapData : ScriptableObject
     private AreaManager manager;
 
     // 임시로 지닌 로드될 구역 데이터
-    private List<AreaData> loadDatas;
+    private int loadCurrentAreaID;
+    private List<AreaData> loadAreaDatas;
 
     public override bool Equals(object other)
     {
@@ -69,12 +70,14 @@ public class MapData : ScriptableObject
         this.manager = manager;
 
         // 관리자 연결 시 불러올 데이터가 있는 경우
-        if (loadDatas != null && loadDatas.Count > 0)
+        if (loadAreaDatas != null && loadAreaDatas.Count > 0)
         {
-            manager.SetAreaDatas(loadDatas);
+            SetCurrentArea(loadCurrentAreaID);
+            SetAreaDatas(loadAreaDatas);
 
             // 임시 데이터 비우기
-            loadDatas = null;
+            loadCurrentAreaID = 0;
+            loadAreaDatas = null;
         }
     }
 
@@ -83,16 +86,27 @@ public class MapData : ScriptableObject
         manager = null;
     }
 
+    public int GetCurrentAreaID()
+    {
+        if (manager == null) return 0;
+        return manager.CurrentArea.ID;
+    }
+
+    public void SetCurrentArea(int id)
+    {
+        if (manager == null) loadCurrentAreaID = id;
+        else manager.SetCurrentArea(id);
+    }
+
     public List<AreaData> GetAreaDatas()
     {
         if (manager == null) return new List<AreaData>();
-
         return manager.GetAreaDatas();
     }
 
     public void SetAreaDatas(List<AreaData> datas)
     {
-        if (manager == null) loadDatas = datas;
+        if (manager == null) loadAreaDatas = datas;
         else manager.SetAreaDatas(datas);
     }
 }

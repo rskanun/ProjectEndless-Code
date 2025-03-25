@@ -67,6 +67,21 @@ public struct SaveMapData
 {
     public string id;
     public string name;
+    public int currentArea;
+    public List<AreaData> areas;
+}
+
+[System.Serializable]
+public class AreaData
+{
+    public int id;
+    public bool isClearArea;
+
+    public AreaData(int id, bool isClearArea)
+    {
+        this.id = id;
+        this.isClearArea = isClearArea;
+    }
 }
 
 [System.Serializable]

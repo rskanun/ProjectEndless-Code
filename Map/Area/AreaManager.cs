@@ -38,6 +38,22 @@ public class AreaManager : MonoBehaviour
         areas.Remove(area);
     }
 
+    /************************************************************
+     * [세이브 로드]
+     * 
+     * 세이브 및 로드 시 필요한 정보 주고 받고 이를 적용
+     ************************************************************/
+
+    private void OnEnable()
+    {
+        map.RegisterManager(this);
+    }
+
+    private void OnDisable()
+    {
+        map.RemoveManager();
+    }
+
     public List<AreaData> GetAreaDatas()
     {
         return areas.Select(area => area.GetAreaData()).ToList();
@@ -60,6 +76,16 @@ public class AreaManager : MonoBehaviour
         }
     }
 
+    public void SetCurrentArea(int id)
+    {
+        // 해당 ID를 가진 Area 찾기
+        FieldArea area = areas.FirstOrDefault(a => a.ID == id);
+
+        // 해당 구역을 현재 구역으로 설정
+        CurrentArea = area;
+        EnableArea(area);
+    }
+
     /************************************************************
      * [구역 이동]
      * 
@@ -68,12 +94,11 @@ public class AreaManager : MonoBehaviour
 
     public void OnEntedArea(FieldArea area)
     {
-        Debug.Log("Enter Area: " + area);
+        Debug.Log("Enter: " + area);
         // 첫 방문 구역일 경우
         if (LastEntedArea == null)
         {
             // 해당 구역 활성화
-            CurrentArea = area;
             EnableArea(area);
         }
 
@@ -83,7 +108,7 @@ public class AreaManager : MonoBehaviour
 
     public void OnExitedArea(FieldArea area)
     {
-        Debug.Log("Exit Area: " + area);
+        Debug.Log("Exit: " + area);
         if (CurrentArea != area)
         {
             // 나간 영역이 현재 구역이 아닐 경우 무시

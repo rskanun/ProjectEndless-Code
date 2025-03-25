@@ -1,42 +1,31 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class AreaData
-{
-    [ReadOnly]
-    public int id;
-    public bool isClearArea;
-
-    public AreaData(int id, bool isClearArea)
-    {
-        this.id = id;
-        this.isClearArea = isClearArea;
-    }
-}
-
 [RequireComponent(typeof(PolygonCollider2D))]
 public class FieldArea : MonoBehaviour
 {
     [Header("구역 정보")]
-    [SerializeField]
-    private AreaData areaData;
+    [ReadOnly, SerializeField]
+    private int _id;
     public int ID
     {
         get
         {
-            if (areaData.id == 0)
-                areaData.id = GetInstanceID();
-
-            return areaData.id;
+#if UNITY_EDITOR
+            if (_id == 0)
+                CreateID();
+#endif
+            return _id;
         }
     }
+    [SerializeField]
+    private bool _isClearArea;
     public bool IsClearArea
     {
-        get { return areaData.isClearArea; }
+        get { return _isClearArea; }
         set
         {
-            areaData.isClearArea = value;
+            _isClearArea = value;
             if (IsClearArea)
             {
                 SetActiveMonsters(false);
@@ -64,6 +53,15 @@ public class FieldArea : MonoBehaviour
         {
             manager = transform.GetComponentInParent<AreaManager>();
         }
+
+        // ID값 할당
+        CreateID();
+    }
+
+    private void CreateID()
+    {
+        if (_id == 0)
+            _id = GetInstanceID();
     }
 #endif
 
