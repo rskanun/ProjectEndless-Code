@@ -1,17 +1,47 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class AreaData
+{
+    [ReadOnly]
+    public int id;
+    public bool isClearArea;
+
+    public AreaData(int id, bool isClearArea)
+    {
+        this.id = id;
+        this.isClearArea = isClearArea;
+    }
+}
+
 [RequireComponent(typeof(PolygonCollider2D))]
 public class FieldArea : MonoBehaviour
 {
-    private AreaManager manager;
-
     [Header("구역 정보")]
-    private bool _isClearArea;
+    [SerializeField]
+    private AreaData areaData;
+    public int ID
+    {
+        get
+        {
+            if (areaData.id == 0)
+                areaData.id = GetInstanceID();
+
+            return areaData.id;
+        }
+    }
     public bool IsClearArea
     {
-        get { return _isClearArea; }
-        set { _isClearArea = value; }
+        get { return areaData.isClearArea; }
+        set
+        {
+            areaData.isClearArea = value;
+            if (IsClearArea)
+            {
+                SetActiveMonsters(false);
+            }
+        }
     }
     private PolygonCollider2D _areaCollider;
     public PolygonCollider2D AreaCollider
@@ -22,6 +52,8 @@ public class FieldArea : MonoBehaviour
     private List<GameObject> fieldMonsters;
     [SerializeField]
     private BattleFieldData fieldData;
+
+    private AreaManager manager;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -35,12 +67,12 @@ public class FieldArea : MonoBehaviour
     }
 #endif
 
-    public void OnEnable()
+    private void OnEnable()
     {
         manager.RegisterArea(this);
     }
 
-    public void OnDisable()
+    private void OnDisable()
     {
         manager.RemoveArea(this);
     }
@@ -59,6 +91,11 @@ public class FieldArea : MonoBehaviour
         {
             manager.OnExitedArea(this);
         }
+    }
+
+    public AreaData GetAreaData()
+    {
+        return new AreaData(ID, IsClearArea);
     }
 
     public void SetActiveMonsters(bool isActive)

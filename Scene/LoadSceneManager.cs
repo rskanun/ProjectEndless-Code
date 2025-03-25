@@ -67,6 +67,8 @@ public class LoadSceneManager : ScriptableObject
         }
     }
 
+    public static SceneLoadingScreen.LoadingCallBack loadingCallBack;
+
     [SerializeField]
     private SceneAsset _loadingScene;
     public SceneAsset LoadingScene
@@ -114,6 +116,12 @@ public class LoadSceneManager : ScriptableObject
         loadingScreen = null;
     }
 
+    public void InitCallBack()
+    {
+        // 콜백 함수 초기화
+        loadingCallBack = () => { };
+    }
+
     /************************************************************
      * [씬 전환]
      * 
@@ -148,6 +156,10 @@ public class LoadSceneManager : ScriptableObject
 
         // 로딩씬 불러오기
         await LoadSceneAsyncTask(LoadingScene.name, LoadSceneMode.Additive);
+
+        // 로딩 간에 실행될 함수 설정
+        loadingCallBack += () => InitCallBack();
+        loadingScreen.loadingCallBack = loadingCallBack;
 
         // 로딩화면 띄우기
         loadingScreen.EnableScreen(loadScenes, unloadScenes, unloadOptions, startEffect, endEffect, screen);

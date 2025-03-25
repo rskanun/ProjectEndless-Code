@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AreaManager : MonoBehaviour
 {
-    // 해당 맵의 구역 관리
-    // -> 세이브 로드 시 해치운 구역 정보 주고 받는 역할
-    // -> 현재 구역 관리
+    [SerializeField]
+    private MapData map;
 
     // 해당 맵의 구역 정보
     private HashSet<FieldArea> areas = new HashSet<FieldArea>();
 
+    [ReadOnly, SerializeField]
     private FieldArea _currentArea;
     public FieldArea CurrentArea
     {
@@ -17,6 +18,7 @@ public class AreaManager : MonoBehaviour
         get { return _currentArea; }
     }
 
+    [ReadOnly, SerializeField]
     private FieldArea _lastEntedArea;
     public FieldArea LastEntedArea
     {
@@ -36,8 +38,37 @@ public class AreaManager : MonoBehaviour
         areas.Remove(area);
     }
 
+    public List<AreaData> GetAreaDatas()
+    {
+        return areas.Select(area => area.GetAreaData()).ToList();
+    }
+
+    public void SetAreaDatas(List<AreaData> datas)
+    {
+        if (datas == null) return;
+
+        foreach (AreaData data in datas)
+        {
+            // 해당 ID를 가진 Area 찾기
+            FieldArea area = areas.FirstOrDefault(a => a.ID == data.id);
+
+            // 찾은 Area가 존재하면 IsClearArea를 업데이트
+            if (area != null)
+            {
+                area.IsClearArea = data.isClearArea;
+            }
+        }
+    }
+
+    /************************************************************
+     * [구역 이동]
+     * 
+     * 특정 구역에 들어오거나 나갈 때 실행될 함수 관리
+     ************************************************************/
+
     public void OnEntedArea(FieldArea area)
     {
+        Debug.Log("Enter Area: " + area);
         // 첫 방문 구역일 경우
         if (LastEntedArea == null)
         {
@@ -52,6 +83,7 @@ public class AreaManager : MonoBehaviour
 
     public void OnExitedArea(FieldArea area)
     {
+        Debug.Log("Exit Area: " + area);
         if (CurrentArea != area)
         {
             // 나간 영역이 현재 구역이 아닐 경우 무시

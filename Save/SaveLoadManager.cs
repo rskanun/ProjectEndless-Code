@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using Endless.GameData;
 using UnityEngine.SceneManagement;
 
-
-
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -112,8 +108,7 @@ public class SaveLoadManager : ScriptableObject
     {
         List<SaveMemberData> data = new List<SaveMemberData>();
 
-        PartyData partyData = PartyData.Instance;
-        foreach (CharacterData member in partyData.AllMemberList)
+        foreach (CharacterData member in PartyData.Instance.GetAllCharacters())
         {
             SaveMemberData memberData = new SaveMemberData();
 
@@ -121,7 +116,7 @@ public class SaveLoadManager : ScriptableObject
             memberData.isUnlocked = member.IsUnlocked;
             memberData.isParty = member.IsParty;
             memberData.hp = member.Stat.HP;
-            memberData.maxSP = member.Stat.MaxSP;
+            memberData.maxHP = member.Stat.MaxHP;
             memberData.str = member.Stat.STR;
             memberData.agi = member.Stat.AGI;
             memberData.def = member.Stat.DEF;
@@ -210,6 +205,9 @@ public class SaveLoadManager : ScriptableObject
         SetStoryData(data.storyData);
         SetMapData(data.mapData);
         SetQuestData(data.questData);
+
+        // 세이브 데이터 로드로 인해 변수가 바뀌었음을 알림
+        GameEventResource.Instance.DataLoadEvent.NotifyUpdate();
     }
 
     private void SetPlayerData(SavePlayerData data)
@@ -265,6 +263,8 @@ public class SaveLoadManager : ScriptableObject
         LoadingScreen screen = IsRequireReturn(data) ? LoadingScreen.ClockLoading : LoadingScreen.Loading;
         MapData map = MapManager.FindMap(data.mapData.id);
 
+        // 로딩 과정에서 데이터 불러오기
+        LoadSceneManager.loadingCallBack += () => LoadGameData(data);
         LoadSceneManager.Instance.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
     }
 

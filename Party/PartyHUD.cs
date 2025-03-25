@@ -7,7 +7,7 @@ public class PartyHUD : MonoBehaviour
     public Transform hudContainer;
     public GameObject hudPrefab;
 
-    // ��Ƽ HUD
+    // 파티 HUD
     private Dictionary<string, HUD> partyHUDs = new Dictionary<string, HUD>();
 
     private void Start()
@@ -22,6 +22,18 @@ public class PartyHUD : MonoBehaviour
             hud.InitData(entity);
 
             partyHUDs[entity.Name] = hud;
+        }
+    }
+
+    public void UpdateStat()
+    {
+        // 데이터 로드로 전체적인 데이터가 변한 경우
+        List<CharacterData> party = PartyData.Instance.GetPartyMembers();
+        foreach (CharacterData entity in party)
+        {
+            EntityStat stat = entity.Stat;
+            partyHUDs[entity.Name].UpdateHP(stat.HP, stat.MaxHP);
+            partyHUDs[entity.Name].UpdateSP(stat.SP, stat.MaxSP);
         }
     }
 

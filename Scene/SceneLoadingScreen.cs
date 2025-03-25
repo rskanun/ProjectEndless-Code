@@ -16,9 +16,12 @@ public class SceneLoadingScreen : MonoBehaviour
     [SerializeField] private ClockLoadingAnimation clockLoading;
 
     private Dictionary<SceneFadeEffect, Action<Action>> sceneEffects;
-    private Dictionary<LoadingScreen, Action<List<string>, List<string>, UnloadSceneOptions, Action>> loadingAnimations;
+    private Dictionary<LoadingScreen, Action<List<string>, List<string>, UnloadSceneOptions, Action, Action>> loadingAnimations;
     private Coroutine loadingCoroutine;
     private bool isPlayAnimation;
+
+    public delegate void LoadingCallBack();
+    public LoadingCallBack loadingCallBack;
 
     private void Awake()
     {
@@ -28,7 +31,7 @@ public class SceneLoadingScreen : MonoBehaviour
             { SceneFadeEffect.BlurFadeIn, blurFadeIn.OnPlayEffect }
         };
 
-        loadingAnimations = new Dictionary<LoadingScreen, Action<List<string>, List<string>, UnloadSceneOptions, Action>>
+        loadingAnimations = new Dictionary<LoadingScreen, Action<List<string>, List<string>, UnloadSceneOptions, Action, Action>>
         {
             { LoadingScreen.Loading, loading.OnPlayAnimation },
             { LoadingScreen.ClockLoading, clockLoading.OnPlayAnimation }
@@ -107,6 +110,6 @@ public class SceneLoadingScreen : MonoBehaviour
     private void EnableLoadingScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, LoadingScreen screen)
     {
         isPlayAnimation = true;
-        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, unloadOptions, () => isPlayAnimation = false);
+        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, unloadOptions, () => loadingCallBack.Invoke(), () => isPlayAnimation = false);
     }
 }

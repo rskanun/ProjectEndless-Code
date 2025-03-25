@@ -53,30 +53,22 @@ public class GameEventResource : ScriptableObject
     [Header("필드 이벤트")]
     [SerializeField]
     private GameEvent _areaMoveEvent;
-    public GameEvent AreaMoveEvent
-    {
-        get { return _areaMoveEvent; }
-    }
+    public GameEvent AreaMoveEvent => _areaMoveEvent;
+
+    [SerializeField]
+    private GameEvent _dataLoadEvent;
+    public GameEvent DataLoadEvent => _dataLoadEvent;
 
     [Header("전투 이벤트")]
     [SerializeField]
     private GameEvent _sequenceUpdateEvent;
-    public GameEvent SequenceUpdateEvent
-    {
-        get { return _sequenceUpdateEvent; }
-    }
+    public GameEvent SequenceUpdateEvent => _sequenceUpdateEvent;
 
     [SerializeField]
     private GameEvent _endTurnEvent;
-    public GameEvent EndTurnEvent
-    {
-        get { return _endTurnEvent; }
-    }
+    public GameEvent EndTurnEvent => _endTurnEvent;
 
     [SerializeField]
     private GameEvent _startTurnEvent;
-    public GameEvent StartTurnEvent
-    {
-        get { return _startTurnEvent; }
-    }
+    public GameEvent StartTurnEvent => _startTurnEvent;
 }

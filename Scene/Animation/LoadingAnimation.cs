@@ -14,12 +14,12 @@ public class LoadingAnimation : MonoBehaviour, ILoadAnimation
     private bool isLoading;
     private float minTime = 2.0f;
 
-    public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action completeAction)
+    public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction, Action completeAction)
     {
         // 이미 로딩중이면 무시
         if (isLoading) return;
 
-        StartCoroutine(SceneLoadCoroutine(loadScenes, unloadScenes, unloadOptions));
+        StartCoroutine(SceneLoadCoroutine(loadScenes, unloadScenes, unloadOptions, loadAction));
         StartCoroutine(LoadingCoroutine(completeAction));
     }
 
@@ -50,7 +50,7 @@ public class LoadingAnimation : MonoBehaviour, ILoadAnimation
         completeAction?.Invoke();
     }
 
-    private IEnumerator SceneLoadCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions)
+    private IEnumerator SceneLoadCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction)
     {
         isLoading = true;
 
@@ -65,6 +65,9 @@ public class LoadingAnimation : MonoBehaviour, ILoadAnimation
         {
             yield return SceneManager.LoadSceneAsync(loadScene, LoadSceneMode.Additive);
         }
+
+        // 로딩 시 실행해야할 함수 실행
+        loadAction?.Invoke();
 
         // 로딩 종료
         isLoading = false;

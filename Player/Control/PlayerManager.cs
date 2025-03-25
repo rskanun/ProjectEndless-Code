@@ -45,6 +45,12 @@ public class PlayerManager : MonoBehaviour
      * 플레이어의 이동을 제어
      ************************************************************/
 
+    public void UpdateLocation()
+    {
+        // 현재 게임 데이터에 저장된 값의 위치 데이터 불러오기
+        rigid.MovePosition(ReadOnlyGameData.Instance.Position);
+    }
+
     public void MoveTo(Vector2 direction)
     {
         this.direction = direction;

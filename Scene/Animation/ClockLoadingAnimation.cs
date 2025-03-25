@@ -18,17 +18,17 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
     private bool isLoading;
     private RemainTime time;
 
-    public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action completeAction)
+    public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction, Action completeAction)
     {
         // 이미 로딩중이면 무시
         if (isLoading) return;
 
         isLoading = true;
-        StartCoroutine(LoadingCoroutine(loadScenes, unloadScenes, unloadOptions, completeAction));
+        StartCoroutine(LoadingCoroutine(loadScenes, unloadScenes, unloadOptions, loadAction, completeAction));
         StartCoroutine(TimerBlink());
     }
 
-    private IEnumerator LoadingCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOpions, Action completeAction)
+    private IEnumerator LoadingCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOpions, Action loadAction, Action completeAction)
     {
         // 이펙트 전용 시간 복사해놓기기
         time = ReadOnlyGameData.Instance.Time.Clone();
@@ -58,7 +58,7 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
 
         // 텀을 준 뒤 로딩화면 띄우기
         yield return new WaitForSeconds(0.6f);
-        loading.OnPlayAnimation(loadScenes, unloadScenes, unloadOpions, completeAction);
+        loading.OnPlayAnimation(loadScenes, unloadScenes, unloadOpions, loadAction, completeAction);
     }
 
     private IEnumerator TimerBlink()
