@@ -4,6 +4,6 @@ public class TurnTrigger : EventTrigger
 
     public override bool IsTrigger()
     {
-        return turn <= CurrentBattleData.Instance.PassedTurn;
+        return turn <= BattleData.Instance.PassedTurn;
     }
 }

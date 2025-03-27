@@ -30,7 +30,7 @@ public class ActionManager : MonoBehaviour
 
     private void Awake()
     {
-        selectionData = CurrentBattleData.Instance.SelectionData;
+        selectionData = BattleData.Instance.SelectionData;
     }
 
     public void OpenSelection(ISelection selection)

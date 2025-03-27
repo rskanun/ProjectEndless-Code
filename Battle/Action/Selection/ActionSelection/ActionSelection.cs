@@ -14,7 +14,7 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void OpenSelection()
     {
-        CurrentBattleData battleData = CurrentBattleData.Instance;
+        BattleData battleData = BattleData.Instance;
 
         // 현재 턴인 캐릭터 설정
         actor = battleData.SelectionData.actor;

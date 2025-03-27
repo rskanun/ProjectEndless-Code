@@ -48,7 +48,7 @@ public class AssistAttackManager : MonoBehaviour
         ui.SetActivePlayerSelectIcon(true);
 
         // 지원 가능한 캐릭터 목록 띄우기
-        ActiveAssistableChr(CurrentBattleData.Instance.LivingCharacters);
+        ActiveAssistableChr(BattleData.Instance.LivingCharacters);
     }
 
     private void ActiveAssistableChr(List<Entity> livingChrs)
@@ -83,7 +83,7 @@ public class AssistAttackManager : MonoBehaviour
 
         // 지원 공격
         Entity attacker = index.HasValue ? assistMembers[index.Value] : defender;
-        BattleAction action = CurrentBattleData.Instance.Sequence.GetEntityAction(attacker);
+        BattleAction action = BattleData.Instance.Sequence.GetEntityAction(attacker);
 
         if (IsAssistableSkill(action, out SkillAction skillAction))
         {
@@ -128,7 +128,7 @@ public class AssistAttackManager : MonoBehaviour
 
     private void OnActionAssistSkill(SkillAction skillAction)
     {
-        BattleSequence sequence = CurrentBattleData.Instance.Sequence;
+        BattleSequence sequence = BattleData.Instance.Sequence;
 
         // 본래 사용할 행동 대신 대기 모션 예약
         sequence.RemoveTurn(skillAction.actor);

@@ -56,7 +56,7 @@ public class BattleSequence
         }
 
         // 전투 데이터에 경과한 만큼의 턴 추가
-        CurrentBattleData.Instance.OnPassedTurn(turn);
+        BattleData.Instance.OnPassedTurn(turn);
     }
 
     public BattleAction GetTurnAction(int index)

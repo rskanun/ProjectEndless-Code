@@ -22,7 +22,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         ui.SetActiveWindow(true);
 
         // 스킬 정보 배치
-        Character actor = CurrentBattleData.Instance.SelectionData.actor;
+        Character actor = BattleData.Instance.SelectionData.actor;
         InitSkillsInfo(actor.SkillList, actor, actor.Stat.SP);
 
         // 초기 스킬 선택

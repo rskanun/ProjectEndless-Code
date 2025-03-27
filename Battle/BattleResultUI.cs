@@ -17,7 +17,7 @@ public class BattleResultUI : MonoBehaviour
         resultWindow.SetActive(true);
 
         // UI 정보 설정
-        CurrentBattleData battleData = CurrentBattleData.Instance;
+        BattleData battleData = BattleData.Instance;
 
         SetGold(battleData.TotalAmount);
         SetDropItems(battleData.DropItems);

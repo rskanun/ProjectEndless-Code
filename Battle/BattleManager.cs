@@ -16,6 +16,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Timeline timeline;
     [SerializeField] private BattleResultUI resultUI;
     [SerializeField] private TargetSelection selectionManager;
+    [SerializeField] private BattleCameraManager cameraManager;
 
     [Header("엔티티 배치")]
     [SerializeField]
@@ -28,9 +29,11 @@ public class BattleManager : MonoBehaviour
     [Header("테스트 필드 몬스터")]
     [SerializeField] private BattleFieldData fieldData;
 
-    // 참조 데이터
-    private CurrentBattleData battleData;
+    [Header("전투 데이터")]
+    public BattleData battleData;
     private BattleSequence battleSeq;
+
+    private BattleCameraDirector director;
 
     // 전투 진행 상태
     private bool isTurnEnded = false;
@@ -55,7 +58,8 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-        battleData = CurrentBattleData.Instance;
+        director = BattleCameraDirector.Instance;
+        battleData = BattleData.Instance;
         battleSeq = battleData.Sequence;
 
         Time.timeScale = 1.0f;
@@ -93,15 +97,13 @@ public class BattleManager : MonoBehaviour
 
         // 플레이어 진형 파티 설정
         List<Character> playerParty = GetPlayerParty();
-        ReadyToJoinBattle(playerParty);
         entityList.AddRange(playerParty);
+        cameraManager.RegisterCameraToPlayerParty(playerParty);
 
         // 적 진형 파티 설정
         List<Monster> enemyParty = GetEnemyParty(fieldData.EncountMonsters);
         entityList.AddRange(enemyParty);
-
-        // 전투 데이터 초기화
-        battleData.Clear();
+        cameraManager.RegisterCameraToEnemyParty(enemyParty);
 
         // 전투에 참여하는 엔티티 목록 설정
         battleData.SetEnemyList(enemyParty);
@@ -132,16 +134,15 @@ public class BattleManager : MonoBehaviour
         // 파티 멤버 데이터를 가져와서 검색
         return partyData.GetPartyMembers()
             .Where(memberData => memberMap.TryGetValue(memberData.Name, out _))
-            .Select(memberData => memberMap[memberData.Name])
-            .ToList();
-    }
+            .Select(memberData =>
+            {
+                Character chr = memberMap[memberData.Name];
 
-    private void ReadyToJoinBattle(List<Character> playerParty)
-    {
-        foreach (Character member in playerParty)
-        {
-            member.OnJoinBattle();
-        }
+                // 전투 돌입 시의 설정
+                chr.OnJoinBattle();
+
+                return chr;
+            }).ToList();
     }
 
     private List<Monster> GetEnemyParty(List<GameObject> mobList)
@@ -164,9 +165,22 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator RunningBattle()
     {
+        // 전투 시작 상황을 위한 플레이어 그룹 카메라 잡아주기
+        // (기습 or 일반 or 역기습 애니메이션 연출)
+        director.FocusingPlayerParty();
+        yield return new WaitForSeconds(3.5f); // 현재는 시간이지만 나중엔 애니메이션이 끝나는데로
+
+        // 전체적인 상황 보여주기
+        director.FocusingFullScreen();
+        yield return new WaitForSeconds(2.5f);
+
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
+            // 턴 진행 전 전체적인 상황 포커싱
+            director.FocusingFullScreen();
+            yield return new WaitForSeconds(1.5f);
+
             // 턴 진행
             StartCoroutine(TakeTurn());
 
@@ -190,9 +204,7 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        Debug.Log($"{curAction.actor.Name} Check");
         yield return new WaitUntil(() => !curAction.actor.IsActionable);
-        Debug.Log($"{curAction.actor.Name} Complete");
 
         // 다음 턴에 진행할 행동 선택
         curAction.actor.TakeTurn();

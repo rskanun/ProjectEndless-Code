@@ -37,7 +37,7 @@ public abstract class Personality
     public void OnTurnStart()
     {
         // 다음 턴이 시작될 때, 해당 턴 정보 가져오기
-        BattleAction curAction = CurrentBattleData.Instance.Sequence.GetTurnAction(0);
+        BattleAction curAction = BattleData.Instance.Sequence.GetTurnAction(0);
 
         // 해당 턴 안의 필요한 정보 저장
         GatherCurTurnAction(curAction);

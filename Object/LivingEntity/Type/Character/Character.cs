@@ -52,7 +52,9 @@ public class Character : Entity
 
     protected override void SelectAction()
     {
-        Debug.Log("Open Selection");
+        // 행동 선택을 위해 카메라 위치 변경
+        BattleCameraDirector.Instance.FocusingSelection(GetInstanceID());
+
         // 행동 선택창 열기
         actionSelection.OnSelect(this);
     }

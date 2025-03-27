@@ -7,8 +7,8 @@ public class BattleController : MonoBehaviour, IController
     [SerializeField] private ActionManager actionManager;
 
     // 참조 데이터
-    private CurrentBattleData battleData
-        => CurrentBattleData.Instance;
+    private BattleData battleData
+        => BattleData.Instance;
 
     // 현재 전황 체크 상태인지
     private bool isSurvey;

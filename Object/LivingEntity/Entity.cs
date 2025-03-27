@@ -97,6 +97,7 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected BattleHUD hud;
     [SerializeField] protected StatusEffectManager effectManager;
     [SerializeField] protected EntitySurveyManager surveyManager;
+    public BattleCameraOption cameraOption;
 
     // 현재 상태
     private bool _isDead;
@@ -124,7 +125,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     // 전투 순서 데이터
-    protected CurrentBattleData battleData { private set; get; }
+    protected BattleData battleData { private set; get; }
     protected BattleSequence battleSeq { private set; get; }
 
     protected virtual void Awake()
@@ -134,7 +135,7 @@ public abstract class Entity : MonoBehaviour
 
     private void InitData()
     {
-        battleData = CurrentBattleData.Instance;
+        battleData = BattleData.Instance;
         battleSeq = battleData.Sequence;
     }
 
@@ -210,6 +211,9 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnAttack(Entity target)
     {
+        // 해당 엔티티를 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusingCharacter(GetInstanceID());
+
         // 타겟이 사망상태일 경우 다른 대상을 타겟으로 설정
         if (target != null && target.IsDead)
         {

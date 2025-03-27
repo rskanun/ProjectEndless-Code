@@ -11,7 +11,7 @@ public class SurveyManager : MonoBehaviour
     [SerializeField] private SurveyController thisController;
     [SerializeField] private BattleController mainController;
 
-    private CurrentBattleData battleData;
+    private BattleData battleData;
     private BattleSequence seq;
 
     private int prevIndex = -1;
@@ -19,7 +19,7 @@ public class SurveyManager : MonoBehaviour
 
     private void Awake()
     {
-        battleData = CurrentBattleData.Instance;
+        battleData = BattleData.Instance;
         seq = battleData.Sequence;
     }
 

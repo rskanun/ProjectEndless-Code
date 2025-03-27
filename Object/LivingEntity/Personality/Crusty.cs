@@ -15,7 +15,7 @@ public class Crusty : Personality
 
     public override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
     {
-        BattleSequence seq = CurrentBattleData.Instance.Sequence;
+        BattleSequence seq = BattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
         // 공격 순서에 따른 가중치 값

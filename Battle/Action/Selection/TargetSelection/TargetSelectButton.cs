@@ -133,7 +133,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         SelectedButton();
 
         // 예상 체력 보여주기
-        ForecastHP(CurrentBattleData.Instance.SelectionData.action);
+        ForecastHP(BattleData.Instance.SelectionData.action);
     }
 
     public void MultiSelected()
@@ -146,7 +146,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         SelectedButton();
 
         // 예상 체력 보여주기
-        ForecastHP(CurrentBattleData.Instance.SelectionData.action);
+        ForecastHP(BattleData.Instance.SelectionData.action);
     }
 
     private void SelectedButton()

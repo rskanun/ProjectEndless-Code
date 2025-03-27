@@ -31,12 +31,12 @@ public class TargetSelection : MonoBehaviour, ISelection
     private List<TargetSelectButton> selectButtons = new List<TargetSelectButton>();
 
     // 현재 변수
-    CurrentBattleData battleData;
+    BattleData battleData;
     private TargetType target;
 
     private void Awake()
     {
-        battleData = CurrentBattleData.Instance;
+        battleData = BattleData.Instance;
         targetSelectActions = new Dictionary<TargetType, Action>
         {
             { TargetType.FrontEnemy, ActiveEnemyFront },
@@ -51,8 +51,8 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     public void InitSelectableEntities()
     {
-        List<GameObject> enemyParty = GetPartyObjs(CurrentBattleData.Instance.EnemyList);
-        List<GameObject> playerParty = GetPartyObjs(CurrentBattleData.Instance.CharacterList);
+        List<GameObject> enemyParty = GetPartyObjs(BattleData.Instance.EnemyList);
+        List<GameObject> playerParty = GetPartyObjs(BattleData.Instance.CharacterList);
 
         AddButtonToList(enemyParty);
         AddButtonToList(playerParty);
@@ -122,7 +122,7 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveEnemyFront()
     {
-        if (!CurrentBattleData.Instance.IsLivingEnemyFront)
+        if (!BattleData.Instance.IsLivingEnemyFront)
         {
             // 전위가 없다면 모든 적 선택 가능
             ActiveEnemy();
