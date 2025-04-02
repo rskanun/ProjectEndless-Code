@@ -106,11 +106,17 @@ public abstract class Entity : MonoBehaviour
         private set { _isDead = value; }
         get { return _isDead; }
     }
-    private bool _isActionable;
-    public bool IsActionable
+    private bool _isActing;
+    public bool IsActing
     {
-        private set { _isActionable = value; }
-        get { return _isActionable; }
+        private set { _isActing = value; }
+        get { return _isActing; }
+    }
+    private bool _isEndAction;
+    public bool IsEndAction
+    {
+        private set { _isEndAction = value; }
+        get { return _isEndAction; }
     }
     private EntityStateManager _stateManager;
     protected EntityStateManager State
@@ -158,13 +164,13 @@ public abstract class Entity : MonoBehaviour
 
     public void OnActiveMotion(string motion)
     {
-        IsActionable = true;
+        IsActing = true;
         animator.SetTrigger(motion);
     }
 
     public void OnMotionEnd()
     {
-        IsActionable = false;
+        IsActing = false;
     }
 
     /***************************************************************
@@ -211,9 +217,6 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnAttack(Entity target)
     {
-        // 해당 엔티티를 향해 카메라 포커싱
-        BattleCameraDirector.Instance.FocusingCharacter(GetInstanceID());
-
         // 타겟이 사망상태일 경우 다른 대상을 타겟으로 설정
         if (target != null && target.IsDead)
         {
@@ -227,7 +230,7 @@ public abstract class Entity : MonoBehaviour
             float criticalChance = GetCriticalChance(target);
 
             // 공격 모션 실행
-            StartCoroutine(OnAttackAction(target, criticalChance));
+            StartCoroutine(AttackAction(target, criticalChance));
 
             // 타겟에게 방어 유형 전달
             // 원거리는 패링 X
@@ -241,13 +244,13 @@ public abstract class Entity : MonoBehaviour
         return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 
-    private IEnumerator OnAttackAction(Entity target, float criticalChance)
+    private IEnumerator AttackAction(Entity target, float criticalChance)
     {
         // 공격 모션 실행
         OnActiveMotion("atk");
 
         // 모션 체크
-        while (IsActionable)
+        while (IsActing)
         {
             // 공격 모션 중간 패링을 당했을 경우
             if (State.HasState(EntityState.Stagger))
@@ -302,16 +305,39 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void OnUseItem(Consumable item, List<Entity> targets)
     {
+        // 이후 
+
+        // 아이템 사용
         item.OnUse(targets);
     }
 
     public virtual void OnRun()
     {
+        // 화면 전체를 잡기
+        BattleCameraDirector.Instance.FocusFullScreen();
+
         // 해당 엔티티를 전투에서 영구 제외
         battleData.RemoveEntity(this);
 
         // 오브젝트 삭제
         Destroy(gameObject);
+    }
+
+    private void OnAction(Coroutine actionCoroutine)
+    {
+        // 각 행동을 실행
+        // 행동 모션 등이 끝나면 끝났다고 알림
+        IsEndAction = false;
+        StartCoroutine(ActionCoroutine(actionCoroutine));
+    }
+
+    private IEnumerator ActionCoroutine(Coroutine coroutine)
+    {
+        // 행동 모션
+        yield return coroutine;
+
+        // 행동 모션이 끝났음을 알림
+        IsEndAction = true;
     }
 
     /***************************************************************
@@ -457,7 +483,7 @@ public abstract class Entity : MonoBehaviour
         OnActiveMotion("parrying");
 
         // 모션 체크
-        yield return new WaitUntil(() => IsActionable == false);
+        yield return new WaitUntil(() => IsActing == false);
 
         // 패링 모션이 끝까지 진행되었을 경우 통상적인 엔티티는 자신이 한 번 더 공격
         OnAttack(attacker);

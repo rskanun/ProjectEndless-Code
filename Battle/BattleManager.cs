@@ -16,7 +16,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Timeline timeline;
     [SerializeField] private BattleResultUI resultUI;
     [SerializeField] private TargetSelection selectionManager;
-    [SerializeField] private BattleCameraManager cameraManager;
 
     [Header("엔티티 배치")]
     [SerializeField]
@@ -37,7 +36,6 @@ public class BattleManager : MonoBehaviour
 
     // 전투 진행 상태
     private bool isTurnEnded = false;
-    private List<Entity> entityList = new List<Entity>();
 
     private void InitPosition()
     {
@@ -92,24 +90,19 @@ public class BattleManager : MonoBehaviour
 
     private void StartBattle(BattleFieldData fieldData)
     {
-        // 전투 참여 엔티티 목록 초기화
-        entityList.Clear();
-
         // 플레이어 진형 파티 설정
         List<Character> playerParty = GetPlayerParty();
-        entityList.AddRange(playerParty);
-        cameraManager.RegisterCameraToPlayerParty(playerParty);
+        InitPlayerParty(playerParty);
 
         // 적 진형 파티 설정
         List<Monster> enemyParty = GetEnemyParty(fieldData.EncountMonsters);
-        entityList.AddRange(enemyParty);
-        cameraManager.RegisterCameraToEnemyParty(enemyParty);
+        InitEnemyParty(enemyParty);
 
         // 전투에 참여하는 엔티티 목록 설정
         battleData.SetEnemyList(enemyParty);
-        battleData.SetPartyList(playerParty);
 
         // 시퀀스 생성
+        List<Entity> entityList = playerParty.Concat<Entity>(enemyParty).ToList();
         battleSeq.SetSequence(entityList);
 
         // 타임라인 생성
@@ -157,6 +150,36 @@ public class BattleManager : MonoBehaviour
             }).ToList();
     }
 
+    private void InitPlayerParty(List<Character> party)
+    {
+        // 카메라 셋팅
+        InitCameraSetting(party);
+
+        // 전투에 참여하는 엔티티 목록 설정
+        battleData.SetPartyList(party);
+    }
+
+    private void InitEnemyParty(List<Monster> party)
+    {
+        // 카메라 셋팅
+        InitCameraSetting(party);
+
+        // 전투에 참여하는 엔티티 목록 설정
+        battleData.SetEnemyList(party);
+    }
+
+    private void InitCameraSetting<T>(List<T> party) where T : Entity
+    {
+        // 캐릭터별 카메라 지정
+        foreach (Entity chr in party)
+        {
+            int instanceID = chr.GetInstanceID();
+            Transform bodyPivot = chr.cameraOption.BodyPivot;
+
+            director.RegisterPlayerChrPivot(instanceID, bodyPivot);
+        }
+    }
+
     /***************************************************************
     * [ 전투 진행 ]
     * 
@@ -165,20 +188,13 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator RunningBattle()
     {
-        // 전투 시작 상황을 위한 플레이어 그룹 카메라 잡아주기
-        // (기습 or 일반 or 역기습 애니메이션 연출)
-        director.FocusingPlayerParty();
-        yield return new WaitForSeconds(3.5f); // 현재는 시간이지만 나중엔 애니메이션이 끝나는데로
-
-        // 전체적인 상황 보여주기
-        director.FocusingFullScreen();
-        yield return new WaitForSeconds(2.5f);
+        yield return director.DirectBattleStart();
 
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
             // 턴 진행 전 전체적인 상황 포커싱
-            director.FocusingFullScreen();
+            director.FocusFullScreen();
             yield return new WaitForSeconds(1.5f);
 
             // 턴 진행
@@ -204,7 +220,7 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        yield return new WaitUntil(() => !curAction.actor.IsActionable);
+        yield return new WaitWhile(() => curAction.actor.IsEndAction);
 
         // 다음 턴에 진행할 행동 선택
         curAction.actor.TakeTurn();
@@ -242,7 +258,14 @@ public class BattleManager : MonoBehaviour
 
     private void UpdateEffectTimers(float turn)
     {
-        foreach (Entity entity in entityList)
+        // 캐릭터 버프 시간 돌리기
+        foreach (Entity entity in battleData.CharacterList)
+        {
+            entity.UpdateEffectTimer(turn);
+        }
+
+        // 적 버프 시간 돌리기
+        foreach (Entity entity in battleData.EnemyList)
         {
             entity.UpdateEffectTimer(turn);
         }

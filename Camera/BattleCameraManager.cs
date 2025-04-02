@@ -4,39 +4,16 @@ using UnityEngine;
 
 public class BattleCameraManager : MonoBehaviour
 {
-    [System.Serializable]
-    private class EnemyCamera
-    {
-        public CinemachineVirtualCamera groupCam;
-        public CinemachineTargetGroup groupManager;
-        public List<GameObject> camObjs;
-        public List<CinemachineVirtualCamera> bodyCams;
-    }
+    [SerializeField] private CinemachineTargetGroup targetGroup;
 
-    [System.Serializable]
-    private class PlayerCamera : EnemyCamera
-    {
-        public List<CinemachineVirtualCamera> selectionCams;
-    }
+    [Header("시네머신 카메라")]
+    [SerializeField] private CinemachineVirtualCamera mainCam;
+    [SerializeField] private CinemachineVirtualCamera groupCam;
+    [SerializeField] private CinemachineVirtualCamera singleCam;
 
-    [Header("시네머신 연출 카메라")]
-    [SerializeField]
-    private CinemachineVirtualCamera mainCam;
+    private CinemachineVirtualCamera liveCam;
+    private List<Transform> liveGroup = new List<Transform>();
 
-    [SerializeField]
-    private PlayerCamera playerCamera;
-    private int playerCamNum;
-    private int selectionCamNum;
-
-    [SerializeField]
-    private EnemyCamera enemyCamera;
-    private int enemyCamNum;
-
-
-    private Dictionary<int, CinemachineVirtualCamera> bodyCamMap;
-    private Dictionary<int, CinemachineVirtualCamera> selectionCamMap;
-
-    private CinemachineVirtualCamera currentLiveCamera;
 
     private void OnEnable()
     {
@@ -48,78 +25,6 @@ public class BattleCameraManager : MonoBehaviour
         BattleCameraDirector.Instance.RemoveManager();
     }
 
-    public void RegisterCameraToPlayerParty(List<Character> party)
-    {
-        bodyCamMap = new Dictionary<int, CinemachineVirtualCamera>();
-        selectionCamMap = new Dictionary<int, CinemachineVirtualCamera>();
-
-        foreach (Character chr in party)
-        {
-            playerCamera.groupManager.AddMember(chr.cameraOption.BodyPivot, 1.0f, 1.0f);
-
-            playerCamera.camObjs[playerCamNum].SetActive(true);
-
-            bodyCamMap.Add(chr.GetInstanceID(), RegisterPlayerCamera(chr.cameraOption.BodyPivot));
-            selectionCamMap.Add(chr.GetInstanceID(), RegisterSelectionCamera(chr.cameraOption.SelectionPivot));
-        }
-    }
-
-    private CinemachineVirtualCamera RegisterPlayerCamera(Transform transform)
-    {
-        if (playerCamNum >= playerCamera.bodyCams.Count)
-        {
-            // 준비된 카메라보다 많이 등록하려면 빈 카메라 리턴
-            return null;
-        }
-
-        CinemachineVirtualCamera registCam = playerCamera.bodyCams[playerCamNum++];
-
-        registCam.Follow = transform;
-        return registCam;
-    }
-
-    private CinemachineVirtualCamera RegisterSelectionCamera(Transform transform)
-    {
-        if (selectionCamNum >= playerCamera.selectionCams.Count)
-        {
-            // 준비된 카메라보다 많이 등록하려면 빈 카메라 리턴
-            return null;
-        }
-
-        CinemachineVirtualCamera registCam = playerCamera.selectionCams[selectionCamNum++];
-
-        registCam.Follow = transform;
-        return registCam;
-    }
-
-    public void RegisterCameraToEnemyParty(List<Monster> party)
-    {
-        bodyCamMap = new Dictionary<int, CinemachineVirtualCamera>();
-
-        foreach (Monster mob in party)
-        {
-            enemyCamera.groupManager.AddMember(mob.cameraOption.BodyPivot, 1.0f, 1.0f);
-
-            enemyCamera.camObjs[enemyCamNum].SetActive(true);
-
-            bodyCamMap.Add(mob.GetInstanceID(), RegisterEnemyCamera(mob.cameraOption.BodyPivot));
-        }
-    }
-
-    private CinemachineVirtualCamera RegisterEnemyCamera(Transform transform)
-    {
-        if (enemyCamNum >= enemyCamera.bodyCams.Count)
-        {
-            // 준비된 카메라보다 많이 등록하려면 빈 카메라 리턴
-            return null;
-        }
-
-        CinemachineVirtualCamera registCam = enemyCamera.bodyCams[enemyCamNum++];
-
-        registCam.Follow = transform;
-        return registCam;
-    }
-
     /***************************************************************
     * [ 라이브 카메라 ]
     * 
@@ -128,31 +33,36 @@ public class BattleCameraManager : MonoBehaviour
 
     public void LiveMainCamera()
     {
+        // 전체 화면 캠 라이브 시작
         LiveCamera(mainCam);
     }
 
-    public void LivePlayerPartyCamera()
+    public void LiveGroupCamera(List<Transform> transforms)
     {
-        LiveCamera(playerCamera.groupCam);
+        // 기존 그룹 지우기
+        foreach (Transform transform in liveGroup)
+        {
+            targetGroup.RemoveMember(transform);
+        }
+
+        // 새 그룹 추가
+        foreach (Transform transform in transforms)
+        {
+            targetGroup.AddMember(transform, 1.0f, 1.0f);
+            liveGroup.Add(transform);
+        }
+
+        // 그룹캠 라이브 시작
+        LiveCamera(groupCam);
     }
 
-    public void LiveEnemyPartyCamera()
+    public void LiveSingleCamera(Transform transform)
     {
-        LiveCamera(enemyCamera.groupCam);
-    }
+        // 대상 설정
+        singleCam.Follow = transform;
 
-    public void LiveCharacterCamera(int instanceID)
-    {
-        if (!bodyCamMap.ContainsKey(instanceID)) return;
-
-        LiveCamera(bodyCamMap[instanceID]);
-    }
-
-    public void LiveSelectionCamera(int instanceID)
-    {
-        if (!selectionCamMap.ContainsKey(instanceID)) return;
-
-        LiveCamera(selectionCamMap[instanceID]);
+        // 단일캠 라이브 시작
+        LiveCamera(singleCam);
     }
 
     private void LiveCamera(CinemachineVirtualCamera liveCamera)
@@ -160,11 +70,11 @@ public class BattleCameraManager : MonoBehaviour
         if (!liveCamera.isActiveAndEnabled) return;
 
         // 현재 라이브 중인 카메라의 우선도 낮추기
-        if (currentLiveCamera != null)
-            currentLiveCamera.Priority = 0;
+        if (liveCam != null)
+            liveCam.Priority = 0;
 
         // 라이브 할 카메라의 우선도 높이기
         liveCamera.Priority = 1;
-        currentLiveCamera = liveCamera;
+        liveCam = liveCamera;
     }
 }
