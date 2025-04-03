@@ -34,6 +34,9 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void ReopenSelection()
     {
+        // 모션 없이 선택창에 맞게 카메라 이동
+        BattleCameraDirector.Instance.FocusSelection(actor.gameObject);
+
         // 다시 선택창 열기
         OpenActionSelection(actor);
     }

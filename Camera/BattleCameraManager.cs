@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BattleCameraManager : MonoBehaviour
 {
-    [SerializeField] private CinemachineTargetGroup targetGroup;
+    public CinemachineTargetGroup targetGroup;
 
     [Header("시네머신 카메라")]
-    [SerializeField] private CinemachineVirtualCamera mainCam;
-    [SerializeField] private CinemachineVirtualCamera groupCam;
-    [SerializeField] private CinemachineVirtualCamera singleCam;
+    public CinemachineVirtualCamera mainCam;
+    public CinemachineVirtualCamera groupCam;
+    public CinemachineVirtualCamera singleCam;
 
     private CinemachineVirtualCamera liveCam;
     private List<Transform> liveGroup = new List<Transform>();

@@ -167,8 +167,11 @@ public class ActionManager : MonoBehaviour
         // 턴 적용
         action.remainTurn = turn;
 
-        // 선택한 데이터를 종합한 행동 실행
-        actor.OnSelectedAction(action, index);
+        // 선택한 데이터를 종합한 행동 예약
+        BattleData.Instance.Sequence.AddTurn(action, index);
+
+        // 턴 종료
+        actor.EndTurn();
     }
 
     /***************************************************************

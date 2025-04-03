@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 public class BattleCameraDirector
@@ -27,6 +28,10 @@ public class BattleCameraDirector
     private HashSet<int> playerIDs;
     private HashSet<int> enemyIDs;
 
+    // 선택창 모션 위치
+    private float x = 3.0f;
+    private float y = 1.0f;
+
     public BattleCameraDirector()
     {
         bodyTransforms = new Dictionary<int, Transform>();
@@ -50,7 +55,6 @@ public class BattleCameraDirector
         bodyTransforms.Add(instanceID, pivot);
         playerIDs.Add(instanceID);
     }
-
 
     public void RegisterEnemyChrPivot(int instanceID, Transform pivot)
     {
@@ -147,6 +151,22 @@ public class BattleCameraDirector
         }
     }
 
+    public void FocusSelection(GameObject entityObj)
+    {
+        int instanceID = entityObj.GetInstanceID();
+
+        if (bodyTransforms.ContainsKey(instanceID))
+        {
+            var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
+
+            // 카메라 위치 조정
+            cmOffset.m_Offset.x = x;
+            cmOffset.m_Offset.y = y;
+
+            // 카메라 라이브
+            manager.LiveSingleCamera(bodyTransforms[instanceID]);
+        }
+    }
 
     /***************************************************************
     * [ 카메라 연출 ]
@@ -171,15 +191,41 @@ public class BattleCameraDirector
         yield return null;
     }
 
-    public IEnumerator DirectItemUse(Entity entity, List<Entity> targets)
+    public IEnumerator DirectActionMotion(Entity actor, Entity target)
     {
-        // 아이템을 사용하는 캐릭터(아이템 효과를 받는 캐릭터와 별계)부터 카메라 잡기
-        FocusSingle(entity.gameObject);
+        // 단일 타겟을 리스트로 변환
+        List<Entity> list = new List<Entity>() { target };
+        yield return DirectActionMotion(actor, list);
+    }
 
-        // 아이템 사용 모션 동안 대기
-        yield return new WaitWhile(() => entity.IsActing);
+    public IEnumerator DirectActionMotion(Entity actor, List<Entity> targets)
+    {
+        // 행동을 하는 캐릭터부터 카메라 잡기
+        FocusSingle(actor.gameObject);
 
-        // 아이템 효과를 받는 캐릭터 그룹을 카메라에 잡기
+        // 모션 동안 대기
+        yield return new WaitWhile(() => actor.IsActing);
+
+        // 타겟이 되는 대상 그룹샷
         FocusGroup(targets.Select(t => t.gameObject).ToList());
+    }
+
+    public IEnumerator DirectSelectMotion()
+    {
+        var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
+
+        yield return DOTween.Sequence()
+            .Join(DOTween.To(
+            () => cmOffset.m_Offset.x,
+            x => cmOffset.m_Offset.x = x,
+            x,
+            0.8f
+        ).SetEase(Ease.OutQuint))
+            .Join(DOTween.To(
+            () => cmOffset.m_Offset.y,
+            y => cmOffset.m_Offset.y = y,
+            y,
+            0.8f
+        ).SetEase(Ease.OutQuint));
     }
 }

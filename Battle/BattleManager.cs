@@ -153,7 +153,13 @@ public class BattleManager : MonoBehaviour
     private void InitPlayerParty(List<Character> party)
     {
         // 카메라 셋팅
-        InitCameraSetting(party);
+        foreach (Entity chr in party)
+        {
+            int instanceID = chr.gameObject.GetInstanceID();
+            Transform bodyPivot = chr.cameraOption.BodyPivot;
+
+            director.RegisterPlayerChrPivot(instanceID, bodyPivot);
+        }
 
         // 전투에 참여하는 엔티티 목록 설정
         battleData.SetPartyList(party);
@@ -162,22 +168,16 @@ public class BattleManager : MonoBehaviour
     private void InitEnemyParty(List<Monster> party)
     {
         // 카메라 셋팅
-        InitCameraSetting(party);
+        foreach (Entity chr in party)
+        {
+            int instanceID = chr.gameObject.GetInstanceID();
+            Transform bodyPivot = chr.cameraOption.BodyPivot;
+
+            director.RegisterEnemyChrPivot(instanceID, bodyPivot);
+        }
 
         // 전투에 참여하는 엔티티 목록 설정
         battleData.SetEnemyList(party);
-    }
-
-    private void InitCameraSetting<T>(List<T> party) where T : Entity
-    {
-        // 캐릭터별 카메라 지정
-        foreach (Entity chr in party)
-        {
-            int instanceID = chr.GetInstanceID();
-            Transform bodyPivot = chr.cameraOption.BodyPivot;
-
-            director.RegisterPlayerChrPivot(instanceID, bodyPivot);
-        }
     }
 
     /***************************************************************
@@ -193,10 +193,6 @@ public class BattleManager : MonoBehaviour
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
-            // 턴 진행 전 전체적인 상황 포커싱
-            director.FocusFullScreen();
-            yield return new WaitForSeconds(1.5f);
-
             // 턴 진행
             StartCoroutine(TakeTurn());
 

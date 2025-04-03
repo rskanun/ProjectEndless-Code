@@ -30,6 +30,9 @@ public class TurnSelection : MonoBehaviour, ISelection
     {
         action = battleData.SelectionData.action;
 
+        // 화면 전체를 카메라 영역으로 잡기
+        BattleCameraDirector.Instance.FocusFullScreen();
+
         // 타임라인 삽입 아이콘 활성화
         ActiveInsertIcon();
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,8 +53,15 @@ public class Character : Entity
 
     protected override void SelectAction()
     {
-        // 행동 선택을 위해 카메라 위치 변경
-        BattleCameraDirector.Instance.FocusingSelection(GetInstanceID());
+        StartCoroutine(SelectMotion());
+    }
+
+    private IEnumerator SelectMotion()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        // 행동 선택창을 열기 위한 카메라 이동
+        yield return BattleCameraDirector.Instance.DirectSelectMotion();
 
         // 행동 선택창 열기
         actionSelection.OnSelect(this);

@@ -92,7 +92,11 @@ public abstract class Monster : Entity
         action.remainTurn = skill.CostTurn;
         action.SetTarget(targets);
 
-        OnSelectedAction(action, index);
+        // 선택한 행동 예약
+        SelectAction(action, index);
+
+        // 턴 종료
+        EndTurn();
     }
 
     protected virtual void SelectAttack(Entity target, int? index = null)
@@ -104,7 +108,11 @@ public abstract class Monster : Entity
         action.target = target;
         action.remainTurn = AttackTurn;
 
-        OnSelectedAction(action);
+        // 선택한 행동 예약
+        SelectAction(action, index);
+
+        // 턴 종료
+        EndTurn();
     }
 
     private void SelectWait()
@@ -116,7 +124,18 @@ public abstract class Monster : Entity
         action.actor = this;
 
         Debug.Log($"{Name}: {action.remainTurn} Turn Waiting...");
-        OnSelectedAction(action);
+
+        // 선택한 행동 예약
+        SelectAction(action);
+
+        // 턴 종료
+        EndTurn();
+    }
+
+    private void SelectAction(BattleAction action, int? index = null)
+    {
+        if (index.HasValue) battleSeq.AddTurn(action, index.Value);
+        else battleSeq.AddTurn(action);
     }
 
     /***************************************************************

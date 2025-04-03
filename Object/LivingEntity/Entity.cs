@@ -181,17 +181,17 @@ public abstract class Entity : MonoBehaviour
 
     public void TakeTurn()
     {
-        // 패링 상태 해제
-        // 임시적으로 턴이 시작될 때 흐트러진 상태를 제거하도록 했으나,
-        // 추후 흐트러진 상태로 만드는 스킬이 나올 수도 있으니 수정
-        State.Remove(EntityState.Stagger);
-
         if (battleData.IsInBattle == false)
         {
             // 전투가 끝났을 경우 행동을 하지 않고 종료
             EndTurn();
             return;
         }
+
+        // 패링 상태 해제
+        // 임시적으로 턴이 시작될 때 흐트러진 상태를 제거하도록 했으나,
+        // 추후 흐트러진 상태로 만드는 스킬이 나올 수도 있으니 수정
+        State.Remove(EntityState.Stagger);
 
         // 행동 선택
         SelectAction();
@@ -203,16 +203,6 @@ public abstract class Entity : MonoBehaviour
     {
         // 턴이 끝났음을 알림
         GameEventResource.Instance.EndTurnEvent.NotifyUpdate();
-    }
-
-    public void OnSelectedAction(BattleAction action, int? index = null)
-    {
-        // 선택한 행동 예약
-        if (index.HasValue) battleData.Sequence.AddTurn(action, index.Value);
-        else battleData.Sequence.AddTurn(action);
-
-        // 턴 종료
-        EndTurn();
     }
 
     public virtual void OnAttack(Entity target)
@@ -234,14 +224,9 @@ public abstract class Entity : MonoBehaviour
 
             // 타겟에게 방어 유형 전달
             // 원거리는 패링 X
-            target.OnTargetedAttack(this, AttackType == AttackType.Melee, true);
+            bool isUsedParry = AttackType == AttackType.Melee;
+            target.OnTargetedAttack(this, isUsedParry, true);
         }
-    }
-
-    public virtual float GetCriticalChance(Entity target)
-    {
-        // 크리티컬 확률 코드
-        return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 
     private IEnumerator AttackAction(Entity target, float criticalChance)
@@ -267,6 +252,65 @@ public abstract class Entity : MonoBehaviour
         target.OnDamage(AttackDmg, Stat.MP, criticalChance);
     }
 
+    public virtual void OnCast(Skill skill, List<Entity> targets)
+    {
+        // SP 소모
+        Stat.SP -= skill.CostSP;
+        hud.UpdateSP(Stat.SP, Stat.MaxSP);
+
+        // 스킬 시전
+        skill.OnCasting(this, targets);
+    }
+
+    public virtual void OnUseItem(Consumable item, List<Entity> targets)
+    {
+        // 이후 
+
+        // 아이템 사용
+        item.OnUse(targets);
+    }
+
+    public virtual void OnWait()
+    {
+        // 시전자를 향해 싱글샷
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
+    }
+
+    public virtual void OnRun()
+    {
+        // 화면 전체샷
+        BattleCameraDirector.Instance.FocusFullScreen();
+
+        // 해당 엔티티를 전투에서 영구 제외
+        battleData.RemoveEntity(this);
+
+        // 오브젝트 삭제
+        Destroy(gameObject);
+    }
+
+    private void OnAction(Coroutine actionCoroutine)
+    {
+        // 각 행동을 실행
+        // 행동 모션 등이 끝나면 끝났다고 알림
+        IsEndAction = false;
+        StartCoroutine(ActMotion(actionCoroutine));
+    }
+
+    private IEnumerator ActMotion(Coroutine coroutine)
+    {
+        // 행동 모션
+        yield return coroutine;
+
+        // 행동 모션이 끝났음을 알림
+        IsEndAction = true;
+    }
+
+    public virtual float GetCriticalChance(Entity target)
+    {
+        // 크리티컬 확률 코드
+        return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
+    }
+
     private Entity GetRetarget(Entity curTarget)
     {
         List<Entity> targetableList = GetTargetableList();
@@ -289,55 +333,8 @@ public abstract class Entity : MonoBehaviour
 
     private List<Entity> GetTargetableList()
     {
-        if (this is Monster) return battleData.LivingCharacters;
-        else return battleData.LivingEnemies;
-    }
-
-    public virtual void OnCast(Skill skill, List<Entity> targets)
-    {
-        // SP 소모
-        Stat.SP -= skill.CostSP;
-        hud.UpdateSP(Stat.SP, Stat.MaxSP);
-
-        // 스킬 시전
-        skill.OnCasting(this, targets);
-    }
-
-    public virtual void OnUseItem(Consumable item, List<Entity> targets)
-    {
-        // 이후 
-
-        // 아이템 사용
-        item.OnUse(targets);
-    }
-
-    public virtual void OnRun()
-    {
-        // 화면 전체를 잡기
-        BattleCameraDirector.Instance.FocusFullScreen();
-
-        // 해당 엔티티를 전투에서 영구 제외
-        battleData.RemoveEntity(this);
-
-        // 오브젝트 삭제
-        Destroy(gameObject);
-    }
-
-    private void OnAction(Coroutine actionCoroutine)
-    {
-        // 각 행동을 실행
-        // 행동 모션 등이 끝나면 끝났다고 알림
-        IsEndAction = false;
-        StartCoroutine(ActionCoroutine(actionCoroutine));
-    }
-
-    private IEnumerator ActionCoroutine(Coroutine coroutine)
-    {
-        // 행동 모션
-        yield return coroutine;
-
-        // 행동 모션이 끝났음을 알림
-        IsEndAction = true;
+        return (this is Monster) ? battleData.LivingCharacters
+            : battleData.LivingEnemies;
     }
 
     /***************************************************************

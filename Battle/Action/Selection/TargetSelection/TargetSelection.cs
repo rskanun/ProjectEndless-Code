@@ -51,16 +51,13 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     public void InitSelectableEntities()
     {
-        List<GameObject> enemyParty = GetPartyObjs(BattleData.Instance.EnemyList);
-        List<GameObject> playerParty = GetPartyObjs(BattleData.Instance.CharacterList);
+        List<GameObject> entityList = battleData.EnemyList
+            .Select(entity => entity.gameObject)
+            .Concat(battleData.CharacterList.Select(entity => entity.gameObject))
+            .ToList();
 
-        AddButtonToList(enemyParty);
-        AddButtonToList(playerParty);
-    }
-
-    private List<GameObject> GetPartyObjs<T>(List<T> partyList) where T : Entity
-    {
-        return partyList.Select(entity => entity.gameObject).ToList();
+        // 각 엔티티 오브젝트마다 타겟 선택 버튼 생성
+        AddButtonToList(entityList);
     }
 
     private void AddButtonToList(List<GameObject> entityList)
@@ -130,36 +127,54 @@ public class TargetSelection : MonoBehaviour, ISelection
             return;
         }
 
+        // 적 그룹으로 카메라 돌리기
+        BattleCameraDirector.Instance.FocusEnemyGroup();
+
         // 전위에 있는 적만 선택
         ActiveButtons((target) => IsEnemy(target) && IsFront(target));
     }
 
     private void ActiveEnemy()
     {
+        // 적 그룹으로 카메라 돌리기
+        BattleCameraDirector.Instance.FocusEnemyGroup();
+
         // 적만 선택
         ActiveButtons((target) => IsEnemy(target));
     }
 
     private void ActiveEnemyParty()
     {
+        // 적 그룹으로 카메라 돌리기
+        BattleCameraDirector.Instance.FocusEnemyGroup();
+
         // 모든 적 선택
         MultiSelectButtons((target) => IsEnemy(target));
     }
 
     private void ActivePartyMember()
     {
+        // 아군 그룹으로 카메라 돌리기
+        BattleCameraDirector.Instance.FocusPlayerGroup();
+
         // 아군만 선택
         ActiveButtons((target) => !IsEnemy(target));
     }
 
     private void ActiveParty()
     {
+        // 아군 그룹으로 카메라 돌리기
+        BattleCameraDirector.Instance.FocusPlayerGroup();
+
         // 모든 아군 선택
         MultiSelectButtons(target => !IsEnemy(target));
     }
 
     private void ActiveSelf()
     {
+        // 아군 그룹으로 카메라 돌리기
+        BattleCameraDirector.Instance.FocusPlayerGroup();
+
         // 자기 자신만 선택
         ActiveButtons((target) => IsTargetSelf(target));
     }
