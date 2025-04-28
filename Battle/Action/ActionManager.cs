@@ -74,6 +74,9 @@ public class ActionManager : MonoBehaviour
         // 로그 초기화
         selectionLog = new Stack<ISelection>();
 
+        // 소비 가능한 아이템 목록 초기화
+        itemSelection.UpdateItemInfo();
+
         // 행동 선택창 열기
         OpenSelection(actionSelection);
     }

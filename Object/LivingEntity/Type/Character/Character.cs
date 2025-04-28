@@ -58,8 +58,6 @@ public class Character : Entity
 
     private IEnumerator SelectMotion()
     {
-        yield return new WaitForSeconds(0.5f);
-
         // 행동 선택창을 열기 위한 카메라 이동
         yield return BattleCameraDirector.Instance.DirectSelectMotion();
 
@@ -82,6 +80,15 @@ public class Character : Entity
     private void RunBattle()
     {
         base.OnRun();
+    }
+
+    public override void OnUseItem(Consumable item, List<Entity> targets)
+    {
+        // 아이템 사용
+        base.OnUseItem(item, targets);
+
+        // 플레이어블 캐릭터인 경우 인벤토리에 있는 아이템의 개수 차감
+        InventoryData.Instance.RemoveItem(item);
     }
 
     /***************************************************************

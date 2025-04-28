@@ -19,9 +19,6 @@ public class ItemSelection : MonoBehaviour, ISelection
         // 아이템창 열기
         ui.SetActiveWindow(true);
 
-        // 아이템 정보 업데이트
-        UpdateItemInfo();
-
         // 초기 아이템 선택
         SelectLastButton();
     }
@@ -34,11 +31,14 @@ public class ItemSelection : MonoBehaviour, ISelection
 
     public void ReopenSelection()
     {
-        // 이전 유지된 데이터를 기반으로 아이템창 열기
-        ui.SetActiveWindow(true);
+        // 현재 턴인 캐릭터
+        Character actor = BattleData.Instance.SelectionData.actor;
 
-        // 초기 아이템 선택
-        SelectLastButton();
+        // 모션 없이 선택창에 맞게 카메라 이동
+        BattleCameraDirector.Instance.FocusSelection(actor.gameObject);
+
+        // 기존 아이템창 열기와 동일한 흐름
+        OpenSelection();
     }
 
     public void UndoSelection()
@@ -48,9 +48,9 @@ public class ItemSelection : MonoBehaviour, ISelection
     }
 
     /***************************************************************
-    * [ UI 설정 ]
+    * [ 아이템 목록 관리 ]
     * 
-    * 스킬 선택창의 구성 UI 설정
+    * 소비 아이템 선택창의 구성 UI 관리
     ***************************************************************/
 
     public void UpdateItemInfo()
@@ -116,10 +116,10 @@ public class ItemSelection : MonoBehaviour, ISelection
         if (itemInfoObj == null) return;
 
         ItemInfo itemInfo = itemInfoObj.GetComponent<ItemInfo>();
-        int count = itemInfo.GetCount();
+        int count = InventoryData.Instance.GetItemCount(itemInfo.GetItem());
 
         if (count <= 1) RemoveItemInfoObject(itemInfoObj);
-        else itemInfo.SetCount(count - 1);
+        else itemInfo.SetCount(count);
     }
 
     private void RemoveItemInfoObject(GameObject itemInfoObj)

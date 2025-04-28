@@ -37,6 +37,12 @@ public class SkillSelection : MonoBehaviour, ISelection
 
     public void ReopenSelection()
     {
+        // 현재 턴인 캐릭터
+        Character actor = BattleData.Instance.SelectionData.actor;
+
+        // 모션 없이 선택창에 맞게 카메라 이동
+        BattleCameraDirector.Instance.FocusSelection(actor.gameObject);
+
         // 이전 유지된 데이터를 기반으로 스킬창 열기
         ui.SetActiveWindow(true);
 

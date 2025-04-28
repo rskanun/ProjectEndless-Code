@@ -65,7 +65,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         foreach (GameObject entityObj in entityList)
         {
             Entity target = entityObj.GetComponent<Entity>();
-            TargetSelectButton selectButton = ui.CreateSelectButton(target, entityObj.transform.position);
+            TargetSelectButton selectButton = ui.CreateSelectButton(target, target.cameraOption.BodyPivot.position);
 
             selectButtons.Add(selectButton);
         }

@@ -147,6 +147,13 @@ public class BattleCameraDirector
 
         if (bodyTransforms.ContainsKey(instanceID))
         {
+            var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
+
+            // 카메라 위치 조정
+            cmOffset.m_Offset.x = 0;
+            cmOffset.m_Offset.y = 0;
+
+            // 카메라 라이브
             manager.LiveSingleCamera(bodyTransforms[instanceID]);
         }
     }
@@ -214,18 +221,26 @@ public class BattleCameraDirector
     {
         var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
 
-        yield return DOTween.Sequence()
-            .Join(DOTween.To(
+        Sequence seq = DOTween.Sequence()
+        .AppendInterval(0.5f)
+        .Append(DOTween.To(
             () => cmOffset.m_Offset.x,
             x => cmOffset.m_Offset.x = x,
             x,
-            0.8f
-        ).SetEase(Ease.OutQuint))
-            .Join(DOTween.To(
+            0.4f
+        ).SetEase(Ease.InCirc))
+        .Join(DOTween.To(
             () => cmOffset.m_Offset.y,
             y => cmOffset.m_Offset.y = y,
             y,
-            0.8f
-        ).SetEase(Ease.OutQuint));
+            0.4f
+        ).SetEase(Ease.InCirc));
+
+        // DOTween 애니메이션이 끝날 때까지 대기
+        yield return seq.WaitForCompletion();
     }
+
+    // 대기 선택 -> 전체 화면
+    // 효과 적용
+    // 플레이어 공격 후 선택창 화면 안 잡힘
 }
