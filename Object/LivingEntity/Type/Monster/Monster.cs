@@ -156,6 +156,7 @@ public abstract class Monster : Entity
     public override void OnParried()
     {
         base.OnParried();
+        Debug.Log("Parried");
 
         // 몬스터가 패링 당했을 경우 관련 변수 초기화
         DisableDefensive();

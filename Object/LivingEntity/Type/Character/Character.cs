@@ -58,6 +58,9 @@ public class Character : Entity
 
     private IEnumerator SelectMotion()
     {
+        // 해당 턴인 캐릭터를 싱글샷
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
+
         // 행동 선택창을 열기 위한 카메라 이동
         yield return BattleCameraDirector.Instance.DirectSelectMotion();
 

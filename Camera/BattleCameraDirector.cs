@@ -239,8 +239,4 @@ public class BattleCameraDirector
         // DOTween 애니메이션이 끝날 때까지 대기
         yield return seq.WaitForCompletion();
     }
-
-    // 대기 선택 -> 전체 화면
-    // 효과 적용
-    // 플레이어 공격 후 선택창 화면 안 잡힘
 }

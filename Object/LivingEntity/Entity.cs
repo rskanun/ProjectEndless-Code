@@ -192,6 +192,7 @@ public abstract class Entity : MonoBehaviour
         // 임시적으로 턴이 시작될 때 흐트러진 상태를 제거하도록 했으나,
         // 추후 흐트러진 상태로 만드는 스킬이 나올 수도 있으니 수정
         State.Remove(EntityState.Stagger);
+        Debug.Log(Name + " Is Stagger State: " + State.HasState(EntityState.Stagger));
 
         // 행동 선택
         SelectAction();
@@ -307,7 +308,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual float GetCriticalChance(Entity target)
     {
-        // 크리티컬 확률 코드
+        // 크리티컬 확률 계산
         return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 

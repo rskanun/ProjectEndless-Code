@@ -13,7 +13,6 @@ public class AssistController : MonoBehaviour, IController
         input.AssistAttack.performed += OnExtraAttackKeyPressed;
         input.AssistA.performed += OnAssistAKeyPressed;
         input.AssistB.performed += OnAssistBKeyPressed;
-        input.AssistC.performed += OnAssistCKeyPressed;
     }
 
     public void ControlDisconnect()
@@ -23,7 +22,6 @@ public class AssistController : MonoBehaviour, IController
         input.AssistAttack.performed -= OnExtraAttackKeyPressed;
         input.AssistA.performed -= OnAssistAKeyPressed;
         input.AssistB.performed -= OnAssistBKeyPressed;
-        input.AssistC.performed -= OnAssistCKeyPressed;
     }
 
     private void OnExtraAttackKeyPressed(InputAction.CallbackContext context)
@@ -40,10 +38,5 @@ public class AssistController : MonoBehaviour, IController
     private void OnAssistBKeyPressed(InputAction.CallbackContext context)
     {
         manager.OnAssisAttack(1);
-    }
-
-    private void OnAssistCKeyPressed(InputAction.CallbackContext context)
-    {
-        manager.OnAssisAttack(2);
     }
 }
