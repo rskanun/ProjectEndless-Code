@@ -82,7 +82,7 @@ public class BattleController : MonoBehaviour, IController
     private void OnSurveyKeyPressed(InputAction.CallbackContext context)
     {
         // 행동 선택창에서만 전황 확인이 가능
-        if (subController is ActionSelectionController == false)
+        if ((subController is ActionSelectionController or SurveyController) == false)
         {
             return;
         }

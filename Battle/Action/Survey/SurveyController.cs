@@ -7,8 +7,6 @@ public class SurveyController : MonoBehaviour, IController
     [Header("참조 스크립트")]
     [SerializeField] private SurveyManager manager;
 
-    private bool isMoveKeyPressed;
-
     public void ControlConnect()
     {
         MainInput.UIActions input = ControlContext.Instance.KeyInput.UI;

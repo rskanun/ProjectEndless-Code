@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -11,9 +12,12 @@ public class BattleCameraManager : MonoBehaviour
     public CinemachineVirtualCamera groupCam;
     public CinemachineVirtualCamera singleCam;
 
+    // 브레인 카메라
+    [HideInInspector]
+    public CinemachineBrain brain;
+
     private CinemachineVirtualCamera liveCam;
     private List<Transform> liveGroup = new List<Transform>();
-
 
     private void OnEnable()
     {

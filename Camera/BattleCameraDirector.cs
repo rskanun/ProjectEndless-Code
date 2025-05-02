@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleCameraDirector
 {
@@ -29,8 +31,38 @@ public class BattleCameraDirector
     private HashSet<int> enemyIDs;
 
     // 선택창 모션 위치
-    private float x = 3.0f;
-    private float y = 1.0f;
+    private float selectionPosX = 3.0f;
+    private float selectionPosY = 1.0f;
+
+    public bool IsBlending
+    {
+        get
+        {
+            if (manager.brain == null)
+            {
+                // 매니져에 등록된 시네머신이 없는 경우 직접 찾아오기
+                Scene mainScene = SceneManager.GetSceneByName(SceneResource.Instance.MainScene);
+
+                // 씬이 로드 되지 않았다면 false 반환
+                if (!mainScene.isLoaded) return false;
+
+                // 씬이 현재 로드된 상태라면 찾아서 등록
+                foreach (GameObject obj in mainScene.GetRootGameObjects())
+                {
+                    CinemachineBrain brain = obj.GetComponentInChildren<CinemachineBrain>();
+
+                    if (brain != null)
+                    {
+                        ResiterBrainCamera(brain);
+                        break;
+                    }
+                }
+            }
+
+            // 전환이 일어나고 있는지, 전환 시각과 전환에 걸리는 시간을 비교해서 전환 중인지를 반환
+            return manager.brain.IsBlending;
+        }
+    }
 
     public BattleCameraDirector()
     {
@@ -48,6 +80,16 @@ public class BattleCameraDirector
     public void RemoveManager()
     {
         manager = null;
+    }
+
+    public void ResiterBrainCamera(CinemachineBrain brainCamera)
+    {
+        manager.brain = brainCamera;
+    }
+
+    public void RemoveBrainCamera()
+    {
+        manager.brain = null;
     }
 
     public void RegisterPlayerChrPivot(int instanceID, Transform pivot)
@@ -167,8 +209,8 @@ public class BattleCameraDirector
             var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
 
             // 카메라 위치 조정
-            cmOffset.m_Offset.x = x;
-            cmOffset.m_Offset.y = y;
+            cmOffset.m_Offset.x = selectionPosX;
+            cmOffset.m_Offset.y = selectionPosY;
 
             // 카메라 라이브
             manager.LiveSingleCamera(bodyTransforms[instanceID]);
@@ -226,13 +268,13 @@ public class BattleCameraDirector
         .Append(DOTween.To(
             () => cmOffset.m_Offset.x,
             x => cmOffset.m_Offset.x = x,
-            x,
+            selectionPosX,
             0.4f
         ).SetEase(Ease.InCirc))
         .Join(DOTween.To(
             () => cmOffset.m_Offset.y,
             y => cmOffset.m_Offset.y = y,
-            y,
+            selectionPosY,
             0.4f
         ).SetEase(Ease.InCirc));
 

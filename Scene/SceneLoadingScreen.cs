@@ -86,7 +86,7 @@ public class SceneLoadingScreen : MonoBehaviour
         ControlContext.Instance.KeyUnlock();
 
         loadingCoroutine = null;
-        SceneManager.UnloadSceneAsync(LoadSceneManager.Instance.LoadingScene.name);
+        SceneManager.UnloadSceneAsync(SceneResource.Instance.LoadingScene);
     }
 
     /************************************************************

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -28,8 +29,23 @@ public class SurveyManager : MonoBehaviour
         // 컨트롤러 셋팅
         mainController.SetSubController(thisController);
 
-        // 첫 타임라인부터 살피기
-        SurveyingAction(0);
+        // 카메라 조정
+        BattleCameraDirector.Instance.FocusFullScreen();
+
+        // 전환을 기다리고서 첫 타임라인부터 살피기
+        StartCoroutine(WaitForCameraBlendEnd(() => SurveyingAction(0)));
+    }
+
+    private IEnumerator WaitForCameraBlendEnd(Action onComplete)
+    {
+        // 카메라 전환 시작 대기
+        yield return new WaitUntil(() => BattleCameraDirector.Instance.IsBlending);
+
+        // 카메라 전환 완료 대기
+        yield return new WaitWhile(() => BattleCameraDirector.Instance.IsBlending);
+
+        // 전환 종료 후 다음 행동 실행
+        onComplete?.Invoke();
     }
 
     public void OnEndSurvey()
@@ -138,8 +154,8 @@ public class SurveyManager : MonoBehaviour
         }
 
         // 행동자 및 타겟 위치 가져오기
-        Vector2 actorPos = action.actor.transform.position;
-        List<Vector2> targetsPos = targets.Select(t => (Vector2)t.transform.position).ToList();
+        Vector2 actorPos = action.actor.cameraOption.BodyPivot.position;
+        List<Vector2> targetsPos = targets.Select(t => (Vector2)t.cameraOption.BodyPivot.position).ToList();
 
         CreateArrows(actorPos, targetsPos);
     }
