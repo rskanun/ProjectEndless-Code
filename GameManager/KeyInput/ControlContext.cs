@@ -68,7 +68,7 @@ public class ControlContext
         if (!controllers.ContainsValue(controller))
         {
             // 해당 컨트롤러 등록
-            controllers.Add(controller.GetType(), controller);
+            RegisterController(controller);
         }
 
         // 컨트롤러 연결
@@ -85,6 +85,7 @@ public class ControlContext
         {
             // 해당 컨트롤러 삭제
             controllers.Remove(type);
+            return;
         }
 
         // 컨트롤러 활성화
@@ -98,7 +99,7 @@ public class ControlContext
         if (!controllers.ContainsValue(controller))
         {
             // 해당 컨트롤러 등록
-            controllers.Add(controller.GetType(), controller);
+            RegisterController(controller);
         }
 
         // 컨트롤러 해제
@@ -109,6 +110,14 @@ public class ControlContext
     {
         // 등록된 컨트롤러가 아니면 무시
         if (!controllers.ContainsKey(type)) return;
+
+        // 모종의 이유로 컨트롤러가 파괴된 경우
+        if (controllers[type] == null || controllers[type] as UnityEngine.Object == null)
+        {
+            // 해당 컨트롤러 삭제
+            controllers.Remove(type);
+            return;
+        }
 
         // 컨트롤러 비활성화
         activeControllers.Remove(controllers[type]);

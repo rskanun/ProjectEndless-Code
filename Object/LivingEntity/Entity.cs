@@ -112,11 +112,11 @@ public abstract class Entity : MonoBehaviour
         private set { _isActing = value; }
         get { return _isActing; }
     }
-    private bool _isEndAction;
-    public bool IsEndAction
+    private bool _isIdle = true;
+    public bool IsIdle
     {
-        private set { _isEndAction = value; }
-        get { return _isEndAction; }
+        private set { _isIdle = value; }
+        get { return _isIdle; }
     }
     private EntityStateManager _stateManager;
     protected EntityStateManager State
@@ -205,28 +205,59 @@ public abstract class Entity : MonoBehaviour
         GameEventResource.Instance.EndTurnEvent.NotifyUpdate();
     }
 
+    private void OnAction(IEnumerator actionAnimation)
+    {
+        // 각 행동을 실행
+        IsIdle = false;
+
+        // 행동 모션 체크
+        StartCoroutine(ActMotion(actionAnimation));
+    }
+
+    private IEnumerator ActMotion(IEnumerator actionAnimation)
+    {
+        // 행동 모션
+        yield return StartCoroutine(actionAnimation);
+
+        // 행동 모션이 끝났음을 알림
+        IsIdle = true;
+    }
+
+    /***************************************************************
+    * [ 일반 공격 ]
+    * 
+    * 단일 타겟을 대상으로 한 자원 소모 없는 일반 공격 실행 및 모션 제어
+    ***************************************************************/
+
     public virtual void OnAttack(Entity target)
     {
-        // 타겟이 사망상태일 경우 다른 대상을 타겟으로 설정
-        if (target != null && target.IsDead)
+        // 타겟이 사망상태 혹은 선택할 수 없는 경우 다른 대상을 타겟으로 설정
+        if (target == null || target.IsDead)
         {
             target = GetRetarget(target);
+
+            // 선택할 수 있는 타겟이 없는 경우 행동 종료
+            if (target == null) return;
         }
 
-        // 타겟이 있는 경우에만 계속해서 공격
-        if (target != null)
-        {
-            // 치명타 여부 구하기
-            float criticalChance = GetCriticalChance(target);
+        // 치명타 여부 구하기
+        float criticalChance = GetCriticalChance(target);
 
-            // 공격 모션 실행
-            StartCoroutine(AttackAction(target, criticalChance));
+        // 공격 모션 실행
+        OnAction(AttackAction(target, criticalChance));
 
-            // 타겟에게 방어 유형 전달
-            // 원거리는 패링 X
-            bool isUsedParry = AttackType == AttackType.Melee;
-            target.OnTargetedAttack(this, isUsedParry, true);
-        }
+        // 타겟에게 방어 유형 전달
+        // 원거리는 패링 X
+        bool isUsedParry = AttackType == AttackType.Melee;
+        target.OnTargetedAttack(this, isUsedParry, true);
+    }
+
+    public virtual float GetCriticalChance(Entity target)
+    {
+        // 크리티컬 확률 계산
+        // 흐트러진 상태라면 무조건 크리티컬
+        if (State.HasState(EntityState.Stagger)) return 1.0f;
+        return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 
     private IEnumerator AttackAction(Entity target, float criticalChance)
@@ -252,6 +283,12 @@ public abstract class Entity : MonoBehaviour
         target.OnDamage(AttackDmg, Stat.MP, criticalChance);
     }
 
+    /***************************************************************
+    * [ 스킬 ]
+    * 
+    * 각 스킬 사용에 따른 자원 소모 및 모션 제어
+    ***************************************************************/
+
     public virtual void OnCast(Skill skill, List<Entity> targets)
     {
         // SP 소모
@@ -262,6 +299,12 @@ public abstract class Entity : MonoBehaviour
         skill.OnCasting(this, targets);
     }
 
+    /***************************************************************
+    * [ 아이템 ]
+    * 
+    * 소지 중인 아이템 사용에 따른 자원 소모 및 모션 제어
+    ***************************************************************/
+
     public virtual void OnUseItem(Consumable item, List<Entity> targets)
     {
         // 이후 
@@ -270,11 +313,23 @@ public abstract class Entity : MonoBehaviour
         item.OnUse(targets);
     }
 
+    /***************************************************************
+    * [ 대기 ]
+    * 
+    * 아무런 행동도 하지 않고서 일정 턴 진행
+    ***************************************************************/
+
     public virtual void OnWait()
     {
         // 시전자를 향해 싱글샷
         BattleCameraDirector.Instance.FocusSingle(gameObject);
     }
+
+    /***************************************************************
+    * [ 도주 ]
+    * 
+    * 해당 전투에서 벗어나는 시도 실행 및 모션 제어
+    ***************************************************************/
 
     public virtual void OnRun()
     {
@@ -288,28 +343,12 @@ public abstract class Entity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnAction(Coroutine actionCoroutine)
-    {
-        // 각 행동을 실행
-        // 행동 모션 등이 끝나면 끝났다고 알림
-        IsEndAction = false;
-        StartCoroutine(ActMotion(actionCoroutine));
-    }
-
-    private IEnumerator ActMotion(Coroutine coroutine)
-    {
-        // 행동 모션
-        yield return coroutine;
-
-        // 행동 모션이 끝났음을 알림
-        IsEndAction = true;
-    }
-
-    public virtual float GetCriticalChance(Entity target)
-    {
-        // 크리티컬 확률 계산
-        return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
-    }
+    /***************************************************************
+    * [ 타겟 탐색 ]
+    * 
+    * 만약 지정한 타겟에게 모종의 이유로 행동을 실행할 수 없는 경우
+    * 행동과 성격에 따른 새로운 타겟을 탐색하는 과정 설정
+    ***************************************************************/
 
     private Entity GetRetarget(Entity curTarget)
     {
@@ -356,10 +395,7 @@ public abstract class Entity : MonoBehaviour
         }
 
         // 크리티컬 여부 확인
-        // 흐트러진 상태라면 무조건 크리티컬
-        float random = UnityEngine.Random.Range(0f, 1f);
-        bool isStaggerState = State.HasState(EntityState.Stagger);
-        bool isCritical = isStaggerState || random < criticalChance;
+        bool isCritical = UnityEngine.Random.Range(0f, 1f) <= criticalChance;
 
         // 크리티컬일 경우 기존 데미지의 1.2배 + 방어력 수치 무시
         Stat.HP -= isCritical ? GetLastDmg(damage * 1.2f, true) : GetLastDmg(damage, false);

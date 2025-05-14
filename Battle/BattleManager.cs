@@ -208,18 +208,22 @@ public class BattleManager : MonoBehaviour
     {
         isTurnEnded = false;
 
+        BattleAction curAction = battleSeq.GetTurnAction(0);
+        Entity actor = curAction.actor;
+
         // 턴 시작 알림
         GameEventResource.Instance.StartTurnEvent.NotifyUpdate();
 
         // 이전에 입력한 행동 실행
-        BattleAction curAction = battleSeq.GetTurnAction(0);
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        yield return new WaitWhile(() => curAction.actor.IsEndAction);
+        Debug.Log(actor.Name + "A");
+        yield return new WaitUntil(() => actor.IsIdle);
+        Debug.Log(actor.Name + "B");
 
         // 다음 턴에 진행할 행동 선택
-        curAction.actor.TakeTurn();
+        actor.TakeTurn();
     }
 
     public void EndTurn()
