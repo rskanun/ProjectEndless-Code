@@ -120,6 +120,9 @@ public class Character : Entity
 
     public override void OnParrying(Entity attacker)
     {
+        // 패링 성공 알림
+        GameEventResource.Instance.ParryingEvent.NotifyUpdate();
+
         // 패링 모션 실행
         OnActiveMotion("parrying");
 

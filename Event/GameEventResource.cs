@@ -71,4 +71,20 @@ public class GameEventResource : ScriptableObject
     [SerializeField]
     private GameEvent _startTurnEvent;
     public GameEvent StartTurnEvent => _startTurnEvent;
+
+    [SerializeField]
+    private GameEvent _battleStartEvent;
+    public GameEvent BattleStartEvent => _battleStartEvent;
+
+    [SerializeField]
+    private GameEvent _battleEndEvent;
+    public GameEvent BattleEndEvet => _battleEndEvent;
+
+    [SerializeField]
+    private GameEvent _killEnemyEvent;
+    public GameEvent KillEnemyEvent => _killEnemyEvent;
+
+    [SerializeField]
+    private GameEvent _parryingEvent;
+    public GameEvent ParryingEvent => _parryingEvent;
 }

@@ -111,6 +111,9 @@ public class BattleManager : MonoBehaviour
         // 선택 버튼 등록
         selectionManager.InitSelectableEntities();
 
+        // 개전 시작 알림
+        GameEventResource.Instance.BattleStartEvent.NotifyUpdate();
+
         // 처음 턴 진행
         StartCoroutine(RunningBattle());
     }
@@ -218,9 +221,7 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        Debug.Log(actor.Name + "A");
         yield return new WaitUntil(() => actor.IsIdle);
-        Debug.Log(actor.Name + "B");
 
         // 다음 턴에 진행할 행동 선택
         actor.TakeTurn();
@@ -251,6 +252,9 @@ public class BattleManager : MonoBehaviour
             // 처치 보상 X
             battleData.ClearReward();
         }
+
+        // 전투 종료 알림
+        GameEventResource.Instance.BattleEndEvet.NotifyUpdate();
 
         // 전투가 끝났다면 결과창 출력
         resultUI.OpenResult();
