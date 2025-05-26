@@ -108,9 +108,6 @@ public class BattleManager : MonoBehaviour
         // 타임라인 생성
         timeline.SetupTimeline(battleSeq);
 
-        // 선택 버튼 등록
-        selectionManager.InitSelectableEntities();
-
         // 개전 시작 알림
         GameEventResource.Instance.BattleStartEvent.NotifyUpdate();
 

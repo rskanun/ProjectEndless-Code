@@ -21,14 +21,12 @@ public enum TargetType
 public class TargetSelection : MonoBehaviour, ISelection
 {
     [Header("참조 스크립트")]
-    [SerializeField] private TargetSelectionUI ui;
     [SerializeField] private ActionManager actionManager;
 
     [Header("선택창")]
     [SerializeField] private TurnSelection turnSelection;
 
     private Dictionary<TargetType, Action> targetSelectActions;
-    private List<TargetSelectButton> selectButtons = new List<TargetSelectButton>();
 
     // 현재 변수
     BattleData battleData;
@@ -47,28 +45,16 @@ public class TargetSelection : MonoBehaviour, ISelection
             { TargetType.Self, ActiveSelf },
             { TargetType.None, ActiveNone }
         };
+
+        // 버튼 클릭 이벤트 등록
+        InitClickHandler();
     }
 
-    public void InitSelectableEntities()
+    private void InitClickHandler()
     {
-        List<GameObject> entityList = battleData.EnemyList
-            .Select(entity => entity.gameObject)
-            .Concat(battleData.CharacterList.Select(entity => entity.gameObject))
-            .ToList();
-
-        // 각 엔티티 오브젝트마다 타겟 선택 버튼 생성
-        AddButtonToList(entityList);
-    }
-
-    private void AddButtonToList(List<GameObject> entityList)
-    {
-        foreach (GameObject entityObj in entityList)
-        {
-            Entity target = entityObj.GetComponent<Entity>();
-            TargetSelectButton selectButton = ui.CreateSelectButton(target, target.cameraOption.BodyPivot.position);
-
-            selectButtons.Add(selectButton);
-        }
+        // 모든 버튼에 클릭 이벤트 달아놓기
+        TargetSelectButtonManager.Instance.RegisterClickHandler(()
+            => OnSelectTargets());
     }
 
     public void OpenSelection()
@@ -83,7 +69,7 @@ public class TargetSelection : MonoBehaviour, ISelection
     public void CloseSelection()
     {
         // 모든 버튼 비활성화
-        DeactiveAllButtons();
+        TargetSelectButtonManager.Instance.DeactiveAllButtons();
     }
 
     public void ReopenSelection()
@@ -131,7 +117,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         BattleCameraDirector.Instance.FocusEnemyGroup();
 
         // 전위에 있는 적만 선택
-        ActiveButtons((target) => IsEnemy(target) && IsFront(target));
+        ActiveButtons(target => IsEnemy(target) && IsFront(target));
     }
 
     private void ActiveEnemy()
@@ -140,7 +126,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         BattleCameraDirector.Instance.FocusEnemyGroup();
 
         // 적만 선택
-        ActiveButtons((target) => IsEnemy(target));
+        ActiveButtons(target => IsEnemy(target));
     }
 
     private void ActiveEnemyParty()
@@ -149,7 +135,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         BattleCameraDirector.Instance.FocusEnemyGroup();
 
         // 모든 적 선택
-        MultiSelectButtons((target) => IsEnemy(target));
+        MultiSelectButtons(target => IsEnemy(target));
     }
 
     private void ActivePartyMember()
@@ -158,7 +144,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         BattleCameraDirector.Instance.FocusPlayerGroup();
 
         // 아군만 선택
-        ActiveButtons((target) => !IsEnemy(target));
+        ActiveButtons(target => !IsEnemy(target));
     }
 
     private void ActiveParty()
@@ -176,7 +162,7 @@ public class TargetSelection : MonoBehaviour, ISelection
         BattleCameraDirector.Instance.FocusPlayerGroup();
 
         // 자기 자신만 선택
-        ActiveButtons((target) => IsTargetSelf(target));
+        ActiveButtons(target => IsTargetSelf(target));
     }
 
     private void ActiveNone()
@@ -187,85 +173,19 @@ public class TargetSelection : MonoBehaviour, ISelection
 
     private void ActiveButtons(Func<Entity, bool> activeCondition)
     {
-        TargetSelectButton firstSelectButton = null;
-
-        // 특정 버튼만 활성화
-        foreach (TargetSelectButton button in selectButtons)
-        {
-            Entity target = button.targetEntity;
-
-            // 살아있는 엔티티 중 조건에 맞는 엔티티의 버튼만 활성화
-            button.interactable = IsAlive(target) && activeCondition(target);
-
-            // 활성화된 버튼이 없을 경우
-            if (firstSelectButton == null && button.interactable)
-            {
-                // 임시로 첫번째 버튼 저장
-                firstSelectButton = button;
-            }
-        }
-
-        // 이전 버튼 선택
-        if (TargetSelectButton.lastSelected == null || TargetSelectButton.lastSelected.interactable == false)
-        {
-            // 이전에 선택한 버튼을 선택할 수 없는 경우 선택가능한 첫 버튼 선택
-            TargetSelectButton.lastSelected = firstSelectButton;
-        }
-
-        EventSystem.current.SetSelectedGameObject(TargetSelectButton.lastSelected.gameObject);
+        TargetSelectButtonManager.Instance.ActiveButtons(target
+            => IsAlive(target) && activeCondition(target));
     }
 
     private void MultiSelectButtons(Func<Entity, bool> selectCondition)
     {
-        TargetSelectButton firstSelectButton = null;
-
-        // 특정 버튼만 활성화
-        foreach (TargetSelectButton button in selectButtons)
-        {
-            Entity target = button.targetEntity;
-
-            // 살아있는 엔티티 중 조건에 맞는 엔티티의 버튼만 활성화 및 선택
-            button.interactable = IsAlive(target) && selectCondition(target);
-
-            if (button.interactable)
-            {
-                button.MultiSelected();
-
-                if (firstSelectButton == null)
-                {
-                    firstSelectButton = button;
-                }
-            }
-        }
-
-        // 활성화 된 버튼 중 아무(첫번째) 버튼 선택
-        EventSystem.current.SetSelectedGameObject(firstSelectButton.gameObject);
+        TargetSelectButtonManager.Instance.SelectButtons(target
+            => IsAlive(target) && selectCondition(target));
     }
 
-    public void OnSelect()
+    private void OnSelectTargets()
     {
-        List<Entity> list = new List<Entity>();
-
-        foreach (TargetSelectButton button in selectButtons)
-        {
-            if (button.IsSelected) list.Add(button.targetEntity);
-        }
-
-        actionManager.SelectTargets(list);
-    }
-
-    private void DeactiveAllButtons()
-    {
-        // 모든 버튼 비활성화
-        foreach (TargetSelectButton button in selectButtons)
-        {
-            button.interactable = false;
-
-            // 멀티 선택된 버튼도 전부 초기화
-            button.DeselectedMultiButton();
-        }
-
-        // 선택 버튼 초기화
-        EventSystem.current.SetSelectedGameObject(null);
+        // 선택된 타겟들을 보내기
+        actionManager.SelectTargets(TargetSelectButtonManager.Instance.GetSelectedTargets());
     }
 }

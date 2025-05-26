@@ -292,7 +292,7 @@ public class NormalMonster : Monster
     {
         base.OnDead();
 
-        // 일반 몬스터의 경우 사망 시 페이드 아웃 -> 개체 파괴
+        // 일반 몬스터의 경우 사망 시 페이드 아웃 -> 비활성화
         StartCoroutine(OnDeadAnimation());
     }
 
@@ -301,11 +301,11 @@ public class NormalMonster : Monster
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
 
         // 사망 모션 실행까지 대기
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Death"));
+        yield return new WaitWhile(() => IsActing);
 
         // 사망 모션 시작과 동시에 페이드 아웃
         DOTween.Sequence()
             .Append(sprite.DOFade(0.0f, 1.5f))
-            .OnComplete(() => Destroy(gameObject));
+            .OnComplete(() => gameObject.SetActive(false));
     }
 }

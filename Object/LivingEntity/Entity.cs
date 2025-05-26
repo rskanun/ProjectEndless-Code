@@ -129,6 +129,8 @@ public abstract class Entity : MonoBehaviour
             return _stateManager;
         }
     }
+    private Queue<string> motionQueue = new Queue<string>();
+    private Coroutine motionCoroutine;
 
     // 전투 순서 데이터
     protected BattleData battleData { private set; get; }
@@ -162,10 +164,31 @@ public abstract class Entity : MonoBehaviour
     * 오브젝트의 모션 실행 관리
     ***************************************************************/
 
-    public void OnActiveMotion(string motion)
+    public void ActMotion(string motion)
     {
-        IsActing = true;
-        animator.SetTrigger(motion);
+        motionQueue.Enqueue(motion);
+
+        if (motionCoroutine == null)
+            motionCoroutine = StartCoroutine(RunMotionSequence());
+    }
+
+    private IEnumerator RunMotionSequence()
+    {
+
+        while (motionQueue.Count > 0)
+        {
+            IsActing = true;
+
+            // 모션 실행
+            string motion = motionQueue.Dequeue();
+            animator.SetTrigger(motion);
+
+            // 모션 종료까지 대기
+            yield return new WaitWhile(() => IsActing);
+        }
+
+        // 코루틴 끝내기
+        motionCoroutine = null;
     }
 
     public void OnMotionEnd()
@@ -256,14 +279,14 @@ public abstract class Entity : MonoBehaviour
     {
         // 크리티컬 확률 계산
         // 흐트러진 상태라면 무조건 크리티컬
-        if (State.HasState(EntityState.Stagger)) return 1.0f;
+        if (target.State.HasState(EntityState.Stagger)) return 1.0f;
         return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 
     private IEnumerator AttackAction(Entity target, float criticalChance)
     {
         // 공격 모션 실행
-        OnActiveMotion("atk");
+        ActMotion("atk");
 
         // 모션 체크
         while (IsActing)
@@ -272,7 +295,7 @@ public abstract class Entity : MonoBehaviour
             if (State.HasState(EntityState.Stagger))
             {
                 // 패링 당하는 모션 실행
-                OnActiveMotion("isParried");
+                ActMotion("isParried");
                 yield break;
             }
 
@@ -281,6 +304,12 @@ public abstract class Entity : MonoBehaviour
 
         // 공격 모션이 끝까지 진행되었을 경우 데미지
         target.OnDamage(AttackDmg, Stat.MP, criticalChance);
+
+        // 히트 모션 대기
+        yield return new WaitWhile(() => target.IsActing);
+
+        // 사망 시 사망 모션 대기
+        if (target.IsDead) yield return new WaitWhile(() => target.IsActing);
     }
 
     /***************************************************************
@@ -339,8 +368,8 @@ public abstract class Entity : MonoBehaviour
         // 해당 엔티티를 전투에서 영구 제외
         battleData.RemoveEntity(this);
 
-        // 오브젝트 삭제
-        Destroy(gameObject);
+        // 오브젝트 비활성화
+        gameObject.SetActive(false);
     }
 
     /***************************************************************
@@ -390,7 +419,7 @@ public abstract class Entity : MonoBehaviour
             State.Remove(EntityState.Dodge);
 
             // 회피 모션 실행
-            OnActiveMotion("dodge");
+            ActMotion("dodge");
             return;
         }
 
@@ -402,7 +431,7 @@ public abstract class Entity : MonoBehaviour
         Stat.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
-        animator.SetTrigger("hit");
+        ActMotion("hit");
 
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
@@ -450,7 +479,7 @@ public abstract class Entity : MonoBehaviour
         battleSeq.RemoveTurn(this);
 
         // 사망 모션
-        animator.SetTrigger("death");
+        ActMotion("death");
     }
 
     public virtual void OnRevival(int hp)
@@ -513,7 +542,7 @@ public abstract class Entity : MonoBehaviour
     {
         Debug.Log("Parrying");
         // 패링 모션 실행
-        OnActiveMotion("parrying");
+        ActMotion("parrying");
 
         // 모션 체크
         yield return new WaitUntil(() => IsActing == false);

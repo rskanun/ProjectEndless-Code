@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, ISubmitHandler, ISelectHandler, IDeselectHandler, IMoveHandler
+public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, ISubmitHandler, ISelectHandler, IDeselectHandler, IMoveHandler
 {
     public static TargetSelectButton lastSelected;
 
@@ -16,7 +16,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         get { return isSelected; }
     }
 
-    public Entity targetEntity;
+    public Entity target;
     public Image targetGraphic;
     public Sprite selectedSprite;
     private Sprite originSprite;
@@ -56,12 +56,33 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         }
     }
 
-    [SerializeField]
-    private UnityEvent onClick;
+    private Action clickHandler;
 
     private void Awake()
     {
         originSprite = targetGraphic.sprite;
+    }
+
+    private void OnEnable()
+    {
+        if (target == null || target.gameObject.activeSelf == false)
+        {
+            // 전투에 참여되지 않은 캐릭터는 제외
+            return;
+        }
+
+        TargetSelectButtonManager.Instance.RegisterButton(this);
+    }
+
+    private void OnDisable()
+    {
+        if (target == null || target.gameObject.activeSelf == false)
+        {
+            // 전투에 참여되지 않은 캐릭터는 제외
+            return;
+        }
+
+        TargetSelectButtonManager.Instance.RegisterButton(this);
     }
 
     public void OnSubmit(BaseEventData eventData)
@@ -73,19 +94,19 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        OnClick();
-    }
-
     private void OnClick()
     {
         if (interactable)
         {
             lastSelected = this;
 
-            onClick?.Invoke();
+            clickHandler?.Invoke();
         }
+    }
+
+    public void AddListener(Action listener)
+    {
+        clickHandler += () => listener?.Invoke();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -94,11 +115,6 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         {
             Selected();
         }
-    }
-
-    public void AddListener(UnityAction listener)
-    {
-        onClick.AddListener(() => listener.Invoke());
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -159,9 +175,9 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     private void ForecastHP(BattleAction action)
     {
         float attackDmg = GetAttackDmg(action);
-        int lastDmg = targetEntity.GetLastDmg(attackDmg, false);
+        int lastDmg = target.GetLastDmg(attackDmg, false);
 
-        targetEntity.SetForecastHP(-lastDmg);
+        target.SetForecastHP(-lastDmg);
     }
 
     private float GetAttackDmg(BattleAction action)
@@ -207,7 +223,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         targetGraphic.sprite = originSprite;
 
         // 예상 체력바 비활성화
-        targetEntity.SetActiveForecastHP(false);
+        target.SetActiveForecastHP(false);
     }
 
     public void DeselectedMultiButton()
