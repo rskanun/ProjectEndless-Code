@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, ISubmitHandler, ISelectHandler, IDeselectHandler, IMoveHandler
+public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, ISubmitHandler, ISelectHandler, IDeselectHandler, IMoveHandler
 {
     public static TargetSelectButton lastSelected;
 
@@ -87,11 +86,16 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, ISubmitHa
 
     public void OnSubmit(BaseEventData eventData)
     {
-        if (EventSystem.current.currentSelectedGameObject == gameObject)
+        if (eventData.selectedObject == gameObject)
         {
             // 선택된 상태인 경우 클릭 시 이벤트 실행
             OnClick();
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        OnClick();
     }
 
     private void OnClick()

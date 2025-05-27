@@ -3,6 +3,8 @@ using UnityEngine;
 [System.Serializable]
 public class EntityStat
 {
+    const int MAX = 99;
+
     [SerializeField]
     private int _healthPoint;
     /***************************************************************
@@ -12,32 +14,16 @@ public class EntityStat
      ***************************************************************/
     public int HP
     {
-        get { return _healthPoint; }
-        set
-        {
-            if (value > MaxHP)
-                _healthPoint = value;
-            else if (value < 0)
-                _healthPoint = 0;
-            else
-                _healthPoint = value;
-        }
+        get => _healthPoint;
+        set => _healthPoint = Mathf.Clamp(value, 0, MaxHP);
     }
 
     [SerializeField]
     private int _maxHP;
     public int MaxHP
     {
-        get { return _maxHP; }
-        set
-        {
-            if (value > 99)
-                _maxHP = 99;
-            else if (value <= 0)
-                _maxHP = 1;
-            else
-                _maxHP = value;
-        }
+        get => _maxHP;
+        set => _maxHP = Mathf.Clamp(value, 1, MAX);
     }
 
     [SerializeField]
@@ -50,16 +36,8 @@ public class EntityStat
     ****************************************************************/
     public int STR
     {
-        get { return _strength; }
-        set
-        {
-            if (value > 99)
-                _strength = 99;
-            else if (value < 0)
-                _strength = 0;
-            else
-                _strength = value;
-        }
+        get => _strength;
+        set => _strength = Mathf.Clamp(value, 0, MAX);
     }
 
     [SerializeField]
@@ -72,16 +50,8 @@ public class EntityStat
     ****************************************************************/
     public int DEF
     {
-        get { return _defensive; }
-        set
-        {
-            if (value > 99)
-                _defensive = 99;
-            else if (value < 0)
-                _defensive = 0;
-            else
-                _defensive = value;
-        }
+        get => _defensive;
+        set => _defensive = Mathf.Clamp(value, 0, MAX);
     }
 
     [SerializeField]
@@ -99,16 +69,8 @@ public class EntityStat
     ****************************************************************/
     public int AGI
     {
-        get { return _agility; }
-        set
-        {
-            if (value > 99)
-                _agility = 99;
-            else if (value < 0)
-                _agility = 0;
-            else
-                _agility = value;
-        }
+        get => _agility;
+        set => _agility = Mathf.Clamp(value, 0, MAX);
     }
 
     [SerializeField]
@@ -123,16 +85,8 @@ public class EntityStat
     ****************************************************************/
     public int DEX
     {
-        get { return _dexterity; }
-        set
-        {
-            if (value > 99)
-                _dexterity = 99;
-            else if (value < 0)
-                _dexterity = 0;
-            else
-                _dexterity = value;
-        }
+        get => _dexterity;
+        set => _dexterity = Mathf.Clamp(value, 0, MAX);
     }
 
     [SerializeField]
@@ -147,32 +101,16 @@ public class EntityStat
      ****************************************************************/
     public int MP
     {
-        get { return _magicPower; }
-        set
-        {
-            if (value > MaxMP)
-                _magicPower = MaxMP;
-            else if (value < 0)
-                _magicPower = 0;
-            else
-                _magicPower = value;
-        }
+        get => _magicPower;
+        set => _magicPower = Mathf.Clamp(value, 0, MaxMP);
     }
 
     [SerializeField]
     private int _maxMP;
     public int MaxMP
     {
-        get { return _maxMP; }
-        set
-        {
-            if (value > 99)
-                _maxMP = 99;
-            else if (value <= 0)
-                _maxMP = 1;
-            else
-                _maxMP = value;
-        }
+        get => _maxMP;
+        set => _maxMP = Mathf.Clamp(value, 1, MAX);
     }
 
     [SerializeField]
@@ -185,32 +123,16 @@ public class EntityStat
     ****************************************************************/
     public int SP
     {
-        get { return _stamina; }
-        set
-        {
-            if (value > MaxSP)
-                _stamina = MaxSP;
-            else if (value < 0)
-                _stamina = 0;
-            else
-                _stamina = value;
-        }
+        get => _stamina;
+        set => _stamina = Mathf.Clamp(value, 0, MaxSP);
     }
 
     [SerializeField]
     private int _maxSP;
     public int MaxSP
     {
-        get { return _maxSP; }
-        set
-        {
-            if (value > 99)
-                _maxSP = 99;
-            else if (value <= 0)
-                _maxSP = 1;
-            else
-                _maxSP = value;
-        }
+        get => _maxSP;
+        set => _maxSP = Mathf.Clamp(value, 1, MAX);
     }
 
     [SerializeField]
@@ -221,19 +143,10 @@ public class EntityStat
     * 오브젝트의 정신력 수치로 정신상태 이상에 영향을 끼친다.
     * 정신력이 높을 수록 정신상태 이상에 걸릴 확률이 낮아진다.
     ****************************************************************/
-    private int MaxSAN = 99;
     public int SAN
     {
-        get { return _sanity; }
-        set
-        {
-            if (value > MaxSAN)
-                _sanity = MaxSAN;
-            else if (value < 0)
-                _sanity = 0;
-            else
-                _sanity = value;
-        }
+        get => _sanity;
+        set => _sanity = Mathf.Clamp(value, 0, MAX);
     }
 
     public EntityStat Clone()
