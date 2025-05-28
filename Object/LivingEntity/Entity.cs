@@ -90,13 +90,11 @@ public abstract class Entity : MonoBehaviour
         get { return Stat.STR; }
     }
 
-    [Header("애니메이션")]
-    [SerializeField] protected Animator animator;
-
     [Header("참조 스크립트")]
     [SerializeField] protected BattleHUD hud;
     [SerializeField] protected StatusEffectManager effectManager;
     [SerializeField] protected EntitySurveyManager surveyManager;
+    [SerializeField] protected EntityMotionManager motionManager;
     public BattleCameraOption cameraOption;
 
     // 현재 상태
@@ -106,18 +104,8 @@ public abstract class Entity : MonoBehaviour
         private set { _isDead = value; }
         get { return _isDead; }
     }
-    private bool _isActing;
-    public bool IsActing
-    {
-        private set { _isActing = value; }
-        get { return _isActing; }
-    }
-    private bool _isIdle = true;
-    public bool IsIdle
-    {
-        private set { _isIdle = value; }
-        get { return _isIdle; }
-    }
+    public bool IsActing => motionManager.IsActing;
+    public bool IsIdle => motionManager.IsIdle;
     private EntityStateManager _stateManager;
     protected EntityStateManager State
     {
@@ -129,8 +117,6 @@ public abstract class Entity : MonoBehaviour
             return _stateManager;
         }
     }
-    private Queue<string> motionQueue = new Queue<string>();
-    private Coroutine motionCoroutine;
 
     // 전투 순서 데이터
     protected BattleData battleData { private set; get; }
@@ -156,44 +142,6 @@ public abstract class Entity : MonoBehaviour
     {
         // 턴 시작 시 현재 턴 정보 수집
         Personality.OnTurnStart();
-    }
-
-    /***************************************************************
-    * [ 모션 ]
-    * 
-    * 오브젝트의 모션 실행 관리
-    ***************************************************************/
-
-    public void ActMotion(string motion)
-    {
-        motionQueue.Enqueue(motion);
-
-        if (motionCoroutine == null)
-            motionCoroutine = StartCoroutine(RunMotionSequence());
-    }
-
-    private IEnumerator RunMotionSequence()
-    {
-
-        while (motionQueue.Count > 0)
-        {
-            IsActing = true;
-
-            // 모션 실행
-            string motion = motionQueue.Dequeue();
-            animator.SetTrigger(motion);
-
-            // 모션 종료까지 대기
-            yield return new WaitWhile(() => IsActing);
-        }
-
-        // 코루틴 끝내기
-        motionCoroutine = null;
-    }
-
-    public void OnMotionEnd()
-    {
-        IsActing = false;
     }
 
     /***************************************************************
@@ -226,24 +174,6 @@ public abstract class Entity : MonoBehaviour
     {
         // 턴이 끝났음을 알림
         GameEventResource.Instance.EndTurnEvent.NotifyUpdate();
-    }
-
-    private void OnAction(IEnumerator actionAnimation)
-    {
-        // 각 행동을 실행
-        IsIdle = false;
-
-        // 행동 모션 체크
-        StartCoroutine(ActMotion(actionAnimation));
-    }
-
-    private IEnumerator ActMotion(IEnumerator actionAnimation)
-    {
-        // 행동 모션
-        yield return StartCoroutine(actionAnimation);
-
-        // 행동 모션이 끝났음을 알림
-        IsIdle = true;
     }
 
     /***************************************************************
