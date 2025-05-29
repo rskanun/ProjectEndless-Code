@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Collections;
+using System;
+
 
 
 #if UNITY_EDITOR
@@ -15,8 +17,11 @@ public class Motion
     public AnimationClip clip;
 }
 
+[RequireComponent(typeof(Entity))]
 public class EntityMotionManager : MonoBehaviour
 {
+    [SerializeField]
+    private Entity entity;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
     [SerializeField]
@@ -51,6 +56,15 @@ public class EntityMotionManager : MonoBehaviour
 #if UNITY_EDITOR
     [ContextMenu("Reload")]
     private void OnValidate()
+    {
+        // 엔티티 등록
+        entity = GetComponent<Entity>();
+
+        // 근접 공격 및 스킬 범위 설정
+        SetMeleeRanges();
+    }
+
+    private void SetMeleeRanges()
     {
         meleeRange = new Dictionary<string, float>();
 
@@ -100,17 +114,7 @@ public class EntityMotionManager : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        OnDrawBody();
         OnDrawMeleeRanges(meleeRange.Values.ToList());
-    }
-
-    private void OnDrawBody()
-    {
-        Vector3 offset = transform.TransformPoint(spriteRenderer.sprite.bounds.center);
-        Vector3 size = Vector3.Scale(spriteRenderer.sprite.bounds.size, transform.lossyScale);
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(offset, size);
     }
 
     private void OnDrawMeleeRanges(List<float> meleeRange)
@@ -128,13 +132,51 @@ public class EntityMotionManager : MonoBehaviour
     }
 #endif
 
-
-    // x 좌표 => (어태커 위치 + 공격 범위) - (타겟 위치 + 피격 범위) < 오차 범위
+    // x 좌표 => 어태커 위치 + 공격 범위 == 타겟 위치
     // y 좌표 => 어태커 위치 == 타겟 위치
     // 이동 방법 => lerp?
 
     // 공격 방식
     // 시작 모션 -> 이동 -> 공격 모션
+    private IEnumerator MoveAnimation(Vector2 target, string motion)
+    {
+        // 임시로 막아두기
+        if (meleeRange == null || !meleeRange.ContainsKey(motion)) yield break;
+
+        animator.SetBool("isMove", true);
+
+        // 이동 거리 계산
+        Vector2 movePoint = GetMovePoint(target, motion);
+
+        // 오차 범위 안에만 들어온다면 이동 정지
+        while (Vector2.Distance(movePoint, transform.position) > 0.01f)
+        {
+            transform.position = Vector2.Lerp(transform.position, movePoint, 0.01f);
+            yield return null;
+        }
+
+        animator.SetBool("isMove", false);
+    }
+    private IEnumerator ReturnAnimation(Vector2 target)
+    {
+        animator.SetBool("isMove", true);
+
+        // 오차 범위 안에만 들어온다면 이동 정지
+        while (Vector2.Distance(target, transform.position) > 0.01f)
+        {
+            transform.position = Vector2.Lerp(transform.position, target, 0.01f);
+            yield return null;
+        }
+
+        transform.position = target;
+        animator.SetBool("isMove", false);
+    }
+
+    private Vector2 GetMovePoint(Vector2 target, string motion)
+    {
+        float vectorX = spriteRenderer.flipX ? -1 : 1;
+        return new Vector2(target.x + meleeRange[motion] * vectorX, target.y);
+    }
 
     /***************************************************************
     * [ 모션 ]
@@ -187,22 +229,63 @@ public class EntityMotionManager : MonoBehaviour
 
         // 진행 중이던 애니메이션 강제 종료
         StopCoroutine(motionAnimation);
-        IsIdle = false;
+        IsIdle = true;
     }
 
     /***************************************************************
     * [ 공격 애니메이션 ]
     * 
-    * 시전 모션 -> 이동 -> 타격 모션
+    * 시전 모션 -> 이동 -> 타격 모션 -> 돌아오기
     ***************************************************************/
 
-    public void ActAttackAnimation()
+    public void ActAttackAnimation(Entity target, Action onAttack)
     {
-        PlayAnimation(AttackAnimation());
+        ActAnimation(AttackAnimation(target, onAttack));
     }
 
-    private IEnumerator AttackAnimation()
+    private IEnumerator AttackAnimation(Entity target, Action onAttack)
     {
+        Vector2 originPos = transform.position;
 
+        // 모션 실행
+        ActMotion("atk");
+
+        // 플레이어를 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
+
+        // 이동 애니메이션 실행
+        yield return StartCoroutine(MoveAnimation(target.transform.position, "attack"));
+
+        // 모션 체크
+        while (IsActing)
+        {
+            // 공격 모션 중간 패링을 당했을 경우
+            if (entity.HasState(EntityState.Stagger))
+            {
+                // 패링 당하는 모션 실행
+                ActMotion("isParried");
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        // 공격 모션이 끝까지 진행되었을 경우 공격 실행
+        onAttack?.Invoke();
+
+        // 원래 자리로 돌아오기
+        StartCoroutine(ReturnAnimation(originPos));
+
+        // 적을 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusSingle(target.gameObject);
+
+        // 히트 또는 회피 모션 대기
+        yield return new WaitWhile(() => target.IsActing);
+
+        // 사망 시 사망 모션 대기
+        if (target.IsDead) yield return new WaitWhile(() => target.IsActing);
+
+        // 플레이어가 원래 자리로 돌아올 때까지 대기
+        yield return new WaitWhile(() => animator.GetBool("isMove"));
     }
 }

@@ -124,7 +124,7 @@ public class Character : Entity
         GameEventResource.Instance.ParryingEvent.NotifyUpdate();
 
         // 패링 모션 실행
-        ActMotion("parrying");
+        motionManager.ActMotion("parrying");
 
         // 플레이어가 패링에 성공했을 경우 추가타를 넣을 대상 선택
         assistManager.OnSelectExtraAttacker(attacker, this);

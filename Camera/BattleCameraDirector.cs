@@ -240,25 +240,6 @@ public class BattleCameraDirector
         yield return null;
     }
 
-    public IEnumerator DirectActionMotion(Entity actor, Entity target)
-    {
-        // 단일 타겟을 리스트로 변환
-        List<Entity> list = new List<Entity>() { target };
-        yield return DirectActionMotion(actor, list);
-    }
-
-    public IEnumerator DirectActionMotion(Entity actor, List<Entity> targets)
-    {
-        // 행동을 하는 캐릭터부터 카메라 잡기
-        FocusSingle(actor.gameObject);
-
-        // 모션 동안 대기
-        yield return new WaitWhile(() => actor.IsActing);
-
-        // 타겟이 되는 대상 그룹샷
-        FocusGroup(targets.Select(t => t.gameObject).ToList());
-    }
-
     public IEnumerator DirectSelectMotion()
     {
         var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
