@@ -332,7 +332,7 @@ public abstract class Entity : MonoBehaviour
         Stat.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
-        motionManager.ActMotion("hit");
+        motionManager.ActHitAnimation();
 
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
@@ -378,9 +378,6 @@ public abstract class Entity : MonoBehaviour
 
         // 시퀀스 삭제
         battleSeq.RemoveTurn(this);
-
-        // 사망 모션
-        motionManager.ActMotion("death");
     }
 
     public virtual void OnRevival(int hp)
@@ -443,7 +440,7 @@ public abstract class Entity : MonoBehaviour
     {
         Debug.Log("Parrying");
         // 패링 모션 실행
-        motionManager.ActMotion("parrying");
+        motionManager.ActMotion("parry");
 
         // 모션 체크
         yield return new WaitUntil(() => IsActing == false);

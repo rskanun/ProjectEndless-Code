@@ -3,6 +3,8 @@ using System.Linq;
 using UnityEngine;
 using System.Collections;
 using System;
+using DG.Tweening;
+
 
 
 
@@ -26,11 +28,15 @@ public class EntityMotionManager : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    private bool lookAtRight;
 
     [Header("근접 공격 및 스킬")]
     [SerializeField]
     private List<Motion> meleeMotions;
-    private Dictionary<string, float> meleeRange;
+    [SerializeField, HideInInspector]
+    private List<MeleeRangeEntry> meleeRanges; // dict 저장용
+    private Dictionary<string, float> meleeRangeDict;
 
     private bool _isActing;
     public bool IsActing
@@ -44,14 +50,7 @@ public class EntityMotionManager : MonoBehaviour
         private set { _isIdle = value; }
         get { return _isIdle; }
     }
-    private string _motion;
-    public string Motion
-    {
-        private set { _motion = value; }
-        get { return _motion; }
-    }
-
-    private Coroutine motionAnimation;
+    private Queue<string> motionQueue = new Queue<string>();
 
 #if UNITY_EDITOR
     [ContextMenu("Reload")]
@@ -66,13 +65,13 @@ public class EntityMotionManager : MonoBehaviour
 
     private void SetMeleeRanges()
     {
-        meleeRange = new Dictionary<string, float>();
+        meleeRanges = new List<MeleeRangeEntry>();
 
         foreach (Motion motion in meleeMotions)
         {
             if (string.IsNullOrEmpty(motion.name) || motion.clip == null) continue;
 
-            meleeRange.Add(motion.name, GetRange(motion.clip));
+            meleeRanges.Add(new MeleeRangeEntry(motion.name, GetRange(motion.clip)));
         }
     }
 
@@ -114,7 +113,9 @@ public class EntityMotionManager : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        OnDrawMeleeRanges(meleeRange.Values.ToList());
+        if (meleeRangeDict == null || meleeRangeDict.Count <= 0) return;
+
+        OnDrawMeleeRanges(meleeRangeDict.Values.ToList());
     }
 
     private void OnDrawMeleeRanges(List<float> meleeRange)
@@ -132,50 +133,21 @@ public class EntityMotionManager : MonoBehaviour
     }
 #endif
 
-    // x 좌표 => 어태커 위치 + 공격 범위 == 타겟 위치
-    // y 좌표 => 어태커 위치 == 타겟 위치
-    // 이동 방법 => lerp?
-
-    // 공격 방식
-    // 시작 모션 -> 이동 -> 공격 모션
-    private IEnumerator MoveAnimation(Vector2 target, string motion)
+    private void Awake()
     {
-        // 임시로 막아두기
-        if (meleeRange == null || !meleeRange.ContainsKey(motion)) yield break;
-
-        animator.SetBool("isMove", true);
-
-        // 이동 거리 계산
-        Vector2 movePoint = GetMovePoint(target, motion);
-
-        // 오차 범위 안에만 들어온다면 이동 정지
-        while (Vector2.Distance(movePoint, transform.position) > 0.01f)
-        {
-            transform.position = Vector2.Lerp(transform.position, movePoint, 0.01f);
-            yield return null;
-        }
-
-        animator.SetBool("isMove", false);
-    }
-    private IEnumerator ReturnAnimation(Vector2 target)
-    {
-        animator.SetBool("isMove", true);
-
-        // 오차 범위 안에만 들어온다면 이동 정지
-        while (Vector2.Distance(target, transform.position) > 0.01f)
-        {
-            transform.position = Vector2.Lerp(transform.position, target, 0.01f);
-            yield return null;
-        }
-
-        transform.position = target;
-        animator.SetBool("isMove", false);
+        // 저장용 리스트를 Dict로 옮기기
+        meleeRangeDict = meleeRanges.ToDictionary(e => e.name, e => e.range);
     }
 
     private Vector2 GetMovePoint(Vector2 target, string motion)
     {
-        float vectorX = spriteRenderer.flipX ? -1 : 1;
-        return new Vector2(target.x + meleeRange[motion] * vectorX, target.y);
+        float vectorX = spriteRenderer.flipX != lookAtRight ? -1 : 1;
+        return new Vector2(target.x + meleeRangeDict[motion] * vectorX, target.y);
+    }
+
+    private bool IsPlayAnimation(string motion = "Idle")
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName(motion);
     }
 
     /***************************************************************
@@ -187,7 +159,7 @@ public class EntityMotionManager : MonoBehaviour
     public void ActMotion(string motion)
     {
         IsActing = true;
-        Motion = motion;
+        motionQueue.Enqueue(motion);
 
         animator.SetTrigger(motion);
     }
@@ -195,7 +167,14 @@ public class EntityMotionManager : MonoBehaviour
     public void OnEndMotion()
     {
         IsActing = false;
-        Motion = "idle";
+        motionQueue.Dequeue();
+
+        // 아직 남은 모션이 실행 중이라면
+        if (motionQueue.Count > 0)
+        {
+            // 다시 모션 실행 중으로 변경
+            IsActing = true;
+        }
     }
 
     /***************************************************************
@@ -210,7 +189,7 @@ public class EntityMotionManager : MonoBehaviour
         IsIdle = false;
 
         // 행동 모션 체크
-        motionAnimation = StartCoroutine(PlayAnimation(actionAnimation));
+        StartCoroutine(PlayAnimation(actionAnimation));
     }
 
     private IEnumerator PlayAnimation(IEnumerator actionAnimation)
@@ -219,23 +198,13 @@ public class EntityMotionManager : MonoBehaviour
         yield return StartCoroutine(actionAnimation);
 
         // 행동 모션이 끝났음을 알림
-        motionAnimation = null;
-        IsIdle = true;
-    }
-
-    public void StopAnimation()
-    {
-        if (motionAnimation == null) return;
-
-        // 진행 중이던 애니메이션 강제 종료
-        StopCoroutine(motionAnimation);
         IsIdle = true;
     }
 
     /***************************************************************
     * [ 공격 애니메이션 ]
     * 
-    * 시전 모션 -> 이동 -> 타격 모션 -> 돌아오기
+    * 시전 모션 -> 이동 모션 -> 타격 모션 -> 복귀 모션
     ***************************************************************/
 
     public void ActAttackAnimation(Entity target, Action onAttack)
@@ -247,14 +216,20 @@ public class EntityMotionManager : MonoBehaviour
     {
         Vector2 originPos = transform.position;
 
+        // 공격하는 엔티티를 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
+
         // 모션 실행
         ActMotion("atk");
 
-        // 플레이어를 향해 카메라 포커싱
-        BattleCameraDirector.Instance.FocusSingle(gameObject);
+        // 시전 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => IsPlayAnimation("Attack_Ready"));
 
-        // 이동 애니메이션 실행
-        yield return StartCoroutine(MoveAnimation(target.transform.position, "attack"));
+        // 타겟을 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusSingle(target.gameObject);
+
+        // 타겟 앞으로 이동
+        transform.position = GetMovePoint(target.transform.position, "attack");
 
         // 모션 체크
         while (IsActing)
@@ -262,8 +237,8 @@ public class EntityMotionManager : MonoBehaviour
             // 공격 모션 중간 패링을 당했을 경우
             if (entity.HasState(EntityState.Stagger))
             {
-                // 패링 당하는 모션 실행
-                ActMotion("isParried");
+                // 패링 애니메이션 실행 및 공격 애니메이션 종료
+                StartCoroutine(CounterattackAnimation(originPos));
                 yield break;
             }
 
@@ -271,21 +246,112 @@ public class EntityMotionManager : MonoBehaviour
         }
 
         // 공격 모션이 끝까지 진행되었을 경우 공격 실행
-        onAttack?.Invoke();
+        onAttack.Invoke();
 
         // 원래 자리로 돌아오기
         StartCoroutine(ReturnAnimation(originPos));
 
-        // 적을 향해 카메라 포커싱
-        BattleCameraDirector.Instance.FocusSingle(target.gameObject);
+        // 히트 & 사망 모션 대기
+        yield return new WaitWhile(() => target.IsIdle);
+    }
 
-        // 히트 또는 회피 모션 대기
-        yield return new WaitWhile(() => target.IsActing);
+    private IEnumerator CounterattackAnimation(Vector2 originPos)
+    {
+        // 패링 당한 엔티티(=공격을 감행한 엔티티)를 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
 
-        // 사망 시 사망 모션 대기
-        if (target.IsDead) yield return new WaitWhile(() => target.IsActing);
+        // 반격(패링 당하는) 모션 실행
+        ActMotion("counter");
 
-        // 플레이어가 원래 자리로 돌아올 때까지 대기
-        yield return new WaitWhile(() => animator.GetBool("isMove"));
+        // 히트 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => IsPlayAnimation("Hit"));
+        yield return new WaitWhile(() => IsActing);
+
+        // 사망 상태가 아니라면 원래 자리로 복귀하는 모션 실행
+        if (!entity.IsDead) ActMotion("return");
+
+        // 모션이 끝날 때까지 기다리기
+        yield return new WaitWhile(() => IsActing);
+
+        // 모션이 끝나면 원래 자리로 복귀
+        transform.position = originPos;
+    }
+
+    /***************************************************************
+    * [ 히트 애니메이션 ]
+    * 
+    * 히트 모션 실행, 이후 사망했다면 사망 모션까지 실행
+    ***************************************************************/
+
+    public void ActHitAnimation()
+    {
+        ActAnimation(HitAnimation());
+    }
+
+    private IEnumerator HitAnimation()
+    {
+        // 히트 모션 실행
+        ActMotion("hit");
+
+        // 사망 체크
+        while (IsActing)
+        {
+            // 사망한 경우 해당 애니메이션 실행
+            if (entity.IsDead)
+            {
+                yield return StartCoroutine(DeadAnimation());
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
+    protected virtual IEnumerator DeadAnimation()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+
+        // 사망 모션 실행
+        ActMotion("death");
+
+        // 사망 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => IsPlayAnimation("Death"));
+        yield return new WaitWhile(() => IsActing);
+
+        // 사망 모션 시작과 동시에 페이드 아웃
+        DOTween.Sequence()
+            .Append(sprite.DOFade(0.0f, 1.5f))
+            .OnComplete(() => gameObject.SetActive(false));
+    }
+
+    /***************************************************************
+    * [ 복귀 애니메이션 ]
+    * 
+    * 근접 공격 실행 후, 본래 자리로 돌아오는 애니메이션
+    ***************************************************************/
+
+    private IEnumerator ReturnAnimation(Vector2 originPos)
+    {
+        // 복귀 모션 실행
+        ActMotion("return");
+
+        // 모션이 끝날 때까지 대기
+        yield return new WaitWhile(() => IsActing);
+
+        // 모션이 끝나면 원래 자리로 복귀
+        transform.position = originPos;
+    }
+
+    [System.Serializable]
+    private class MeleeRangeEntry
+    {
+        public string name;
+        public float range;
+
+        public MeleeRangeEntry(string name, float range)
+        {
+            this.name = name;
+            this.range = range;
+        }
     }
 }

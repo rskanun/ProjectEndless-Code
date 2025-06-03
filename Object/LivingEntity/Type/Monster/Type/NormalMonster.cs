@@ -281,31 +281,4 @@ public class NormalMonster : Monster
         testDisplay.SetSelectTarget(targets[0]);
         base.SelectSkill(skill, targets, index);
     }
-
-    /***************************************************************
-    * [ 상태 처리 ]
-    * 
-    * 오브젝트의 이벤트에 의한 상태 처리
-    ***************************************************************/
-
-    public override void OnDead()
-    {
-        base.OnDead();
-
-        // 일반 몬스터의 경우 사망 시 페이드 아웃 -> 비활성화
-        StartCoroutine(OnDeadAnimation());
-    }
-
-    public IEnumerator OnDeadAnimation()
-    {
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-
-        // 사망 모션 실행까지 대기
-        yield return new WaitWhile(() => IsActing);
-
-        // 사망 모션 시작과 동시에 페이드 아웃
-        DOTween.Sequence()
-            .Append(sprite.DOFade(0.0f, 1.5f))
-            .OnComplete(() => gameObject.SetActive(false));
-    }
 }
