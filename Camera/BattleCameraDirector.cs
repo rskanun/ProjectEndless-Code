@@ -235,11 +235,6 @@ public class BattleCameraDirector
         yield return new WaitForSeconds(2.5f);
     }
 
-    public IEnumerator DirectActionSelection()
-    {
-        yield return null;
-    }
-
     public IEnumerator DirectSelectMotion()
     {
         var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
@@ -261,5 +256,21 @@ public class BattleCameraDirector
 
         // DOTween 애니메이션이 끝날 때까지 대기
         yield return seq.WaitForCompletion();
+    }
+
+    public IEnumerator DirectSmoothFocusing(GameObject target)
+    {
+        // 카메라가 부드럽게 움직이도록 지정
+        var bodyComponent = manager.singleCam.GetCinemachineComponent<CinemachineHardLockToTarget>();
+        bodyComponent.m_Damping = 0.1f;
+
+        // 목표 변경
+        FocusSingle(target);
+
+        // 목표까지 대기
+        yield return new WaitUntil(() => target.transform.position == Camera.main.transform.position);
+
+        // 본래대로 딱딱하게 움직이도록 지정
+        bodyComponent.m_Damping = 0.0f;
     }
 }

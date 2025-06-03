@@ -23,7 +23,7 @@ public class ActionManager : MonoBehaviour
     [SerializeField] private SurveyManager checkingManager;
 
     // 현재 열린 창
-    private Stack<ISelection> selectionLog;
+    private Stack<ISelection> selectionLog = new Stack<ISelection>();
 
     // 현재 턴 정보
     private SelectionData selectionData;
@@ -70,9 +70,6 @@ public class ActionManager : MonoBehaviour
     public void OnSelect(Character actor)
     {
         selectionData.actor = actor;
-
-        // 로그 초기화
-        selectionLog = new Stack<ISelection>();
 
         // 소비 가능한 아이템 목록 초기화
         itemSelection.UpdateItemInfo();
@@ -163,6 +160,9 @@ public class ActionManager : MonoBehaviour
     {
         Character actor = selectionData.actor;
         BattleAction action = selectionData.action;
+
+        // 로그 초기화
+        selectionLog.Clear();
 
         // 턴 선택창 닫기
         turnSelection.CloseSelection();

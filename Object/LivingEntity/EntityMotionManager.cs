@@ -224,9 +224,10 @@ public class EntityMotionManager : MonoBehaviour
 
         // 시전 모션이 끝날 때까지 대기
         yield return new WaitUntil(() => IsPlayAnimation("Attack_Ready"));
+        yield return new WaitWhile(() => IsPlayAnimation("Attack_Ready"));
 
         // 타겟을 향해 카메라 포커싱
-        BattleCameraDirector.Instance.FocusSingle(target.gameObject);
+        StartCoroutine(BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject));
 
         // 타겟 앞으로 이동
         transform.position = GetMovePoint(target.transform.position, "attack");
@@ -252,7 +253,7 @@ public class EntityMotionManager : MonoBehaviour
         StartCoroutine(ReturnAnimation(originPos));
 
         // 히트 & 사망 모션 대기
-        yield return new WaitWhile(() => target.IsIdle);
+        yield return new WaitUntil(() => target.IsIdle);
     }
 
     private IEnumerator CounterattackAnimation(Vector2 originPos)
@@ -318,10 +319,11 @@ public class EntityMotionManager : MonoBehaviour
         yield return new WaitUntil(() => IsPlayAnimation("Death"));
         yield return new WaitWhile(() => IsActing);
 
-        // 사망 모션 시작과 동시에 페이드 아웃
+        // 페이드 아웃
         DOTween.Sequence()
             .Append(sprite.DOFade(0.0f, 1.5f))
-            .OnComplete(() => gameObject.SetActive(false));
+            .OnComplete(() => gameObject.SetActive(false))
+            .WaitForCompletion();
     }
 
     /***************************************************************
