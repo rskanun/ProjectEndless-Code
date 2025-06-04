@@ -253,6 +253,9 @@ public class BattleManager : MonoBehaviour
         // 전투 종료 알림
         GameEventResource.Instance.BattleEndEvet.NotifyUpdate();
 
+        // 전체 화면으로 카메라 포커싱
+        BattleCameraDirector.Instance.FocusFullScreen();
+
         // 전투가 끝났다면 결과창 출력
         resultUI.OpenResult();
     }

@@ -205,6 +205,12 @@ public abstract class Entity : MonoBehaviour
         target.OnTargetedAttack(this, isUsedParry, true);
     }
 
+    public void OnCounterattack(Entity target)
+    {
+        // 반격 모션 실행
+        motionManager.ActCounterattackAnimation(() => target.OnDamage(AttackDmg, Stat.MP, 1.0f));
+    }
+
     public virtual float GetCriticalChance(Entity target)
     {
         // 크리티컬 확률 계산

@@ -95,7 +95,7 @@ public class AssistAttackManager : MonoBehaviour
         }
 
         // 지원 가능한 스킬이 아닌 경우 지원 공격 사용
-        attacker.OnAttack(target);
+        attacker.OnCounterattack(target);
     }
 
     private void DeactiveAssistSelection()

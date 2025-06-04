@@ -142,7 +142,7 @@ public class EntityMotionManager : MonoBehaviour
     private Vector2 GetMovePoint(Vector2 target, string motion)
     {
         float vectorX = spriteRenderer.flipX != lookAtRight ? -1 : 1;
-        return new Vector2(target.x + meleeRangeDict[motion] * vectorX, target.y);
+        return new Vector2(target.x + (meleeRangeDict[motion] - 0.1f) * vectorX, target.y);
     }
 
     private bool IsPlayAnimation(string motion = "Idle")
@@ -220,7 +220,7 @@ public class EntityMotionManager : MonoBehaviour
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
         // 모션 실행
-        ActMotion("atk");
+        ActMotion("attack");
 
         // 시전 모션이 끝날 때까지 대기
         yield return new WaitUntil(() => IsPlayAnimation("Attack_Ready"));
@@ -239,7 +239,7 @@ public class EntityMotionManager : MonoBehaviour
             if (entity.HasState(EntityState.Stagger))
             {
                 // 패링 애니메이션 실행 및 공격 애니메이션 종료
-                StartCoroutine(CounterattackAnimation(originPos));
+                yield return StartCoroutine(ParriedAnimation(originPos));
                 yield break;
             }
 
@@ -256,26 +256,58 @@ public class EntityMotionManager : MonoBehaviour
         yield return new WaitUntil(() => target.IsIdle);
     }
 
-    private IEnumerator CounterattackAnimation(Vector2 originPos)
+    private IEnumerator ParriedAnimation(Vector2 originPos)
     {
         // 패링 당한 엔티티(=공격을 감행한 엔티티)를 향해 카메라 포커싱
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
-        // 반격(패링 당하는) 모션 실행
+        // 반격(패링) 당하는 모션 실행
         ActMotion("counter");
 
         // 히트 모션이 끝날 때까지 대기
         yield return new WaitUntil(() => IsPlayAnimation("Hit"));
         yield return new WaitWhile(() => IsActing);
 
-        // 사망 상태가 아니라면 원래 자리로 복귀하는 모션 실행
-        if (!entity.IsDead) ActMotion("return");
+        // 반격으로 엔티티가 사망했다면
+        if (entity.IsDead)
+        {
+            // 사망 모션 기다리고 종료
+            yield return new WaitWhile(() => IsActing);
+            yield break;
+        }
+
+        // 원래 자리로 복귀하는 모션 실행
+        ActMotion("return");
 
         // 모션이 끝날 때까지 기다리기
         yield return new WaitWhile(() => IsActing);
 
         // 모션이 끝나면 원래 자리로 복귀
         transform.position = originPos;
+    }
+
+    /***************************************************************
+    * [ 반격 애니메이션 ]
+    * 
+    * 패링 성공 시, 일반 반격 공격 모션 실행
+    ***************************************************************/
+
+    public void ActCounterattackAnimation(Action onAttack)
+    {
+        ActAnimation(CounterattackAnimation(onAttack));
+    }
+
+    private IEnumerator CounterattackAnimation(Action onAttack)
+    {
+        // 반격 모션 실행
+        ActMotion("counterattack");
+
+        // 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => IsPlayAnimation("Counterattack"));
+        yield return new WaitWhile(() => IsActing);
+
+        // 모션이 끝까지 진행되었을 경우 공격 실행
+        onAttack.Invoke();
     }
 
     /***************************************************************
@@ -334,6 +366,7 @@ public class EntityMotionManager : MonoBehaviour
 
     private IEnumerator ReturnAnimation(Vector2 originPos)
     {
+        Debug.Log($"{entity.name} return");
         // 복귀 모션 실행
         ActMotion("return");
 
