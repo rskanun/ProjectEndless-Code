@@ -99,13 +99,13 @@ public class ItemSelection : MonoBehaviour, ISelection
         // 버튼 클릭 설정
         itemInfo.SetClickHandler(() =>
         {
-            OnItemClicked(itemInfo, consumable, itemInfoObj);
+            OnItemClicked(consumable, itemInfoObj);
         });
 
         return itemInfoObj;
     }
 
-    private void OnItemClicked(ItemInfo itemInfo, Consumable consumable, GameObject itemInfoObj)
+    private void OnItemClicked(Consumable consumable, GameObject itemInfoObj)
     {
         actionManager.SelectItem(consumable);
         lastSelected = itemInfoObj;

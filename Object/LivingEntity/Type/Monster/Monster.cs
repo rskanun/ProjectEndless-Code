@@ -101,7 +101,7 @@ public abstract class Monster : Entity
 
     protected virtual void SelectAttack(Entity target, int? index = null)
     {
-        Debug.Log($"{Name}: Select Attack to {target.Name}");
+        Debug.Log($"{name}: Select Attack to {target.name}");
         AttackAction action = new AttackAction();
 
         action.actor = this;

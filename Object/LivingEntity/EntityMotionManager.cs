@@ -30,6 +30,9 @@ public class EntityMotionManager : MonoBehaviour
     private Animator animator;
     [SerializeField]
     private bool lookAtRight;
+    [SerializeField]
+    [Range(-1.0f, 1.0f)]
+    private float range;
 
     [Header("근접 공격 및 스킬")]
     [SerializeField]
@@ -142,7 +145,7 @@ public class EntityMotionManager : MonoBehaviour
     private Vector2 GetMovePoint(Vector2 target, string motion)
     {
         float vectorX = spriteRenderer.flipX != lookAtRight ? -1 : 1;
-        return new Vector2(target.x + (meleeRangeDict[motion] - 0.1f) * vectorX, target.y);
+        return new Vector2(target.x + (meleeRangeDict[motion] - range) * vectorX, target.y);
     }
 
     private bool IsPlayAnimation(string motion = "Idle")
@@ -166,6 +169,9 @@ public class EntityMotionManager : MonoBehaviour
 
     public void OnEndMotion()
     {
+        // 종료 시킬 모션이 없으면 그대로 종료
+        if (motionQueue.Count <= 0) return;
+
         IsActing = false;
         motionQueue.Dequeue();
 
@@ -239,7 +245,7 @@ public class EntityMotionManager : MonoBehaviour
             if (entity.HasState(EntityState.Stagger))
             {
                 // 패링 애니메이션 실행 및 공격 애니메이션 종료
-                yield return StartCoroutine(ParriedAnimation(originPos));
+                yield return StartCoroutine(ParriedAnimation(target, originPos));
                 yield break;
             }
 
@@ -256,10 +262,13 @@ public class EntityMotionManager : MonoBehaviour
         yield return new WaitUntil(() => target.IsIdle);
     }
 
-    private IEnumerator ParriedAnimation(Vector2 originPos)
+    private IEnumerator ParriedAnimation(Entity target, Vector2 originPos)
     {
-        // 패링 당한 엔티티(=공격을 감행한 엔티티)를 향해 카메라 포커싱
-        BattleCameraDirector.Instance.FocusSingle(gameObject);
+        // 이전 공격 모션 종료
+        OnEndMotion();
+
+        // 현재 행동의 주체들을 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusGroup(new List<GameObject> { gameObject, target.gameObject });
 
         // 반격(패링) 당하는 모션 실행
         ActMotion("counter");
@@ -290,6 +299,7 @@ public class EntityMotionManager : MonoBehaviour
     * [ 반격 애니메이션 ]
     * 
     * 패링 성공 시, 일반 반격 공격 모션 실행
+    * 반격 대상 비추기 -> 시전 모션 -> 이동 -> 두 사람 포커싱 -> 공격 모션
     ***************************************************************/
 
     public void ActCounterattackAnimation(Action onAttack)
@@ -366,7 +376,6 @@ public class EntityMotionManager : MonoBehaviour
 
     private IEnumerator ReturnAnimation(Vector2 originPos)
     {
-        Debug.Log($"{entity.name} return");
         // 복귀 모션 실행
         ActMotion("return");
 

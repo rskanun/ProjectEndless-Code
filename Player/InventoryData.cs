@@ -57,6 +57,19 @@ public class InventoryData : ScriptableObject
     // 테스트 아이템
     public List<Consumable> testConsumable = new List<Consumable>();
 
+
+    public void InitInventory()
+    {
+        // 임시로 아이템 채워넣기
+        foreach (Item item in testConsumable)
+        {
+            if (inventory.ContainsKey(item) == false)
+                inventory[item] = 1;
+            else
+                inventory[item]++;
+        }
+    }
+
     [ContextMenu("Inventory Clear")]
     private void Clear()
     {
@@ -87,9 +100,6 @@ public class InventoryData : ScriptableObject
 
     public Dictionary<Item, int> GetItems(ItemType type)
     {
-        // 임시로 테스트 소비 아이템 목록 내보내기
-        return TestGetConsumable();
-
         Dictionary<Item, int> result = new Dictionary<Item, int>();
 
         // 인벤토리 내 동일한 타입의 아이템 담기
@@ -99,21 +109,6 @@ public class InventoryData : ScriptableObject
             {
                 result.Add(item, inventory[item]);
             }
-        }
-
-        return result;
-    }
-
-    private Dictionary<Item, int> TestGetConsumable()
-    {
-        Dictionary<Item, int> result = new Dictionary<Item, int>();
-
-        foreach (Item item in testConsumable)
-        {
-            if (result.ContainsKey(item) == false)
-                result[item] = 1;
-            else
-                result[item]++;
         }
 
         return result;

@@ -152,13 +152,6 @@ public abstract class Entity : MonoBehaviour
 
     public void TakeTurn()
     {
-        if (battleData.IsInBattle == false)
-        {
-            // 전투가 끝났을 경우 행동을 하지 않고 종료
-            EndTurn();
-            return;
-        }
-
         // 패링 상태 해제
         // 임시적으로 턴이 시작될 때 흐트러진 상태를 제거하도록 했으나,
         // 추후 흐트러진 상태로 만드는 스킬이 나올 수도 있으니 수정
@@ -214,8 +207,6 @@ public abstract class Entity : MonoBehaviour
     public virtual float GetCriticalChance(Entity target)
     {
         // 크리티컬 확률 계산
-        // 흐트러진 상태라면 무조건 크리티컬
-        if (target.State.HasState(EntityState.Stagger)) return 1.0f;
         return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 

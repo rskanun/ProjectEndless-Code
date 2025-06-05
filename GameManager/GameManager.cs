@@ -25,7 +25,15 @@ public class GameManager : MonoBehaviour
     {
         // 총 스크립트 개수
         string[] files = Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories);
-        Debug.Log("Total Scripts: " + files.Count());
+        int totalLines = 0;
+
+        foreach (string file in files)
+        {
+            int lineCount = File.ReadAllLines(file).Length;
+            totalLines += lineCount;
+        }
+
+        Debug.Log($"Total Scripts: {files.Count()}, Total Lines: {totalLines}");
 
         // 게임 시작 전 설정
         StartGame();

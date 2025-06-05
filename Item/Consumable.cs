@@ -4,6 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item/Consumable", fileName = "Consumable Item")]
 public class Consumable : Item
 {
+    public override ItemType Type
+    {
+        get { return ItemType.Consumable; }
+    }
+
     [Header("소비 아이템 정보")]
     [SerializeField]
     private TargetType _targetType;

@@ -64,6 +64,9 @@ public class BattleManager : MonoBehaviour
 
         // 임시 몹 데이터 집어넣기
         OnEncounter(fieldData);
+
+        // 임시 아이템 채워넣기
+        InventoryData.Instance.InitInventory();
     }
 
     /***************************************************************
@@ -193,6 +196,8 @@ public class BattleManager : MonoBehaviour
         // 전투가 진행되는 동안 각자의 턴 진행
         while (battleData.IsInBattle)
         {
+            isTurnEnded = false;
+
             // 턴 진행
             StartCoroutine(TakeTurn());
 
@@ -206,8 +211,6 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator TakeTurn()
     {
-        isTurnEnded = false;
-
         BattleAction curAction = battleSeq.GetTurnAction(0);
         Entity actor = curAction.actor;
 
@@ -219,6 +222,21 @@ public class BattleManager : MonoBehaviour
 
         // 이전 행동 모션이 끝날 때까지 대기
         yield return new WaitUntil(() => actor.IsIdle);
+
+        // 해당 행동으로 전투가 끝났거나, 해당 엔티티가 사망한 경우 턴 끝내기
+        if (battleData.IsInBattle == false || actor.IsDead)
+        {
+            // 만약 사망으로 턴을 끝내는 경우
+            if (actor.IsDead)
+            {
+                // 다음 턴(=이번 턴) 턴수만큼 상태이상 지속 시간 돌리기
+                BattleAction nextAction = battleSeq.GetTurnAction(0);
+                UpdateEffectTimers(nextAction.remainTurn);
+            }
+
+            isTurnEnded = true;
+            yield break;
+        }
 
         // 다음 턴에 진행할 행동 선택
         actor.TakeTurn();
