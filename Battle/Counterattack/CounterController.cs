@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AssistController : MonoBehaviour, IController
+public class CounterController : MonoBehaviour, IController
 {
     [Header("참조 스크립트")]
-    [SerializeField] private AssistAttackManager manager;
+    [SerializeField] private CounterattackSelection manager;
 
     public void ControlConnect()
     {

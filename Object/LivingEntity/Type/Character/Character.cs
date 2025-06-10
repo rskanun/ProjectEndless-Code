@@ -68,7 +68,7 @@ public class Character : Entity
         actionSelection.OnSelect(this);
     }
 
-    public override void OnRun()
+    public override void Run()
     {
         List<Character> partyList = battleData.CharacterList;
 
@@ -82,13 +82,13 @@ public class Character : Entity
 
     private void RunBattle()
     {
-        base.OnRun();
+        base.Run();
     }
 
-    public override void OnUseItem(Consumable item, List<Entity> targets)
+    public override void UseItem(Consumable item, List<Entity> targets)
     {
         // 아이템 사용
-        base.OnUseItem(item, targets);
+        base.UseItem(item, targets);
 
         // 플레이어블 캐릭터인 경우 인벤토리에 있는 아이템의 개수 차감
         InventoryData.Instance.RemoveItem(item);

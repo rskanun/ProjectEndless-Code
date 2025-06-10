@@ -13,7 +13,7 @@ public class WaitAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnWait();
+        actor.Wait();
     }
 
     public override List<Entity> GetTargets()

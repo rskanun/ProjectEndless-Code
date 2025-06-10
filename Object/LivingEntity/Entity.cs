@@ -175,7 +175,7 @@ public abstract class Entity : MonoBehaviour
     * 단일 타겟을 대상으로 한 자원 소모 없는 일반 공격 실행 및 모션 제어
     ***************************************************************/
 
-    public void OnAttack(Entity target)
+    public void Attack(Entity target)
     {
         // 타겟이 사망상태 혹은 선택할 수 없는 경우 다른 대상을 타겟으로 설정
         if (target == null || target.IsDead)
@@ -198,7 +198,7 @@ public abstract class Entity : MonoBehaviour
         target.OnTargetedAttack(this, isUsedParry, true);
     }
 
-    public void OnCounterattack(Entity target)
+    public void Counterattack(Entity target)
     {
         // 반격 모션 실행
         motionManager.ActCounterattackAnimation(() => target.OnDamage(AttackDmg, Stat.MP, 1.0f));
@@ -216,7 +216,7 @@ public abstract class Entity : MonoBehaviour
     * 각 스킬 사용에 따른 자원 소모 및 모션 제어
     ***************************************************************/
 
-    public virtual void OnCast(Skill skill, List<Entity> targets)
+    public virtual void CastSkill(Skill skill, List<Entity> targets)
     {
         // SP 소모
         Stat.SP -= skill.CostSP;
@@ -232,7 +232,7 @@ public abstract class Entity : MonoBehaviour
     * 소지 중인 아이템 사용에 따른 자원 소모 및 모션 제어
     ***************************************************************/
 
-    public virtual void OnUseItem(Consumable item, List<Entity> targets)
+    public virtual void UseItem(Consumable item, List<Entity> targets)
     {
         // 이후 
 
@@ -246,7 +246,7 @@ public abstract class Entity : MonoBehaviour
     * 아무런 행동도 하지 않고서 일정 턴 진행
     ***************************************************************/
 
-    public virtual void OnWait()
+    public virtual void Wait()
     {
         // 시전자를 향해 싱글샷
         BattleCameraDirector.Instance.FocusSingle(gameObject);
@@ -258,7 +258,7 @@ public abstract class Entity : MonoBehaviour
     * 해당 전투에서 벗어나는 시도 실행 및 모션 제어
     ***************************************************************/
 
-    public virtual void OnRun()
+    public virtual void Run()
     {
         // 화면 전체샷
         BattleCameraDirector.Instance.FocusFullScreen();
@@ -443,7 +443,7 @@ public abstract class Entity : MonoBehaviour
         yield return new WaitUntil(() => IsActing == false);
 
         // 패링 모션이 끝까지 진행되었을 경우 통상적인 엔티티는 자신이 한 번 더 공격
-        OnAttack(attacker);
+        Attack(attacker);
     }
 
     public virtual void OnDodge()

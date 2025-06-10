@@ -13,7 +13,7 @@ public class RunAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnRun();
+        actor.Run();
     }
 
     public override List<Entity> GetTargets()

@@ -18,7 +18,7 @@ public class ItemAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnUseItem(usingItem, targets);
+        actor.UseItem(usingItem, targets);
     }
 
     public override List<Entity> GetTargets()

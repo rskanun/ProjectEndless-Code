@@ -19,7 +19,7 @@ public class SkillAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnCast(castSkill, targets);
+        actor.CastSkill(castSkill, targets);
     }
 
     public override List<Entity> GetTargets()

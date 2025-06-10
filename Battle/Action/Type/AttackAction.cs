@@ -17,7 +17,7 @@ public class AttackAction : BattleAction
 
     public override void OnAction()
     {
-        actor.OnAttack(target);
+        actor.Attack(target);
     }
 
     public override List<Entity> GetTargets()
