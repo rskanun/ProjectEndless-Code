@@ -53,6 +53,7 @@ public class EntityMotionManager : MonoBehaviour
         private set { _isIdle = value; }
         get { return _isIdle; }
     }
+    private bool isHit;
     private Queue<string> motionQueue = new Queue<string>();
 
 #if UNITY_EDITOR
@@ -183,6 +184,12 @@ public class EntityMotionManager : MonoBehaviour
         }
     }
 
+    public void OnHit()
+    {
+        // 타격 상태 변경
+        isHit = true;
+    }
+
     /***************************************************************
     * [ 애니메이션 ]
     * 
@@ -210,15 +217,14 @@ public class EntityMotionManager : MonoBehaviour
     /***************************************************************
     * [ 공격 애니메이션 ]
     * 
-    * 시전 모션 -> 이동 모션 -> 타격 모션 -> 복귀 모션
+    * 대상을 공격하는 모션을 근거리와 원거리를 나눠 애니메이션 진행
     ***************************************************************/
-
-    public void ActAttackAnimation(Entity target, Action onAttack)
+    public void ActMeleeAttackAnimation(Entity target, Action onHit)
     {
-        ActAnimation(AttackAnimation(target, onAttack));
+        ActAnimation(MeleeAttackAnimation(target, onHit));
     }
 
-    private IEnumerator AttackAnimation(Entity target, Action onAttack)
+    private IEnumerator MeleeAttackAnimation(Entity target, Action onHit)
     {
         Vector2 originPos = transform.position;
 
@@ -227,6 +233,9 @@ public class EntityMotionManager : MonoBehaviour
 
         // 모션 실행
         ActMotion("attack");
+
+        // 타격 타이밍에 맞춰 데미지 넣기
+        Coroutine hitCoroutine = StartCoroutine(WaitUntilHit(onHit));
 
         // 시전 모션이 끝날 때까지 대기
         yield return new WaitUntil(() => IsPlayAnimation("Attack_Ready"));
@@ -244,6 +253,9 @@ public class EntityMotionManager : MonoBehaviour
             // 공격 모션 중간 패링을 당했을 경우
             if (entity.HasState(EntityState.Stagger))
             {
+                // 타격 타이밍 계산 중지
+                StopCoroutine(hitCoroutine);
+
                 // 패링 애니메이션 실행 및 공격 애니메이션 종료
                 yield return StartCoroutine(ParriedAnimation(target, originPos));
                 yield break;
@@ -251,9 +263,6 @@ public class EntityMotionManager : MonoBehaviour
 
             yield return null;
         }
-
-        // 공격 모션이 끝까지 진행되었을 경우 공격 실행
-        onAttack.Invoke();
 
         // 원래 자리로 돌아오기
         StartCoroutine(ReturnAnimation(originPos));
@@ -295,35 +304,72 @@ public class EntityMotionManager : MonoBehaviour
         transform.position = originPos;
     }
 
+    public void ActRangeAttackAnimation(Entity target, Action onHit)
+    {
+        ActAnimation(RangeAttackAnimation(target, onHit));
+    }
+
+    private IEnumerator RangeAttackAnimation(Entity target, Action onHit)
+    {
+        // 공격하는 엔티티를 향해 카메라 포커싱
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
+
+        // 모션 실행
+        ActMotion("attack");
+
+        // 시전 모션이 끝날 때까지 대기
+        yield return new WaitUntil(() => IsPlayAnimation("Attack"));
+        yield return new WaitWhile(() => IsPlayAnimation("Attack"));
+
+        // 타겟을 향해 카메라 포커싱
+        StartCoroutine(BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject));
+
+        // 원거리 오브젝트 생성
+    }
+
+    private IEnumerator WaitUntilHit(Action onHit)
+    {
+        // 공격이 맞을 때까지 대기
+        yield return new WaitUntil(() => isHit);
+
+        // 공격이 적중하면 데미지 넣기
+        onHit?.Invoke();
+
+        // 다음 타격 타이밍을 위해 꺼놓기
+        isHit = false;
+    }
+
     /***************************************************************
     * [ 반격 애니메이션 ]
     * 
     * 패링 성공 시, 일반 반격 공격 모션 실행
-    * 반격 대상 비추기 -> 시전 모션 -> 이동 -> 두 사람 포커싱 -> 공격 모션
     ***************************************************************/
 
-    public void ActCounterattackAnimation(Action onAttack)
+    public void ActCounterattackAnimation(Action onHit)
     {
-        ActAnimation(CounterattackAnimation(onAttack));
+        ActAnimation(CounterattackAnimation(onHit));
     }
 
-    private IEnumerator CounterattackAnimation(Action onAttack)
+    private IEnumerator CounterattackAnimation(Action onHit)
     {
+        // 반격 대상 포커싱
+        BattleCameraDirector.Instance.FocusSingle(gameObject);
+
         // 반격 모션 실행
         ActMotion("counterattack");
+
+        // 타격 타이밍에 맞춰 데미지 넣기
+        StartCoroutine(WaitUntilHit(onHit));
 
         // 모션이 끝날 때까지 대기
         yield return new WaitUntil(() => IsPlayAnimation("Counterattack"));
         yield return new WaitWhile(() => IsActing);
-
-        // 모션이 끝까지 진행되었을 경우 공격 실행
-        onAttack.Invoke();
     }
 
     /***************************************************************
-    * [ 히트 애니메이션 ]
+    * [ 타격 애니메이션 ]
     * 
-    * 히트 모션 실행, 이후 사망했다면 사망 모션까지 실행
+    * 타격 모션 실행, 이후 사망했다면 사망 모션까지 실행
     ***************************************************************/
 
     public void ActHitAnimation()
@@ -333,7 +379,7 @@ public class EntityMotionManager : MonoBehaviour
 
     private IEnumerator HitAnimation()
     {
-        // 히트 모션 실행
+        // 타격 모션 실행
         ActMotion("hit");
 
         // 사망 체크

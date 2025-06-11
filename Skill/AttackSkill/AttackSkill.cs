@@ -43,10 +43,10 @@ public class AttackSkill : Skill
 
         foreach (Entity target in targets)
         {
-            float criticalChance = (caster.Stat.DEX - target.Stat.AGI) / (2.0f * caster.Stat.DEX);
+            float criticalChance = caster.GetCriticalChance(target);
             target.OnDamage(damage, caster.Stat.MP, criticalChance);
 
-            if (Debuff.IsEmpty())
+            if (!Debuff.IsEmpty())
             {
                 // 적용할 디버프가 있으면 디버프 적용
                 target.AddEffect(Debuff);

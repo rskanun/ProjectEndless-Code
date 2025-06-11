@@ -56,10 +56,8 @@ public class CounterattackSelection : MonoBehaviour
         // 반격할 캐릭터를 고를 때까지 대기 
         yield return new WaitUntil(() => 0 <= attackerIdx && attackerIdx <= assistableChrs.Count);
 
-        // 반격 실행
-        // 0 -> 공격을 막아낸 대상자, 1~ -> 지원 가능한 캐릭터
-        if (attackerIdx == 0) PerformCounterattack(defender, target);
-        else PerformCounterSkill(assistableChrs[attackerIdx - 1], target); // 배열은 0부터 시작
+        // 시간 원래대로 되돌리기
+        Time.timeScale = 1.0f;
 
         // 컨트롤러 변경
         ControlContext.Instance.SetController(mainController);
@@ -72,6 +70,11 @@ public class CounterattackSelection : MonoBehaviour
 
         // 지원가능한 캐릭터 목록 지우기기
         ui.DeactiveAssistableChrs();
+
+        // 반격 실행
+        // 0 -> 공격을 막아낸 대상자, 1~ -> 지원 가능한 캐릭터
+        if (attackerIdx == DefenderIdx) PerformCounterattack(defender, target);
+        else PerformCounterSkill(assistableChrs[attackerIdx - 1], target); // 배열은 0부터 시작
     }
 
     private List<Entity> GetAssistableChrs(List<Entity> livingChrs)

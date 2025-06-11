@@ -27,16 +27,16 @@ public class CounterController : MonoBehaviour, IController
     private void OnExtraAttackKeyPressed(InputAction.CallbackContext context)
     {
         // 공격을 막아낸 캐릭터의 지원 공격
-        manager.OnAssisAttack();
+        manager.SelectAttacker(0);
     }
 
     private void OnAssistAKeyPressed(InputAction.CallbackContext context)
     {
-        manager.OnAssisAttack(0);
+        manager.SelectAttacker(1);
     }
 
     private void OnAssistBKeyPressed(InputAction.CallbackContext context)
     {
-        manager.OnAssisAttack(1);
+        manager.SelectAttacker(2);
     }
 }

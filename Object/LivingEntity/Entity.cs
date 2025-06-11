@@ -190,12 +190,22 @@ public abstract class Entity : MonoBehaviour
         float criticalChance = GetCriticalChance(target);
 
         // 공격 모션 실행
-        motionManager.ActAttackAnimation(target, () => target.OnDamage(AttackDmg, Stat.MP, criticalChance));
+        ActAttackAnimation(target, () => target.OnDamage(AttackDmg, Stat.MP, criticalChance));
 
         // 타겟에게 방어 유형 전달
         // 원거리는 패링 X
         bool isUsedParry = AttackType == AttackType.Melee;
         target.OnTargetedAttack(this, isUsedParry, true);
+    }
+
+    private void ActAttackAnimation(Entity target, Action onHit)
+    {
+        // 해당 엔티티의 공격 타입에 따라 공격 모션 선택
+        if (AttackType == AttackType.Melee)
+            motionManager.ActMeleeAttackAnimation(target, onHit);
+        else
+            motionManager.ActRangeAttackAnimation(target, onHit);
+
     }
 
     public void Counterattack(Entity target)
@@ -207,6 +217,7 @@ public abstract class Entity : MonoBehaviour
     public virtual float GetCriticalChance(Entity target)
     {
         // 크리티컬 확률 계산
+        if (target.HasState(EntityState.Stagger)) return 1.0f;
         return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
     }
 

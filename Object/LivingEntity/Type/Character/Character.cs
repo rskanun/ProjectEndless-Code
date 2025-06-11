@@ -6,7 +6,7 @@ public class Character : Entity
 {
     // 참조 스크립트
     [SerializeField] private ActionManager actionSelection;
-    [SerializeField] private AssistAttackManager assistManager;
+    [SerializeField] private CounterattackSelection counterSelection;
 
     protected override void Awake()
     {
@@ -127,6 +127,6 @@ public class Character : Entity
         motionManager.ActMotion("parry");
 
         // 플레이어가 패링에 성공했을 경우 추가타를 넣을 대상 선택
-        assistManager.OnSelectExtraAttacker(attacker, this);
+        counterSelection.ShowAttackerSelection(attacker, this);
     }
 }
