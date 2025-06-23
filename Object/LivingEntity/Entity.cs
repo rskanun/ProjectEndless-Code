@@ -336,11 +336,15 @@ public abstract class Entity : MonoBehaviour
         bool isCritical = UnityEngine.Random.Range(0f, 1f) <= criticalChance;
 
         // 크리티컬일 경우 기존 데미지의 1.2배 + 방어력 수치 무시
-        Stat.HP -= isCritical ? GetLastDmg(damage * 1.2f, true) : GetLastDmg(damage, false);
+        int lastDamage = isCritical ? GetLastDmg(damage * 1.2f, true) : GetLastDmg(damage, false);
+        Stat.HP -= lastDamage;
         Stat.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
         motionManager.ActHitAnimation();
+
+        // 데미지 표시
+        DamagePopup.IndicateDamage(transform.position, lastDamage);
 
         // HUD 업데이트
         hud.UpdateHP(Stat.HP, Stat.MaxHP);
