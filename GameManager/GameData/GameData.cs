@@ -1,10 +1,78 @@
-﻿using Endless.GameData;
-using UnityEngine;
+﻿using UnityEngine;
+using Endless.GameData;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(menuName = "Scriptable Object/GameData", fileName = "Game_Data")]
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public enum GameState
+{
+    Title,
+    Field,
+    Battle
+}
+
 public class GameData : ScriptableObject
 {
+    // 저장 파일 위치
+    private const string OPTION_FILE_DIRECTORY = "Assets/Resources";
+    private const string FILE_DIRECTORY = "Assets/Resources/Option";
+    private const string FILE_PATH = "Assets/Resources/Option/GameData.asset";
+
+    private static GameData _instance;
+    public static GameData Instance
+    {
+        get
+        {
+            if (_instance != null) return _instance;
+
+            _instance = Resources.Load<GameData>("Option/GameData");
+
+#if UNITY_EDITOR
+            if (_instance == null)
+            {
+                // 파일 경로가 없을 경우 폴더 생성
+                if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
+                {
+                    if (!AssetDatabase.IsValidFolder(OPTION_FILE_DIRECTORY))
+                    {
+                        AssetDatabase.CreateFolder("Assets", "Resources");
+                    }
+
+                    AssetDatabase.CreateFolder("Assets/Resources", "Option");
+                }
+
+                // Resource.Load가 실패했을 경우
+                _instance = AssetDatabase.LoadAssetAtPath<GameData>(FILE_PATH);
+                if (_instance == null)
+                {
+                    _instance = CreateInstance<GameData>();
+                    AssetDatabase.CreateAsset(_instance, FILE_PATH);
+                }
+            }
+#endif
+            return _instance;
+        }
+    }
+
+    [SerializeField]
+    private GameState _state;
+    public GameState State
+    {
+        get => _state;
+        set
+        {
+            // 이전과 동일한 상태이면 무시
+            if (_state == value) return;
+
+            _state = value;
+
+            // 상태 변경 알림 보내기
+            GameEventManager.Instance.NotifyGameStateChanged();
+        }
+    }
+
     /************************************************************
     * [챕터 데이터]
     * 

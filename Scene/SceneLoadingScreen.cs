@@ -40,12 +40,12 @@ public class SceneLoadingScreen : MonoBehaviour
 
     private void OnEnable()
     {
-        LoadSceneManager.Instance.RegisterManager(this);
+        SceneLoadManager.Instance.RegisterManager(this);
     }
 
     private void OnDisable()
     {
-        LoadSceneManager.Instance.RemoveManager();
+        SceneLoadManager.Instance.RemoveManager();
     }
 
     /************************************************************
@@ -67,6 +67,9 @@ public class SceneLoadingScreen : MonoBehaviour
 
     private IEnumerator SceneLoading(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
+        // 게임 시간이 흘러가지 않도록 조정
+        Time.timeScale = 0.0f;
+
         // 로딩 중엔 어떠한 키 입력도 받지 않기
         ControlContext.Instance.KeyLock();
 
@@ -77,6 +80,9 @@ public class SceneLoadingScreen : MonoBehaviour
         // 씬 로딩 애니메이션 띄우기
         EnableLoadingScreen(loadScenes, unloadScenes, unloadOptions, screen);
         yield return new WaitWhile(() => isPlayAnimation);
+
+        // 게임 시간 복구 시키기
+        Time.timeScale = 1.0f;
 
         // 로딩 이후 전환 연출 실행
         PlayTransitionEffect(endEffect);

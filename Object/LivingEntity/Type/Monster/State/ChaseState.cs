@@ -22,7 +22,7 @@ public class ChaseState : IMonsterState
 
     private void ChasePlayer(FSM fsm)
     {
-        bool isMiss = (Vector2)lastPlayerPos != ReadOnlyGameData.Instance.Position;
+        bool isMiss = (Vector2)lastPlayerPos != GameData.Instance.Position;
         bool isArrive = monster.transform.position == lastPlayerPos;
 
         // 공격 가능한 거리인지 계산

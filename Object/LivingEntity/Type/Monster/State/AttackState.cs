@@ -21,7 +21,7 @@ public class AttackState : IMonsterState
         if (IsAttackable())
         {
             // 방향 전환
-            monster.RotateTo(ReadOnlyGameData.Instance.Position);
+            monster.RotateTo(GameData.Instance.Position);
 
             // 공격 액션
             monster.OnAttack();
@@ -35,7 +35,7 @@ public class AttackState : IMonsterState
 
     private bool IsAttackable()
     {
-        Vector2 playerPos = ReadOnlyGameData.Instance.Position;
+        Vector2 playerPos = GameData.Instance.Position;
         float distance = Vector2.Distance(playerPos, monster.transform.position);
 
         return distance <= monster.AttackDistance;

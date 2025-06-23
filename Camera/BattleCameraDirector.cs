@@ -22,6 +22,7 @@ public class BattleCameraDirector
     }
 
     private BattleCameraManager manager;
+    private CinemachineBrain brain;
 
     // 카메라 중심점(대상)
     private Dictionary<int, Transform> bodyTransforms;
@@ -75,6 +76,10 @@ public class BattleCameraDirector
     public void RegisterManager(BattleCameraManager manager)
     {
         this.manager = manager;
+
+        // 현재 브레인이 등록되어 있다면 매니져에 브레인 적용
+        if (brain != null)
+            manager.brain = brain;
     }
 
     public void RemoveManager()
@@ -84,12 +89,20 @@ public class BattleCameraDirector
 
     public void ResiterBrainCamera(CinemachineBrain brainCamera)
     {
-        manager.brain = brainCamera;
+        brain = brainCamera;
+
+        // 현재 매니져가 등록되어 있다면 매니져에서도 이를 적용
+        if (manager != null)
+            manager.brain = brain;
     }
 
     public void RemoveBrainCamera()
     {
         manager.brain = null;
+
+        // 현재 매니져가 등록되어 있다면 매니져에서도 이를 적용
+        if (manager != null)
+            manager.brain = null;
     }
 
     public void RegisterPlayerChrPivot(int instanceID, Transform pivot)

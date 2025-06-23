@@ -137,7 +137,7 @@ public class MonsterObject : MonoBehaviour
         {
             // 전투 돌입
             // #임시로 로드 시의 애니메이션과 동일하게 설정
-            LoadSceneManager.Instance.LoadBattleScene(null, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
+            SceneLoadManager.Instance.LoadBattleScene(null, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
             Time.timeScale = 0.02f;
         }
     }

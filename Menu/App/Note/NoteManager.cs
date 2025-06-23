@@ -153,7 +153,7 @@ public class NoteManager : MonoBehaviour
         {
             Date loadDate = Date.StrToDate(data.storyData.date);
 
-            if (loadDate < ReadOnlyGameData.Instance.Date)
+            if (loadDate < GameData.Instance.Date)
             {
                 // 불러올 게임의 시간대가 과거일 경우 불러올지 여부 확인
                 Confirm.CreateMsg("해당 시간대는 현재보다 과거입니다. 그래도 불러오시겠습니까?", "계속", "취소")

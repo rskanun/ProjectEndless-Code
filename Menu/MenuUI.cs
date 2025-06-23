@@ -28,12 +28,12 @@ public class MenuUI : MonoBehaviour
 
     // 참조 데이터
     private PhoneOptionSetting menuOption;
-    private ReadOnlyGameData gameData;
+    private GameData gameData;
 
     private void Start()
     {
         menuOption = PhoneOptionSetting.Instance;
-        gameData = ReadOnlyGameData.Instance;
+        gameData = GameData.Instance;
     }
 
     public Sequence OpenMenu()

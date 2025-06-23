@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Collections;
 
 public enum SceneFadeEffect
 {
@@ -17,16 +17,24 @@ public enum LoadingScreen
     ClockLoading
 }
 
-public class LoadSceneManager
+public class SceneLoadManager : MonoBehaviour
 {
-
-    private static LoadSceneManager _instance;
-    public static LoadSceneManager Instance
+    private static SceneLoadManager _instance;
+    public static SceneLoadManager Instance
     {
         get
         {
+            if (_instance != null) return _instance;
+
+            // 씬 내에서 찾기
+            _instance = FindObjectOfType<SceneLoadManager>();
+
             if (_instance == null)
-                _instance = new LoadSceneManager();
+            {
+                // 해당 스크립트를 가진 오브젝트가 없다면 만들기
+                GameObject obj = new GameObject("[SceneLoadManager]");
+                _instance = obj.AddComponent<SceneLoadManager>();
+            }
 
             return _instance;
         }
@@ -35,11 +43,21 @@ public class LoadSceneManager
     public static SceneLoadingScreen.LoadingCallBack loadingCallBack;
 
     private SceneLoadingScreen loadingScreen;
-    private SceneResource resource;
 
-    public LoadSceneManager()
+    private void Awake()
     {
-        resource = SceneResource.Instance;
+        if (_instance == null)
+        {
+            _instance = this;
+
+            // 씬 전환 시에도 유지
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
+        {
+            // 현재 instance에 등록된 게 해당 스크립트가 아니라면 파괴
+            Destroy(gameObject);
+        }
     }
 
     public void RegisterManager(SceneLoadingScreen loadingScreen)
@@ -66,20 +84,32 @@ public class LoadSceneManager
 
     public void LoadTitleScene(SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        LoadScene(resource.TitleRequireScenes, null, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects, startEffect, endEffect, screen);
+        // 로딩 간에 현재 게임 상태를 타이틀로 변경하기
+        loadingCallBack += () => GameData.Instance.State = GameState.Title;
+
+        // 씬 변경
+        StartCoroutine(LoadScene(SceneResource.Instance.TitleRequireScenes, null, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects, startEffect, endEffect, screen));
     }
 
     public void LoadFieldScene(string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        LoadScene(resource.FieldRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen);
+        // 로딩 간에 현재 게임 상태를 필드로 변경하기
+        loadingCallBack += () => GameData.Instance.State = GameState.Field;
+
+        // 씬 변경
+        StartCoroutine(LoadScene(SceneResource.Instance.FieldRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen));
     }
 
     public void LoadBattleScene(string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        LoadScene(resource.BattleRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen);
+        // 로딩 간에 현재 게임 상태를 전투로 변경하기
+        loadingCallBack += () => GameData.Instance.State = GameState.Battle;
+
+        // 씬 변경
+        StartCoroutine(LoadScene(SceneResource.Instance.BattleRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen));
     }
 
-    private async void LoadScene(List<string> requireScenes, string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
+    private IEnumerator LoadScene(List<string> requireScenes, string loadMap, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         List<string> activeScenes = FindActiveScenes();
 
@@ -91,7 +121,7 @@ public class LoadSceneManager
         if (!string.IsNullOrEmpty(loadMap)) loadScenes.Add(loadMap);
 
         // 로딩씬 불러오기
-        await LoadSceneAsyncTask(resource.LoadingScene, LoadSceneMode.Additive);
+        yield return StartCoroutine(LoadSceneCoroutine(SceneResource.Instance.LoadingScene, LoadSceneMode.Additive));
 
         // 로딩 간에 실행될 함수 설정
         loadingCallBack += () => InitCallBack();
@@ -101,15 +131,16 @@ public class LoadSceneManager
         loadingScreen.EnableScreen(loadScenes, unloadScenes, unloadOptions, startEffect, endEffect, screen);
     }
 
-    private async Task LoadSceneAsyncTask(string sceneName, LoadSceneMode mode)
+    private IEnumerator LoadSceneCoroutine(string sceneName, LoadSceneMode mode)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, mode);
-        if (asyncLoad == null) return;
+        if (asyncLoad == null) yield break;
 
-        // TaskCompletionSource를 사용하여 완료될 때까지 대기
-        TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-        asyncLoad.completed += _ => tcs.SetResult(true);
-        await tcs.Task;
+        while (!asyncLoad.isDone)
+        {
+            // 씬 로드 완료될 때까지 대기
+            yield return null;
+        }
     }
 
     private List<string> FindActiveScenes()

@@ -4,9 +4,6 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private InteractManager interactManager;
 
-    [Header("게임 데이터")]
-    [SerializeField] private GameData gameData;
-
     [Header("이동속도")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
@@ -28,6 +25,18 @@ public class PlayerManager : MonoBehaviour
     }
 #endif
 
+    public void HideCharacter()
+    {
+        // 몬스터 인카운트 시, 플레이어 오브젝트 숨기기
+        gameObject.SetActive(false);
+    }
+
+    public void ShowCharacter()
+    {
+        // 필드로 돌아오면 다시 플레이어 오브젝트 보이기
+        gameObject.SetActive(true);
+    }
+
     /************************************************************
      * [상호작용]
      * 
@@ -48,7 +57,7 @@ public class PlayerManager : MonoBehaviour
     public void UpdateLocation()
     {
         // 현재 게임 데이터에 저장된 값의 위치 데이터 불러오기
-        transform.position = ReadOnlyGameData.Instance.Position;
+        transform.position = GameData.Instance.Position;
     }
 
     public void MoveTo(Vector2 direction)
@@ -103,7 +112,7 @@ public class PlayerManager : MonoBehaviour
         rigid.velocity = direction.normalized * speed * Time.deltaTime;
 
         // 플레이어 위치 데이터 갱신
-        gameData.Position = transform.position;
+        GameData.Instance.Position = transform.position;
     }
 
     private bool IsCanRunning(Vector2 moveVec)

@@ -60,8 +60,6 @@ public class BattleManager : MonoBehaviour
         battleData = BattleData.Instance;
         battleSeq = battleData.Sequence;
 
-        Time.timeScale = 1.0f;
-
         // 임시 몹 데이터 집어넣기
         OnEncounter(fieldData);
 
@@ -112,7 +110,7 @@ public class BattleManager : MonoBehaviour
         timeline.SetupTimeline(battleSeq);
 
         // 개전 시작 알림
-        GameEventResource.Instance.BattleStartEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifyBattleStarted();
 
         // 처음 턴 진행
         StartCoroutine(RunningBattle());
@@ -215,7 +213,7 @@ public class BattleManager : MonoBehaviour
         Entity actor = curAction.actor;
 
         // 턴 시작 알림
-        GameEventResource.Instance.StartTurnEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifyTurnStarted();
 
         // 이전에 입력한 행동 실행
         curAction.OnAction();
@@ -269,7 +267,7 @@ public class BattleManager : MonoBehaviour
         }
 
         // 전투 종료 알림
-        GameEventResource.Instance.BattleEndEvet.NotifyUpdate();
+        GameEventManager.Instance.NotifyBattleEnded();
 
         // 전체 화면으로 카메라 포커싱
         BattleCameraDirector.Instance.FocusFullScreen();

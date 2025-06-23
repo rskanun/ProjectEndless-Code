@@ -4,22 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("참조 데이터")]
-    [SerializeField] private GameData gameData;
-
-    [Header("Map")]
-    public bool player;
-    public bool ui;
-    public bool battle;
-
-    private void Update()
-    {
-        ControlContext controller = ControlContext.Instance;
-
-        player = controller.KeyInput.Player.enabled;
-        ui = controller.KeyInput.UI.enabled;
-        battle = controller.KeyInput.Battle.enabled;
-    }
+    [SerializeField]
+    private GameObject playerObj;
+    [SerializeField]
+    private GameObject trackingCamera;
 
     private void Awake()
     {
@@ -41,11 +29,14 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        // 게임 상태 초기화
+        GameData.Instance.State = GameState.Field;
+
         // 시나리오 불러오기
-        LoadScript(gameData.Chapter);
+        LoadScript(GameData.Instance.Chapter);
 
         // 플레이어 위치 초기화
-        gameData.Position = new Vector2(0, 0);
+        GameData.Instance.Position = new Vector2(0, 0);
     }
 
     private void LoadScript(Chapter data)
@@ -55,5 +46,24 @@ public class GameManager : MonoBehaviour
         int subChapter = data.SubChapterNum;
 
         TextScriptResource.Instance.LoadScript(chapter, root, subChapter);
+    }
+
+    /// <summary>
+    /// 현재 게임 상태(타이틀? 필드? 전투?) 변경에 따른 플레이어 오브젝트 활성화 설정
+    /// </summary>
+    public void OnGameStateChanged()
+    {
+        if (GameData.Instance.State == GameState.Battle)
+        {
+            // 전투 시엔 캐릭터 및 트래킹 카메라 오브젝트 비활성화
+            playerObj.SetActive(false);
+            trackingCamera.SetActive(false);
+        }
+        else if (GameData.Instance.State == GameState.Field)
+        {
+            // 필드로 돌아올 경우 다시 오브젝트 활성화
+            playerObj.SetActive(true);
+            trackingCamera.SetActive(true);
+        }
     }
 }

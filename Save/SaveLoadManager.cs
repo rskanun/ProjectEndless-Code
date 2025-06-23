@@ -57,7 +57,6 @@ public class SaveLoadManager : ScriptableObject
 
     [Header("저장 데이터")]
     [SerializeField] private PartyData partyData;
-    [SerializeField] private GameData gameData;
 
     /************************************************************
     * [게임 데이터 저장]
@@ -96,7 +95,7 @@ public class SaveLoadManager : ScriptableObject
     {
         SavePlayerData data = new SavePlayerData();
 
-        ReadOnlyGameData playerData = ReadOnlyGameData.Instance;
+        GameData playerData = GameData.Instance;
 
         data.pos = playerData.Position;
         data.ap = playerData.AP;
@@ -136,9 +135,9 @@ public class SaveLoadManager : ScriptableObject
     {
         SaveStoryData data = new SaveStoryData();
 
-        data.date = gameData.Date.ToString();
+        data.date = GameData.Instance.Date.ToString();
 
-        Chapter chapter = gameData.Chapter;
+        Chapter chapter = GameData.Instance.Chapter;
         data.chapter = chapter.ChapterNum;
         data.root = chapter.RootNum;
         data.subChapter = chapter.SubChapterNum;
@@ -150,10 +149,10 @@ public class SaveLoadManager : ScriptableObject
     {
         SaveMapData data = new SaveMapData();
 
-        data.id = gameData.MapData.ID;
-        data.name = gameData.MapData.Name;
-        data.currentArea = gameData.MapData.GetCurrentAreaID();
-        data.areas = gameData.MapData.GetAreaDatas();
+        data.id = GameData.Instance.MapData.ID;
+        data.name = GameData.Instance.MapData.Name;
+        data.currentArea = GameData.Instance.MapData.GetCurrentAreaID();
+        data.areas = GameData.Instance.MapData.GetAreaDatas();
 
         return data;
     }
@@ -162,8 +161,8 @@ public class SaveLoadManager : ScriptableObject
     {
         SaveQuestData data = new SaveQuestData();
 
-        data.id = gameData.MainQuest.ID;
-        data.title = gameData.MainQuest.Title;
+        data.id = GameData.Instance.MainQuest.ID;
+        data.title = GameData.Instance.MainQuest.Title;
 
         return data;
     }
@@ -209,13 +208,13 @@ public class SaveLoadManager : ScriptableObject
         SetQuestData(data.questData);
 
         // 세이브 데이터 로드로 인해 변수가 바뀌었음을 알림
-        GameEventResource.Instance.DataLoadEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifyDataLoaded();
     }
 
     private void SetPlayerData(SavePlayerData data)
     {
-        gameData.Position = data.pos;
-        gameData.AP = data.ap;
+        GameData.Instance.Position = data.pos;
+        GameData.Instance.AP = data.ap;
     }
 
     private void SetPartyData(List<SaveMemberData> data)
@@ -241,24 +240,24 @@ public class SaveLoadManager : ScriptableObject
 
     private void SetStoryData(SaveStoryData data)
     {
-        gameData.Date = Date.StrToDate(data.date);
-        gameData.Chapter = new Chapter(data.chapter, data.root, data.subChapter);
+        GameData.Instance.Date = Date.StrToDate(data.date);
+        GameData.Instance.Chapter = new Chapter(data.chapter, data.root, data.subChapter);
     }
 
     private void SetMapData(SaveMapData data)
     {
         MapData map = MapManager.FindMap(data.id);
 
-        gameData.MapData = map;
-        gameData.MapData.SetCurrentArea(data.currentArea);
-        gameData.MapData.SetAreaDatas(data.areas);
+        GameData.Instance.MapData = map;
+        GameData.Instance.MapData.SetCurrentArea(data.currentArea);
+        GameData.Instance.MapData.SetAreaDatas(data.areas);
     }
 
     private void SetQuestData(SaveQuestData data)
     {
         QuestData quest = QuestManager.FindQuest(data.id);
 
-        gameData.MainQuest = quest;
+        GameData.Instance.MainQuest = quest;
     }
 
     public void LoadSaveFile(SaveData data)
@@ -268,8 +267,8 @@ public class SaveLoadManager : ScriptableObject
         MapData map = MapManager.FindMap(data.mapData.id);
 
         // 로딩 과정에서 데이터 불러오기
-        LoadSceneManager.loadingCallBack += () => LoadGameData(data);
-        LoadSceneManager.Instance.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
+        SceneLoadManager.loadingCallBack += () => LoadGameData(data);
+        SceneLoadManager.Instance.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
     }
 
     private bool IsRequireReturn(SaveData data)
@@ -277,6 +276,6 @@ public class SaveLoadManager : ScriptableObject
         // 현재 데이터와 불러올 데이터를 대조하여 회귀할 필요가 있는지 판단
         // #지금 단계에선 시간대가 과거인지만 판단
         Date loadDate = Date.StrToDate(data.storyData.date);
-        return loadDate < ReadOnlyGameData.Instance.Date;
+        return loadDate < GameData.Instance.Date;
     }
 }

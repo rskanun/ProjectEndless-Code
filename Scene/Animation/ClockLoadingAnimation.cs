@@ -31,39 +31,39 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
     private IEnumerator LoadingCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOpions, Action loadAction, Action completeAction)
     {
         // 이펙트 전용 시간 복사해놓기기
-        time = ReadOnlyGameData.Instance.Time.Clone();
+        time = GameData.Instance.Time.Clone();
 
         // 미리 줄여놓기
-        ReadOnlyGameData.Instance.Time.ConsumeTime();
+        GameData.Instance.Time.ConsumeTime();
 
         // 잠시 텀을 준 뒤 타이머 띄우기
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
         timer.SetActive(true);
 
-        yield return new WaitForSeconds(3.6f);
+        yield return new WaitForSecondsRealtime(3.6f);
 
         // 화면 전체에 글리치 이펙트
         glitch.ActiveEffect(0.3f);
 
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSecondsRealtime(0.6f);
 
         // 두 번에 나눠서 화면 전체에 글리치 이펙트
         glitch.ActiveEffect(0.3f);
         time.ConsumeTime(); // 이펙트용 클론 타이머 시간 줄이기기
 
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSecondsRealtime(0.6f);
 
         // 연출 이후 타이머 숨기기
         timer.SetActive(false);
 
         // 텀을 준 뒤 로딩화면 띄우기
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSecondsRealtime(0.6f);
         loading.OnPlayAnimation(loadScenes, unloadScenes, unloadOpions, loadAction, completeAction);
     }
 
     private IEnumerator TimerBlink()
     {
-        WaitForSeconds delay = new WaitForSeconds(0.6f);
+        WaitForSecondsRealtime delay = new WaitForSecondsRealtime(0.6f);
 
         while (isLoading)
         {

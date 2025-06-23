@@ -150,7 +150,7 @@ public abstract class Monster : Entity
         base.OnDead();
 
         // 사망 알림
-        GameEventResource.Instance.KillEnemyEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifyEnemyDefeated();
 
         // 처지 보상 업데이트
         battleData.AddKillReward(this);

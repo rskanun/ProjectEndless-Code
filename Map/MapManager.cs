@@ -23,6 +23,6 @@ public class MapManager
         CurrentArea = collider;
 
         // 구역 이동 알림
-        GameEventResource.Instance.AreaMoveEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifyAreaChanged();
     }
 }

@@ -166,7 +166,7 @@ public abstract class Entity : MonoBehaviour
     public void EndTurn()
     {
         // 턴이 끝났음을 알림
-        GameEventResource.Instance.EndTurnEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifyTurnEnded();
     }
 
     /***************************************************************

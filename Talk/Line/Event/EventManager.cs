@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-    [Header("게임 데이터")]
-    [SerializeField] private GameData gameData;
 
     public void GetCommandEvent(string str)
     {
@@ -16,7 +14,7 @@ public class EventManager : MonoBehaviour
                 // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 AP 증가
                 if (int.TryParse(commands[1], out int ap))
                 {
-                    gameData.AP = ap;
+                    //gameData.AP = ap;
                 }
                 break;
 

@@ -38,7 +38,7 @@ public class LoadingAnimation : MonoBehaviour, ILoadAnimation
             loadingText.text = "Loading" + new string('.', dotCounts[index]);
             index = ++index % dotCounts.Length;
 
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSecondsRealtime(delay);
 
             // 딜레이 만큼 경과 시간 추가
             timer += delay;

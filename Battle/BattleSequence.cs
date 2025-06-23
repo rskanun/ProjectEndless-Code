@@ -13,10 +13,6 @@ public class BattleSequence
         get { return _sequence; }
     }
 
-    // 시퀀스 업데이트
-    private GameEvent SeqUpdateEvent
-        => GameEventResource.Instance.SequenceUpdateEvent;
-
     public void SetSequence(List<Entity> entityList)
     {
         Sequence = new List<BattleAction>();
@@ -45,7 +41,7 @@ public class BattleSequence
         PassedTurn(Sequence[0].remainTurn);
 
         // 시퀀스 업데이트 알림
-        SeqUpdateEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifySequenceUpdate();
     }
 
     private void PassedTurn(float turn)
@@ -90,7 +86,7 @@ public class BattleSequence
         else Sequence.Insert(index, action);
 
         // 시퀀스 업데이트 알림
-        SeqUpdateEvent.NotifyUpdate();
+        GameEventManager.Instance.NotifySequenceUpdate();
     }
 
     public void RemoveTurn(Entity actor)
@@ -102,7 +98,7 @@ public class BattleSequence
                 Sequence.Remove(action);
 
                 // 시퀀스 업데이트 알림
-                SeqUpdateEvent.NotifyUpdate();
+                GameEventManager.Instance.NotifySequenceUpdate();
                 return;
             }
         }
