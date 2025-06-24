@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -43,13 +42,6 @@ public class MapData : ScriptableObject
         get { return _scene.name; }
     }
 
-    // 현재 맵에 있는 구역 관리 매니져
-    private AreaManager manager;
-
-    // 임시로 지닌 로드될 구역 데이터
-    private int loadCurrentAreaID;
-    private List<AreaData> loadAreaDatas;
-
     public override bool Equals(object other)
     {
         if (other != null && other is MapData otherData)
@@ -63,50 +55,5 @@ public class MapData : ScriptableObject
     public override int GetHashCode()
     {
         return base.GetHashCode();
-    }
-
-    public void RegisterManager(AreaManager manager)
-    {
-        this.manager = manager;
-
-        // 관리자 연결 시 불러올 데이터가 있는 경우
-        if (loadAreaDatas != null && loadAreaDatas.Count > 0)
-        {
-            SetCurrentArea(loadCurrentAreaID);
-            SetAreaDatas(loadAreaDatas);
-
-            // 임시 데이터 비우기
-            loadCurrentAreaID = 0;
-            loadAreaDatas = null;
-        }
-    }
-
-    public void RemoveManager()
-    {
-        manager = null;
-    }
-
-    public int GetCurrentAreaID()
-    {
-        if (manager == null) return 0;
-        return manager.CurrentArea.ID;
-    }
-
-    public void SetCurrentArea(int id)
-    {
-        if (manager == null) loadCurrentAreaID = id;
-        else manager.SetCurrentArea(id);
-    }
-
-    public List<AreaData> GetAreaDatas()
-    {
-        if (manager == null) return new List<AreaData>();
-        return manager.GetAreaDatas();
-    }
-
-    public void SetAreaDatas(List<AreaData> datas)
-    {
-        if (manager == null) loadAreaDatas = datas;
-        else manager.SetAreaDatas(datas);
     }
 }

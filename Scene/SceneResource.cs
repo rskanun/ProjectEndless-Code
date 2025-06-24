@@ -1,13 +1,21 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 
-
-
-
 #if UNITY_EDITOR
 using UnityEditor;
+
+[System.Serializable]
+public class SceneConfiguration
+{
+    [SerializeField]
+    private SceneAsset _mainSceneAsset;
+    public SceneAsset MainScene => _mainSceneAsset;
+
+    [SerializeField]
+    private List<SceneAsset> _requireSceneAssets;
+    public List<SceneAsset> RequireScenes => _requireSceneAssets;
+}
 #endif
 
 public class SceneResource : ScriptableObject
@@ -59,54 +67,70 @@ public class SceneResource : ScriptableObject
 
     [Header("¸ÞÀÎ ¾À")]
     [SerializeField]
-    private SceneAsset _mainScene;
-    public string MainScene => _mainScene.name;
+    private SceneAsset _mainSceneAsset;
+    private string _mainScene;
+    public string MainScene => _mainScene;
 
     [Header("·Îµù ¾À")]
     [SerializeField]
-    private SceneAsset _loadingScene;
-    public string LoadingScene => _loadingScene.name;
+    private SceneAsset _loadingSceneAsset;
+    private string _loadingScene;
+    public string LoadingScene => _loadingScene;
 
-    [Header("ÇÊ¼ö ¾À ¸®½ºÆ®")]
+    [Header("»óÅÂº° ¾À ¼³Á¤")]
     [SerializeField]
-    private List<SceneAsset> fieldRequireSceneAssets;
+    private SceneConfiguration _fieldSceneConfig;
+    private string _fieldMainScene;
+    public string FieldMainScene => _fieldMainScene;
     private List<string> _fieldRequireScenes;
-    public List<string> FieldRequireScenes
-    {
-        get
-        {
-            if (_fieldRequireScenes == null)
-                _fieldRequireScenes = SceneAssetsToString(fieldRequireSceneAssets);
-
-            return _fieldRequireScenes;
-        }
-    }
+    public List<string> FieldRequireScenes => _fieldRequireScenes;
 
     [SerializeField]
-    private List<SceneAsset> battleRequireSceneAssets;
+    private SceneConfiguration _battleSceneConfig;
+    private string _battleMainScene;
+    public string BattleMainScene => _battleMainScene;
     private List<string> _battleRequireScenes;
-    public List<string> BattleRequireScenes
-    {
-        get
-        {
-            if (_battleRequireScenes == null)
-                _battleRequireScenes = SceneAssetsToString(battleRequireSceneAssets);
-
-            return _battleRequireScenes;
-        }
-    }
+    public List<string> BattleRequireScenes => _battleRequireScenes;
 
     [SerializeField]
-    private List<SceneAsset> titleRequireSceneAssets;
+    private SceneConfiguration _titleSceneConfig;
+    private string _titleMainScene;
+    public string TitleMainScene => _titleMainScene;
     private List<string> _titleRequireScenes;
-    public List<string> TitleRequireScenes
-    {
-        get
-        {
-            if (_titleRequireScenes == null)
-                _titleRequireScenes = SceneAssetsToString(titleRequireSceneAssets);
+    public List<string> TitleRequireScenes => _titleRequireScenes;
 
-            return _titleRequireScenes;
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        // ¸ÞÀÎ ¾À
+        if (_mainSceneAsset != null)
+        {
+            _mainScene = _mainSceneAsset.name;
+        }
+
+        // ·Îµù ¾À
+        if (_loadingSceneAsset != null)
+        {
+            _loadingScene = _loadingSceneAsset.name;
+        }
+
+        // ¾À ¼³Á¤
+        if (_fieldSceneConfig.MainScene != null)
+        {
+            _fieldMainScene = _fieldSceneConfig.MainScene.name;
+            _fieldRequireScenes = SceneAssetsToString(_fieldSceneConfig.RequireScenes);
+        }
+
+        if (_battleSceneConfig.MainScene != null)
+        {
+            _battleMainScene = _battleSceneConfig.MainScene.name;
+            _battleRequireScenes = SceneAssetsToString(_battleSceneConfig.RequireScenes);
+        }
+
+        if (_titleSceneConfig.MainScene != null)
+        {
+            _titleMainScene = _titleSceneConfig.MainScene.name;
+            _titleRequireScenes = SceneAssetsToString(_titleSceneConfig.RequireScenes);
         }
     }
 
@@ -118,4 +142,5 @@ public class SceneResource : ScriptableObject
             .Select(scene => scene.name)
             .ToList();
     }
+#endif
 }

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemResultUI : MonoBehaviour
+public class DropItemInfo : MonoBehaviour
 {
     public Image itemIcon;
     public TextMeshProUGUI itemName;

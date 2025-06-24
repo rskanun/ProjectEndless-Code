@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using Endless.GameData;
 using UnityEngine.SceneManagement;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -151,8 +153,7 @@ public class SaveLoadManager : ScriptableObject
 
         data.id = GameData.Instance.MapData.ID;
         data.name = GameData.Instance.MapData.Name;
-        data.currentArea = GameData.Instance.MapData.GetCurrentAreaID();
-        data.areas = GameData.Instance.MapData.GetAreaDatas();
+        data.areas = GameData.Instance.AreaDatas.ToList();
 
         return data;
     }
@@ -249,8 +250,7 @@ public class SaveLoadManager : ScriptableObject
         MapData map = MapManager.FindMap(data.id);
 
         GameData.Instance.MapData = map;
-        GameData.Instance.MapData.SetCurrentArea(data.currentArea);
-        GameData.Instance.MapData.SetAreaDatas(data.areas);
+        GameData.Instance.AreaDatas = data.areas.ToHashSet();
     }
 
     private void SetQuestData(SaveQuestData data)

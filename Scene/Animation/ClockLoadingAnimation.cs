@@ -16,7 +16,7 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
     [SerializeField] private LoadingAnimation loading;
 
     private bool isLoading;
-    private RemainTime time;
+    private DateTime time;
 
     public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction, Action completeAction)
     {
@@ -30,11 +30,18 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
 
     private IEnumerator LoadingCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOpions, Action loadAction, Action completeAction)
     {
-        // 이펙트 전용 시간 복사해놓기기
-        time = GameData.Instance.Time.Clone();
+        int hour = GameData.Instance.Time.Hour;
+        int min = GameData.Instance.Time.Minute;
+        int sec = GameData.Instance.Time.Second;
 
-        // 미리 줄여놓기
+        // 게임 데이터의 시간을 가져와 변환 가능한 DateTime으로 변환
+        time = new DateTime(1, 1, 1, hour, min, sec);
+
+        // 데이터 값의 시간 미리 줄여놓기
         GameData.Instance.Time.ConsumeTime();
+
+        // 해당 씬 도중엔 시간이 흐르도록 하기
+        Time.timeScale = 1.0f;
 
         // 잠시 텀을 준 뒤 타이머 띄우기
         yield return new WaitForSecondsRealtime(1f);
@@ -49,7 +56,9 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
 
         // 두 번에 나눠서 화면 전체에 글리치 이펙트
         glitch.ActiveEffect(0.3f);
-        time.ConsumeTime(); // 이펙트용 클론 타이머 시간 줄이기기
+
+        // 표시용 시간 줄이기
+        time = time.AddSeconds(-1);
 
         yield return new WaitForSecondsRealtime(0.6f);
 
@@ -63,17 +72,15 @@ public class ClockLoadingAnimation : MonoBehaviour, ILoadAnimation
 
     private IEnumerator TimerBlink()
     {
-        WaitForSecondsRealtime delay = new WaitForSecondsRealtime(0.6f);
-
         while (isLoading)
         {
-            timerText.text = time.Hour + ":" + time.Minute + ":" + time.Second;
+            timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}", time.Hour, time.Minute, time.Second);
 
-            yield return delay;
+            yield return new WaitForSecondsRealtime(0.6f);
 
-            timerText.text = time.Hour + " " + time.Minute + " " + time.Second;
+            timerText.text = string.Format("{0:D2} {1:D2} {2:D2}", time.Hour, time.Minute, time.Second);
 
-            yield return delay;
+            yield return new WaitForSecondsRealtime(0.6f);
         }
     }
 }

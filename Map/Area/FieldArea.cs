@@ -23,24 +23,15 @@ public class FieldArea : MonoBehaviour
     public bool IsClearArea
     {
         get { return _isClearArea; }
-        set
-        {
-            _isClearArea = value;
-            if (IsClearArea)
-            {
-                SetActiveMonsters(false);
-            }
-        }
+        set { _isClearArea = value; }
     }
     private PolygonCollider2D _areaCollider;
-    public PolygonCollider2D AreaCollider
-    {
-        get { return _areaCollider; }
-    }
+    public PolygonCollider2D AreaCollider => _areaCollider;
     [SerializeField]
     private List<GameObject> fieldMonsters;
     [SerializeField]
-    private BattleFieldData fieldData;
+    private BattleFieldData _fieldData;
+    public BattleFieldData FieldData => _fieldData;
 
     private AreaManager manager;
 
@@ -89,11 +80,6 @@ public class FieldArea : MonoBehaviour
         {
             manager.OnExitedArea(this);
         }
-    }
-
-    public AreaData GetAreaData()
-    {
-        return new AreaData(ID, IsClearArea);
     }
 
     public void SetActiveMonsters(bool isActive)

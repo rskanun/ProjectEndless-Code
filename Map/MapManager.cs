@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MapManager
+public static class MapManager
 {
     public static PolygonCollider2D CurrentArea { get; private set; }
     public static MapData FindMap(string id)

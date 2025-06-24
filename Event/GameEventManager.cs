@@ -56,6 +56,7 @@ public class GameEventManager : ScriptableObject
     [Header("필드 이벤트")]
     [SerializeField] private GameEvent _areaMoveEvent;
     [SerializeField] private GameEvent _dataLoadEvent;
+    [SerializeField] private GameEvent _fieldReturnEvent;
 
     [Header("전투 이벤트")]
     [SerializeField] private GameEvent _sequenceUpdateEvent;
@@ -94,6 +95,14 @@ public class GameEventManager : ScriptableObject
     public void NotifyDataLoaded()
     {
         _dataLoadEvent.NotifyUpdate();
+    }
+
+    /// <summary>
+    /// 전투가 끝나 다시 필드로 돌아왔음을 알림
+    /// </summary>
+    public void NotifyFieldReturned()
+    {
+        _fieldReturnEvent.NotifyUpdate();
     }
 
     /************************************************************

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using Endless.GameData;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,6 +9,12 @@ public class GameManager : MonoBehaviour
     private GameObject playerObj;
     [SerializeField]
     private GameObject trackingCamera;
+
+    [Header("초기 설정")]
+    [SerializeField] private GameState state;
+    [SerializeField] private Chapter chapter;
+    [SerializeField] private Vector2 pos;
+    [SerializeField] private Date date;
 
     private void Awake()
     {
@@ -30,13 +37,16 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // 게임 상태 초기화
-        GameData.Instance.State = GameState.Field;
+        GameData.Instance.State = state;
 
         // 시나리오 불러오기
-        LoadScript(GameData.Instance.Chapter);
+        LoadScript(chapter);
 
         // 플레이어 위치 초기화
-        GameData.Instance.Position = new Vector2(0, 0);
+        GameData.Instance.Position = pos;
+
+        // 날짜 데이터 초기화
+        GameData.Instance.Date = date;
     }
 
     private void LoadScript(Chapter data)

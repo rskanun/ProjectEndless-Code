@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,7 +32,6 @@ public class MonsterObject : MonoBehaviour
     private Vector3 prevPos;
 
     // 공격 정보
-    private AttackManager atkManager;
     [SerializeField]
     private float _attackDistance;
     public float AttackDistance
@@ -55,7 +53,6 @@ public class MonsterObject : MonoBehaviour
     private void OnValidate()
     {
         anim = GetComponent<Animator>();
-        atkManager = GetComponent<AttackManager>();
 
         prevPos = transform.position;
     }

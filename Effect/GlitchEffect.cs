@@ -10,6 +10,7 @@ public class GlitchEffect : Effect
 
     public override void SetActive(bool active)
     {
+        Debug.Log("Glitch " + active);
         GetComponent<Image>().enabled = active;
 
         analogGlitch.enabled = active;

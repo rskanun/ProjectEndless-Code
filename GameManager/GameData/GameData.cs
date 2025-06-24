@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Endless.GameData;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -142,6 +144,13 @@ public class GameData : ScriptableObject
     {
         get { return _mapData; }
         set { _mapData = value; }
+    }
+
+    private HashSet<AreaData> _areaDatas = new();
+    public HashSet<AreaData> AreaDatas
+    {
+        get { return _areaDatas; }
+        set { _areaDatas = value; }
     }
 
     [SerializeField]

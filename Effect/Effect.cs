@@ -18,7 +18,7 @@ public abstract class Effect : MonoBehaviour
     private IEnumerator EffectCoroutine(float time)
     {
         SetActive(true);
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSecondsRealtime(time);
         SetActive(false);
 
         effectCoroutine = null;

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class BattleResultUI : MonoBehaviour
+public class ResultWindow : MonoBehaviour
 {
     [Header("아이템 정보 프리팹")]
     public GameObject itemPrefab;
@@ -27,6 +28,14 @@ public class BattleResultUI : MonoBehaviour
     {
         // UI 닫고 기존 씬으로 이동
         resultWindow.SetActive(false);
+
+        SceneLoadManager.Instance.LoadFieldScene(
+            GameData.Instance.MapData.SceneName,
+            UnloadSceneOptions.None,
+            SceneFadeEffect.BlurFadeOut,
+            SceneFadeEffect.BlurFadeIn,
+            LoadingScreen.Loading
+        );
     }
 
     private void SetGold(int gold)
@@ -39,7 +48,7 @@ public class BattleResultUI : MonoBehaviour
         foreach (Item item in dropItems.Keys)
         {
             GameObject itemObj = Instantiate(itemPrefab, itemContainer);
-            ItemResultUI itemUI = itemObj.GetComponent<ItemResultUI>();
+            DropItemInfo itemUI = itemObj.GetComponent<DropItemInfo>();
 
             itemUI.SetItemInfo(item, dropItems[item]);
         }

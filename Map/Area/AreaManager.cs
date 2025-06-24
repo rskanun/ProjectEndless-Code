@@ -1,89 +1,79 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class AreaManager : MonoBehaviour
 {
-    [SerializeField]
-    private MapData map;
+    private static FieldArea currentArea;
+    private static FieldArea lastEntedArea;
 
     // 해당 맵의 구역 정보
-    private HashSet<FieldArea> areas = new HashSet<FieldArea>();
-
-    [ReadOnly, SerializeField]
-    private FieldArea _currentArea;
-    public FieldArea CurrentArea
-    {
-        private set { _currentArea = value; }
-        get { return _currentArea; }
-    }
-
-    [ReadOnly, SerializeField]
-    private FieldArea _lastEntedArea;
-    public FieldArea LastEntedArea
-    {
-        private set { _lastEntedArea = value; }
-        get { return _lastEntedArea; }
-    }
+    private Dictionary<FieldArea, AreaData> areaDict = new();
 
     public void RegisterArea(FieldArea area)
     {
+        AreaData newData = new AreaData(area.ID, area.IsClearArea);
+
         // 관리 구역 리스트에 추가
-        areas.Add(area);
+        areaDict.Add(area, newData);
+
+        // 게임 데이터에도 해당 정보 추가
+        GameData.Instance.AreaDatas.Add(newData);
     }
 
     public void RemoveArea(FieldArea area)
     {
+        AreaData removeData = areaDict[area];
+
         // 관리 구역 리스트에 삭제
-        areas.Remove(area);
+        areaDict.Remove(area);
+
+        // 게임 데이터에서도 해당 정보 삭제
+        GameData.Instance.AreaDatas.Remove(removeData);
     }
 
     /************************************************************
-     * [세이브 로드]
+     * [구역 관리]
      * 
-     * 세이브 및 로드 시 필요한 정보 주고 받고 이를 적용
+     * 게임 파일 로드 및 전투 결과에 따른 구역 정보 설정
      ************************************************************/
 
-    private void OnEnable()
+    /// <summary>
+    /// 게임 파일 로드 시, 게임 데이터를 토대로 현재 각 구역들의 클리어 상황만을 업데이트
+    /// </summary>
+    public void UpdateData()
     {
-        map.RegisterManager(this);
-    }
-
-    private void OnDisable()
-    {
-        map.RemoveManager();
-    }
-
-    public List<AreaData> GetAreaDatas()
-    {
-        return areas.Select(area => area.GetAreaData()).ToList();
-    }
-
-    public void SetAreaDatas(List<AreaData> datas)
-    {
-        if (datas == null) return;
-
-        foreach (AreaData data in datas)
+        // 각 구역의 클리어 여부만 갱신
+        foreach (AreaData data in GameData.Instance.AreaDatas)
         {
             // 해당 ID를 가진 Area 찾기
-            FieldArea area = areas.FirstOrDefault(a => a.ID == data.id);
+            FieldArea area = areaDict.Keys.FirstOrDefault(a => a.ID == data.id);
 
-            // 찾은 Area가 존재하면 IsClearArea를 업데이트
+            // 찾은 Area가 존재하면 클리어 여부 업데이트
             if (area != null)
             {
                 area.IsClearArea = data.isClearArea;
+                area.SetActiveMonsters(!data.isClearArea); // 클리어했다면 비활성화
             }
         }
     }
 
-    public void SetCurrentArea(int id)
+    /// <summary>
+    /// 전투에서 승리했을 경우 해당 구역을 클리어 했다고 설정
+    /// </summary>
+    public void OnBattleEnded()
     {
-        // 해당 ID를 가진 Area 찾기
-        FieldArea area = areas.FirstOrDefault(a => a.ID == id);
+        // 필드로 복귀한 게 아니라면 무시
+        if (GameData.Instance.State != GameState.Field) return;
 
-        // 해당 구역을 현재 구역으로 설정
-        CurrentArea = area;
-        EnableArea(area);
+        // 전투에서 승리한 경우에만 현재 구역을 토벌했다고 인정
+        if (BattleCache.Current.Result == BattleResult.Victory)
+        {
+            // 여기 적용 안됨
+            currentArea.IsClearArea = true;
+            currentArea.SetActiveMonsters(false);
+        }
     }
 
     /************************************************************
@@ -96,36 +86,39 @@ public class AreaManager : MonoBehaviour
     {
         Debug.Log("Enter: " + area);
         // 첫 방문 구역일 경우
-        if (LastEntedArea == null)
+        if (lastEntedArea == null)
         {
             // 해당 구역 활성화
             EnableArea(area);
         }
 
         // 마지막 방문 구역으로 등록
-        LastEntedArea = area;
+        lastEntedArea = area;
     }
 
     public void OnExitedArea(FieldArea area)
     {
         Debug.Log("Exit: " + area);
-        if (CurrentArea != area)
+        if (currentArea != area)
         {
             // 나간 영역이 현재 구역이 아닐 경우 무시
             return;
         }
 
         // 마지막으로 방문한 구역을 카메라 영역으로 변경
-        EnableArea(LastEntedArea);
+        EnableArea(lastEntedArea);
     }
 
     public void EnableArea(FieldArea area)
     {
-        FieldArea prevArea = CurrentArea;
-        CurrentArea = area;
+        FieldArea prevArea = currentArea;
+        currentArea = area;
 
         // 해당 구역을 카메라 영역으로 지정
         MapManager.SetCurrentArea(area.AreaCollider);
+
+        // 해당 구역의 몬스터 정보를 캐시 데이터에 저장
+        BattleCache.Current.FieldData = area.FieldData;
 
         // 구역 몬스터 활성화
         if (area.IsClearArea == false)

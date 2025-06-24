@@ -14,7 +14,7 @@ public class BattleManager : MonoBehaviour
 
     [Header("참조 스크립트")]
     [SerializeField] private Timeline timeline;
-    [SerializeField] private BattleResultUI resultUI;
+    [SerializeField] private ResultWindow resultUI;
     [SerializeField] private TargetSelection selectionManager;
 
     [Header("엔티티 배치")]
@@ -24,9 +24,6 @@ public class BattleManager : MonoBehaviour
 
     [Header("캐릭터 오브젝트")]
     [SerializeField] private List<GameObject> allMemberObjs;
-
-    [Header("테스트 필드 몬스터")]
-    [SerializeField] private BattleFieldData fieldData;
 
     [Header("전투 데이터")]
     public BattleData battleData;
@@ -60,8 +57,8 @@ public class BattleManager : MonoBehaviour
         battleData = BattleData.Instance;
         battleSeq = battleData.Sequence;
 
-        // 임시 몹 데이터 집어넣기
-        OnEncounter(fieldData);
+        // 임시로 일반 전투 실행
+        OnEncounter(BattleCache.Current.FieldData);
 
         // 임시 아이템 채워넣기
         InventoryData.Instance.InitInventory();
@@ -259,9 +256,9 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle()
     {
-        if (battleData.IsLivingEnemy)
+        if (!battleData.IsLivingCharacter)
         {
-            // 몬스터가 살아있을 경우 = 플레이어가 도망쳤을 경우
+            // 플레이어 파티가 죽거나 도망간 경우
             // 처치 보상 X
             battleData.ClearReward();
         }
@@ -272,8 +269,21 @@ public class BattleManager : MonoBehaviour
         // 전체 화면으로 카메라 포커싱
         BattleCameraDirector.Instance.FocusFullScreen();
 
+        // 전투 결과 캐시 저장
+        BattleCache.Current.Result = GetBattleResult();
+
         // 전투가 끝났다면 결과창 출력
         resultUI.OpenResult();
+    }
+
+    private BattleResult GetBattleResult()
+    {
+        if (battleData.IsLivingCharacter) // 플레이어 파티가 살아있다면 승리
+            return BattleResult.Victory;
+        else if (battleData.CharacterList.Count > 0) // 전부 사망 판정에 필드에 남아있다면 패배
+            return BattleResult.Defeat;
+        else // 필드에 한 명도 남아있지 않다면 도망
+            return BattleResult.Escape;
     }
 
     private void UpdateEffectTimers(float turn)

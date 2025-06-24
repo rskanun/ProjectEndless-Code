@@ -67,7 +67,6 @@ public struct SaveMapData
 {
     public string id;
     public string name;
-    public int currentArea;
     public List<AreaData> areas;
 }
 

@@ -87,6 +87,9 @@ public class SceneLoadManager : MonoBehaviour
         // 로딩 간에 현재 게임 상태를 타이틀로 변경하기
         loadingCallBack += () => GameData.Instance.State = GameState.Title;
 
+        // 메인 씬 지정
+        loadingCallBack += () => SceneManager.SetActiveScene(SceneManager.GetSceneByName(SceneResource.Instance.TitleMainScene));
+
         // 씬 변경
         StartCoroutine(LoadScene(SceneResource.Instance.TitleRequireScenes, null, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects, startEffect, endEffect, screen));
     }
@@ -96,6 +99,9 @@ public class SceneLoadManager : MonoBehaviour
         // 로딩 간에 현재 게임 상태를 필드로 변경하기
         loadingCallBack += () => GameData.Instance.State = GameState.Field;
 
+        // 메인 씬 지정
+        loadingCallBack += () => SceneManager.SetActiveScene(SceneManager.GetSceneByName(SceneResource.Instance.FieldMainScene));
+
         // 씬 변경
         StartCoroutine(LoadScene(SceneResource.Instance.FieldRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen));
     }
@@ -104,6 +110,9 @@ public class SceneLoadManager : MonoBehaviour
     {
         // 로딩 간에 현재 게임 상태를 전투로 변경하기
         loadingCallBack += () => GameData.Instance.State = GameState.Battle;
+
+        // 메인 씬 지정
+        loadingCallBack += () => SceneManager.SetActiveScene(SceneManager.GetSceneByName(SceneResource.Instance.BattleMainScene));
 
         // 씬 변경
         StartCoroutine(LoadScene(SceneResource.Instance.BattleRequireScenes, loadMap, unloadOptions, startEffect, endEffect, screen));
