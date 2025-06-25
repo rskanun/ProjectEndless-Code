@@ -74,6 +74,9 @@ public class SceneLoadingScreen : MonoBehaviour
         PlayTransitionEffect(startEffect);
         yield return new WaitWhile(() => isPlayAnimation);
 
+        // 현재 진행 중인 모든 DOTween 애니메이션 종료
+        DOTween.KillAll();
+
         // 씬 로딩 간엔 시간 멈추기
         Time.timeScale = 0.0f;
 

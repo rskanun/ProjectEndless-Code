@@ -5,32 +5,28 @@ using UnityEngine;
 
 public class AreaManager : MonoBehaviour
 {
-    private static FieldArea currentArea;
-    private static FieldArea lastEntedArea;
+    private static int curAreaID;
+    private static int lastEntedAreaID;
 
     // 해당 맵의 구역 정보
-    private Dictionary<FieldArea, AreaData> areaDict = new();
+    private Dictionary<int, FieldArea> areaDict = new();
 
     public void RegisterArea(FieldArea area)
     {
-        AreaData newData = new AreaData(area.ID, area.IsClearArea);
-
         // 관리 구역 리스트에 추가
-        areaDict.Add(area, newData);
+        areaDict.Add(area.ID, area);
 
         // 게임 데이터에도 해당 정보 추가
-        GameData.Instance.AreaDatas.Add(newData);
+        GameData.Instance.AreaDatas.Add(new AreaData(area.ID, area.IsClearArea));
     }
 
     public void RemoveArea(FieldArea area)
     {
-        AreaData removeData = areaDict[area];
-
         // 관리 구역 리스트에 삭제
-        areaDict.Remove(area);
+        areaDict.Remove(area.ID);
 
         // 게임 데이터에서도 해당 정보 삭제
-        GameData.Instance.AreaDatas.Remove(removeData);
+        GameData.Instance.AreaDatas.RemoveWhere(data => data.id == area.ID);
     }
 
     /************************************************************
@@ -48,7 +44,7 @@ public class AreaManager : MonoBehaviour
         foreach (AreaData data in GameData.Instance.AreaDatas)
         {
             // 해당 ID를 가진 Area 찾기
-            FieldArea area = areaDict.Keys.FirstOrDefault(a => a.ID == data.id);
+            FieldArea area = areaDict.GetValueOrDefault(data.id);
 
             // 찾은 Area가 존재하면 클리어 여부 업데이트
             if (area != null)
@@ -70,9 +66,8 @@ public class AreaManager : MonoBehaviour
         // 전투에서 승리한 경우에만 현재 구역을 토벌했다고 인정
         if (BattleCache.Current.Result == BattleResult.Victory)
         {
-            // 여기 적용 안됨
-            currentArea.IsClearArea = true;
-            currentArea.SetActiveMonsters(false);
+            areaDict[curAreaID].IsClearArea = true;
+            areaDict[curAreaID].SetActiveMonsters(false);
         }
     }
 
@@ -84,35 +79,33 @@ public class AreaManager : MonoBehaviour
 
     public void OnEntedArea(FieldArea area)
     {
-        Debug.Log("Enter: " + area);
-        // 첫 방문 구역일 경우
-        if (lastEntedArea == null)
+        // 이전 구역이 현재 없거나, 첫 방문 구역인 경우 혹은 모종의 이유로 재방문한 경우
+        if (!areaDict.ContainsKey(lastEntedAreaID) || curAreaID == area.ID)
         {
             // 해당 구역 활성화
             EnableArea(area);
         }
 
         // 마지막 방문 구역으로 등록
-        lastEntedArea = area;
+        lastEntedAreaID = area.ID;
     }
 
     public void OnExitedArea(FieldArea area)
     {
-        Debug.Log("Exit: " + area);
-        if (currentArea != area)
+        if (curAreaID != area.ID)
         {
             // 나간 영역이 현재 구역이 아닐 경우 무시
             return;
         }
 
         // 마지막으로 방문한 구역을 카메라 영역으로 변경
-        EnableArea(lastEntedArea);
+        EnableArea(areaDict[lastEntedAreaID]);
     }
 
     public void EnableArea(FieldArea area)
     {
-        FieldArea prevArea = currentArea;
-        currentArea = area;
+        FieldArea prevArea = areaDict.GetValueOrDefault(curAreaID);
+        curAreaID = area.ID;
 
         // 해당 구역을 카메라 영역으로 지정
         MapManager.SetCurrentArea(area.AreaCollider);

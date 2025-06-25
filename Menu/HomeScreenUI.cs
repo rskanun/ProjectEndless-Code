@@ -13,6 +13,7 @@ public class HomeScreenUI : MonoBehaviour
     [SerializeField] private GameObject titleButton;
     [SerializeField] private GameObject callButton;
     [SerializeField] private GameObject messageButton;
+    [SerializeField] private GameObject partyButton;
 
     public Sequence DisabledHomeScreen(bool isPlayAnimation)
     {
@@ -38,5 +39,6 @@ public class HomeScreenUI : MonoBehaviour
         titleButton.SetActive(isActive);
         callButton.SetActive(isActive);
         messageButton.SetActive(isActive);
+        partyButton.SetActive(isActive);
     }
 }

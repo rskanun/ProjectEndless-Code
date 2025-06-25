@@ -1,9 +1,20 @@
 ﻿using DG.Tweening;
+using UnityEngine;
 
 public class OptionUI : SubWindowUI
 {
+    [SerializeField] private GameObject window;
+
+    [Header("참조 오브젝트")]
+    [SerializeField] private GameObject appBackground;
+
+    [Header("참조 스크립트")]
+    [SerializeField] private HomeScreenUI homeScreenUI;
+
     protected override Sequence AppCloseAnimation(bool isPlayAnimation)
     {
+        homeScreenUI.EnabledHomeScreen(isPlayAnimation);
+
         if (!isPlayAnimation)
         {
             // 애니메이션 스킵
@@ -18,6 +29,8 @@ public class OptionUI : SubWindowUI
 
     protected override Sequence AppOpenAnimation(bool isPlayAnimation)
     {
+        homeScreenUI.DisabledHomeScreen(isPlayAnimation);
+
         if (!isPlayAnimation)
         {
             // 애니메이션 스킵
