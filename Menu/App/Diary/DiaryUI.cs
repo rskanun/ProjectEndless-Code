@@ -63,7 +63,7 @@ public class DiaryUI : AppUI
     {
         // 다이어리 집어넣는 모션
         return DOTween.Sequence()
-            .Append(diary.transform.DORotate(new Vector3(0, 0, diaryCloseRotate), delay).SetEase(Ease.OutSine))
+            .Append(diary.transform.DORotate(new Vector3(0, 0, diaryCloseRotate), delay).SetEase(Ease.InQuad))
             .OnComplete(() =>
             {
                 diary.SetActive(false);
