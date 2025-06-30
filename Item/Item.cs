@@ -4,7 +4,7 @@ public enum ItemType
 {
     Consumable, // 소모성 아이템
     Weapon,     // 무기
-    Armor,      // 방어구
+    Accessory,  // 장신구
     Quest,      // 퀘스트 아이템
     Other       // 기타
 }

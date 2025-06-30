@@ -1,5 +1,7 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ContactUI : AppUI
@@ -13,7 +15,6 @@ public class ContactUI : AppUI
     [SerializeField] private GameObject window;
 
     [Header("연락처 오브젝트")]
-    [SerializeField] private Contact playerContact;
     [SerializeField] private GameObject contactPrefab;
     [SerializeField] private Transform contactTrans;
 
@@ -26,17 +27,13 @@ public class ContactUI : AppUI
     [Header("참조 스크립트")]
     [SerializeField] private HomeScreenUI homeScreenUI;
 
-    public void SetPlayerContact(PlayerData player)
-    {
-        playerContact.SetInfo(player);
-    }
-
-    public Contact CreateContact(CharacterData character)
+    public Contact CreateContact(CharacterData character, Action selectHander)
     {
         GameObject contactObj = Instantiate(contactPrefab, contactTrans);
         Contact contact = contactObj.GetComponent<Contact>();
 
-        contact.SetInfo(character);
+        contact.UpdateInfo(character);
+        contact.SetSelectAction(selectHander);
 
         return contact;
     }
