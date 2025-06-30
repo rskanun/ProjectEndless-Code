@@ -109,7 +109,7 @@ public class SaveLoadManager : ScriptableObject
     {
         List<SaveMemberData> data = new List<SaveMemberData>();
 
-        foreach (CharacterData member in PartyData.Instance.GetAllCharacters())
+        foreach (CharacterData member in PartyData.Instance.Characters)
         {
             SaveMemberData memberData = new SaveMemberData();
 

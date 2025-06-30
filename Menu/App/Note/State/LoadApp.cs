@@ -2,20 +2,20 @@
 
 public class LoadApp : NoteApp, INoteState
 {
-    protected override void LoadData()
+    protected override void OnOpened()
     {
         NoteContext.Instance.SetState(this);
 
-        base.LoadData();
+        base.OnOpened();
     }
 
     public void InitObj()
     {
-        ui.InitNotice();
+        UI.InitNotice();
     }
 
     public void OnClickHandler(int id)
     {
-        manager.LoadHandler(id);
+        Manager.LoadHandler(id);
     }
 }

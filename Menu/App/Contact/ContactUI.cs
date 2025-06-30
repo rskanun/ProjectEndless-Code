@@ -2,15 +2,20 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DiaryUI : AppUI
+public class ContactUI : AppUI
 {
     // 애니메이션 값
     private float delay = 0.19f;
-    private float diaryCloseRotate = 90, diaryOpenRotate = 0;
+    private float diaryCloseRotate = 90, diaryOpenRotate = 7;
     private float menuMoveX = 200.0f;
     private float menuRotate = 3.0f;
 
     [SerializeField] private GameObject window;
+
+    [Header("연락처 오브젝트")]
+    [SerializeField] private Contact playerContact;
+    [SerializeField] private GameObject contactPrefab;
+    [SerializeField] private Transform contactTrans;
 
     [Header("참조 오브젝트")]
     [SerializeField] private GameObject appBackground;
@@ -20,6 +25,21 @@ public class DiaryUI : AppUI
 
     [Header("참조 스크립트")]
     [SerializeField] private HomeScreenUI homeScreenUI;
+
+    public void SetPlayerContact(PlayerData player)
+    {
+        playerContact.SetInfo(player);
+    }
+
+    public Contact CreateContact(CharacterData character)
+    {
+        GameObject contactObj = Instantiate(contactPrefab, contactTrans);
+        Contact contact = contactObj.GetComponent<Contact>();
+
+        contact.SetInfo(character);
+
+        return contact;
+    }
 
     protected override Sequence AppCloseAnimation(bool isPlayAnimation)
     {

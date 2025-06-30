@@ -5,6 +5,7 @@ public class AmountTextBar : AmountHUD
 {
     public Image amountBar;
     public TextMeshProUGUI amountText;
+    public bool isViewMax;
 
     public override void UpdateAmount(int curAmount, int maxAmount)
     {
@@ -19,6 +20,7 @@ public class AmountTextBar : AmountHUD
 
     protected virtual void UpdateText(int amount, int maxAmount)
     {
-        amountText.text = amount.ToString();
+        if (isViewMax) amountText.text = $"{amount} / {maxAmount}";
+        else amountText.text = amount.ToString();
     }
 }

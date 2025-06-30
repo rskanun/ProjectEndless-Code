@@ -15,7 +15,7 @@ public class MessengerApp : App
         setting = PhoneOptionSetting.Instance;
     }
 
-    protected override void LoadData()
+    protected override void OnOpened()
     {
         if (setting.Network == true)
         {

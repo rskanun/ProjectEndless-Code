@@ -1,19 +1,19 @@
 ﻿public class SaveApp : NoteApp, INoteState
 {
-    protected override void LoadData()
+    protected override void OnOpened()
     {
         NoteContext.Instance.SetState(this);
 
-        base.LoadData();
+        base.OnOpened();
     }
 
     public void InitObj()
     {
-        ui.UpdateAddSaveButton();
+        UI.UpdateAddSaveButton();
     }
 
     public void OnClickHandler(int id)
     {
-        manager.SaveHandler(id);
+        Manager.SaveHandler(id);
     }
 }

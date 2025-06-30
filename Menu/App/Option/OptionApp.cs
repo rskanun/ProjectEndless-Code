@@ -2,15 +2,15 @@
 
 public class OptionApp : SubWindowApp
 {
-    protected override void LoadData()
+    protected override void OnOpened()
     {
         // Load Option Data
     }
 
-    protected override void SaveData()
+    protected override void OnClosed()
     {
         // Save Option Data
-        
+
         // if not changed
         // -> exit
 

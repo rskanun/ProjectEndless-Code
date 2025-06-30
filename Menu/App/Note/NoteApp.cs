@@ -6,19 +6,19 @@ public class NoteApp : App
 
     [SerializeField]
     private NoteManager _manager;
-    public NoteManager manager
+    protected NoteManager Manager
     {
         get { return _manager; }
     }
 
     [SerializeField]
     private NoteUI _ui;
-    public NoteUI ui
+    protected NoteUI UI
     {
         get { return _ui; }
     }
 
-    protected override void LoadData()
+    protected override void OnOpened()
     {
         _manager.InitSaveFile();
 

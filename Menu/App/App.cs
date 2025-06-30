@@ -12,25 +12,25 @@ public abstract class App : MonoBehaviour
     }
 
     [Header("참조 스크립트")]
-    [SerializeField] private AppUI ui;
+    [SerializeField] protected AppUI ui;
 
     public virtual void Open(bool isPlayAnimation)
     {
         IsActive = true;
 
         ui.OpenApp(isPlayAnimation);
-        LoadData();
+        OnOpened();
     }
 
-    protected virtual void LoadData() { }
+    protected virtual void OnOpened() { }
 
     public virtual void Close(bool isPlayAnimation)
     {
-        SaveData();
+        OnClosed();
         ui.CloseApp(isPlayAnimation);
 
         IsActive = false;
     }
 
-    protected virtual void SaveData() { }
+    protected virtual void OnClosed() { }
 }
