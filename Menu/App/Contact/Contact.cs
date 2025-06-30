@@ -1,7 +1,9 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
@@ -9,9 +11,10 @@ public class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] private GameObject partyMark;
     [SerializeField] private AmountHUD hpHud;
     [SerializeField] private AmountHUD spHud;
-    [SerializeField] private GameObject selectMark;
+    [SerializeField] private Image selectMark;
 
     private Action selectHandler;
+    private Tween selectionTween;
 
     private void OnEnable()
     {
@@ -21,6 +24,12 @@ public class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
             // 핸들러 작동
             SelectHandler();
         }
+    }
+
+    private void OnDisable()
+    {
+        // 선택이 해제되지 않고 비활성화 될 경우 대비
+        DeselectHandler();
     }
 
     public void UpdateInfo(CharacterData character)
@@ -49,11 +58,24 @@ public class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
     private void SelectHandler()
     {
         selectHandler?.Invoke();
-        selectMark.SetActive(true);
+        selectMark.gameObject.SetActive(true);
+
+        // 선택 애니메이션
+        selectionTween = selectMark.DOFade(0.25f, 0.5f)
+            .SetLoops(-1, LoopType.Yoyo);
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        selectMark.SetActive(false);
+        DeselectHandler();
+    }
+
+    private void DeselectHandler()
+    {
+        // 비활성화 전 애니메이션 삭제
+        selectionTween.Kill();
+
+        selectMark.color = new Color(selectMark.color.r, selectMark.color.g, selectMark.color.b, 0f);
+        selectMark.gameObject.SetActive(false);
     }
 }

@@ -56,8 +56,36 @@ public class CharacterData
 
     [Header("장비 정보")]
     [SerializeField]
-    private Accessory _armor;
-    // 추후 추가
+    private Weapon _mainWeapon;
+    public Weapon MainWeapon
+    {
+        get => _mainWeapon;
+        set => _mainWeapon = value;
+    }
+
+    [SerializeField]
+    private Weapon _offWeapon;
+    public Weapon OffWeapon
+    {
+        get => _offWeapon;
+        set => _offWeapon = value;
+    }
+
+    [SerializeField]
+    private Accessory _accessory1;
+    public Accessory Accessory1
+    {
+        get => _accessory1;
+        set => _accessory1 = value;
+    }
+
+    [SerializeField]
+    private Accessory _accessory2;
+    public Accessory Accessory2
+    {
+        get => _accessory2;
+        set => _accessory2 = value;
+    }
 
     [Header("스탯")]
     [SerializeField]

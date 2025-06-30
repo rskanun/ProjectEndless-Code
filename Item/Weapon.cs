@@ -7,7 +7,7 @@ public enum WeaponType
 }
 
 [CreateAssetMenu(fileName = "Weapon", menuName = "Item/Weapon")]
-public class Weapon : Item
+public class Weapon : Equip
 {
     public override ItemType Type => ItemType.Weapon;
 
@@ -15,16 +15,4 @@ public class Weapon : Item
     [SerializeField]
     private WeaponType _weaponType;
     public WeaponType WeaponType => _weaponType;
-
-    [SerializeField]
-    private int _strength;
-    public int STR => _strength;
-
-    [SerializeField]
-    private int _agility;
-    public int AGI => _agility;
-
-    [SerializeField]
-    private Skill _skill;
-    public Skill Skill => _skill;
 }
