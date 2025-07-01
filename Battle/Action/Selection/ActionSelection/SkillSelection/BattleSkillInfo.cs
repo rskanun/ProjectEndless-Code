@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SkillInfo : MonoBehaviour, ISelectHandler
+public class BattleSkillInfo : MonoBehaviour, ISelectHandler
 {
     [Header("스킬 정보 구성요소")]
     public Image icon;

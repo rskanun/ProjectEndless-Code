@@ -84,7 +84,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         GameObject skillInfoObj = ui.CreateSkillInfo(skill);
 
         // 스킬 정보 설정
-        SkillInfo skillInfo = skillInfoObj.GetComponent<SkillInfo>();
+        BattleSkillInfo skillInfo = skillInfoObj.GetComponent<BattleSkillInfo>();
         skillInfo.SetSkill(skill, actor);
 
         // hover 설정
@@ -140,7 +140,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         // 첫번째 선택 요소 찾기
         foreach (GameObject skillInfoObj in skillInfoList)
         {
-            SkillInfo skillInfo = skillInfoObj.GetComponent<SkillInfo>();
+            BattleSkillInfo skillInfo = skillInfoObj.GetComponent<BattleSkillInfo>();
 
             // 해당 스킬을 사용가능한 경우
             if (skillInfo.IsUsable())
@@ -162,7 +162,7 @@ public class SkillSelection : MonoBehaviour, ISelection
         }
         else
         {
-            SkillInfo skill = selectedItem.GetComponent<SkillInfo>();
+            BattleSkillInfo skill = selectedItem.GetComponent<BattleSkillInfo>();
             ui.SetDescription(skill.GetSkill().Description);
         }
     }

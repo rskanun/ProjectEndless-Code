@@ -7,21 +7,11 @@ public class EquipInfo : MonoBehaviour
 {
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI nameField;
-    [SerializeField] private TextMeshProUGUI addStatField;
     [SerializeField] private string tagName;
 
     public void UpdateInfo(Equip equip)
     {
-        // ?? ??? ??? ?? ?? ?? ?? ??? ? ??? ??
-        if (equip == null)
-        {
-            nameField.text = tagName;
-            addStatField.text = "";
-            return;
-        }
-
-        nameField.text = equip.Name;
-        addStatField.text = AddStatToString(equip);
+        nameField.text = equip != null ? equip.Name : tagName;
     }
 
     private string AddStatToString(Equip equip)
@@ -40,6 +30,6 @@ public class EquipInfo : MonoBehaviour
         if (equip.DEX != 0)
             addStats.Add($"DEX {(equip.DEX > 0 ? "+" : "")}{equip.DEX}");
 
-        return string.Join(" · ", addStats);
+        return string.Join(" Â· ", addStats);
     }
 }

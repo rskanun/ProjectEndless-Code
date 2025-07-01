@@ -34,6 +34,14 @@ public class CharacterData
     }
 
     [SerializeField]
+    private bool _isDead; // 전투 사망 X
+    public bool IsDead
+    {
+        get => _isDead;
+        set => _isDead = value;
+    }
+
+    [SerializeField]
     private CharacterProfile _profile;
     public CharacterProfile Profile => _profile;
 
@@ -51,8 +59,11 @@ public class CharacterData
 
     [Header("스킬 정보")]
     [SerializeField]
-    private List<Skill> _skills;
-    public List<Skill> Skills => _skills;
+    private List<Skill> _hasSkills; // 해당 캐릭터가 지닌 스킬 목록
+    public List<Skill> HasSkills => _hasSkills;
+    [SerializeField]
+    private List<Skill> _usableSkills; // 해당 캐릭터의 사용 할 수 있는 스킬 목록
+    public List<Skill> UsableSkills => _usableSkills;
 
     [Header("장비 정보")]
     [SerializeField]

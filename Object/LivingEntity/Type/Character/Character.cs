@@ -22,7 +22,7 @@ public class Character : Entity
         Position = data.Position;
         AttackType = data.AttackType;
         PersonalityType = data.Personality;
-        SkillList = data.Skills;
+        SkillList = data.UsableSkills;
         OriginStat = data.Stat;
 
         // 최종스텟 설정

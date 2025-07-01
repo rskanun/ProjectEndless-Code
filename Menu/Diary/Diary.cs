@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Diary : MonoBehaviour
 {
+    [SerializeField] private GameObject deadMark;
+
     [Header("프로필 구성")]
     [SerializeField] private TextMeshProUGUI nameField;
     [SerializeField] private TextMeshProUGUI occupationField;
@@ -27,8 +30,14 @@ public class Diary : MonoBehaviour
     [SerializeField] private EquipInfo AccesssoryField1;
     [SerializeField] private EquipInfo AccesssoryField2;
 
+    [Header("스킬 구성")]
+    [SerializeField] private List<SkillInfo> skillFields;
+
     public void UpdateDiary(CharacterData character)
     {
+        // 사망 판정
+        deadMark.SetActive(character.IsDead);
+
         // 프로필 설정
         nameField.text = character.Name;
         profileImage.sprite = character.Profile.ProfileImage;
@@ -51,6 +60,19 @@ public class Diary : MonoBehaviour
         offWeaponField.UpdateInfo(character.OffWeapon);
         AccesssoryField1.UpdateInfo(character.Accessory1);
         AccesssoryField2.UpdateInfo(character.Accessory2);
+
+        // 스킬 설정
+        for (int i = 0; i < skillFields.Count; i++)
+        {
+            // 이전 비활성화 된 칸 재활성화
+            skillFields[i].gameObject.SetActive(true);
+
+            // 플레이어가 가진 스킬 개수에 맞춰 칸에 스킬 넣기
+            if (i < character.UsableSkills.Count)
+                skillFields[i].UpdateInfo(character.UsableSkills[i]);
+            else // 스킬 개수보다 적으면 해당 칸 비활성화
+                skillFields[i].gameObject.SetActive(false);
+        }
     }
 
     private string GetSanToText(CharacterData character)
