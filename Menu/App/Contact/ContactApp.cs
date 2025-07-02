@@ -1,14 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
 
 public class ContactApp : App
 {
-    // 참조 스크립트
-    [SerializeField] private Diary diary;
-    [SerializeField] private Contact playerContact;
+    private enum ContactState
+    {
+        Party,
+        Weapon,
+        Skill
+    }
 
-    private Dictionary<CharacterData, Contact> memberContacts = new();
+    [SerializeField] private ContactWindow mainWindow;
+    [SerializeField] private ContactWindow weaponWindow;
+    [SerializeField] private ContactWindow skillWindow;
+
+    private ContactState state;
+    private ContactWindow currentWindow;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -17,39 +27,29 @@ public class ContactApp : App
     }
 #endif
 
-    private void Awake()
-    {
-        playerContact.SetSelectAction(() => diary.UpdateDiary(PartyData.Instance.Player));
-    }
-
-    private void OnDestroy()
-    {
-        // 생성된 오브젝트 모두 파괴
-        foreach (Contact contact in memberContacts.Values)
-        {
-            Destroy(contact.gameObject);
-        }
-    }
-
     protected override void OnOpened()
     {
-        if (ui is not ContactUI contactUI) return;
+        state = ContactState.Party;
+        currentWindow = mainWindow;
 
-        // 플레이어 데이터 설정
-        playerContact.UpdateInfo(PartyData.Instance.Player);
-
-        // 파티 편입이 가능한 캐릭터 수만큼 오브젝트 생성
-        foreach (CharacterData character in PartyData.Instance.Characters)
-        {
-            if (character is PlayerData) continue;
-
-            if (memberContacts.ContainsKey(character)) // 기존 오브젝트가 있다면 정보만 갱신
-                memberContacts[character].UpdateInfo(character);
-            else    // 없다면 새로 만들기
-                memberContacts.Add(character, contactUI.CreateContact(character, () => diary.UpdateDiary(character)));
-        }
-
-        // 플레이어의 연락처를 먼저 선택
-        EventSystem.current.SetSelectedGameObject(playerContact.gameObject);
+        // 파티 맴버 화면부터 열기
+        mainWindow.OpenWindow();
     }
+
+    /// <summary>
+    /// 현재 창에 띄워진 목록을 무기 목록으로 바꾸기
+    /// </summary>
+    public void ShowWeapons()
+    {
+        // 현재 활성화된 목록이 무기 목록일 경우 넘어가기
+        if (state == ContactState.Weapon) return;
+
+        // 이전 화면 비활성화
+        currentWindow.CloseWindow();
+
+        // 무기 목록 화면 활성화
+        weaponWindow.gameObject.SetActive(true);
+        weaponWindow.OpenWindow();
+    }
+
 }

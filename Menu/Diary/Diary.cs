@@ -33,6 +33,9 @@ public class Diary : MonoBehaviour
     [Header("스킬 구성")]
     [SerializeField] private List<SkillInfo> skillFields;
 
+    private CharacterData _selectChracter;
+    public CharacterData SeelctCharacter => _selectChracter;
+
     public void UpdateDiary(CharacterData character)
     {
         // 사망 판정

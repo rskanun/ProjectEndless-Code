@@ -10,9 +10,9 @@ public abstract class AppUI : MonoBehaviour
     * 애니메이션 조작 관리
     ************************************************************/
 
-    public void OpenApp(bool isPlayAnimation)
+    public Sequence OpenApp(bool isPlayAnimation)
     {
-        AppOpenAnimation(isPlayAnimation);
+        return AppOpenAnimation(isPlayAnimation);
     }
 
     protected abstract Sequence AppOpenAnimation(bool isPlayAnimation);

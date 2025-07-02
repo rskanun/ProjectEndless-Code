@@ -1,8 +1,6 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ContactUI : AppUI
 {
@@ -14,10 +12,6 @@ public class ContactUI : AppUI
 
     [SerializeField] private GameObject window;
 
-    [Header("연락처 오브젝트")]
-    [SerializeField] private GameObject contactPrefab;
-    [SerializeField] private Transform contactTrans;
-
     [Header("참조 오브젝트")]
     [SerializeField] private GameObject appBackground;
     [SerializeField] private GameObject face;
@@ -27,17 +21,13 @@ public class ContactUI : AppUI
     [Header("참조 스크립트")]
     [SerializeField] private HomeScreenUI homeScreenUI;
 
-    public Contact CreateContact(CharacterData character, Action selectHander)
-    {
-        GameObject contactObj = Instantiate(contactPrefab, contactTrans);
-        Contact contact = contactObj.GetComponent<Contact>();
 
-        contact.UpdateInfo(character);
-        contact.SetSelectAction(selectHander);
 
-        return contact;
-    }
-
+    /// <summary>
+    /// 앱 종료 시 실행될 애니메이션
+    /// </summary>
+    /// <param name="isPlayAnimation">애니메이션을 실행할 지 여부</param>
+    /// <returns>해당 애니메이션의 Sequence</returns>
     protected override Sequence AppCloseAnimation(bool isPlayAnimation)
     {
         homeScreenUI.EnabledHomeScreen(isPlayAnimation);
@@ -88,6 +78,11 @@ public class ContactUI : AppUI
             });
     }
 
+    /// <summary>
+    /// 앱 실행 시 실행될 애니메이션
+    /// </summary>
+    /// <param name="isPlayAnimation">애니메이션을 실행할 지 여부</param>
+    /// <returns>해당 애니메이션의 Sequence</returns>
     protected override Sequence AppOpenAnimation(bool isPlayAnimation)
     {
         homeScreenUI.DisabledHomeScreen(isPlayAnimation);
@@ -137,4 +132,5 @@ public class ContactUI : AppUI
             })
             .Append(diary.transform.DORotate(new Vector3(0, 0, diaryOpenRotate), delay).SetEase(Ease.OutSine));
     }
+
 }

@@ -1,17 +1,12 @@
 using System;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
+public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
-    [SerializeField] private TextMeshProUGUI nameField;
-    [SerializeField] private GameObject partyMark;
-    [SerializeField] private AmountHUD hpHud;
-    [SerializeField] private AmountHUD spHud;
-    [SerializeField] private Image selectMark;
+    [SerializeField] protected Image selectMark;
 
     private Action selectHandler;
     private Tween selectionTween;
@@ -30,19 +25,6 @@ public class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         // 선택이 해제되지 않고 비활성화 될 경우 대비
         DeselectHandler();
-    }
-
-    public void UpdateInfo(CharacterData character)
-    {
-        nameField.text = character.Name;
-        partyMark.SetActive(character.IsParty);
-        hpHud.UpdateAmount(character.Stat.HP, character.Stat.MaxHP);
-        spHud.UpdateAmount(character.Stat.SP, character.Stat.MaxSP);
-    }
-
-    public void SetPartyStatus(bool isInParty)
-    {
-        partyMark.SetActive(isInParty);
     }
 
     public void SetSelectAction(Action handler)

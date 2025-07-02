@@ -4,17 +4,12 @@ using UnityEngine;
 
 public abstract class SubWindowApp : App
 {
-    [SerializeField]
-    private SubWindowUI subWindowUI;
-
     protected Stack<GameObject> subWindows = new Stack<GameObject>();
 
     public virtual void OpenSubWindow(GameObject subWindow)
     {
         subWindow.SetActive(true);
         subWindows.Push(subWindow);
-
-        subWindowUI.setCancelPanel(true);
     }
 
     public override void Close(bool isPlayAnimation)
@@ -23,9 +18,6 @@ public abstract class SubWindowApp : App
         {
             GameObject subWindow = subWindows.Pop();
             subWindow.SetActive(false);
-
-            if (subWindows.Count <= 0)
-                subWindowUI.setCancelPanel(false);
         }
         else
         {

@@ -1,12 +1,13 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-public class OptionUI : SubWindowUI
+public class OptionUI : AppUI
 {
     [SerializeField] private GameObject window;
 
     [Header("참조 오브젝트")]
     [SerializeField] private GameObject appBackground;
+    [SerializeField] private GameObject cancelPanel;
 
     [Header("참조 스크립트")]
     [SerializeField] private HomeScreenUI homeScreenUI;
@@ -41,5 +42,10 @@ public class OptionUI : SubWindowUI
         }
 
         return MenuAnimation.AppToastOpenAnimation(window, appBackground);
+    }
+
+    public void SetCancelPanel(bool isVeiw)
+    {
+        cancelPanel.SetActive(isVeiw);
     }
 }

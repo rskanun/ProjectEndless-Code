@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using UnityEngine;
 
 public abstract class App : MonoBehaviour
@@ -18,8 +19,8 @@ public abstract class App : MonoBehaviour
     {
         IsActive = true;
 
-        ui.OpenApp(isPlayAnimation);
-        OnOpened();
+        ui.OpenApp(isPlayAnimation)
+            .OnComplete(() => OnOpened());
     }
 
     protected virtual void OnOpened() { }
