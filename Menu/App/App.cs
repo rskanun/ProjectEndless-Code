@@ -1,6 +1,4 @@
-﻿using System;
-using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class App : MonoBehaviour
 {
@@ -19,19 +17,21 @@ public abstract class App : MonoBehaviour
     {
         IsActive = true;
 
-        ui.OpenApp(isPlayAnimation)
-            .OnComplete(() => OnOpened());
+        ui.OpenApp(isPlayAnimation, () => OnOpen());
     }
 
-    protected virtual void OnOpened() { }
+    protected virtual void OnOpen() { }
 
     public virtual void Close(bool isPlayAnimation)
     {
-        OnClosed();
+        // 화면이 완전히 열린 상태가 아니라면 닫기 금지
+        if (!ui.IsOpened) return;
+
+        OnClose();
         ui.CloseApp(isPlayAnimation);
 
         IsActive = false;
     }
 
-    protected virtual void OnClosed() { }
+    protected virtual void OnClose() { }
 }

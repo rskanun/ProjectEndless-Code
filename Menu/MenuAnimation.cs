@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 public class MenuAnimation
 {
     // 메뉴 열리고 닫히는 각도
     private const float closeRotate = 70, openRotate = 0;
 
-    public static Sequence AppToastOpenAnimation(GameObject window, GameObject background)
+    public static Sequence AppToastOpenAnimation(GameObject window, GameObject background, Action openHandler)
     {
         return BiggerOpenSeq(background, 0.1f, 0.08f)
                 .AppendInterval(0.12f)
-                .Append(ToastWindowSeq(window, 0.2f));
+                .Append(ToastWindowSeq(window, 0.2f, openHandler));
     }
 
     public static Sequence AppCloseAnimation(GameObject window, GameObject background)
@@ -30,11 +31,15 @@ public class MenuAnimation
         return CloseMenuSeq(phone, screenPanel, face);
     }
 
-    public static Sequence AppOpenAnimation(GameObject window, GameObject background)
+    public static Sequence AppOpenAnimation(GameObject window, GameObject background, Action openHandler)
     {
         return BiggerOpenSeq(background, 0.1f, 0.08f)
-                .AppendInterval(0.12f)
-                .Append(FadeInSeq(window, 0.2f));
+            .AppendInterval(0.12f)
+            .AppendCallback(() =>
+            {
+                window.SetActive(true);
+                openHandler?.Invoke();
+            });
     }
 
     public static Sequence ToastAnimation(GameObject window, float fadeTime, float delay)
@@ -70,13 +75,17 @@ public class MenuAnimation
     * DOTween을 이용한 각 애니메이션 동작 시퀀스 관리
     ************************************************************/
 
-    private static Sequence ToastWindowSeq(GameObject window, float t)
+    private static Sequence ToastWindowSeq(GameObject window, float t, Action openHandler = null)
     {
         Vector2 loc = window.transform.localPosition;
         window.transform.localPosition = new Vector2(loc.x, loc.y - window.GetComponent<RectTransform>().rect.height / 4);
 
         return DOTween.Sequence()
-            .OnStart(() => window.SetActive(true))
+            .OnStart(() =>
+            {
+                window.SetActive(true);
+                openHandler?.Invoke();
+            })
             .Append(window.transform.DOLocalMoveY(loc.y, t).SetEase(Ease.OutQuad));
     }
 
@@ -197,6 +206,22 @@ public class MenuAnimation
             .Append(group.DOFade(origin, time));
     }
 
+    private static Sequence FadeInAppSeq(GameObject appWindow, float time, Action openHandler = null)
+    {
+        CanvasGroup group = appWindow.GetComponent<CanvasGroup>();
+        float origin = group.alpha;
+
+        return DOTween.Sequence()
+            .OnStart(() =>
+            {
+                group.alpha = 0;
+
+                appWindow.SetActive(true);
+                openHandler?.Invoke();
+            })
+            .Append(group.DOFade(origin, time));
+    }
+
     private static Sequence FadeOutSeq(GameObject obj, float time)
     {
         if (obj.activeSelf == true)
@@ -248,6 +273,7 @@ public class MenuAnimation
     private static Sequence BiggerOpenSeq(GameObject window, float startSize, float t)
     {
         window.SetActive(true);
+
         return BiggerSeq(window, startSize, 1f, t);
     }
 

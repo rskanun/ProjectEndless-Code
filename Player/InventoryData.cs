@@ -55,13 +55,13 @@ public class InventoryData : ScriptableObject
     private Dictionary<Item, int> inventory = new Dictionary<Item, int>();
 
     // 테스트 아이템
-    public List<Consumable> testConsumable = new List<Consumable>();
+    public List<Item> testItems = new List<Item>();
 
 
     public void InitInventory()
     {
         // 임시로 아이템 채워넣기
-        foreach (Item item in testConsumable)
+        foreach (Item item in testItems)
         {
             if (inventory.ContainsKey(item) == false)
                 inventory[item] = 1;

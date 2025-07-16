@@ -10,44 +10,76 @@ public class ContactUI : AppUI
     private float menuMoveX = 200.0f;
     private float menuRotate = 3.0f;
 
-    [SerializeField] private GameObject window;
-
     [Header("참조 오브젝트")]
-    [SerializeField] private GameObject appBackground;
     [SerializeField] private GameObject face;
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject diary;
 
-    [Header("참조 스크립트")]
-    [SerializeField] private HomeScreenUI homeScreenUI;
-
-
-
-    /// <summary>
-    /// 앱 종료 시 실행될 애니메이션
-    /// </summary>
-    /// <param name="isPlayAnimation">애니메이션을 실행할 지 여부</param>
-    /// <returns>해당 애니메이션의 Sequence</returns>
-    protected override Sequence AppCloseAnimation(bool isPlayAnimation)
+    protected override void ActiveApp(Action openHandler)
     {
-        homeScreenUI.EnabledHomeScreen(isPlayAnimation);
+        // 추가적으로 활성화 여부를 설정
+        diary.SetActive(true);
+        menu.transform.localPosition = menu.transform.localPosition + new Vector3(menuMoveX, 0);
+        menu.transform.localRotation = Quaternion.Euler(0, 0, -menuRotate);
+        face.transform.localPosition = face.transform.localPosition - new Vector3(menuMoveX, 0);
+        face.transform.localRotation = Quaternion.Euler(0, 0, menuRotate);
 
-        if (!isPlayAnimation)
-        {
-            // 애니메이션 스킵
-            menu.transform.localPosition = menu.transform.localPosition - new Vector3(menuMoveX, 0);
-            menu.transform.localRotation = Quaternion.Euler(0, 0, 0);
-            face.transform.localPosition = face.transform.localPosition + new Vector3(menuMoveX, 0);
-            face.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        // 기존 활성화 여부 설정
+        base.ActiveApp(openHandler);
+    }
 
-            diary.SetActive(false);
-            window.SetActive(false);
-            appBackground.SetActive(false);
+    protected override void ActiveAppWithAnimation(Action openHandler)
+    {
+        DOTween.Sequence()
+            .Join(MenuAnimation.AppOpenAnimation(window, appBackground, openHandler))
+            .Join(MenuMoveAnimation(menu, face))
+            .Join(DiaryOpenAnimation(diary))
+            .AppendCallback(() => _isOpened = true);
+    }
 
-            return DOTween.Sequence();
-        }
+    private Sequence MenuMoveAnimation(GameObject phone, GameObject face)
+    {
+        float menuEndX = phone.transform.localPosition.x + menuMoveX;
+        float faceEndX = face.transform.localPosition.x - menuMoveX;
 
+        // 휴대폰 화면 옮기는 모션
         return DOTween.Sequence()
+            .Join(phone.transform.DOLocalMoveX(menuEndX, delay))
+            .Join(phone.transform.DORotate(new Vector3(0, 0, -menuRotate), delay).SetEase(Ease.OutSine))
+            .Join(face.transform.DOLocalMoveX(faceEndX, delay))
+            .Join(face.transform.DORotate(new Vector3(0, 0, menuRotate), delay).SetEase(Ease.OutSine));
+    }
+
+    private Sequence DiaryOpenAnimation(GameObject diary)
+    {
+        // 다이어리 꺼내드는 모션
+        return DOTween.Sequence()
+            .OnStart(() =>
+            {
+                diary.SetActive(true);
+                diary.transform.localRotation = Quaternion.Euler(0, 0, diaryCloseRotate);
+            })
+            .Append(diary.transform.DORotate(new Vector3(0, 0, diaryOpenRotate), delay).SetEase(Ease.OutSine));
+    }
+
+    protected override void DeactiveApp()
+    {
+        // 추가적으로 활성화 여부를 설정
+        diary.SetActive(false);
+        menu.transform.localPosition = menu.transform.localPosition - new Vector3(menuMoveX, 0);
+        menu.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        face.transform.localPosition = face.transform.localPosition + new Vector3(menuMoveX, 0);
+        face.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+        // 기존 활성화 여부 설정
+        base.DeactiveApp();
+    }
+
+    protected override void DeactiveAppWithAnimation()
+    {
+        _isOpened = false;
+
+        DOTween.Sequence()
             .Join(MenuAnimation.AppCloseAnimation(window, appBackground))
             .Join(MenuReturnAnimation(menu, face))
             .Join(DiaryCloseAnimation(diary));
@@ -76,61 +108,6 @@ public class ContactUI : AppUI
                 diary.SetActive(false);
                 diary.transform.localRotation = Quaternion.Euler(0, 0, diaryOpenRotate);
             });
-    }
-
-    /// <summary>
-    /// 앱 실행 시 실행될 애니메이션
-    /// </summary>
-    /// <param name="isPlayAnimation">애니메이션을 실행할 지 여부</param>
-    /// <returns>해당 애니메이션의 Sequence</returns>
-    protected override Sequence AppOpenAnimation(bool isPlayAnimation)
-    {
-        homeScreenUI.DisabledHomeScreen(isPlayAnimation);
-
-        if (!isPlayAnimation)
-        {
-            // 애니메이션 스킵
-            menu.transform.localPosition = menu.transform.localPosition + new Vector3(menuMoveX, 0);
-            menu.transform.localRotation = Quaternion.Euler(0, 0, -menuRotate);
-            face.transform.localPosition = face.transform.localPosition - new Vector3(menuMoveX, 0);
-            face.transform.localRotation = Quaternion.Euler(0, 0, menuRotate);
-
-            diary.SetActive(true);
-            window.SetActive(true);
-            appBackground.SetActive(true);
-
-            return DOTween.Sequence();
-        }
-
-        return DOTween.Sequence()
-            .Join(MenuAnimation.AppOpenAnimation(window, appBackground))
-            .Join(MenuMoveAnimation(menu, face))
-            .Join(DiaryOpenAnimation(diary));
-    }
-
-    private Sequence MenuMoveAnimation(GameObject phone, GameObject face)
-    {
-        float menuEndX = phone.transform.localPosition.x + menuMoveX;
-        float faceEndX = face.transform.localPosition.x - menuMoveX;
-
-        // 휴대폰 화면 옮기는 모션
-        return DOTween.Sequence()
-            .Join(phone.transform.DOLocalMoveX(menuEndX, delay))
-            .Join(phone.transform.DORotate(new Vector3(0, 0, -menuRotate), delay).SetEase(Ease.OutSine))
-            .Join(face.transform.DOLocalMoveX(faceEndX, delay))
-            .Join(face.transform.DORotate(new Vector3(0, 0, menuRotate), delay).SetEase(Ease.OutSine));
-    }
-
-    private Sequence DiaryOpenAnimation(GameObject diary)
-    {
-        // 다이어리 꺼내드는 모션
-        return DOTween.Sequence()
-            .OnStart(() =>
-            {
-                diary.SetActive(true);
-                diary.transform.localRotation = Quaternion.Euler(0, 0, diaryCloseRotate);
-            })
-            .Append(diary.transform.DORotate(new Vector3(0, 0, diaryOpenRotate), delay).SetEase(Ease.OutSine));
     }
 
 }

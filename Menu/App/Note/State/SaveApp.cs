@@ -1,10 +1,10 @@
 ﻿public class SaveApp : NoteApp, INoteState
 {
-    protected override void OnOpened()
+    protected override void OnOpen()
     {
         NoteContext.Instance.SetState(this);
 
-        base.OnOpened();
+        base.OnOpen();
     }
 
     public void InitObj()

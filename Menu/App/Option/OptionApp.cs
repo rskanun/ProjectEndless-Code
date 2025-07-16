@@ -5,12 +5,12 @@ public class OptionApp : SubWindowApp
     [SerializeField]
     private OptionUI optionUI;
 
-    protected override void OnOpened()
+    protected override void OnOpen()
     {
         // Load Option Data
     }
 
-    protected override void OnClosed()
+    protected override void OnClose()
     {
         // Save Option Data
 

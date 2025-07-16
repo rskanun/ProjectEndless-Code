@@ -59,9 +59,6 @@ public class BattleManager : MonoBehaviour
 
         // 임시로 일반 전투 실행
         OnEncounter(BattleCache.Current.FieldData);
-
-        // 임시 아이템 채워넣기
-        InventoryData.Instance.InitInventory();
     }
 
     /***************************************************************

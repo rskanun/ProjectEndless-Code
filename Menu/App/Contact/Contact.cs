@@ -8,6 +8,7 @@ public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     [SerializeField] protected Image selectMark;
 
+    private Action clickHandler;
     private Action selectHandler;
     private Tween selectionTween;
 
@@ -25,6 +26,16 @@ public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         // 선택이 해제되지 않고 비활성화 될 경우 대비
         DeselectHandler();
+    }
+
+    public void SetClickHandler(Action handler)
+    {
+        clickHandler = handler;
+    }
+
+    public void OnClick()
+    {
+        clickHandler?.Invoke();
     }
 
     public void SetSelectAction(Action handler)

@@ -2,9 +2,12 @@
 using System.Linq;
 using Endless.GameData;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
+    [ReadOnly]
+    public GameObject select;
     [SerializeField]
     private GameObject playerObj;
     [SerializeField]
@@ -15,6 +18,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Chapter chapter;
     [SerializeField] private Vector2 pos;
     [SerializeField] private Date date;
+
+    private void Update()
+    {
+        select = EventSystem.current.currentSelectedGameObject;
+    }
 
     private void Awake()
     {
@@ -29,6 +37,9 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log($"Total Scripts: {files.Count()}, Total Lines: {totalLines}");
+
+        // 임시 아이템 채워넣기
+        InventoryData.Instance.InitInventory();
 
         // 게임 시작 전 설정
         StartGame();

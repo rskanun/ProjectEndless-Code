@@ -1,12 +1,16 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class TeamContact : Contact
+public class TeamContact : Contact, ISubmitHandler
 {
     [SerializeField] private TextMeshProUGUI nameField;
     [SerializeField] private GameObject partyMark;
     [SerializeField] private AmountHUD hpHud;
     [SerializeField] private AmountHUD spHud;
+
+    private Action submitHandler;
 
     public void UpdateInfo(CharacterData character)
     {
@@ -19,5 +23,15 @@ public class TeamContact : Contact
     public void SetPartyStatus(bool isInParty)
     {
         partyMark.SetActive(isInParty);
+    }
+
+    public void SetSubmitHandler(Action handler)
+    {
+        submitHandler = handler;
+    }
+
+    public void OnSubmit(BaseEventData eventData)
+    {
+        submitHandler?.Invoke();
     }
 }

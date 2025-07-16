@@ -18,7 +18,7 @@ public class NoteApp : App
         get { return _ui; }
     }
 
-    protected override void OnOpened()
+    protected override void OnOpen()
     {
         _manager.InitSaveFile();
 

@@ -65,7 +65,8 @@ public class PartyData : ScriptableObject
     private List<CharacterData> _characters;
     public List<CharacterData> Characters => _characters;
 
-    private void OnEnable()
+#if UNITY_EDITOR
+    private void OnValidate()
     {
         UpdateCharacterList();
         ChrList2Dict();
@@ -90,6 +91,7 @@ public class PartyData : ScriptableObject
             charactersDict[member.Name] = member;
         }
     }
+#endif
 
     public CharacterData GetCharacter(string name)
     {

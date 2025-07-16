@@ -1,45 +1,18 @@
-﻿using DG.Tweening;
-using UnityEngine;
+﻿using System;
+using DG.Tweening;
 
 public class NoteAppUI : AppUI
 {
-    [SerializeField] private GameObject window;
-
-    [Header("참조 오브젝트")]
-    [SerializeField] private GameObject appBackground;
-
-    [Header("참조 스크립트")]
-    [SerializeField] private HomeScreenUI homeScreenUI;
-
-    protected override Sequence AppCloseAnimation(bool isPlayAnimation)
+    protected override void ActiveAppWithAnimation(Action openHandler)
     {
-        homeScreenUI.EnabledHomeScreen(isPlayAnimation);
-
-        if (!isPlayAnimation)
-        {
-            // 애니메이션 스킵
-            window.SetActive(false);
-            appBackground.SetActive(false);
-
-            return DOTween.Sequence();
-        }
-
-        return MenuAnimation.AppCloseAnimation(window, appBackground);
+        MenuAnimation.AppOpenAnimation(window, appBackground, openHandler)
+            .AppendCallback(() => _isOpened = true);
     }
 
-    protected override Sequence AppOpenAnimation(bool isPlayAnimation)
+    protected override void DeactiveAppWithAnimation()
     {
-        homeScreenUI.DisabledHomeScreen(isPlayAnimation);
+        _isOpened = false;
 
-        if (!isPlayAnimation)
-        {
-            // 애니메이션 스킵
-            window.SetActive(true);
-            appBackground.SetActive(true);
-
-            return DOTween.Sequence();
-        }
-
-        return MenuAnimation.AppOpenAnimation(window, appBackground);
+        MenuAnimation.AppCloseAnimation(window, appBackground);
     }
 }
