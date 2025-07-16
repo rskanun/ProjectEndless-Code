@@ -17,12 +17,13 @@ public class TeamContactWindow : ContactWindow
     [SerializeField] private TeamContact playerContact;
 
     private List<GameObject> contactList = new();
+    private GameObject lastSelected;
 
     private void Awake()
     {
         // 플레이어 오브젝트의 핸들러 등록
         playerContact.SetSelectAction(() => app.OnSelectCharacter(PartyData.Instance.Player));
-        playerContact.SetSubmitHandler(() => app.ShowWeapons());
+        playerContact.SetSubmitHandler(() => ModifyCharacter(PartyData.Instance.Player));
     }
 
     private void OnDisable()
@@ -34,8 +35,21 @@ public class TeamContactWindow : ContactWindow
         }
     }
 
+    /// <summary>
+    /// 마지막으로 선택된 연락처 오브젝트 선택
+    /// </summary>
+    public void SelectLastSelectedContact()
+    {
+        EventSystem.current.SetSelectedGameObject(lastSelected);
+    }
+
+    /// <summary>
+    /// 초기 연락처 목록 생성
+    /// </summary>
     protected override void InitContact()
     {
+        lastSelected = playerContact.gameObject;
+
         // 플레이어 데이터 설정
         playerContact.UpdateInfo(PartyData.Instance.Player);
 
@@ -54,14 +68,30 @@ public class TeamContactWindow : ContactWindow
             // 정보 및 핸들러 등록
             contact.UpdateInfo(character);
             contact.SetSelectAction(() => app.OnSelectCharacter(character));
-            contact.SetSubmitHandler(() => app.ShowWeapons());
+            contact.SetSubmitHandler(() => ModifyCharacter(character));
 
             // 후에 파괴를 위한 리스트에 추가
             contactList.Add(contactObj);
+
+            // 마지막에 선택한 오브젝트인 경우 해당 오브젝트를 선택하기
+            if (character == app.SelectCharacter) lastSelected = contactObj;
         }
 
-        // 플레이어의 연락처를 먼저 선택
-        EventSystem.current.SetSelectedGameObject(playerContact.gameObject);
+        // 메뉴에 포커싱 된 상태라면, 이전에 선택한 캐릭터, 혹은 플레이어 먼저 선택
+        if (app.State == ContactState.Party)
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+    }
+
+    private void ModifyCharacter(CharacterData character)
+    {
+        // 해당 캐릭터가 사망했다면 목록 불러오기 X
+        if (character.IsDead) return;
+
+        // 선택 해제
+        EventSystem.current.SetSelectedGameObject(null);
+
+        // 다이어리로 넘어가기
+        app.FocusDiary();
     }
 
     protected override IEnumerator OpenAnimation()

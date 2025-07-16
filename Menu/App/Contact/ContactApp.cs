@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ContactState
+{
+    Party,
+    Diary,
+    Weapon,
+    OffWeapon,
+    Accessory,
+    Skill
+}
+
 public class ContactApp : App
 {
-    private enum ContactState
-    {
-        Party,
-        Weapon,
-        Accessory,
-        Skill
-    }
-
     [SerializeField] private Diary diary;
     [SerializeField] private TeamContactWindow mainWindow;
     [SerializeField] private WeaponContactWindow weaponWindow;
@@ -20,8 +22,9 @@ public class ContactApp : App
 
     private Dictionary<ContactState, ContactWindow> windows;
 
-    private ContactState state;
     private ContactWindow currentWindow;
+    private ContactState _state;
+    public ContactState State => _state;
     public CharacterData SelectCharacter { get; private set; }
 
 #if UNITY_EDITOR
@@ -40,11 +43,6 @@ public class ContactApp : App
             { ContactState.Accessory, accessoryWindow },
             { ContactState.Skill, skillWindow }
         };
-    }
-
-    public void Test()
-    {
-        Debug.Log("test");
     }
 
     protected override void OnOpen()
@@ -73,15 +71,15 @@ public class ContactApp : App
     private IEnumerator SwapWindow(ContactState state)
     {
         // 현재 활성화된 목록과 동일한 경우 넘어가기
-        if (currentWindow != null && this.state == state) yield break;
+        if (currentWindow != null && this._state == state) yield break;
 
-        this.state = state;
+        this._state = state;
 
         // 이전 화면 비활성화
         currentWindow?.CloseWindow();
 
         // 이전 화면이 비활성화 될 때까지 대기
-        yield return new WaitUntil(() => currentWindow == null || !currentWindow.IsTweening);
+        if (currentWindow != null) yield return new WaitUntil(() => !currentWindow.IsTweening);
 
         // 새 목록 화면 활성화
         windows[state].gameObject.SetActive(true);
@@ -96,15 +94,25 @@ public class ContactApp : App
         // 현재 열린 창에서 애니메이션이 실행 중이면 무시
         if (currentWindow?.IsTweening == true) return;
 
-        if (state != ContactState.Party)
+        // 첫 화면이 아닌 경우
+        if (_state != ContactState.Party)
         {
-            // 처음 창이 아닌 경우 메인 창으로 돌아가기
-            ShowContact(ContactState.Party);
+            // 다이어리라면 파티 메뉴 내의 버튼 선택으로 넘어가기
+            if (_state == ContactState.Diary) FocusContactMenu();
+            else
+            {
+                // 그 외엔 메인 파티 메뉴로 돌아가서 다이어리 내 버튼 선택으로 넘어가기
+                ShowContact(ContactState.Party);
+                FocusDiary();
+            }
         }
         else
         {
             // 현재 창 정보 초기화
             currentWindow = null;
+
+            // 선택 캐릭터 정보 초기화
+            SelectCharacter = null;
 
             // 처음 창인 경우 앱 종료
             base.Close(isPlayAnimation);
@@ -125,4 +133,28 @@ public class ContactApp : App
     * 
     * 캐릭터의 정보를 보이는 다이어리 관리
     ************************************************************/
+
+    /// <summary>
+    /// 다이어리 내의 버튼 선택으로 넘어가기
+    /// </summary>
+    public void FocusDiary()
+    {
+        // 다이어리 내 버튼 선택
+        diary.SelectButton(_state);
+
+        // 현재 상태 변경
+        _state = ContactState.Diary;
+    }
+
+    /// <summary>
+    /// 메뉴 내의 버튼 선택으로 넘아가기
+    /// </summary>
+    public void FocusContactMenu()
+    {
+        // 현재 상태 변경
+        _state = ContactState.Party;
+
+        // 선택된 캐릭터 선택으로 넘어가기
+        mainWindow.SelectLastSelectedContact();
+    }
 }

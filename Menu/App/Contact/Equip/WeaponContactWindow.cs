@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WeaponContactWindow : ContactWindow
 {
@@ -11,6 +13,7 @@ public class WeaponContactWindow : ContactWindow
     [SerializeField] private Transform contactTrans;
 
     private List<GameObject> contactList = new();
+    private GameObject firstSelect;
 
     private void OnDisable()
     {
@@ -37,7 +40,24 @@ public class WeaponContactWindow : ContactWindow
 
             // 후에 파괴를 위한 리스트에 추가
             contactList.Add(contactObj);
+
+            // 해당 캐릭터가 들고 있는 무기를 먼저, 없다면 가장 첫 무기를 먼저 선택
+            if (app.SelectCharacter.MainWeapon == weapon) firstSelect = contactObj;
+            if (firstSelect == null) firstSelect = contactObj;
         }
+    }
+
+    protected override IEnumerator OpenAnimation()
+    {
+        ControlContext.Instance.KeyLock();
+
+        yield return StartCoroutine(base.OpenAnimation());
+
+        // 목록을 다 불러온 후 처음으로 선택할 무기 설정
+        if (firstSelect != null)
+            EventSystem.current.SetSelectedGameObject(firstSelect);
+
+        ControlContext.Instance.KeyUnlock();
     }
 
     /// <summary>

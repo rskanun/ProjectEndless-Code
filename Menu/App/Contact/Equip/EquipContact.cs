@@ -1,12 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EquipContact : Contact
 {
+    [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI nameField;
     [SerializeField] private TextMeshProUGUI statField;
@@ -15,6 +16,31 @@ public class EquipContact : Contact
     [Space]
     [SerializeField] private TextMeshProUGUI categoryField;
     [SerializeField] private TextMeshProUGUI descriptionField;
+
+    // 애니메이션 설정
+    private float expandSize = 6.3f;
+    private float expandDuration = 0.35f;
+    private float fadeDuration = 0.12f;
+    private Sequence selectSeq;
+
+    private float originHeight;
+
+    private void Start()
+    {
+        if (rectTransform == null) return;
+
+        originHeight = rectTransform.rect.height;
+    }
+
+    public override void OnSelect(BaseEventData eventData)
+    {
+        ShowDetails();
+    }
+
+    public override void OnDeselect(BaseEventData eventData)
+    {
+        HideDetails();
+    }
 
     public void UpdateInfo(Equip equip, int count, bool isEquipped)
     {
@@ -33,10 +59,17 @@ public class EquipContact : Contact
     {
         List<string> stats = new List<string>();
 
-        if (equip.STR != 0) stats.Add($"STR {(equip.STR > 0 ? "+" : "-")}{Mathf.Abs(equip.STR)}");
-        if (equip.DEF != 0) stats.Add($"DEF {(equip.DEF > 0 ? "+" : "-")}{Mathf.Abs(equip.DEF)}");
-        if (equip.AGI != 0) stats.Add($"AGI {(equip.AGI > 0 ? "+" : "-")}{Mathf.Abs(equip.AGI)}");
-        if (equip.DEX != 0) stats.Add($"DEX {(equip.DEX > 0 ? "+" : "-")}{Mathf.Abs(equip.DEX)}");
+        if (equip.STR != 0)
+            stats.Add($"STR {(equip.STR > 0 ? "+" : "-")}{Mathf.Abs(equip.STR)}");
+
+        if (equip.DEF != 0)
+            stats.Add($"DEF {(equip.DEF > 0 ? "+" : "-")}{Mathf.Abs(equip.DEF)}");
+
+        if (equip.AGI != 0)
+            stats.Add($"AGI {(equip.AGI > 0 ? "+" : "-")}{Mathf.Abs(equip.AGI)}");
+
+        if (equip.DEX != 0)
+            stats.Add($"DEX {(equip.DEX > 0 ? "+" : "-")}{Mathf.Abs(equip.DEX)}");
 
         // 완성된 문장의 너비 초과분 자르기
         return string.Join(" · ", stats);
@@ -94,13 +127,76 @@ public class EquipContact : Contact
     /// <summary>
     /// 해당 아이템의 자세한 설명 띄우기
     /// </summary>
-    private void ShowDetails()
+    public void ShowDetails()
     {
+        // 확장 크기 조정
+        float fieldHeight = descriptionField.GetPreferredValues().y;
+        float height = fieldHeight + expandSize + rectTransform.rect.height;
+
+        // 기존 정보 비활성화
+        statField.alpha = 0.0f;
+
+        // 디테일 정보 비활성화 상태로 시작
+        categoryField.alpha = 0.0f;
+        descriptionField.alpha = 0.0f;
+
+        // 애니메이션 실행
+        selectSeq = DOTween.Sequence()
+            .Append(FadeOutSummaryAnimation())
+            .Append(ExpandObjectTween(height))
+            .Append(FadeInDetailAnimation());
     }
 
-    private IEnumerator ExpandObject()
+    private Tween FadeOutSummaryAnimation()
     {
-        DOTween expandTween = DOTween.Sequence()
-            .
+        return statField.DOFade(0.0f, fadeDuration);
+    }
+
+    private Tween ExpandObjectTween(float height)
+    {
+        Vector2 endValue = new Vector2(rectTransform.sizeDelta.x, height);
+
+        return rectTransform.DOSizeDelta(endValue, expandDuration).SetEase(Ease.OutSine);
+    }
+
+    private Sequence FadeInDetailAnimation()
+    {
+        return DOTween.Sequence()
+            .Join(categoryField.DOFade(1.0f, fadeDuration))
+            .Join(descriptionField.DOFade(1.0f, fadeDuration));
+    }
+
+    /// <summary>
+    /// 해당 아이템의 간단한 설명 띄우기
+    /// </summary>
+    public void HideDetails()
+    {
+        // 현재 진행 중인 애니메이션이 있을 수 있으니 제거
+        selectSeq.Kill();
+
+        // 애니메이션 실행
+        DOTween.Sequence()
+            .AppendCallback(() =>
+            {
+                Vector2 size = rectTransform.sizeDelta;
+                size.y = originHeight;
+                rectTransform.sizeDelta = size;
+            })
+            .Append(FadeOutDetailAnimation());
+    }
+
+    private Sequence FadeOutDetailAnimation()
+    {
+        return DOTween.Sequence()
+            .AppendCallback(() =>
+            {
+                // 디테일 정보 비활성화
+                categoryField.alpha = 0.0f;
+                descriptionField.alpha = 0.0f;
+
+                // 기본 정보 비활성화 상태로 시작
+                statField.alpha = 0.0f;
+            })
+            .Append(statField.DOFade(1.0f, fadeDuration));
     }
 }

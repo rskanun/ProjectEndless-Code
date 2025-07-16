@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Diary : MonoBehaviour
@@ -86,5 +87,15 @@ public class Diary : MonoBehaviour
         if (character.Stat.SAN >= 60) return "안정";
         else if (character.Stat.SAN >= 20) return "불안";
         else return "붕괴";
+    }
+
+    /// <summary>
+    /// 다이어리 내 정보를 확인하거나 변경할 특정 버튼 선택
+    /// </summary>
+    /// <param name="state">선택될 버튼 종류</param>
+    public void SelectButton(ContactState state)
+    {
+        // 임시로 무조건 무기만
+        EventSystem.current.SetSelectedGameObject(weaponField.gameObject);
     }
 }
