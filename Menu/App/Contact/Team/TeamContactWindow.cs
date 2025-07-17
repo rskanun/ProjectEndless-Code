@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class TeamContactWindow : ContactWindow
 {
+    [SerializeField] protected NavigationGroup naviGroup;
+
     [Header("연락처 오브젝트")]
     [SerializeField] private List<GameObject> fadeOutObjects;
     [SerializeField] private GameObject contactPrefab;
@@ -22,7 +24,7 @@ public class TeamContactWindow : ContactWindow
     private void Awake()
     {
         // 플레이어 오브젝트의 핸들러 등록
-        playerContact.SetSelectAction(() => app.OnSelectCharacter(PartyData.Instance.Player));
+        playerContact.SetSelectAction(() => OnSelectContact(playerContact.gameObject, PartyData.Instance.Player));
         playerContact.SetSubmitHandler(() => ModifyCharacter(PartyData.Instance.Player));
     }
 
@@ -67,7 +69,7 @@ public class TeamContactWindow : ContactWindow
 
             // 정보 및 핸들러 등록
             contact.UpdateInfo(character);
-            contact.SetSelectAction(() => app.OnSelectCharacter(character));
+            contact.SetSelectAction(() => OnSelectContact(contactObj, character));
             contact.SetSubmitHandler(() => ModifyCharacter(character));
 
             // 후에 파괴를 위한 리스트에 추가
@@ -77,18 +79,24 @@ public class TeamContactWindow : ContactWindow
             if (character == app.SelectCharacter) lastSelected = contactObj;
         }
 
+        // 버튼 네비게이션 설정
+        naviGroup.SetupChildsNavigation();
+
         // 메뉴에 포커싱 된 상태라면, 이전에 선택한 캐릭터, 혹은 플레이어 먼저 선택
         if (app.State == ContactState.Party)
             EventSystem.current.SetSelectedGameObject(lastSelected);
+    }
+
+    private void OnSelectContact(GameObject contact, CharacterData character)
+    {
+        app.OnSelectCharacter(character);
+        UpdateScrollPosition(contact);
     }
 
     private void ModifyCharacter(CharacterData character)
     {
         // 해당 캐릭터가 사망했다면 목록 불러오기 X
         if (character.IsDead) return;
-
-        // 선택 해제
-        EventSystem.current.SetSelectedGameObject(null);
 
         // 다이어리로 넘어가기
         app.FocusDiary();
@@ -121,9 +129,20 @@ public class TeamContactWindow : ContactWindow
         // 레이아웃 그룹 잠시 끄기
         layoutGroup.enabled = false;
 
+        // 화면에 표시되는 y 경계값 찾기
+        float minY = -content.localPosition.y;
+        float maxY = -content.localPosition.y - viewportRect.rect.height;
+
+        int count = 0; // 애니메이션이 실행되는 오브젝트 개수
         for (int i = 0; i < content.childCount; i++)
         {
             if (content.GetChild(i) is not RectTransform item) continue;
+
+            float contactMinY = item.localPosition.y;
+            float contactMaxY = item.localPosition.y - item.rect.height;
+
+            // 경계값 밖의 오브젝트는 애니메이션 적용 X
+            if (minY <= contactMaxY || maxY >= contactMinY) continue;
 
             GameObject obj = item.gameObject;
 
@@ -136,7 +155,7 @@ public class TeamContactWindow : ContactWindow
                 if (cg != null)
                 {
                     cg.DOFade(0.0f, duration)
-                        .SetDelay(i * interval);
+                        .SetDelay(count++ * interval);
                 }
             }
             else
@@ -145,13 +164,13 @@ public class TeamContactWindow : ContactWindow
 
                 // 나머지 오브젝트는 왼쪽으로 빠지며 페이드 아웃되는 애니메이션 실행
                 item.DOAnchorPos(targetPos, duration)
-                    .SetDelay(i * interval)
+                    .SetDelay(count++ * interval)
                     .SetEase(Ease.OutCubic);
             }
         }
 
         // 애니메이션 종료까지 대기
-        yield return new WaitForSeconds(content.childCount * interval + duration);
+        yield return new WaitForSeconds(count * interval + duration);
 
         // 애니메이션 종료 후 레이아웃 그룹 다시 작동
         layoutGroup.enabled = true;

@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class Diary : MonoBehaviour
 {
+    [SerializeField] private GameObject firstSelect;
+
+    [Space]
     [SerializeField] private GameObject deadMark;
 
     [Header("프로필 구성")]
@@ -34,8 +37,7 @@ public class Diary : MonoBehaviour
     [Header("스킬 구성")]
     [SerializeField] private List<SkillInfo> skillFields;
 
-    private CharacterData _selectChracter;
-    public CharacterData SeelctCharacter => _selectChracter;
+    private GameObject lastSelected;
 
     public void UpdateDiary(CharacterData character)
     {
@@ -90,12 +92,18 @@ public class Diary : MonoBehaviour
     }
 
     /// <summary>
-    /// 다이어리 내 정보를 확인하거나 변경할 특정 버튼 선택
+    /// 다이어리 내 마지막으로 선택한 버튼 선택
     /// </summary>
-    /// <param name="state">선택될 버튼 종류</param>
-    public void SelectButton(ContactState state)
+    public void SelectLastButton()
     {
-        // 임시로 무조건 무기만
-        EventSystem.current.SetSelectedGameObject(weaponField.gameObject);
+        // 이전에 선택한 버튼이 없다면 먼저 선택할 버튼 선택
+        if (lastSelected == null) lastSelected = firstSelect;
+
+        EventSystem.current.SetSelectedGameObject(lastSelected);
+    }
+
+    public void SetLastSelectedButton(GameObject selectButton)
+    {
+        lastSelected = selectButton;
     }
 }

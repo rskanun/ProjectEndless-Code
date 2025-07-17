@@ -17,6 +17,7 @@ public class ContactApp : App
     [SerializeField] private Diary diary;
     [SerializeField] private TeamContactWindow mainWindow;
     [SerializeField] private WeaponContactWindow weaponWindow;
+    [SerializeField] private OffWeaponContactWindow offWeaponWindow;
     [SerializeField] private ContactWindow accessoryWindow;
     [SerializeField] private ContactWindow skillWindow;
 
@@ -40,6 +41,7 @@ public class ContactApp : App
         {
             { ContactState.Party, mainWindow },
             { ContactState.Weapon, weaponWindow },
+            { ContactState.OffWeapon, offWeaponWindow },
             { ContactState.Accessory, accessoryWindow },
             { ContactState.Skill, skillWindow }
         };
@@ -56,14 +58,19 @@ public class ContactApp : App
     /// </summary>
     public void ShowWeapons()
     {
-        // 애니메이션이 실행 중이라면 창 변경 중지
-        if (currentWindow?.IsTweening == true) return;
-
         ShowContact(ContactState.Weapon);
+    }
+
+    public void ShowOffWeapons()
+    {
+        ShowContact(ContactState.OffWeapon);
     }
 
     private void ShowContact(ContactState state)
     {
+        // 애니메이션이 실행 중이라면 창 변경 중지
+        if (currentWindow?.IsTweening == true) return;
+
         // 이전 화면이 비활성화 되고 난 후에 바꿀 화면 활성화
         StartCoroutine(SwapWindow(state));
     }
@@ -71,9 +78,9 @@ public class ContactApp : App
     private IEnumerator SwapWindow(ContactState state)
     {
         // 현재 활성화된 목록과 동일한 경우 넘어가기
-        if (currentWindow != null && this._state == state) yield break;
+        if (currentWindow != null && _state == state) yield break;
 
-        this._state = state;
+        _state = state;
 
         // 이전 화면 비활성화
         currentWindow?.CloseWindow();
@@ -140,7 +147,7 @@ public class ContactApp : App
     public void FocusDiary()
     {
         // 다이어리 내 버튼 선택
-        diary.SelectButton(_state);
+        diary.SelectLastButton();
 
         // 현재 상태 변경
         _state = ContactState.Diary;

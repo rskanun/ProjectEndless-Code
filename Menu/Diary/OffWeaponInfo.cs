@@ -8,6 +8,6 @@ public class OffWeaponInfo : EquipInfo
     }
     protected override void ShowEquips()
     {
-        Debug.Log("Show Off Weapons");
+        app.ShowOffWeapons();
     }
 }

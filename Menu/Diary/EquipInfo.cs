@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubmitHandler
 {
     [SerializeField] protected ContactApp app;
+    [SerializeField] protected Diary diary;
     [Space]
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI nameField;
@@ -66,8 +67,13 @@ public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
 
     private void SubmitHandler()
     {
+        여기 문제
+
         // 해당 장비칸이 선택 되었다면 변경 모드로 들어가기
         isModifyMode = true;
+
+        // 마지막 선택 버튼으로 설정
+        diary.SetLastSelectedButton(gameObject);
 
         // 장비 목록 띄우기
         ShowEquips();

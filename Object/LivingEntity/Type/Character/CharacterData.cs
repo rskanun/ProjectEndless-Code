@@ -67,6 +67,10 @@ public class CharacterData
 
     [Header("장비 정보")]
     [SerializeField]
+    private WeaponType _usableWeaponType;
+    public WeaponType UsableWeaponType => _usableWeaponType;
+
+    [SerializeField]
     private Weapon _mainWeapon;
     public Weapon MainWeapon
     {

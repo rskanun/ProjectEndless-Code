@@ -24,17 +24,27 @@ public class EquipContact : Contact
     private Sequence selectSeq;
 
     private float originHeight;
+    public float DetailSize { get; private set; }
+
+    [ContextMenu("Test")]
+    public void Test()
+    {
+        Debug.Log(transform.localPosition.y);
+    }
 
     private void Start()
     {
         if (rectTransform == null) return;
 
         originHeight = rectTransform.rect.height;
+
+        DetailSize = descriptionField.GetPreferredValues().y + expandSize + rectTransform.rect.height;
     }
 
     public override void OnSelect(BaseEventData eventData)
     {
         ShowDetails();
+        base.OnSelect(eventData);
     }
 
     public override void OnDeselect(BaseEventData eventData)
@@ -129,10 +139,6 @@ public class EquipContact : Contact
     /// </summary>
     public void ShowDetails()
     {
-        // 확장 크기 조정
-        float fieldHeight = descriptionField.GetPreferredValues().y;
-        float height = fieldHeight + expandSize + rectTransform.rect.height;
-
         // 기존 정보 비활성화
         statField.alpha = 0.0f;
 
@@ -143,7 +149,7 @@ public class EquipContact : Contact
         // 애니메이션 실행
         selectSeq = DOTween.Sequence()
             .Append(FadeOutSummaryAnimation())
-            .Append(ExpandObjectTween(height))
+            .Append(ExpandObjectTween(DetailSize))
             .Append(FadeInDetailAnimation());
     }
 
