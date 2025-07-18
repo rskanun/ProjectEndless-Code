@@ -17,8 +17,11 @@ public class WeaponContactWindow : ContactWindow
     private List<GameObject> contactList = new();
     private Dictionary<GameObject, float> contactsY = new();
     private GameObject firstSelect;
+    private EquipContact currentEquip;
 
     private float originContentSize;
+
+    public virtual WeaponType ShowType => WeaponType.Main;
 
     private void OnDisable()
     {
@@ -41,9 +44,10 @@ public class WeaponContactWindow : ContactWindow
         foreach ((Item item, int count) in InventoryData.Instance.GetItems(ItemType.Weapon))
         {
             Weapon weapon = item as Weapon;
+            CharacterData character = app.SelectCharacter;
 
             // 해당 칸에 선택된 캐릭터가 쓸 수 있는 무기 목록만 띄우기
-            if (app.SelectCharacter.UsableWeaponType != weapon.WeaponType || !IsEquipType(weapon)) continue;
+            if (!IsEquipType(character.UsableWeaponType, weapon.WeaponType)) continue;
 
             // 해당 무기 정보를 토대로 한 연락처(=정보) 오브젝트 생성
             GameObject contactObj = Instantiate(contactPrefab, contactTrans);
@@ -52,13 +56,21 @@ public class WeaponContactWindow : ContactWindow
             // 정보 및 핸들러 등록
             contact.UpdateInfo(weapon, count, IsEquipAnyone(weapon));
             contact.SetSelectAction(() => UpdateScroll(contactObj));
+            contact.SetSubmitHandler(() => OnClickContact(contact, character, weapon));
 
             // 후에 파괴를 위한 리스트에 추가
             contactList.Add(contactObj);
 
             // 해당 캐릭터가 들고 있는 무기를 먼저, 없다면 가장 첫 무기를 먼저 선택
-            if (app.SelectCharacter.MainWeapon == weapon) firstSelect = contactObj;
-            if (firstSelect == null) firstSelect = contactObj;
+            bool isEquipped = IsEquip(character, weapon);
+            if (firstSelect == null || isEquipped)
+            {
+                firstSelect = contactObj;
+
+                // 캐릭터가 들고 있는 장비는 저장해놓기
+                if (isEquipped)
+                    currentEquip = contact;
+            }
         }
 
         // 목록 사이즈 업데이트
@@ -74,9 +86,40 @@ public class WeaponContactWindow : ContactWindow
         naviGroup.SetupChildsNavigation();
     }
 
-    protected virtual bool IsEquipType(Weapon weapon)
+    private bool IsEquipType(WeaponType usableType, WeaponType weaponType)
     {
-        return weapon.IsMainType;
+        // 아래의 조건을 만족하는 무기 타입인지 리턴
+        // 1. 해당 창에서 띄울 타입 혹은 둘 다 낄 수 있는 무기 타입인지
+        // 2. 플레이어가 착용할 수 있는 타입인지
+        return ((ShowType | WeaponType.Both) & usableType & weaponType) != 0;
+    }
+
+    private void OnClickContact(EquipContact contact, CharacterData character, Weapon selectWeapon)
+    {
+        // 장비 장착
+        EquipItem(character, selectWeapon);
+
+        // 이전 장비 장착 마크 해제
+        currentEquip?.SetEquipMark(false);
+
+        // 현재 장비 업데이트
+        currentEquip = contact;
+
+        // 현재 장비 장착 마크 설정
+        currentEquip.SetEquipMark(true);
+
+        // 장비 교체 후 알림
+        GameEventManager.Instance.NotifyEquipUpdate();
+    }
+
+    protected virtual void EquipItem(CharacterData character, Weapon selectWeapon)
+    {
+        character.MainWeapon = selectWeapon;
+    }
+
+    protected virtual bool IsEquip(CharacterData chr, Weapon weapon)
+    {
+        return chr.MainWeapon == weapon;
     }
 
     private void ContentResize()

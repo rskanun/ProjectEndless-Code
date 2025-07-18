@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 
 public class ControlContext
 {
@@ -156,7 +157,7 @@ public class ControlContext
         KeyInput.Battle.Disable();
 
         // Input System UI Input Module 비활성화
-        EventSystem.current.sendNavigationEvents = false;
+        EventSystem.current.GetComponent<InputSystemUIInputModule>().enabled = false;
     }
 
     public void KeyUnlock()
@@ -169,6 +170,6 @@ public class ControlContext
         KeyInput.Battle.Enable();
 
         // Input System UI Input Module 재활성화
-        EventSystem.current.sendNavigationEvents = true;
+        EventSystem.current.GetComponent<InputSystemUIInputModule>().enabled = true;
     }
 }

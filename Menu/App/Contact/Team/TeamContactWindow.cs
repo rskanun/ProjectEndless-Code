@@ -23,9 +23,12 @@ public class TeamContactWindow : ContactWindow
 
     private void Awake()
     {
+        CharacterData playerData = PartyData.Instance.Player;
+
         // 플레이어 오브젝트의 핸들러 등록
-        playerContact.SetSelectAction(() => OnSelectContact(playerContact.gameObject, PartyData.Instance.Player));
-        playerContact.SetSubmitHandler(() => ModifyCharacter(PartyData.Instance.Player));
+        playerContact.SetSelectAction(() => OnSelectContact(playerContact.gameObject, playerData));
+        playerContact.SetClickHandler(() => OnClickContact());
+        playerContact.SetSubmitHandler(() => ModifyCharacter(playerData));
     }
 
     private void OnDisable()
@@ -70,6 +73,7 @@ public class TeamContactWindow : ContactWindow
             // 정보 및 핸들러 등록
             contact.UpdateInfo(character);
             contact.SetSelectAction(() => OnSelectContact(contactObj, character));
+            contact.SetClickHandler(() => OnClickContact());
             contact.SetSubmitHandler(() => ModifyCharacter(character));
 
             // 후에 파괴를 위한 리스트에 추가
@@ -89,8 +93,19 @@ public class TeamContactWindow : ContactWindow
 
     private void OnSelectContact(GameObject contact, CharacterData character)
     {
+        lastSelected = contact;
+
         app.OnSelectCharacter(character);
         UpdateScrollPosition(contact);
+    }
+
+    private void OnClickContact()
+    {
+        // 파티 목록 상태에서 클릭한 경우는 무시
+        if (app.State == ContactState.Party) return;
+
+        // 메뉴에 초점 두기
+        app.FocusContactMenu();
     }
 
     private void ModifyCharacter(CharacterData character)

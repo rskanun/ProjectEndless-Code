@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
@@ -5,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class EquipContact : Contact
+public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
 {
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Image icon;
@@ -17,6 +18,8 @@ public class EquipContact : Contact
     [SerializeField] private TextMeshProUGUI categoryField;
     [SerializeField] private TextMeshProUGUI descriptionField;
 
+    private Action submitHandler;
+
     // 애니메이션 설정
     private float expandSize = 6.3f;
     private float expandDuration = 0.35f;
@@ -25,12 +28,6 @@ public class EquipContact : Contact
 
     private float originHeight;
     public float DetailSize { get; private set; }
-
-    [ContextMenu("Test")]
-    public void Test()
-    {
-        Debug.Log(transform.localPosition.y);
-    }
 
     private void Start()
     {
@@ -50,6 +47,16 @@ public class EquipContact : Contact
     public override void OnDeselect(BaseEventData eventData)
     {
         HideDetails();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        EventSystem.current.SetSelectedGameObject(gameObject);
+    }
+
+    public void SetEquipMark(bool isActive)
+    {
+        equipMark.SetActive(isActive);
     }
 
     public void UpdateInfo(Equip equip, int count, bool isEquipped)
@@ -132,6 +139,21 @@ public class EquipContact : Contact
         if (equip.Skill != null) description += "\n고유스킬: " + equip.Skill.Name;
 
         return description;
+    }
+
+    public void OnSubmit(BaseEventData eventData)
+    {
+        Submit();
+    }
+
+    public void Submit()
+    {
+        submitHandler?.Invoke();
+    }
+
+    public void SetSubmitHandler(Action handler)
+    {
+        submitHandler = handler;
     }
 
     /// <summary>

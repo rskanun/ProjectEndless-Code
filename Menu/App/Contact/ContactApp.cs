@@ -24,7 +24,7 @@ public class ContactApp : App
     private Dictionary<ContactState, ContactWindow> windows;
 
     private ContactWindow currentWindow;
-    private ContactState _state;
+    public ContactState _state;
     public ContactState State => _state;
     public CharacterData SelectCharacter { get; private set; }
 
@@ -146,11 +146,11 @@ public class ContactApp : App
     /// </summary>
     public void FocusDiary()
     {
-        // 다이어리 내 버튼 선택
-        diary.SelectLastButton();
-
         // 현재 상태 변경
         _state = ContactState.Diary;
+
+        // 다이어리 내 버튼 선택
+        diary.SelectLastButton();
     }
 
     /// <summary>
@@ -161,7 +161,18 @@ public class ContactApp : App
         // 현재 상태 변경
         _state = ContactState.Party;
 
+        // 다이어리 내 버튼 선택 마크 제거
+        diary.LastSelectedInfo?.OnDeselect(null);
+
         // 선택된 캐릭터 선택으로 넘어가기
         mainWindow.SelectLastSelectedContact();
+    }
+
+    /// <summary>
+    /// 현재 선택된 캐릭터의 다이어리 정보 업데이트
+    /// </summary>
+    public void UpdateDiaryInfo()
+    {
+        diary.UpdateDiary(SelectCharacter);
     }
 }

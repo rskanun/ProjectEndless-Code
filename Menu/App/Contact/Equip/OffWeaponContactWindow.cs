@@ -1,7 +1,17 @@
 public class OffWeaponContactWindow : WeaponContactWindow
 {
-    protected override bool IsEquipType(Weapon weapon)
+    public override WeaponType ShowType => WeaponType.Off;
+
+    protected override void EquipItem(CharacterData character, Weapon selectWeapon)
     {
-        return weapon.IsOffType;
+        character.OffWeapon = selectWeapon;
+
+        // 장비 교체 후 알림
+        GameEventManager.Instance.NotifyEquipUpdate();
+    }
+
+    protected override bool IsEquip(CharacterData chr, Weapon weapon)
+    {
+        return chr.OffWeapon == weapon;
     }
 }

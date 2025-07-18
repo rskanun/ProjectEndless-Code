@@ -1,33 +1,36 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Flags]
 public enum WeaponType
 {
-    BastardSword,
-    Dagger
+    None = 0,
+
+    // 메인
+    BastardSword = 1 << 0,
+    Katana = 1 << 1,
+    Main = BastardSword | Katana,
+
+    // 보조
+    Shield = 1 << 5,
+    Off = Shield,
+
+    // 둘다
+    Dagger = 1 << 10,
+    Gun = 1 << 11,
+    Both = Dagger | Gun
 }
 
 public static class WeaponHelper
 {
-    private static readonly HashSet<WeaponType> MainTypes = new()
+    private static HashSet<WeaponType> twoHand = new()
     {
-        WeaponType.BastardSword,
-        WeaponType.Dagger,
+        WeaponType.BastardSword, WeaponType.Katana
     };
 
-    private static readonly HashSet<WeaponType> OffTypes = new()
+    public static bool IsTwoHand(this WeaponType type)
     {
-        WeaponType.Dagger,
-    };
-
-    public static bool IsMain(this WeaponType type)
-    {
-        return MainTypes.Contains(type);
-    }
-
-    public static bool IsOff(this WeaponType type)
-    {
-        return OffTypes.Contains(type);
+        return twoHand.Contains(type);
     }
 }
 
@@ -35,8 +38,6 @@ public static class WeaponHelper
 public class Weapon : Equip
 {
     public override ItemType Type => ItemType.Weapon;
-    public bool IsMainType => WeaponType.IsMain();
-    public bool IsOffType => WeaponType.IsOff();
 
     [Header("무기 아이템 정보")]
     [SerializeField]

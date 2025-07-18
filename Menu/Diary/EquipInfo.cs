@@ -9,30 +9,41 @@ public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
     [SerializeField] protected ContactApp app;
     [SerializeField] protected Diary diary;
     [Space]
-    [SerializeField] private Image icon;
-    [SerializeField] private TextMeshProUGUI nameField;
-    [SerializeField] private Image selectMark;
+    [SerializeField] protected Image icon;
+    [SerializeField] protected TextMeshProUGUI nameField;
+    [SerializeField] protected Image selectMark;
 
-    private bool isModifyMode;
+    protected bool isAvailable = true;
+    public bool IsAvailable => isAvailable;
+    private bool isSelect;
 
-    public void UpdateInfo(Equip equip)
+    private void OnDisable()
+    {
+        DeactiveSelectMark();
+    }
+
+    public virtual void UpdateInfo(Equip equip)
     {
         nameField.text = equip != null ? equip.Name : GetTagName();
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        // 변경 모드에서 선택된 거라면 모드만 해제
-        if (isModifyMode) isModifyMode = false;
-        else ActiveSelectMark();
+        // 현재 선택된 상태라면 재선택 X
+        if (isSelect) return;
+
+        ActiveSelectMark();
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        // 해당 칸의 장비를 변경 중이라면 선택 표식 해제 X
-        if (isModifyMode) return;
+        if (app.State != ContactState.Party || !isSelect) return;
 
+        // 파티 메뉴로 돌아왔으면 선택 제거
         DeactiveSelectMark();
+
+        // 마지막 선택 정보 제거
+        diary.SetLastSelectedButton(null);
     }
 
     public void OnSubmit(BaseEventData eventData)
@@ -42,19 +53,27 @@ public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
 
     public void OnClick()
     {
-        // select -> submit와 같은 순서로 진행
-        ActiveSelectMark();
         SubmitHandler();
     }
 
     private void ActiveSelectMark()
     {
+        isSelect = true;
+
+        // 이전 버튼 선택마크 비활성화
+        diary.LastSelectedInfo?.DeactiveSelectMark();
+
+        // 해당 정보칸을 마지막 선택 정보로 설정
+        diary.SetLastSelectedButton(this);
+
+        // 선택 이펙트 활성화
         selectMark.gameObject.SetActive(true);
         selectMark.DOFade(0.25f, 0.5f).SetLoops(-1, LoopType.Yoyo);
     }
 
     private void DeactiveSelectMark()
     {
+        isSelect = false;
         selectMark.DOKill();
 
         // 원래 알파값으로 되돌리기
@@ -67,13 +86,8 @@ public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
 
     private void SubmitHandler()
     {
-        여기 문제
-
-        // 해당 장비칸이 선택 되었다면 변경 모드로 들어가기
-        isModifyMode = true;
-
-        // 마지막 선택 버튼으로 설정
-        diary.SetLastSelectedButton(gameObject);
+        // 사용할 수 없는 칸이면 장비 및 교체 X
+        if (!IsAvailable) return;
 
         // 장비 목록 띄우기
         ShowEquips();

@@ -57,6 +57,7 @@ public class GameEventManager : ScriptableObject
     [SerializeField] private GameEvent _areaMoveEvent;
     [SerializeField] private GameEvent _dataLoadEvent;
     [SerializeField] private GameEvent _fieldReturnEvent;
+    [SerializeField] private GameEvent _equipUpdateEvent;
 
     [Header("전투 이벤트")]
     [SerializeField] private GameEvent _sequenceUpdateEvent;
@@ -103,6 +104,14 @@ public class GameEventManager : ScriptableObject
     public void NotifyFieldReturned()
     {
         _fieldReturnEvent.NotifyUpdate();
+    }
+
+    /// <summary>
+    /// 캐릭터의 장비 변경 알림
+    /// </summary>
+    public void NotifyEquipUpdate()
+    {
+        _equipUpdateEvent.NotifyUpdate();
     }
 
     /************************************************************

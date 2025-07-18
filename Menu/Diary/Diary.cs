@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Diary : MonoBehaviour
 {
-    [SerializeField] private GameObject firstSelect;
+    [SerializeField] private EquipInfo firstSelectInfo;
 
     [Space]
     [SerializeField] private GameObject deadMark;
@@ -37,7 +37,8 @@ public class Diary : MonoBehaviour
     [Header("스킬 구성")]
     [SerializeField] private List<SkillInfo> skillFields;
 
-    private GameObject lastSelected;
+    private EquipInfo _lastSelectedInfo;
+    public EquipInfo LastSelectedInfo => _lastSelectedInfo;
 
     public void UpdateDiary(CharacterData character)
     {
@@ -97,13 +98,13 @@ public class Diary : MonoBehaviour
     public void SelectLastButton()
     {
         // 이전에 선택한 버튼이 없다면 먼저 선택할 버튼 선택
-        if (lastSelected == null) lastSelected = firstSelect;
+        if (_lastSelectedInfo == null) _lastSelectedInfo = firstSelectInfo;
 
-        EventSystem.current.SetSelectedGameObject(lastSelected);
+        EventSystem.current.SetSelectedGameObject(_lastSelectedInfo.gameObject);
     }
 
-    public void SetLastSelectedButton(GameObject selectButton)
+    public void SetLastSelectedButton(EquipInfo selectInfo)
     {
-        lastSelected = selectButton;
+        _lastSelectedInfo = selectInfo;
     }
 }

@@ -1,10 +1,8 @@
 using System;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
+public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerClickHandler
 {
 
     private Action clickHandler;
@@ -25,7 +23,7 @@ public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler
         clickHandler = handler;
     }
 
-    public void OnClick()
+    public void OnPointerClick(PointerEventData eventData)
     {
         clickHandler?.Invoke();
     }
