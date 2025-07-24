@@ -69,17 +69,7 @@ public class Diary : MonoBehaviour
         AccesssoryField2.UpdateInfo(character.Accessory2);
 
         // 스킬 설정
-        for (int i = 0; i < skillFields.Count; i++)
-        {
-            // 이전 비활성화 된 칸 재활성화
-            skillFields[i].gameObject.SetActive(true);
-
-            // 플레이어가 가진 스킬 개수에 맞춰 칸에 스킬 넣기
-            if (i < character.UsableSkills.Count)
-                skillFields[i].UpdateInfo(character.UsableSkills[i]);
-            else // 스킬 개수보다 적으면 해당 칸 비활성화
-                skillFields[i].gameObject.SetActive(false);
-        }
+        InitSkillInfo(character);
     }
 
     private string GetSanToText(CharacterData character)
@@ -90,6 +80,25 @@ public class Diary : MonoBehaviour
         if (character.Stat.SAN >= 60) return "안정";
         else if (character.Stat.SAN >= 20) return "불안";
         else return "붕괴";
+    }
+
+    private void InitSkillInfo(CharacterData character)
+    {
+        for (int i = 0; i < skillFields.Count; i++)
+        {
+            // 유저가 가진 스킬 개수 이상의 슬롯은 비활성화
+            if (i >= character.UsableSkills.Count)
+            {
+                skillFields[i].gameObject.SetActive(false);
+                continue;
+            }
+
+            // 이전 비활성화 된 칸 재활성화
+            skillFields[i].gameObject.SetActive(true);
+
+            // 플레이어가 가진 스킬 개수에 맞춰 칸에 스킬 넣기
+            skillFields[i].UpdateInfo(character.UsableSkills[i]);
+        }
     }
 
     /// <summary>

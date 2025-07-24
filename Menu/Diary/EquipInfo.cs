@@ -14,7 +14,6 @@ public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
     [SerializeField] protected Image selectMark;
 
     protected bool isAvailable = true;
-    public bool IsAvailable => isAvailable;
     private bool isSelect;
 
     private void OnDisable()
@@ -87,7 +86,7 @@ public abstract class EquipInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
     private void SubmitHandler()
     {
         // 사용할 수 없는 칸이면 장비 및 교체 X
-        if (!IsAvailable) return;
+        if (!isAvailable) return;
 
         // 장비 목록 띄우기
         ShowEquips();

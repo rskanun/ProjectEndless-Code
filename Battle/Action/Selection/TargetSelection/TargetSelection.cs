@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 
 public enum TargetType
 {
-    FrontEnemy,     // 적 진형 선열 1명
+    FrontEnemy,     // 적 진형 전열 1명
     Enemy,          // 적 진형 1명
     EnemyParty,     // 모든 적
-    FrontMember,    // 파티 진형 선열 1명
+    FrontMember,    // 파티 진형 전열 1명
     Member,         // 파티 맴버 1명
     PlayerParty,    // 모든 파티 맴버
     One,            // 모든 엔티티 중 하나
@@ -187,5 +187,25 @@ public class TargetSelection : MonoBehaviour, ISelection
     {
         // 선택된 타겟들을 보내기
         actionManager.SelectTargets(TargetSelectButtonManager.Instance.GetSelectedTargets());
+    }
+}
+
+public static class TargetHelper
+{
+    public static string GetTypeName(this TargetType type)
+    {
+        return type switch
+        {
+            TargetType.FrontEnemy => "전열 단일 적",
+            TargetType.Enemy => "단일 적",
+            TargetType.EnemyParty => "모든 적",
+            TargetType.FrontMember => "전열 단일 아군",
+            TargetType.Member => "단일 아군",
+            TargetType.PlayerParty => "모든 아군",
+            TargetType.One => "단일 개체",
+            TargetType.Every => "전체",
+            TargetType.Self => "자신",
+            _ => ""
+        };
     }
 }

@@ -19,6 +19,7 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
     [SerializeField] private TextMeshProUGUI descriptionField;
 
     private Action submitHandler;
+    private bool isHover;
 
     // 애니메이션 설정
     private float expandSize = 6.3f;
@@ -40,18 +41,32 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
 
     public override void OnSelect(BaseEventData eventData)
     {
+        // hover에 의한 선택이면 기존 선택 흐름 X
+        if (isHover) return;
+
         ShowDetails();
         base.OnSelect(eventData);
     }
 
     public override void OnDeselect(BaseEventData eventData)
     {
+        isHover = false;
+
         HideDetails();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (isHover) return;
+
+        // OnSelect 실행 방지용
+        isHover = true;
+
+        // 해당 오브젝트 선택
         EventSystem.current.SetSelectedGameObject(gameObject);
+
+        // 자세한 정보 표시
+        ShowDetails();
     }
 
     public void SetEquipMark(bool isActive)
@@ -167,6 +182,9 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
         // 디테일 정보 비활성화 상태로 시작
         categoryField.alpha = 0.0f;
         descriptionField.alpha = 0.0f;
+
+        // 현재 진행 중인 애니메이션이 있을 수 있으니 제거
+        selectSeq.Kill();
 
         // 애니메이션 실행
         selectSeq = DOTween.Sequence()

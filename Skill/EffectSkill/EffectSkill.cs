@@ -31,4 +31,12 @@ public class EffectSkill : Skill
             target.AddEffect(Effect);
         }
     }
+
+    public override string GetTypeName()
+    {
+        if (_effect is Buff)
+            return "버프 스킬";
+
+        return "디버프 스킬";
+    }
 }

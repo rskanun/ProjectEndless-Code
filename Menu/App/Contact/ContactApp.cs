@@ -8,7 +8,8 @@ public enum ContactState
     Diary,
     Weapon,
     OffWeapon,
-    Accessory,
+    Accessory1,
+    Accessory2,
     Skill
 }
 
@@ -18,13 +19,13 @@ public class ContactApp : App
     [SerializeField] private TeamContactWindow mainWindow;
     [SerializeField] private WeaponContactWindow weaponWindow;
     [SerializeField] private OffWeaponContactWindow offWeaponWindow;
-    [SerializeField] private ContactWindow accessoryWindow;
+    [SerializeField] private AccessoryContactWindow accessoryWindow;
     [SerializeField] private ContactWindow skillWindow;
 
     private Dictionary<ContactState, ContactWindow> windows;
 
     private ContactWindow currentWindow;
-    public ContactState _state;
+    private ContactState _state;
     public ContactState State => _state;
     public CharacterData SelectCharacter { get; private set; }
 
@@ -42,7 +43,8 @@ public class ContactApp : App
             { ContactState.Party, mainWindow },
             { ContactState.Weapon, weaponWindow },
             { ContactState.OffWeapon, offWeaponWindow },
-            { ContactState.Accessory, accessoryWindow },
+            { ContactState.Accessory1, accessoryWindow },
+            { ContactState.Accessory2, accessoryWindow },
             { ContactState.Skill, skillWindow }
         };
     }
@@ -61,9 +63,28 @@ public class ContactApp : App
         ShowContact(ContactState.Weapon);
     }
 
+    /// <summary>
+    /// 현재 창에 띄워진 목록을 보조 무기 목록으로 바꾸기
+    /// </summary>
     public void ShowOffWeapons()
     {
         ShowContact(ContactState.OffWeapon);
+    }
+
+    /// <summary>
+    /// 현재 창에 띄워진 목록을 1번 슬롯의 악세사리 목록으로 바꾸기
+    /// </summary>
+    public void ShowSlot1Accessory()
+    {
+        ShowContact(ContactState.Accessory1);
+    }
+
+    /// <summary>
+    /// 현재 창에 띄워진 목록을 2번 슬롯의 악세사리 목록으로 바꾸기
+    /// </summary>
+    public void ShowSlot2Accessory()
+    {
+        ShowContact(ContactState.Accessory2);
     }
 
     private void ShowContact(ContactState state)

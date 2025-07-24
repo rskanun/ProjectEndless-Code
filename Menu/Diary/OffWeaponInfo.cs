@@ -10,11 +10,17 @@ public class OffWeaponInfo : EquipInfo
     public void UpdateAvailable()
     {
         Weapon mainWeapon = app.SelectCharacter.MainWeapon;
-        isAvailable = mainWeapon != null && !mainWeapon.WeaponType.IsTwoHand();
 
-        unavailableMark.SetActive(!IsAvailable);
-        nameField.alpha = IsAvailable ? 1.0f : 0.75f;
-        nameField.text = IsAvailable ? nameField.text : mainWeapon.Name;
+        bool hasMainWeapon = mainWeapon != null;
+        bool isOneHandWeapon = hasMainWeapon && !mainWeapon.WeaponType.IsTwoHand();
+
+        // 한손 무기를 든 상태에서만 보조 무기를 착용할 수 있음
+        isAvailable = isOneHandWeapon;
+
+        // 보조 무기 착용 여부에 따른 UI 표시 갱신
+        unavailableMark.SetActive(!isAvailable);
+        nameField.alpha = isAvailable ? 1.0f : 0.75f;
+        nameField.text = isAvailable ? nameField.text : (mainWeapon?.Name ?? GetTagName());
     }
 
     public override void UpdateInfo(Equip equip)

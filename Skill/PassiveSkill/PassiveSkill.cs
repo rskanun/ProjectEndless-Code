@@ -6,4 +6,9 @@ public class PassiveSkill : Skill
     {
         throw new System.NotImplementedException();
     }
+
+    public override string GetTypeName()
+    {
+        return "패시브 스킬";
+    }
 }

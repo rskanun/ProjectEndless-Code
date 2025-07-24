@@ -59,4 +59,9 @@ public class AttackSkill : Skill
         // 데미지 공식 = 기본 데미지 + 시전자 MP 계수 + 시전자 STR 계수
         return Damage + caster.Stat.MP * MpDegree + caster.Stat.STR * StrDegree;
     }
+
+    public override string GetTypeName()
+    {
+        return "액티브 스킬";
+    }
 }

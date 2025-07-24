@@ -6,4 +6,9 @@ public class ActiveSkill : Skill
     {
         throw new System.NotImplementedException();
     }
+
+    public override string GetTypeName()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -43,4 +43,5 @@ public abstract class Skill : ScriptableObject
     }
 
     public abstract void OnCasting(Entity caster, List<Entity> targets);
+    public abstract string GetTypeName();
 }
