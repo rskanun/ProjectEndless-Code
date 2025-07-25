@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public enum ContactState
@@ -20,7 +21,7 @@ public class ContactApp : App
     [SerializeField] private WeaponContactWindow weaponWindow;
     [SerializeField] private OffWeaponContactWindow offWeaponWindow;
     [SerializeField] private AccessoryContactWindow accessoryWindow;
-    [SerializeField] private ContactWindow skillWindow;
+    [SerializeField] private SkillInformationWindow skillWindow;
 
     private Dictionary<ContactState, ContactWindow> windows;
 
@@ -45,7 +46,6 @@ public class ContactApp : App
             { ContactState.OffWeapon, offWeaponWindow },
             { ContactState.Accessory1, accessoryWindow },
             { ContactState.Accessory2, accessoryWindow },
-            { ContactState.Skill, skillWindow }
         };
     }
 
@@ -87,6 +87,40 @@ public class ContactApp : App
         ShowContact(ContactState.Accessory2);
     }
 
+    /// <summary>
+    /// 현재 창에서 스킬 정보를 보여주는 창으로 바꾸기
+    /// </summary>
+    public void ShowSkillInformation(Skill skill)
+    {
+        _state = ContactState.Skill;
+
+        // 맴버 정보 화면 숨기기
+        mainWindow.HideWindow();
+
+        // 스킬 정보 불러오기
+        skillWindow.OpenWindow(skill);
+    }
+
+    /// <summary>
+    /// 스킬 정보가 띄워진 상태에서 다른 스킬 정보로 넘어가기
+    /// </summary>
+    /// <param name="skill"></param>
+    public void SwapSkillInformation(Skill skill, bool isReverseMove)
+    {
+        skillWindow.SwapInfo(skill, isReverseMove);
+    }
+
+    public void HideSkillInformation()
+    {
+        diary.IsFocusToSkill = false;
+
+        // 스킬 정보 숨기기
+        skillWindow.CloseWindow();
+
+        // 맴버 정보 화면 되돌리기
+        mainWindow.ShowWindow();
+    }
+
     private void ShowContact(ContactState state)
     {
         // 애니메이션이 실행 중이라면 창 변경 중지
@@ -125,13 +159,24 @@ public class ContactApp : App
         // 첫 화면이 아닌 경우
         if (_state != ContactState.Party)
         {
-            // 다이어리라면 파티 메뉴 내의 버튼 선택으로 넘어가기
-            if (_state == ContactState.Diary) FocusContactMenu();
-            else
+            switch (_state)
             {
+                // 다이어리라면 파티 메뉴 내의 버튼 선택으로 넘어가기
+                case ContactState.Diary:
+                    FocusContactMenu();
+                    break;
+
+                // 스킬은 예외적으로 처리
+                case ContactState.Skill:
+                    HideSkillInformation();
+                    FocusContactMenu();
+                    break;
+
                 // 그 외엔 메인 파티 메뉴로 돌아가서 다이어리 내 버튼 선택으로 넘어가기
-                ShowContact(ContactState.Party);
-                FocusDiary();
+                default:
+                    ShowContact(ContactState.Party);
+                    FocusDiary();
+                    break;
             }
         }
         else

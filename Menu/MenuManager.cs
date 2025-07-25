@@ -90,11 +90,17 @@ public class MenuManager : MonoBehaviour
 
     public void CloseAllApps(bool isPlayAnimation = true)
     {
+        int count = 0;
         while (currentApp != null)
         {
+            if (count > 100)
+            {
+                Debug.LogWarning("앱 화면 끄기 -> 내부에서 종료로 변경");
+                return;
+            }
+
             CloseApp(isPlayAnimation);
+            count++;
         }
     }
-
-
 }

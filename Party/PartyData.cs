@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
@@ -51,6 +52,9 @@ public class PartyData : ScriptableObject
             return _instance;
         }
     }
+    [SerializeField]
+    private int _maxPartySize;
+    public int MaxPartySize => _maxPartySize;
 
     [Header("게임 내 캐릭터 정보")]
     [SerializeField]
@@ -119,6 +123,8 @@ public class PartyData : ScriptableObject
 
     public void JoinParty(string name)
     {
+        if (GetPartyMembers().Count >= _maxPartySize) return;
+
         CharacterData addMember = charactersDict[name];
 
         addMember.IsParty = true;

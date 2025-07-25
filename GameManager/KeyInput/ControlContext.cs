@@ -48,6 +48,7 @@ public class ControlContext
         KeyInput.Player.Enable();
         KeyInput.UI.Enable();
         KeyInput.Battle.Enable();
+        KeyInput.Menu.Enable();
     }
 
     public void RegisterController(IController controller)
@@ -155,6 +156,7 @@ public class ControlContext
         KeyInput.Player.Disable();
         KeyInput.UI.Disable();
         KeyInput.Battle.Disable();
+        KeyInput.Menu.Disable();
 
         // Input System UI Input Module 비활성화
         EventSystem.current.GetComponent<InputSystemUIInputModule>().enabled = false;
@@ -168,6 +170,7 @@ public class ControlContext
         KeyInput.Player.Enable();
         KeyInput.UI.Enable();
         KeyInput.Battle.Enable();
+        KeyInput.Menu.Enable();
 
         // Input System UI Input Module 재활성화
         EventSystem.current.GetComponent<InputSystemUIInputModule>().enabled = true;

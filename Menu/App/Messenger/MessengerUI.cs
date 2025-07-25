@@ -5,7 +5,7 @@ public class MessengerUI : AppUI
     protected override void ActiveAppWithAnimation(Action openHandler)
     {
         MenuAnimation.AppOpenAnimation(window, appBackground, openHandler)
-            .AppendCallback(() => _isOpened = false);
+            .AppendCallback(() => _isOpened = true);
     }
 
     protected override void DeactiveAppWithAnimation()

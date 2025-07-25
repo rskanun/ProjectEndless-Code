@@ -523,6 +523,34 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menu"",
+            ""id"": ""518b0841-0ac1-446d-8da6-a1f3c4f6e22b"",
+            ""actions"": [
+                {
+                    ""name"": ""Context"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2833d91-b26c-4f0b-8a52-06df37a02cfa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""879ca529-4b28-4d6c-982a-2ea84c3ba08a"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Context"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -570,6 +598,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         m_Battle_AssistA = m_Battle.FindAction("AssistA", throwIfNotFound: true);
         m_Battle_AssistB = m_Battle.FindAction("AssistB", throwIfNotFound: true);
         m_Battle_AssistC = m_Battle.FindAction("AssistC", throwIfNotFound: true);
+        // Menu
+        m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
+        m_Menu_Context = m_Menu.FindAction("Context", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -860,6 +891,39 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         }
     }
     public BattleActions @Battle => new BattleActions(this);
+
+    // Menu
+    private readonly InputActionMap m_Menu;
+    private IMenuActions m_MenuActionsCallbackInterface;
+    private readonly InputAction m_Menu_Context;
+    public struct MenuActions
+    {
+        private @MainInput m_Wrapper;
+        public MenuActions(@MainInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Context => m_Wrapper.m_Menu_Context;
+        public InputActionMap Get() { return m_Wrapper.m_Menu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuActions set) { return set.Get(); }
+        public void SetCallbacks(IMenuActions instance)
+        {
+            if (m_Wrapper.m_MenuActionsCallbackInterface != null)
+            {
+                @Context.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnContext;
+                @Context.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnContext;
+                @Context.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnContext;
+            }
+            m_Wrapper.m_MenuActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Context.started += instance.OnContext;
+                @Context.performed += instance.OnContext;
+                @Context.canceled += instance.OnContext;
+            }
+        }
+    }
+    public MenuActions @Menu => new MenuActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -897,5 +961,9 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
         void OnAssistA(InputAction.CallbackContext context);
         void OnAssistB(InputAction.CallbackContext context);
         void OnAssistC(InputAction.CallbackContext context);
+    }
+    public interface IMenuActions
+    {
+        void OnContext(InputAction.CallbackContext context);
     }
 }

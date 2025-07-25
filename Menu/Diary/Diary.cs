@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Diary : MonoBehaviour
 {
-    [SerializeField] private EquipInfo firstSelectInfo;
+    [SerializeField] private DiaryInfo firstSelectInfo;
 
     [Space]
     [SerializeField] private GameObject deadMark;
@@ -37,8 +37,15 @@ public class Diary : MonoBehaviour
     [Header("스킬 구성")]
     [SerializeField] private List<SkillInfo> skillFields;
 
-    private EquipInfo _lastSelectedInfo;
-    public EquipInfo LastSelectedInfo => _lastSelectedInfo;
+    private DiaryInfo _lastSelectedInfo;
+    public DiaryInfo LastSelectedInfo => _lastSelectedInfo;
+
+    private bool _isFocusToSkill;
+    public bool IsFocusToSkill
+    {
+        get => _isFocusToSkill;
+        set => _isFocusToSkill = value;
+    }
 
     public void UpdateDiary(CharacterData character)
     {
@@ -112,7 +119,7 @@ public class Diary : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(_lastSelectedInfo.gameObject);
     }
 
-    public void SetLastSelectedButton(EquipInfo selectInfo)
+    public void SetLastSelectedButton(DiaryInfo selectInfo)
     {
         _lastSelectedInfo = selectInfo;
     }

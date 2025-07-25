@@ -14,6 +14,8 @@ public class TeamContact : Contact, ISubmitHandler
     [SerializeField] private Image selectMark;
 
     private Action submitHandler;
+    private CharacterData _character;
+    public CharacterData Character => _character;
 
     private void OnDisable()
     {
@@ -23,6 +25,8 @@ public class TeamContact : Contact, ISubmitHandler
 
     public void UpdateInfo(CharacterData character)
     {
+        _character = character;
+
         nameField.text = character.Name;
         partyMark.SetActive(character.IsParty);
         hpHud.UpdateAmount(character.Stat.HP, character.Stat.MaxHP);
