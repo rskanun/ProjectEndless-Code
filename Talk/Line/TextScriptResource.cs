@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
+
 
 
 
@@ -66,42 +68,25 @@ public class TextScriptResource : ScriptableObject
         string path = GetFolderPath(chapter, root, subChapter);
 
         // 경로를 통한 CSV 파일 라인 구하기
-        List<CsvFile> files = CsvReader.ReadFiles(path);
-        CsvFile mergeFile = MergeCsvFiles(files);
+        CsvFile file = CsvReader.ReadFiles(path);
 
         // CSV 파일의 정보를 토대로 텍스트 스크립트 구현
-        CurrentScript = BuildTextScript(mergeFile);
+        CurrentScript = BuildTextScript(file);
     }
 
     private string GetFolderPath(int chapter, int root, int subChapter)
     {
         // 챕터번호 1자리 + 분기번호 1자리 + 서브챕터번호 2자리
-        string folderName = chapter.ToString() + root.ToString()
-            + ((subChapter < 10) ? "0" : "") + subChapter.ToString();
-
+        string folderName = $"{chapter}{root}{subChapter:d2}";
         string path = TEXT_SCRIPT_DIRECTORY + "/" + folderName;
 
         return path;
-    }
-
-    private CsvFile MergeCsvFiles(List<CsvFile> files)
-    {
-        CsvFile result = new CsvFile();
-
-        // 매개변수로 받은 모든 CsvFile 값을 하나의 CsvFile 값으로 합치기기
-        foreach (CsvFile file in files)
-        {
-            result.MergeLines(file);
-        }
-
-        return result;
     }
 
     private TextScript BuildTextScript(CsvFile csvFile)
     {
         TextScript script = new TextScript();
 
-        Stack<Select> selectStack = new Stack<Select>();
         Dictionary<int, int> lineNum = new Dictionary<int, int>(); // ID 값에 해당하는 라인의 마지막 index값
         int id = 0; // id를 기억할 dummy int
 
@@ -122,9 +107,6 @@ public class TextScriptResource : ScriptableObject
             // 라인 객체 생성
             Line line = CreateLine(cells);
 
-            // Select 세부 사항 설정
-            SetSelectOption(line, selectStack, lineNum[id]);
-
             // 스크립트에 추가
             script.GetLines(id).Add(line);
 
@@ -132,6 +114,10 @@ public class TextScriptResource : ScriptableObject
             lineNum[id]++;
         }
 
+        // Select 옵션 연결
+        LinkSelectBranches(script, lineNum.Keys.ToList());
+
+        // 완성된 스크립트 전달
         return script;
     }
 
@@ -139,38 +125,43 @@ public class TextScriptResource : ScriptableObject
     {
         // 코드별로 분리
         LineType code = (LineType)Enum.Parse(typeof(LineType), strs[1]);
-        Line line = LineFactory.Instance.CreateLine(code, strs);
+        Line line = LineFactory.CreateLine(code, strs);
 
         return line;
     }
 
-    private void SetSelectOption(Line line, Stack<Select> selectStack, int lineNum)
+    private void LinkSelectBranches(TextScript script, List<int> ids)
     {
-        // Select 처리
-        if (line.Code == LineType.Select)
+        foreach (int id in ids)
         {
-            selectStack.Push((Select)line);
-        }
-        // Case 처리
-        else if (line.Code == LineType.Case)
-        {
-            Select select = selectStack.Peek();
-            select.addOptionBookmark(((Case)line).Choice, lineNum);
-        }
-        // End 처리
-        else if (line.Code == LineType.End)
-        {
-            Select select = selectStack.Pop();
-            select.EndLineNum = lineNum;
+            int index = 0;
+            Stack<Select> stack = new Stack<Select>();
+
+            foreach (Line line in script.GetLines(id))
+            {
+                switch (line.Code)
+                {
+                    case LineType.Select:
+                        stack.Push((Select)line);
+                        break;
+
+                    case LineType.Case:
+                        stack.Peek().addOptionBookmark(((Case)line).Choice, index);
+                        break;
+
+                    case LineType.End:
+                        stack.Pop().EndLineNum = index;
+                        break;
+                }
+
+                index++;
+            }
         }
     }
 
     public bool HasLines(int id)
     {
-        if (id > 0)
-            return CurrentScript.ContainsKey(id);
-
-        // id값이 0보다 작으면 
-        else return false;
+        // id 값이 0이상이고 현재 스크립트가 해당 id 값의 스크립트를 가지고 있는 지
+        return (id > 0) && CurrentScript.ContainsKey(id);
     }
 }

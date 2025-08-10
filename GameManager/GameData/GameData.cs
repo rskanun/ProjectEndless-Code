@@ -2,6 +2,10 @@
 using Endless.GameData;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System;
+using Sirenix.OdinInspector;
+
+
 
 
 #if UNITY_EDITOR
@@ -159,6 +163,24 @@ public class GameData : ScriptableObject
     {
         get { return _pos; }
         set { _pos = value; }
+    }
+
+    /************************************************************
+    * [휴식 시간 데이터]
+    * 
+    * 현재 남은 휴식 시간 데이터
+    ************************************************************/
+
+    [SerializeField]
+    private Endless.GameData.Time _maxTime;
+    public Endless.GameData.Time MaxTime => _maxTime;
+
+    [SerializeField]
+    private Endless.GameData.Time _respiteTime;
+    public Endless.GameData.Time RespiteTime
+    {
+        get => _respiteTime;
+        set => _respiteTime = value;
     }
 
     /************************************************************

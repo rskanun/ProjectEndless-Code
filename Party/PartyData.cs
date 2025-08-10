@@ -64,9 +64,9 @@ public class PartyData : ScriptableObject
         get { return _player; }
     }
     [SerializeField]
-    private List<CharacterData> _members;
+    private List<CharacterData> _members; // 주인공 제외
     private Dictionary<string, CharacterData> charactersDict;
-    private List<CharacterData> _characters;
+    private List<CharacterData> _characters; // 주인공 포함
     public List<CharacterData> Characters => _characters;
 
 #if UNITY_EDITOR

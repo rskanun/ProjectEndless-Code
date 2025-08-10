@@ -14,7 +14,7 @@ public class TextManager : MonoBehaviour
     * 인게임 화면의 대화 제어
     ************************************************************/
 
-    public void PrintText(TextLine line)
+    public void PrintDialogue(TextLine line)
     {
         ui.SetName(line.name);
         ui.PrintText(line.text);

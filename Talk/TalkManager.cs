@@ -48,6 +48,9 @@ public class TalkManager : MonoBehaviour
 
     private IEnumerator ReadLines(List<Line> lines)
     {
+        // 스킵 버튼 오류 방지용
+        yield return null;
+
         while (lineNum < lines.Count)
         {
             // 대사 출력
@@ -151,7 +154,7 @@ public class TalkManager : MonoBehaviour
     {
         isPrinting = true;
 
-        textManager.PrintText(line);
+        textManager.PrintDialogue(line);
     }
 
     private void ActiveSelection(Select line)
