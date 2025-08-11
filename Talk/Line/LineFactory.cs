@@ -1,20 +1,8 @@
 ﻿using System.Linq;
 
-public class LineFactory
+public static class LineFactory
 {
-    private static LineFactory _instance;
-    public static LineFactory Instance
-    {
-        get
-        {
-            if (_instance != null) return _instance;
-
-            _instance = new LineFactory();
-            return _instance;
-        }
-    }
-
-    public Line CreateLine(LineType lineType, string[] strs)
+    public static Line CreateLine(LineType lineType, string[] strs)
     {
         switch (lineType)
         {
@@ -39,7 +27,7 @@ public class LineFactory
         }
     }
 
-    private TextLine CreateTextLine(string[] strs)
+    private static TextLine CreateTextLine(string[] strs)
     {
         if (strs.Length >= 4)
         {
@@ -49,10 +37,10 @@ public class LineFactory
             return new TextLine(name, text);
         }
 
-        else return null;
+        return null;
     }
 
-    private Select CreateSelectLine(string[] strs)
+    private static Select CreateSelectLine(string[] strs)
     {
         if (strs.Length >= 3)
         {
@@ -61,10 +49,10 @@ public class LineFactory
             return new Select(options);
         }
 
-        else return null;
+        return null;
     }
 
-    private Case CreateCaseLine(string[] strs)
+    private static Case CreateCaseLine(string[] strs)
     {
         if (strs.Length >= 3)
         {
@@ -73,15 +61,15 @@ public class LineFactory
             return new Case(choice);
         }
 
-        else return null;
+        return null;
     }
 
-    private Line CreateEndLine()
+    private static Line CreateEndLine()
     {
         return new Line(LineType.End);
     }
 
-    private EventLine CreateEventLine(string[] strs)
+    private static EventLine CreateEventLine(string[] strs)
     {
         if (strs.Length >= 3)
         {
@@ -90,6 +78,6 @@ public class LineFactory
             return new EventLine(command);
         }
 
-        else return null;
+        return null;
     }
 }

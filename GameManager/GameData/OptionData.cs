@@ -59,4 +59,26 @@ public class OptionData : ScriptableObject
         get { return _typingSpeed; }
     }
 
+
+
+    /************************************************************
+    * [휴식 데이터]
+    * 
+    * 휴식 시간에 따른 회복량 관련 데이터
+    ************************************************************/
+    [SerializeField]
+    private int _rotaryRegenHP;
+    public int RotaryRegenHP
+    {
+        get => _rotaryRegenHP;
+        set => _rotaryRegenHP = Mathf.Clamp(value, 0, 100);
+    }
+
+    [SerializeField]
+    private int _rotaryRegenSP;
+    public int RotaryRegenSP
+    {
+        get => _rotaryRegenSP;
+        set => _rotaryRegenSP = Mathf.Clamp(value, 0, 100);
+    }
 }

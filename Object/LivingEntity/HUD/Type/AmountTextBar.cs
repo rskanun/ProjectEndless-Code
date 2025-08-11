@@ -1,11 +1,19 @@
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class AmountTextBar : AmountHUD
 {
+    private enum BarType
+    {
+        Amount,
+        AmountMax,
+        Percentage
+    }
+
     public Image amountBar;
     public TextMeshProUGUI amountText;
-    public bool isViewMax;
+    [SerializeField] private BarType type;
 
     public override void UpdateAmount(int curAmount, int maxAmount)
     {
@@ -20,7 +28,12 @@ public class AmountTextBar : AmountHUD
 
     protected virtual void UpdateText(int amount, int maxAmount)
     {
-        if (isViewMax) amountText.text = $"{amount} / {maxAmount}";
-        else amountText.text = amount.ToString();
+        string text = "";
+
+        if (type == BarType.AmountMax) text = $"{amount} / {maxAmount}";
+        else if (type == BarType.Amount) text = amount.ToString();
+        else if (type == BarType.Percentage) text = $"{(int)(amount / (float)maxAmount * 100)}%";
+
+        amountText.text = text;
     }
 }
