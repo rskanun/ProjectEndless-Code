@@ -59,7 +59,8 @@ public class ControlContext
 
     public void RemoveController(IController controller)
     {
-        controller.ControlDisconnect();
+        // 컨트롤러 연결 해제
+        DisableController(controller);
 
         // 컨트롤러 삭제
         controllers.Remove(controller.GetType());

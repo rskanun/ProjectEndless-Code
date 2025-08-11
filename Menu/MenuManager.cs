@@ -7,11 +7,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private MenuUI ui;
 
     private ControlContext control;
-    private PopupManager popupManager;
 
     // ╬ш ╩Себ
     private App currentApp;
-    private bool _isOpenedApp;
     public bool IsOpenedApp => currentApp != null;
 
     private void Awake()
