@@ -14,7 +14,6 @@ public abstract class EquipContactWindow : ContactWindow
     [SerializeField] private GameObject contactPrefab;
     [SerializeField] private Transform contactTrans;
 
-    private List<GameObject> contactList = new();
     private Dictionary<GameObject, float> contactsY = new();
 
     private GameObject firstSelect;
@@ -26,10 +25,7 @@ public abstract class EquipContactWindow : ContactWindow
     private void OnDisable()
     {
         // 해당 창이 비활성화 될 때, 모든 오브젝트 목록을 지우기
-        foreach (GameObject obj in contactList)
-        {
-            Destroy(obj);
-        }
+        DestroyContactObjs();
 
         contactList.Clear();
         contactsY.Clear();

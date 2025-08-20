@@ -3,16 +3,15 @@ using DG.Tweening;
 
 public class NoteAppUI : AppUI
 {
-    protected override void ActiveAppWithAnimation(Action openHandler)
+    public override void OpenApp(Action openHandler)
     {
-        MenuAnimation.AppOpenAnimation(window, appBackground, openHandler)
-            .AppendCallback(() => _isOpened = true);
+        MenuAnimation.AppOpenAnimation(window, appBackground)
+            .AppendCallback(() => openHandler?.Invoke());
     }
 
-    protected override void DeactiveAppWithAnimation()
+    public override void CloseApp(Action closeHandler)
     {
-        _isOpened = false;
-
-        MenuAnimation.AppCloseAnimation(window, appBackground);
+        MenuAnimation.AppCloseAnimation(window, appBackground)
+            .AppendCallback(() => closeHandler?.Invoke());
     }
 }

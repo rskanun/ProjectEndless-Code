@@ -29,7 +29,7 @@ public class ResultWindow : MonoBehaviour
         // UI ¥›∞Ì ±‚¡∏ æ¿¿∏∑Œ ¿Ãµø
         resultWindow.SetActive(false);
 
-        SceneLoadManager.Instance.LoadFieldScene(
+        SceneLoadManager.LoadFieldScene(
             GameData.Instance.MapData.SceneName,
             UnloadSceneOptions.None,
             SceneFadeEffect.BlurFadeOut,

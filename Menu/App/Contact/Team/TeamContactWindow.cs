@@ -20,7 +20,6 @@ public class TeamContactWindow : ContactWindow
     [SerializeField] private ContactApp app;
     [SerializeField] private TeamContact playerContact;
 
-    private List<GameObject> contactList = new();
     private TeamContact lastSelected;
 
     // 애니메이션 정보
@@ -40,10 +39,7 @@ public class TeamContactWindow : ContactWindow
     private void OnDisable()
     {
         // 해당 창이 비활성화 될 때, 모든 오브젝트 목록을 지우기
-        foreach (GameObject obj in contactList)
-        {
-            Destroy(obj);
-        }
+        DestroyContactObjs();
     }
 
     /// <summary>
@@ -51,11 +47,15 @@ public class TeamContactWindow : ContactWindow
     /// </summary>
     public void ShowWindow()
     {
-        float endPosX = content.transform.localPosition.x + hideShowMoveRange;
+        // 본래 위치 저장
+        float originPosX = content.localPosition.x;
 
-        // 화면 복구시키기
-        darkPanel.alpha = 0.0f;
-        content.transform.DOLocalMoveX(endPosX, hideShowDuration);
+        // 화면 위치 옮겨놓기
+        content.transform.localPosition -= new Vector3(hideShowMoveRange, 0);
+
+        // 화면 복구 애니메이션
+        DOTween.Sequence()
+            .Join(content.transform.DOLocalMoveX(originPosX, hideShowDuration));
     }
 
     /// <summary>
@@ -63,12 +63,17 @@ public class TeamContactWindow : ContactWindow
     /// </summary>
     public void HideWindow()
     {
-        // 화면을 통째로 옆으로 이동
-        float endPosX = content.transform.localPosition.x - hideShowMoveRange;
-        content.transform.DOLocalMoveX(endPosX, hideShowDuration);
+        float originPosX = content.localPosition.x;
 
-        // 화면 점점 어둡게
-        darkPanel.DOFade(0.5f, hideShowDuration);
+        // 화면 숨김 애니메이션 실행
+        DOTween.Sequence()
+            .Join(content.transform.DOLocalMoveX(originPosX - hideShowMoveRange, hideShowDuration)) // 화면을 통째로 옆으로 이동
+            .Join(darkPanel.DOFade(0.5f, hideShowDuration)) // 화면 점점 어둡게
+            .OnKill(() =>
+            {
+                content.transform.localPosition = new Vector3(originPosX, content.transform.localPosition.y);
+                darkPanel.alpha = 0.0f;
+            });
     }
 
     /// <summary>
@@ -247,8 +252,11 @@ public class TeamContactWindow : ContactWindow
                 // 캔버스 그룹 컴포넌트가 없다면 본래 애니메이션으로 처리
                 if (cg != null)
                 {
-                    cg.DOFade(0.0f, duration)
+                    Tween tween = cg.DOFade(0.0f, duration)
                         .SetDelay(count++ * interval);
+                    tween.OnKill(() => playAnimations.Remove(tween));
+
+                    playAnimations.Add(tween);
                 }
             }
             else
@@ -256,9 +264,12 @@ public class TeamContactWindow : ContactWindow
                 Vector2 targetPos = item.anchoredPosition - new Vector2(offsetX, 0);
 
                 // 나머지 오브젝트는 왼쪽으로 빠지며 페이드 아웃되는 애니메이션 실행
-                item.DOAnchorPos(targetPos, duration)
+                Tween tween = item.DOAnchorPos(targetPos, duration)
                     .SetDelay(count++ * interval)
                     .SetEase(Ease.OutCubic);
+                tween.OnKill(() => playAnimations.Remove(tween));
+
+                playAnimations.Add(tween);
             }
         }
 

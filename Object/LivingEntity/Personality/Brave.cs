@@ -5,7 +5,7 @@ public class Brave : Personality
 {
     public Brave() : base(PersonalityType.Brave) { }
 
-    public override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
+    protected override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
     {
         BattleSequence seq = BattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();

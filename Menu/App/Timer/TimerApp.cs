@@ -56,8 +56,8 @@ public class TimerApp : App
         menuManager.CloseMenu();
 
         // 임시 화면 전환
-        SceneLoadManager.loadingCallBack += () => RegenStat();
-        SceneLoadManager.Instance.LoadFieldScene(GameData.Instance.MapData.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
+        SceneLoadManager.onLoaded += () => RegenStat();
+        SceneLoadManager.LoadFieldScene(GameData.Instance.MapData.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
     }
 
     private void RegenStat()

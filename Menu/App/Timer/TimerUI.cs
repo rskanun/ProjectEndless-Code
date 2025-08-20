@@ -27,15 +27,16 @@ public class TimerUI : AppUI
     private Sequence infoAnimation;
     private float infoDuration = 0.25f;
 
-    protected override void ActiveAppWithAnimation(Action openHandler)
+    public override void OpenApp(Action openHandler)
     {
-        MenuAnimation.AppOpenAnimation(window, appBackground, openHandler)
-            .AppendCallback(() => _isOpened = true);
+        MenuAnimation.AppOpenAnimation(window, appBackground)
+            .AppendCallback(() => openHandler?.Invoke());
     }
 
-    protected override void DeactiveAppWithAnimation()
+    public override void CloseApp(Action closeHandler)
     {
-        MenuAnimation.AppCloseAnimation(window, appBackground);
+        MenuAnimation.AppCloseAnimation(window, appBackground)
+            .AppendCallback(() => closeHandler?.Invoke());
     }
 
     public void SelectFirstTimer()

@@ -11,7 +11,7 @@ public abstract class SubWindowApp : App
         subWindows.Push(subWindow);
     }
 
-    public override void Close(bool isPlayAnimation)
+    public override void Close()
     {
         if (subWindows.Count > 0)
         {
@@ -21,7 +21,7 @@ public abstract class SubWindowApp : App
         else
         {
             // 모든 서브창이 닫혔을 경우 앱 종료
-            base.Close(isPlayAnimation);
+            base.Close();
         }
     }
 }

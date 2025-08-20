@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
     // 앱 상태
     private App currentApp;
     public bool IsOpenedApp => currentApp != null;
+    public bool IsOpenedDiary { get; private set; }
 
     private void Awake()
     {
@@ -33,7 +34,7 @@ public class MenuManager : MonoBehaviour
 
         // 메뉴 열기 애니메이션
         ui.OpenMenu()
-            .OnComplete(() => control.KeyUnlock());
+            .AppendCallback(() => control.KeyUnlock());
     }
 
     public void CloseMenu()
@@ -41,16 +42,15 @@ public class MenuManager : MonoBehaviour
         // 메뉴가 닫히는 동안 키 입력 무시
         control.KeyLock();
 
+        // 다이어리가 열려있으면 닫기
+        if (IsOpenedDiary) CloseDiary();
+
         // 메뉴 닫기 애니메이션
         ui.CloseMenu()
-            .OnComplete(() =>
+            .AppendCallback(() =>
             {
-                // 열려있는 앱이 있을 경우
-                if (currentApp != null)
-                {
-                    // 열려있는 모든 앱 닫기
-                    CloseAllApps(false);
-                }
+                // 열려있는 앱 완전 종료시키기
+                ShutdownApp();
 
                 // 키 입력 활성화
                 control.KeyUnlock();
@@ -70,35 +70,53 @@ public class MenuManager : MonoBehaviour
     {
         currentApp = app;
 
-        app.Open(true);
+        // 홈 화면 숨기기
+        ui.DisabledHomeScreen();
+
+        // 앱 열기
+        app.Open();
     }
 
-    public void CloseApp(bool isPlayAnimation = true)
+    public void CloseApp()
     {
+        // 현재 열린 앱이 있다면 앱 종료
         if (currentApp != null)
         {
-            currentApp.Close(isPlayAnimation);
+            currentApp.Close();
 
+            // 앱이 종료되었을 경우 홈 화면 불러오기
             if (!currentApp.IsActive)
             {
                 currentApp = null;
+                ui.EnabledHomeScreen();
             }
         }
     }
 
-    public void CloseAllApps(bool isPlayAnimation = true)
+    public void ShutdownApp()
     {
-        int count = 0;
-        while (currentApp != null)
-        {
-            if (count > 100)
-            {
-                Debug.LogWarning("앱 화면 끄기 -> 내부에서 종료로 변경");
-                return;
-            }
+        // 앱 완전 종료 시키기
+        currentApp?.Shutdown();
+        currentApp = null;
+    }
 
-            CloseApp(isPlayAnimation);
-            count++;
-        }
+    /************************************************************
+    * [다이어리 제어]
+    * 
+    * 메뉴의 부가적인 창인 다이어리 열고 닫기를 제어
+    ************************************************************/
+
+    public void OpenDiary()
+    {
+        IsOpenedDiary = true;
+
+        ui.OpenDiary();
+    }
+
+    public void CloseDiary()
+    {
+        IsOpenedDiary = false;
+
+        ui.CloseDiary();
     }
 }

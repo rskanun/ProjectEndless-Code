@@ -47,6 +47,12 @@ public class Diary : MonoBehaviour
         set => _isFocusToSkill = value;
     }
 
+    private void OnDisable()
+    {
+        _lastSelectedInfo = null;
+        _isFocusToSkill = false;
+    }
+
     public void UpdateDiary(CharacterData character)
     {
         // »ç¸Á ÆÇÁ¤

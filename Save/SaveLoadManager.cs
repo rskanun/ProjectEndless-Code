@@ -267,8 +267,8 @@ public class SaveLoadManager : ScriptableObject
         MapData map = MapManager.FindMap(data.mapData.id);
 
         // 로딩 과정에서 데이터 불러오기
-        SceneLoadManager.loadingCallBack += () => LoadGameData(data);
-        SceneLoadManager.Instance.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
+        SceneLoadManager.onLoaded += () => LoadGameData(data);
+        SceneLoadManager.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
     }
 
     private bool IsRequireReturn(SaveData data)

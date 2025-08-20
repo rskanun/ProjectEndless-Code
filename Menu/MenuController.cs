@@ -9,7 +9,6 @@ public class MenuController : MonoBehaviour, IController
 
     // 메뉴 상태
     private bool isOpened;
-    private bool isOpenedApp;
 
     private void Awake()
     {
@@ -27,7 +26,6 @@ public class MenuController : MonoBehaviour, IController
 
         uiInput.Menu.performed += OnMenuKeyPressed;
         uiInput.Cancel.performed += OnCancelKeyPressed;
-        uiInput.Cancel.started += UpdateAppOpend;
     }
 
     public void ControlDisconnect()
@@ -36,14 +34,14 @@ public class MenuController : MonoBehaviour, IController
 
         uiInput.Menu.performed -= OnMenuKeyPressed;
         uiInput.Cancel.performed -= OnCancelKeyPressed;
-        uiInput.Cancel.started -= UpdateAppOpend;
     }
 
     private void OnMenuKeyPressed(InputAction.CallbackContext context)
     {
-        if (isOpenedApp)
+        // 현재 메뉴가 열려있고, 입력장치가 키보드인 경우
+        if (isOpened && context.control.device is Keyboard)
         {
-            // 앱이 열린 상태면 무시
+            // 뒤로가기 키와 겹치는 것을 방지해 메뉴 닫기의 경우 실행 X
             return;
         }
 
@@ -57,19 +55,24 @@ public class MenuController : MonoBehaviour, IController
 
     private void OnCancelKeyPressed(InputAction.CallbackContext context)
     {
-        if (!isOpened)
+        // 메뉴가 열린 상태에서만 동작
+        if (!isOpened) return;
+
+        // 우선순위에 따라 팝업 -> 앱 -> 메뉴 순서로 닫고 함수 종료
+        if (PopupManager.Instance.isActive)
         {
-            // 메뉴가 열린 상태가 아니라라면 무시
+            PopupManager.Instance.Close();
             return;
         }
 
-        // 앱 또는 팝업창 닫기
-        if (PopupManager.Instance.isActive) PopupManager.Instance.Close();
-        else if (menuManager.IsOpenedApp) menuManager.CloseApp();
-    }
+        if (menuManager.IsOpenedApp)
+        {
+            menuManager.CloseApp();
+            return;
+        }
 
-    private void UpdateAppOpend(InputAction.CallbackContext context)
-    {
-        isOpenedApp = menuManager.IsOpenedApp;
+        // 어떠한 팝업이나 앱도 열려있지 않다면 메뉴 닫기
+        menuManager.CloseMenu();
+        isOpened = false;
     }
 }

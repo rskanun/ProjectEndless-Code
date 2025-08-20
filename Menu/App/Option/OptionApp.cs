@@ -29,9 +29,9 @@ public class OptionApp : SubWindowApp
         optionUI.SetCancelPanel(true);
     }
 
-    public override void Close(bool isPlayAnimation)
+    public override void Close()
     {
-        base.Close(isPlayAnimation);
+        base.Close();
 
         // 모든 서브 창을 다 닫았다면, 취소 패널도 같이 비활성화
         if (subWindows.Count <= 0)

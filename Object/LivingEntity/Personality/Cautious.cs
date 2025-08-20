@@ -13,7 +13,7 @@ public class Cautious : Personality
         rangeAttackEntities = new List<Entity>();
     }
 
-    public override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
+    protected override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
     {
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 

@@ -15,20 +15,23 @@ public class HomeScreenUI : MonoBehaviour
     [SerializeField] private GameObject messageButton;
     [SerializeField] private GameObject partyButton;
 
-    public Sequence DisabledHomeScreen(bool isPlayAnimation)
+    public Sequence DisabledHomeScreen()
     {
         SetAllAppButton(false);
 
-        if (isPlayAnimation) return MenuAnimation.HomeScreenHideAnimation(homeScreen);
-        else return DOTween.Sequence();
+        return MenuAnimation.HomeScreenHideAnimation(homeScreen);
     }
 
-    public Sequence EnabledHomeScreen(bool isPlayAnimation)
+    public Sequence EnabledHomeScreen()
     {
         SetAllAppButton(true);
 
-        if (isPlayAnimation) return MenuAnimation.HomeScreenShowAnimation(homeScreen);
-        else return DOTween.Sequence();
+        return MenuAnimation.HomeScreenShowAnimation(homeScreen);
+    }
+
+    public void SetHomeScreen(bool isActive)
+    {
+        homeScreen.SetActive(isActive);
     }
 
     public void SetAllAppButton(bool isActive)

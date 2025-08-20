@@ -105,7 +105,7 @@ public class MonsterObject : MonoBehaviour
     * 탐지 기관을 통한 플레이어 탐지
     ***************************************************************/
 
-    public Vector3? GetPlayerPos()
+    public Vector3? DetectPlayerPos()
     {
         return organManager.DetectPlayer();
     }
@@ -134,7 +134,7 @@ public class MonsterObject : MonoBehaviour
         {
             // 전투 돌입
             // #임시로 로드 시의 애니메이션과 동일하게 설정
-            SceneLoadManager.Instance.LoadBattleScene(null, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
+            SceneLoadManager.LoadBattleScene(null, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
             Time.timeScale = 0.02f;
         }
     }

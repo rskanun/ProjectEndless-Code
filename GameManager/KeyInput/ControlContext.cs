@@ -23,6 +23,7 @@ public class ControlContext
     // 현재 등록된 컨트롤러 목록
     private Dictionary<Type, IController> controllers = new Dictionary<Type, IController>();
     private HashSet<IController> activeControllers = new HashSet<IController>();
+    public HashSet<IController> ActiveControllers => activeControllers;
 
     private MainInput _keyInput;
     public MainInput KeyInput

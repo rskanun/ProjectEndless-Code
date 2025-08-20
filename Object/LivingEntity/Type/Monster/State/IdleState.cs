@@ -32,7 +32,7 @@ public class IdleState : IMonsterState
 
     private void OnDetected(FSM fsm)
     {
-        if (monster.GetPlayerPos() != null)
+        if (monster.DetectPlayerPos() != null)
         {
             // 탐지에 성공하면 플레이어 추적
             fsm.SetState(new ChaseState(monster));

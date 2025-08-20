@@ -5,7 +5,7 @@ public class Analytical : Personality
 {
     public Analytical() : base(PersonalityType.Analytical) { }
 
-    public override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
+    protected override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
     {
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 

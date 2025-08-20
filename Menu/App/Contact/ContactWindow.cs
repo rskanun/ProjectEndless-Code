@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,23 +9,33 @@ public abstract class ContactWindow : MonoBehaviour
     [SerializeField] protected RectTransform content;
     [SerializeField] protected VerticalLayoutGroup layoutGroup;
     [SerializeField] protected RectTransform viewportRect;
+    protected List<GameObject> contactList = new();
 
     protected bool _isTweening;
     public bool IsTweening => _isTweening;
 
     // 애니메이션 설정
+    protected HashSet<Tween> playAnimations = new();
     protected float offsetY = 200f;  // 오픈 애니메이션이 시작되는 Y 위치
     protected float offsetX = 300f;   // 클로즈 애니메이션이 끝나는 X 위치
     protected float interval = 0.05f; // 각 항목 등장 간격
     protected float duration = 0.3f; // 올라오는데 걸리는 시간
 
+    public void KillAnimations()
+    {
+        foreach (Tween tween in playAnimations)
+        {
+            tween.Kill();
+        }
+    }
+
     public void OpenWindow()
     {
+        layoutGroup.enabled = true;
+
         InitContact();
         StartCoroutine(OpenAnimation());
     }
-
-    protected abstract void InitContact();
 
     /// <summary>
     /// 선택된 연락처 오브젝트 위치에 맞춰 전체적인 스크롤뷰 이동
@@ -57,7 +68,10 @@ public abstract class ContactWindow : MonoBehaviour
         // 잘려나간 부분이 나오도록 스크롤 조정
         if (endValue != content.localPosition.y)
         {
-            content.DOLocalMoveY(endValue, 0.2f);
+            Tween tween = content.DOLocalMoveY(endValue, 0.2f);
+            tween.OnKill(() => playAnimations.Remove(tween));
+
+            playAnimations.Add(tween);
         }
     }
 
@@ -88,9 +102,12 @@ public abstract class ContactWindow : MonoBehaviour
             item.anchoredPosition = targetPos - new Vector2(0, offsetY);
 
             // 위로 올라오는 애니메이션 실행
-            item.DOAnchorPos(targetPos, duration)
-                .SetDelay(count++ * interval)
+            Tween tween = item.DOAnchorPos(targetPos, duration)
+                .SetDelay(interval * count++)
                 .SetEase(Ease.OutCubic);
+            tween.OnKill(() => playAnimations.Remove(tween));
+
+            playAnimations.Add(tween);
         }
 
         // 애니메이션 종료까지 대기
@@ -137,9 +154,12 @@ public abstract class ContactWindow : MonoBehaviour
             Vector2 targetPos = item.anchoredPosition - new Vector2(offsetX, 0);
 
             // 왼쪽으로 빠지며 페이드 아웃되는 애니메이션 실행
-            item.DOAnchorPos(targetPos, duration)
+            Tween tween = item.DOAnchorPos(targetPos, duration)
                 .SetDelay(count++ * interval)
                 .SetEase(Ease.OutCubic);
+            tween.OnKill(() => playAnimations.Remove(tween));
+
+            playAnimations.Add(tween);
         }
 
         // 애니메이션 종료까지 대기
@@ -154,4 +174,14 @@ public abstract class ContactWindow : MonoBehaviour
         // 해당 오브젝트 비활성화
         gameObject.SetActive(false);
     }
+
+    protected void DestroyContactObjs()
+    {
+        foreach (GameObject obj in contactList)
+        {
+            Destroy(obj);
+        }
+    }
+
+    protected abstract void InitContact();
 }

@@ -20,9 +20,6 @@ public class SceneLoadingScreen : MonoBehaviour
     private Coroutine loadingCoroutine;
     private bool isPlayAnimation;
 
-    public delegate void LoadingCallBack();
-    public LoadingCallBack loadingCallBack;
-
     private void Awake()
     {
         sceneEffects = new Dictionary<SceneFadeEffect, Action<Action>>
@@ -36,16 +33,6 @@ public class SceneLoadingScreen : MonoBehaviour
             { LoadingScreen.Loading, loading.OnPlayAnimation },
             { LoadingScreen.ClockLoading, clockLoading.OnPlayAnimation }
         };
-    }
-
-    private void OnEnable()
-    {
-        SceneLoadManager.Instance.RegisterManager(this);
-    }
-
-    private void OnDisable()
-    {
-        SceneLoadManager.Instance.RemoveManager();
     }
 
     /************************************************************
@@ -119,6 +106,6 @@ public class SceneLoadingScreen : MonoBehaviour
     private void EnableLoadingScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, LoadingScreen screen)
     {
         isPlayAnimation = true;
-        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, unloadOptions, () => loadingCallBack.Invoke(), () => isPlayAnimation = false);
+        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, unloadOptions, () => SceneLoadManager.onLoaded.Invoke(), () => isPlayAnimation = false);
     }
 }

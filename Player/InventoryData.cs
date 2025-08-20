@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
@@ -52,6 +53,7 @@ public class InventoryData : ScriptableObject
     }
 
     // 인벤토리 데이터
+    [ShowInInspector]
     private Dictionary<Item, int> inventory = new Dictionary<Item, int>();
 
     // 테스트 아이템

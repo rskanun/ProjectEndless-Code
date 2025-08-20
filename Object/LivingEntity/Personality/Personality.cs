@@ -20,12 +20,23 @@ public abstract class Personality
         this.type = type;
     }
 
+    public static Personality OfType(PersonalityType type)
+    {
+        return type switch
+        {
+            PersonalityType.Belligerent => new Belligerent(),
+            PersonalityType.Cautious => new Cautious(),
+            PersonalityType.Crusty => new Crusty(),
+            PersonalityType.Brave => new Brave(),
+            PersonalityType.Analytical => new Analytical(),
+
+            _ => null
+        };
+    }
+
     public List<Entity> GetPriorityTargetList(List<Entity> targetList)
     {
         Dictionary<Entity, float> weightData = GetWeightData(targetList);
-
-        // 추가적인 가중치 적용
-        ApplyAdditionalWeight(weightData);
 
         // 가중치가 높은 순서대로 Entity 개체만 따로 빼내어 리스트로 만들어 반환
         return weightData
@@ -43,26 +54,7 @@ public abstract class Personality
         GatherCurTurnAction(curAction);
     }
 
-    public static Personality OfType(PersonalityType type)
-    {
-        return type switch
-        {
-            PersonalityType.Belligerent => new Belligerent(),
-            PersonalityType.Cautious => new Cautious(),
-            PersonalityType.Crusty => new Crusty(),
-            PersonalityType.Brave => new Brave(),
-            PersonalityType.Analytical => new Analytical(),
-
-            _ => null
-        };
-    }
-
-    public abstract Dictionary<Entity, float> GetWeightData(List<Entity> targetList);
-
-    public virtual void ApplyAdditionalWeight(Dictionary<Entity, float> weightData)
-    {
-        // 추가적인 가중치 적용 함수
-    }
+    protected abstract Dictionary<Entity, float> GetWeightData(List<Entity> targetList);
 
     protected virtual void GatherCurTurnAction(BattleAction action)
     {

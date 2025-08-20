@@ -56,11 +56,11 @@ public class MessengerApp : App
         // 홈 화면 출력
     }
 
-    public override void Close(bool isPlayAnimation)
+    public override void Close()
     {
         if (networkChecking != null)
             StopCoroutine(networkChecking);
 
-        base.Close(isPlayAnimation);
+        base.Close();
     }
 }

@@ -30,12 +30,10 @@ public class ContactApp : App
     public ContactState State => _state;
     public CharacterData SelectCharacter { get; private set; }
 
-#if UNITY_EDITOR
     private void OnValidate()
     {
         ui = GetComponent<ContactUI>();
     }
-#endif
 
     private void Awake()
     {
@@ -151,7 +149,16 @@ public class ContactApp : App
         currentWindow = windows[state];
     }
 
-    public override void Close(bool isPlayAnimation)
+    public void OnSelectCharacter(CharacterData character)
+    {
+        // 현재 선택된 캐릭터 정보 업데이트
+        SelectCharacter = character;
+
+        // 다이어리 정보 업데이트
+        diary.UpdateDiary(character);
+    }
+
+    public override void Close()
     {
         // 현재 열린 창에서 애니메이션이 실행 중이면 무시
         if (currentWindow?.IsTweening == true) return;
@@ -188,17 +195,35 @@ public class ContactApp : App
             SelectCharacter = null;
 
             // 처음 창인 경우 앱 종료
-            base.Close(isPlayAnimation);
+            base.Close();
         }
     }
 
-    public void OnSelectCharacter(CharacterData character)
+    public override void Shutdown()
     {
-        // 현재 선택된 캐릭터 정보 업데이트
-        SelectCharacter = character;
+        currentWindow.KillAnimations();
 
-        // 다이어리 정보 업데이트
-        diary.UpdateDiary(character);
+        // 현재 창 정보 초기화
+        currentWindow = null;
+
+        // 선택 캐릭터 정보 초기화
+        SelectCharacter = null;
+
+        // 열려있는 창 모두 닫기
+        CloseAllWindows();
+
+        // 앱 셧다운
+        base.Shutdown();
+    }
+
+    private void CloseAllWindows()
+    {
+        // 모든 창 닫기
+        mainWindow.gameObject.SetActive(false);
+        weaponWindow.gameObject.SetActive(false);
+        offWeaponWindow.gameObject.SetActive(false);
+        accessoryWindow.gameObject.SetActive(false);
+        skillWindow.gameObject.SetActive(false);
     }
 
     /************************************************************

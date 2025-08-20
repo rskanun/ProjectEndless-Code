@@ -13,7 +13,7 @@ public class Crusty : Personality
         rangeAttackEntities = new List<Entity>();
     }
 
-    public override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
+    protected override Dictionary<Entity, float> GetWeightData(List<Entity> targetList)
     {
         BattleSequence seq = BattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
@@ -33,7 +33,6 @@ public class Crusty : Personality
             // 일반 공격이나 스킬을 쓸 예정이라면 가중치 증가
             if (action is AttackAction || action is SkillAction)
             {
-                Debug.Log($"{target.Name}) {actionWeight}");
                 weightData[target] += actionWeight;
 
                 // 다음 행동자는 가중치 증가량 감소

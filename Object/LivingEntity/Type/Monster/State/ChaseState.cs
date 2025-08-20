@@ -48,7 +48,7 @@ public class ChaseState : IMonsterState
     private void UpdatePlayerPos()
     {
         // 플레이어 탐지
-        if (monster.GetPlayerPos() is Vector3 playerPos)
+        if (monster.DetectPlayerPos() is Vector3 playerPos)
         {
             // 플레이어가 탐지 범위 안이면 새 좌표 갱신
             lastPlayerPos = playerPos;

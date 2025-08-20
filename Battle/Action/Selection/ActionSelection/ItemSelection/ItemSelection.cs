@@ -55,18 +55,33 @@ public class ItemSelection : MonoBehaviour, ISelection
 
     public void UpdateItemInfo()
     {
-        // 처음 여는 경우 아이템 정보 배치
-        if (itemInfoList.Count == 0)
-        {
-            Dictionary<Item, int> items = GetConsumableItems();
+        Dictionary<Item, int> items = GetConsumableItems();
 
-            InitItemInfo(items);
-        }
-        else
+        ClearItemInfos();       // 아이템 목록 초기화
+        InitItemInfo(items);    // 아이템 목록 생성
+    }
+
+    private void ClearItemInfos()
+    {
+        // 모든 아이템 목록 초기화
+        for (int i = itemInfoList.Count - 1; i >= 0; i--)
         {
-            // 처음이 아닌 경우 아이템 카운트 업데이트
-            UpdateItemCount(lastSelected);
+            RemoveItemInfoObject(itemInfoList[i]);
         }
+    }
+
+    private void RemoveItemInfoObject(GameObject itemInfoObj)
+    {
+        // 만약 마지막으로 선택한 아이템일 경우
+        if (lastSelected == itemInfoObj)
+        {
+            // 마지막 선택 아이템에서 삭제
+            lastSelected = null;
+        }
+
+        // 아이템 삭제
+        itemInfoList.Remove(itemInfoObj);
+        Destroy(itemInfoObj);
     }
 
     private void InitItemInfo(Dictionary<Item, int> items)
@@ -109,31 +124,6 @@ public class ItemSelection : MonoBehaviour, ISelection
     {
         actionManager.SelectItem(consumable);
         lastSelected = itemInfoObj;
-    }
-
-    private void UpdateItemCount(GameObject itemInfoObj)
-    {
-        if (itemInfoObj == null) return;
-
-        ItemInfo itemInfo = itemInfoObj.GetComponent<ItemInfo>();
-        int count = InventoryData.Instance.GetItemCount(itemInfo.GetItem());
-
-        if (count <= 1) RemoveItemInfoObject(itemInfoObj);
-        else itemInfo.SetCount(count);
-    }
-
-    private void RemoveItemInfoObject(GameObject itemInfoObj)
-    {
-        // 만약 마지막으로 선택한 아이템일 경우
-        if (lastSelected == itemInfoObj)
-        {
-            // 마지막 선택 아이템에서 삭제
-            lastSelected = null;
-        }
-
-        // 아이템 삭제
-        itemInfoList.Remove(itemInfoObj);
-        Destroy(itemInfoObj);
     }
 
     private Dictionary<Item, int> GetConsumableItems()
