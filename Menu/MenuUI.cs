@@ -95,7 +95,7 @@ public class MenuUI : MonoBehaviour
         Image darkPanel = screenPanel.GetComponent<Image>();
 
         // 휴대폰을 꺼내드는 모션
-        Sequence retrievePhoneSeq = DOTween.Sequence()
+        Sequence menuOpenSeq = DOTween.Sequence()
             .OnStart(() =>
             {
                 face.transform.localRotation = Quaternion.Euler(0, 0, -closeRotate);
@@ -103,13 +103,14 @@ public class MenuUI : MonoBehaviour
                 menu.SetActive(true);
 
             })
-            .Append(menu.transform.DORotate(new Vector3(0, 0, openRotate), menuOpenDelay).SetEase(Ease.OutSine))
+            .Append(menu.transform.DORotate(new Vector3(0, 0, openRotate), menuOpenDelay))
             .Join(DOTween.To(() => 0, x =>
             {
                 // 휴대폰이 돌아가는 것과 동일한 속도로 반대 방향으로 돌려서 현 상태 유지시키기
                 face.transform.position = oriPos;
                 face.transform.rotation = Quaternion.Euler(oriRotate);
-            }, 0, menuOpenDelay));
+            }, 0, menuOpenDelay))
+            .SetEase(Ease.OutSine);
 
         // 화면을 키는 모션
         Sequence turnOnScreenSeq = DOTween.Sequence()
@@ -123,7 +124,7 @@ public class MenuUI : MonoBehaviour
             .Append(appGroup.transform.DOScale(new Vector3(resultScale, resultScale, 1), loadAppDelay).SetEase(Ease.OutSine));
 
         return DOTween.Sequence()
-            .Append(retrievePhoneSeq)
+            .Append(menuOpenSeq)
             .AppendInterval(delay)
             .Append(turnOnScreenSeq);
     }
@@ -144,7 +145,7 @@ public class MenuUI : MonoBehaviour
             .Append(darkPanel.DOFade(1f, screenCloseDelay));
 
         // 휴대폰을 집어넣는 모션
-        Sequence insertPhoneSeq = DOTween.Sequence()
+        Sequence menuCloseSeq = DOTween.Sequence()
             .Append(menu.transform.DORotate(new Vector3(0, 0, closeRotate), menuCloseDelay).SetEase(Ease.InQuad))
             .Join(DOTween.To(() => 0, x =>
             {
@@ -163,7 +164,7 @@ public class MenuUI : MonoBehaviour
         return DOTween.Sequence()
             .Append(turnOffScreenSeq)
             .AppendInterval(delay)
-            .Append(insertPhoneSeq);
+            .Append(menuCloseSeq);
     }
 
     /************************************************************
