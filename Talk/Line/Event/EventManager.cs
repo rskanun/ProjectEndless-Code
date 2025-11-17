@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-
     public void GetCommandEvent(string str)
     {
         string[] commands = str.Split(' ');
@@ -10,14 +9,6 @@ public class EventManager : MonoBehaviour
 
         switch (command)
         {
-            case "addAP":
-                // 커맨드의 두 번째 단어가 숫자일 경우 해당 숫자만큼 AP 증가
-                if (int.TryParse(commands[1], out int ap))
-                {
-                    //gameData.AP = ap;
-                }
-                break;
-
             default:
                 Debug.Log(command + " is an incorrect command!");
                 break;

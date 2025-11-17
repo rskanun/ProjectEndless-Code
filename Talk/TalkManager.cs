@@ -1,94 +1,94 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class TalkManager : MonoBehaviour
 {
     [Header("참조 스크립트")]
-    [SerializeField] private TextManager textManager;
+    [SerializeField] private DialogueManager dialogueManager;
     [SerializeField] private SelectManager selectManager;
+    [SerializeField] private ImageRenderer imageRenderer;
+    [SerializeField] private EventManager eventManager;
 
     [Space]
     // 현재 라인 진행 상황
     [SerializeField] private bool isPrinting;
     [SerializeField] private bool isTalking;
-    [SerializeField] private int lineNum;
+    [SerializeField] private int selectIndex;
+    private Coroutine readLineCoroutine;
+    private Line readLine;
+    private Npc talkedNPC;
 
-    // Select 관련 변수
-    private Stack<Select> selectStack = new Stack<Select>();
+    // Line 처리 핸들러
+    private Dictionary<LineType, Action<Line>> lineHandler;
+
+    private void Awake()
+    {
+        lineHandler = new()
+        {
+            {LineType.Text,         line => PrintTextLine((TextLine)line)},
+            {LineType.Select,       line => ActiveSelection((SelectLine)line)},
+            {LineType.Image,        line => RenderImage((ImageLine)line)},
+            {LineType.Destroy,      line => DestroyImage((DestroyLine)line)},
+            {LineType.Transform,    line => TransformImage((TransformLine)line)},
+            {LineType.BGM,          line => { } },
+            {LineType.SE,           line => { } },
+            {LineType.Event,        line => { } },
+        };
+    }
 
     private void OnEnable()
     {
-        TalkContext.Instance.RegisterManager(this);
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
     }
 
     private void OnDisable()
     {
-        TalkContext.Instance.RemoveManager();
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
     }
 
-    /************************************************************
-    * [대사 관리]
-    * 
-    * 대사를 읽어 그에 따른 인게임 이벤트 제어
-    ************************************************************/
-
-    public void StartTalk(Npc npc)
+    private void OnLocaleChanged(Locale newLocale)
     {
-        // 대화 처음 시작 시 해당되는 대화목록 가져오기
-        List<Line> lines = npc.GetLines();
+        // 언어 변경이 일어났다면 테이블 다시 불러오기
+        ScenarioManager.Instance.ReloadLocalizationTables().Forget();
 
-        // 캐릭터 이동 컨트롤러 비활성화 및 대화 컨트롤러 활성화
-        ControlContext.Instance.DisableController(typeof(PlayerController));
-        ControlContext.Instance.EnableController(typeof(TalkController));
+        // 현재 진행 중인 라인 중단
+        StopCoroutine(readLineCoroutine);
 
-        isTalking = true;
-        StartCoroutine(ReadLines(lines));
+        // 마지막 진행 중이던 라인 재시작
+        readLineCoroutine = StartCoroutine(ReadLines(talkedNPC, readLine));
     }
 
-    private IEnumerator ReadLines(List<Line> lines)
-    {
-        // 스킵 버튼 오류 방지용
-        yield return null;
-
-        while (lineNum < lines.Count)
-        {
-            // 대사 출력
-            PrintLine(lines[lineNum]);
-
-            // 대사를 출력하는 동안 대기
-            yield return new WaitUntil(() => !isPrinting);
-
-            // 다음 대사 출력
-            lineNum++;
-        }
-
-        // 대사를 모두 읽었다면 대화 멈추기
-        EndTalk();
-    }
-
-    public void OnTalkHandler()
+    public void TalkHandler()
     {
         if (isTalking)
         {
             // 대화 중이면 해당 대화를 스킵
-            OnSkipTalk();
+            SkipToTalk();
         }
     }
 
-    private void OnSkipTalk()
+    private void SkipToTalk()
     {
         // 선택창이 띄워진 경우 패스
         if (selectManager.IsSelectOpen) return;
 
-        if (textManager.IsPrinting)
+        if (dialogueManager.IsPrinting)
         {
             // 텍스트가 출력 중인 경우 한 번에 출력
-            textManager.TextSkip();
+            dialogueManager.TextSkip();
         }
         else
         {
-            // 텍스트 출력이 끝난 경우 다음 대화 출력
+            // 텍스트 출력이 끝난 경우 대화창 종료
+            dialogueManager.CloseDialogue();
+
+            // 다음 대화 출력
             NextTalk();
         }
     }
@@ -98,25 +98,169 @@ public class TalkManager : MonoBehaviour
         isPrinting = false;
     }
 
-    private void EndTalk()
+    public void StartTalk(Npc npc)
     {
-        // 대사 읽기에 쓰이는 변수 초기화
-        InitValue();
+        talkedNPC = npc;
 
-        // 대화창 UI 끄기
-        textManager.CloseDialogue();
+        // 플레이어 조작 컨트롤러 비활성화
+        ControlContext.Instance.DisableController(typeof(PlayerController));
 
-        // 플레이어 컨트롤러로 변경
-        ControlContext.Instance.DisableController(typeof(TalkController));
-        ControlContext.Instance.EnableController(typeof(PlayerController));
+        // 대화 조작 컨트롤러 활성화
+        ControlContext.Instance.EnableController(typeof(TalkController));
+
+        // 대화 처음 시작 시 해당되는 대화의 첫 부분 가져오기
+        Line intro = GetIntroLine(npc);
+
+        // 현재 완료 및 수주가 가능한 퀘스트 처리
+        CheckToQuest(npc);
+
+        // 대사 읽기 시작
+        readLineCoroutine = StartCoroutine(ReadLines(npc, intro));
     }
 
-    private void InitValue()
+    private void CheckToQuest(Npc npc)
     {
-        selectStack.Clear();
-        isPrinting = false;
+        // 완료할 퀘스트가 있는 경우 완료
+        if (!TryCompleteQuest(npc, out _))
+        {
+            // 수주할 퀘스트가 있는 경우 수주
+            TryAcceptQuest(npc, out _);
+        }
+    }
+
+    private bool TryCompleteQuest(Npc npc, out QuestData completeQuest)
+    {
+        completeQuest = npc.GetCompletableQuest();
+        if (completeQuest != null)
+        {
+            // 퀘스트 완료
+            QuestManager.Instance.CompleteCurrentQuest();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryAcceptQuest(Npc npc, out QuestData acceptQuest)
+    {
+        acceptQuest = npc.GetAcceptableQuest();
+        if (acceptQuest != null)
+        {
+            // 퀘스트 수주
+            QuestManager.Instance.AcceptQuest(acceptQuest);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private IEnumerator ReadLines(Npc npc, Line intro)
+    {
+        // 스킵 버튼 오류 방지용
+        yield return null;
+
+        isTalking = true;
+
+        readLine = intro;
+        while (readLine != null)
+        {
+            // 대사 하나하나 출력
+            while (readLine != null)
+            {
+                lineHandler[readLine.code]?.Invoke(readLine);
+
+                // 대사를 출력하는 동안 대기
+                yield return new WaitWhile(() => isPrinting);
+
+                // 다음 대사 준비
+                readLine = GetNextLine(readLine);
+            }
+
+            // 다음 이어질 대본이 있는 지 확인
+            readLine = GetNextScriptEntry(npc);
+        }
+
+        // 대사를 모두 읽었다면 대사 출력 멈추기
+        EndTalk();
+    }
+
+    private Line GetNextLine(Line currentLine)
+    {
+        // 선택지(다음 대사가 여러 개 준비되어 있는 라인)가 아니라면 첫 대사 선택
+        if (currentLine is not SelectLine)
+        {
+            return currentLine.nextLines.FirstOrDefault();
+        }
+
+        // 선택지에서 고른 대사에 문제가 있는 경우
+        if (selectIndex < 0)
+        {
+            // 경고문을 띄우고서 첫번째 선택지 선택
+            Debug.LogError("선택지 선택에 문제가 있어 임시적으로 첫번째 선택지를 선택합니다.");
+            selectIndex = 0;
+        }
+
+        // 선택지에서 고른 대사로 이동
+        return currentLine.nextLines.ElementAtOrDefault(selectIndex);
+    }
+
+    private Line GetNextScriptEntry(Npc npc)
+    {
+        // 수주 가능한 퀘스트 확인
+        if (TryAcceptQuest(npc, out QuestData acceptQuest))
+        {
+            return GetQuestIntro(acceptQuest, QuestState.ACCEPTABLE);
+        }
+
+        // 완료 가능한 퀘스트 확인
+        if (TryCompleteQuest(npc, out QuestData completeQuest))
+        {
+            return GetQuestIntro(completeQuest, QuestState.COMPLETABLE);
+        }
+
+        // 이어질 퀘스트 대화가 없으면 null을 반환
+        return null;
+    }
+
+    private void EndTalk()
+    {
         isTalking = false;
-        lineNum = 0;
+
+        // 활성화된 이미지 모두 파괴
+        imageRenderer.AllDestoryImages();
+
+        // 플레이어 조작 컨트롤러 활성화
+        ControlContext.Instance.ConnectController(typeof(PlayerController));
+
+        // 대화 조작 컨트롤러 비활성화
+        ControlContext.Instance.DisconnectController(typeof(TalkController));
+    }
+
+    private Line GetIntroLine(Npc npc)
+    {
+        // 진행 가능한 퀘스트가 있는 경우
+        QuestData quest = npc.GetAcceptableQuest();
+        if (quest != null) return GetQuestIntro(quest, QuestState.ACCEPTABLE);
+
+        // 완료 가능한 퀘스트가 있는 경우
+        quest = npc.GetCompletableQuest();
+        if (quest != null) return GetQuestIntro(quest, QuestState.COMPLETABLE);
+
+        // 진행 중인 퀘스트가 있는 경우
+        quest = npc.GetAcceptedQuest();
+        if (quest != null) return GetQuestIntro(quest, QuestState.ONGOING);
+
+        return npc.GetIntroLine();
+    }
+
+    private Line GetQuestIntro(QuestData quest, QuestState state)
+    {
+        if (quest == null)
+            return null;
+
+        return ScenarioManager.Instance.GetQuestIntro(quest.ID, state);
     }
 
     /************************************************************
@@ -125,72 +269,62 @@ public class TalkManager : MonoBehaviour
     * 라인을 읽고서 거기에 따른 인게임 이벤트 제어
     ************************************************************/
 
-    private void PrintLine(Line line)
-    {
-        switch (line.Code)
-        {
-            case LineType.Text:
-                PrintTextLine((TextLine)line);
-                break;
-
-            case LineType.Select:
-                ActiveSelection((Select)line);
-                break;
-
-            case LineType.Case:
-                SkipToEnd(); // End로 스킵
-                break;
-
-            case LineType.Event:
-                ActiveEvent((EventLine)line);
-                break;
-
-            default:
-                break;
-        }
-    }
-
+    /// <summary>
+    /// TextLine에 따른 대사 출력 함수
+    /// </summary>
     private void PrintTextLine(TextLine line)
     {
         isPrinting = true;
 
-        textManager.PrintDialogue(line);
+        dialogueManager.PrintText(line);
     }
 
-    private void ActiveSelection(Select line)
+    /// <summary>
+    /// SelectLine에 따른 선택지를 띄우는 함수
+    /// </summary>
+    private void ActiveSelection(SelectLine line)
     {
         isPrinting = true;
 
-        selectStack.Push(line);
-        selectManager.OpenSelect(line, OptionSelect);
+        selectManager.OpenSelect(line, idx => selectIndex = idx);
     }
 
-    public void OptionSelect(string option)
+    /// <summary>
+    /// ImageLine에 따른 이미지 생성 함수
+    /// </summary>
+    private void RenderImage(ImageLine line)
     {
-        Select select = selectStack.Peek();
-        int skipLineNum = select.OptionsLineNum[option];
+        // 이미지 생성
+        int x = (int)line.pos.x;
+        int y = (int)line.pos.y;
 
-        JumpTo(skipLineNum);
+        imageRenderer.DisplayImage(line.guid, line.sprite, x, y);
     }
 
-    private void SkipToEnd()
+    /// <summary>
+    /// DestroyLine에 따른 이미지 파괴 함수
+    /// </summary>
+    private void DestroyImage(DestroyLine line)
     {
-        Select select = selectStack.Pop();
-        int skipLineNum = select.EndLineNum;
-
-        JumpTo(skipLineNum);
+        imageRenderer.DestroyImage(line.target);
     }
 
-    private void JumpTo(int num)
+    /// <summary>
+    /// TransformLine에 따른 이미지 변형 함수
+    /// </summary>
+    private void TransformImage(TransformLine line)
     {
-        lineNum = num;
-        isPrinting = false;
+        imageRenderer.TransformImage(line.target, line.pos, line.color);
+    }
+
+    private void SetAudio(AudioLine line)
+    {
+
     }
 
     private void ActiveEvent(EventLine line)
     {
-        // 이벤트 일시 사용 중지
         string command = line.Command;
-        // eventManager.GetCommandEvent(command);
+        eventManager.GetCommandEvent(command);
     }
 }

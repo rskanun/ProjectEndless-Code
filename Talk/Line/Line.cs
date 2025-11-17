@@ -1,19 +1,59 @@
-﻿public enum LineType
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum LineType
 {
-    Text,   // 대사출력                  -> 대사번호,코드(Text),이름,대사
-    Select, // 선택지                    -> 대사번호,코드(Select),선택1,선택2,...,선택n
-    Case,   // 선택지 선택에 따른 진행    -> 대사번호,코드(Case),선택지
-    End,    // 선택지 종료 선언           -> 대사번호,코드(End)
-    Event   // 이벤트(수치 조작 등) 발생  -> 대사번호,코드(Event),명령어
+    Text,       // 대사출력
+    Select,     // 선택지
+    Image,      // 이미지
+    Destroy,    // 이미지 파괴
+    Transform,  // 이미지 변형
+    BGM,        // 반복되는 사운드 재생
+    SE,         // 일회성 사운드 재생
+    Event       // 이벤트(수치 조작 등) 발생
 }
 
+[Serializable]
 public class Line
 {
-    private LineType code;
-    public LineType Code { get { return code; } }
+    [SerializeField, HideInInspector]
+    private string _guid;
+    public string guid => _guid;
+
+    [SerializeField]
+    private LineType _code;
+    public LineType code => _code;
+
+    // 에셋 저장 시 가지게 될 연결 라인 guid
+    [SerializeField]
+    private List<string> _nextLineGuids = new();
+    public List<string> nextLineGuids
+    {
+        get => _nextLineGuids;
+        set => _nextLineGuids = value;
+    }
+
+    // 연결 리스트 형태로 연결된 라인 소지
+    [NonSerialized]
+    private List<Line> _nextLines = new();
+    public List<Line> nextLines
+    {
+        get => _nextLines;
+        set => _nextLines = value;
+    }
 
     public Line(LineType code)
     {
-        this.code = code;
+        _guid = Guid.NewGuid().ToString();
+        _code = code;
     }
+
+#if UNITY_EDITOR
+    public Line(string guid, LineType code)
+    {
+        _guid = guid;
+        _code = code;
+    }
+#endif
 }

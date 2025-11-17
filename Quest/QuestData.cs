@@ -6,6 +6,13 @@ public enum QuestType
     Sub     // 서브 퀘스트 -> 스토리와 상관없는 퀘스트
 }
 
+public enum QuestState
+{
+    ACCEPTABLE = 0,
+    ONGOING = 1,
+    COMPLETABLE = 2
+}
+
 [CreateAssetMenu(menuName = "Scriptable Object/QuestData", fileName = "Quest_Data")]
 public class QuestData : ScriptableObject
 {

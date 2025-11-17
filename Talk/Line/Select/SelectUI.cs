@@ -1,8 +1,8 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SelectUI : MonoBehaviour
@@ -14,13 +14,16 @@ public class SelectUI : MonoBehaviour
     private RectTransform selectionWindowRect;
     private RectTransform selectPrefabRect;
 
-    [Header("Game Object")]
+    [Header("구성 요소")]
     [SerializeField] private GameObject darkPanel;
     [SerializeField] private GameObject selectionWindow;
     [SerializeField] private GameObject selectPrefab;
     [SerializeField] private VerticalLayoutGroup layoutGroup;
 
-    private void Start()
+    [Header("설정")]
+    [SerializeField] private float minHeight = 104;
+
+    private void Awake()
     {
         optionList = new List<GameObject>();
 
@@ -30,60 +33,63 @@ public class SelectUI : MonoBehaviour
         originSize = new Vector2(selectionWindowRect.rect.width, selectionWindowRect.rect.height);
     }
 
-    public void SetView(bool isView)
+    public void OpenSelection(List<string> options, Action<string> onClickAction)
     {
-        if (isView)
-        {
-            float containerHeight = originSize.y;
-            float buttonHeight = selectPrefabRect.rect.height;
-            float spacing = layoutGroup.spacing;
-            float height = containerHeight + optionList.Count * (buttonHeight + spacing);
+        // 옵션 개수에 따른 선택창 크기 설정
+        float height = GetSelectionHeight(options.Count);
+        selectionWindowRect.sizeDelta = new Vector2(selectionWindowRect.rect.width, height);
 
-            SelectionOpenAnimation(height);
-        }
+        // 옵션 만들기
+        CreateButtons(options, onClickAction);
 
-        selectionWindow.SetActive(isView);
-        darkPanel.SetActive(isView);
+        // 선택창 UI 활성화
+        selectionWindow.SetActive(true);
+        darkPanel.SetActive(true);
     }
 
-    private void SelectionOpenAnimation(float height)
+    public void CloseSelection()
     {
-        float minH = 104;
-        float sec = 0.25f;
-
-        RectTransform rect = selectionWindowRect;
-
-        DOTween.Sequence()
-            .OnStart(() =>
-            {
-                rect.sizeDelta = new Vector2(rect.rect.width, minH);
-            })
-            .Append(rect.DOSizeDelta(new Vector2(rect.rect.width, height), sec).SetEase(Ease.OutCubic))
-            .OnComplete(() =>
-            {
-                foreach (GameObject option in optionList)
-                {
-                    option.SetActive(true);
-                }
-            });
+        // 선택창 UI 비활성화
+        selectionWindow.SetActive(false);
+        darkPanel.SetActive(false);
     }
 
-    public void CreateButtons(string[] options, Action<string> onClickAction)
+    private float GetSelectionHeight(int optionCount)
     {
+        float containerHeight = originSize.y;
+        float buttonHeight = selectPrefabRect.rect.height;
+        float spacing = layoutGroup.spacing;
+        float height = containerHeight + optionCount * (buttonHeight + spacing);
+
+        // 만들어질 창의 높이가 최소값을 만족하지 못하면 최소값 리턴
+        return Mathf.Max(minHeight, height);
+    }
+
+    private void CreateButtons(List<string> options, Action<string> onClickAction)
+    {
+        bool isSelected = false;
         foreach (string option in options)
         {
             // 버튼 오브젝트 추가
             GameObject obj = Instantiate(selectPrefab, selectionWindow.transform);
+            SelectOption selectOption = obj.GetComponent<SelectOption>();
 
             // 텍스트 변경
-            TextMeshProUGUI text = obj.GetComponentInChildren<TextMeshProUGUI>();
-            text.text = option;
+            selectOption.SetOption(option);
 
             // 호출함수 추가
-            Button button = obj.GetComponent<Button>();
-            button.onClick.AddListener(() => onClickAction.Invoke(option));
+            selectOption.SetHandler(() => onClickAction.Invoke(option));
 
+            // 추후 파괴를 위해 리스트에 추가
             optionList.Add(obj);
+
+            // 아직 선택된 버튼이 없을 경우
+            if (isSelected == false)
+            {
+                // 해당 선택지 버튼을 선택
+                isSelected = true;
+                EventSystem.current.SetSelectedGameObject(obj);
+            }
         }
     }
 

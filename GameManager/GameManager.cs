@@ -1,8 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Endless.GameData;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,7 +27,7 @@ public class GameManager : MonoBehaviour
         select = EventSystem.current.currentSelectedGameObject;
     }
 
-    private void Awake()
+    private async Task Awake()
     {
         // 총 스크립트 개수
         string[] files = Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories);
@@ -41,17 +44,23 @@ public class GameManager : MonoBehaviour
         // 임시 아이템 채워넣기
         InventoryData.Instance.InitInventory();
 
+        // 게임 설정이 완료될 때까지 대기
+        await InitGame();
+
         // 게임 시작 전 설정
         StartGame();
     }
 
-    public void StartGame()
+    private async UniTask InitGame()
     {
         // 게임 상태 초기화
         GameData.Instance.State = state;
 
-        // 시나리오 불러오기
-        LoadScript(chapter);
+        // 로컬리제이션 로드
+        await InitLocalized();
+
+        // 시나리오 로드
+        await LoadScenario(GameData.Instance.Chapter);
 
         // 플레이어 위치 초기화
         GameData.Instance.Position = pos;
@@ -60,13 +69,26 @@ public class GameManager : MonoBehaviour
         GameData.Instance.Date = date;
     }
 
-    private void LoadScript(Chapter data)
+    private async UniTask InitLocalized()
     {
+        // 로컬라이제이션 로드 대기
+        await LocalizationSettings.InitializationOperation.Task;
+    }
+
+    private async UniTask LoadScenario(Chapter data)
+    {
+        var scenarioManager = ScenarioManager.Instance;
+
         int chapter = data.ChapterNum;
         int root = data.RootNum;
         int subChapter = data.SubChapterNum;
 
-        TextScriptResource.Instance.LoadScript(chapter, root, subChapter);
+        await scenarioManager.LoadScenario(chapter, root, subChapter);
+    }
+
+    public void StartGame()
+    {
+
     }
 
     /// <summary>

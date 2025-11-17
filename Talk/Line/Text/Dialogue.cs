@@ -1,0 +1,98 @@
+﻿using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Dialogue : MonoBehaviour
+{
+    private bool isPrinting;
+    private string currentText;
+    public bool IsPrinting => isPrinting;
+
+    // 글자 타이핑 코루틴
+    private Coroutine typingCoroutine;
+
+    [Header("대화 관련 오브젝트")]
+    [SerializeField] private TextMeshProUGUI nameField;
+    [SerializeField] private TextMeshProUGUI lineField;
+    [SerializeField] private GameObject endMark;
+
+    // 텍스트 필드 사이즈 조정 컴포넌트
+    private ContentSizeFitter nameFitter;
+
+    private void OnValidate()
+    {
+        nameFitter = nameField.GetComponent<ContentSizeFitter>();
+    }
+
+    public void SetDialogView(bool isView)
+    {
+        gameObject.SetActive(isView);
+    }
+
+    public void PrintText(string text)
+    {
+        isPrinting = true;
+        currentText = text;
+
+        // 다이어로그 활성화
+        SetDialogView(true);
+
+        // 타이핑 중인 텍스트가 있다면 멈춤
+        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+
+        typingCoroutine = StartCoroutine(TextDelayPrint(text));
+    }
+
+    private IEnumerator TextDelayPrint(string line)
+    {
+        // 출력할 문장이 null인 경우 빈 값으로 넣기
+        if (line == null) line = "";
+
+        int textCnt = 0;
+        lineField.text = "";
+
+        float typingSpeed = OptionData.Instance.TypingSpeed;
+        WaitForSeconds typing = new WaitForSeconds(typingSpeed);
+
+        // 텍스트 출력 종료 표시 제거
+        endMark.SetActive(false);
+
+        // 대화 진행 도중일 경우
+        while (textCnt < line.Length && isPrinting)
+        {
+            yield return typing;
+
+            // 한 글자씩 대화를 출력
+            lineField.text += line[textCnt++];
+        }
+
+        // 텍스트 출력 종료 시 표시 띄우기
+        endMark.SetActive(true);
+
+        typingCoroutine = null;
+        isPrinting = false;
+    }
+
+    public void TextSkip()
+    {
+        isPrinting = false;
+
+        // 타이핑 출력 종료
+        StopCoroutine(typingCoroutine);
+
+        // 모든 텍스트 띄우기
+        lineField.text = currentText;
+
+        // 텍스트 출력 종료 표시 띄우기
+        endMark.SetActive(true);
+    }
+
+    public void SetName(string name)
+    {
+        nameField.text = name;
+
+        // 이름 설정 후, 필드 사이즈 변경
+        nameFitter.SetLayoutHorizontal();
+    }
+}

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
 
 [Serializable]
 public class CsvFile : IEnumerable<string[]>
@@ -47,40 +45,26 @@ public class CsvFile : IEnumerable<string[]>
     {
         return GetEnumerator();
     }
-
-    public override string ToString()
-    {
-        StringBuilder strBuilder = new StringBuilder();
-
-        foreach (string[] lineCells in cells)
-        {
-            strBuilder.AppendLine(string.Join(",", lineCells));
-        }
-
-        return strBuilder.ToString();
-    }
 }
 
-public class CsvReader
+public static class CsvReader
 {
-    public static CsvFile ReadFiles(string folderPath)
+    public static List<CsvFile> ReadFiles(string folderPath)
     {
         if (Directory.Exists(folderPath))
         {
             // 폴더 내 CSV 파일을 읽어 리턴
-            CsvFile file = new CsvFile();
+            List<CsvFile> files = new List<CsvFile>();
             string[] csvFiles = Directory.GetFiles(folderPath, "*.csv");
 
             foreach (string filePath in csvFiles)
             {
-                // 파일 읽어오기
-                CsvFile readFile = ReadFile(filePath);
+                CsvFile file = ReadFile(filePath);
 
-                // 읽어온 파일을 하나의 파일로 합치기
-                file.MergeLines(readFile);
+                files.Add(file);
             }
 
-            return file;
+            return files;
         }
 
         return null;
@@ -110,19 +94,8 @@ public class CsvReader
 
     private static TextAsset GetTextAsset(string path)
     {
-        // 파일을 찾을 수 없는 경우
-        if (!File.Exists(path))
-        {
-            Debug.LogWarning($"파일을 찾을 수 없습니다: {path}");
-            return null;
-        }
-
-        // 파일 확장자가 .csv가 아닐 경우
-        if (Path.GetExtension(path).ToLower() != ".csv")
-        {
-            Debug.LogWarning($"csv가 아닌 잘못된 파일 형식입니다: {path}");
-            return null;
-        }
+        // 파일 경로의 유효성을 검사하고 오류를 던짐
+        IsCorrectPath(path);
 
         // 파일에서 텍스트 읽기
         string fileContent = File.ReadAllText(path);
@@ -133,13 +106,30 @@ public class CsvReader
         return textAsset;
     }
 
+    private static bool IsCorrectPath(string path)
+    {
+        // 파일을 찾을 수 없는 경우
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException($"파일을 찾을 수 없습니다: {path}");
+        }
+
+        // 파일 확장자가 .csv가 아닐 경우
+        if (Path.GetExtension(path).ToLower() != ".csv")
+        {
+            throw new InvalidDataException($"잘못된 파일 형식입니다. csv 파일이 필요합니다: {path}");
+        }
+
+        return true;
+    }
+
     private static string[] SplitLine(string line)
     {
-        // 전달받은 라인의 주석 제거
+        // 전달받은 라인의 공백 제거
         string result = RemoveComment(line);
 
         // CSV 라인을 셀 별로 나누기
-        string[] cells = result.Split(',');
+        string[] cells = line.Split(',');
 
         return cells;
     }
