@@ -38,6 +38,6 @@ public class TalkController : MonoBehaviour, IController
 
     private void OnSelectKeyPressed(InputAction.CallbackContext context)
     {
-        talkManager.OnTalkHandler();
+        talkManager.TalkHandler();
     }
 }

@@ -167,7 +167,7 @@ public class TalkManager : MonoBehaviour
             }
 
             // 다음 이어질 대본이 있는 지 확인
-            readLine = GetNextScriptEntry(npc);
+            readLine = GetNextScenarioIntro(npc);
         }
 
         // 대사를 모두 읽었다면 대사 출력 멈추기
@@ -176,7 +176,21 @@ public class TalkManager : MonoBehaviour
 
     private void UpdateQuestState(Npc npc)
     {
+        // 완료 가능한 퀘스트가 있는 경우 완료하기
+        var quest = npc.GetCompletableQuest();
+        if (quest != null)
+        {
+            QuestManager.Instance.CompleteQuest(quest);
+            return;
+        }
 
+        // 수주 가능한 퀘스트가 있는 경우 수주하기
+        quest = npc.GetAcceptableQuest();
+        if (quest != null)
+        {
+            QuestManager.Instance.AcceptQuest(quest);
+            return;
+        }
     }
 
     private Line GetNextLine(Line currentLine)
@@ -199,18 +213,20 @@ public class TalkManager : MonoBehaviour
         return currentLine.nextLines.ElementAtOrDefault(selectIndex);
     }
 
-    private Line GetNextScriptEntry(Npc npc)
+    private Line GetNextScenarioIntro(Npc npc)
     {
         // 수주 가능한 퀘스트 확인
-        if (TryAcceptQuest(npc, out QuestData acceptQuest))
+        var quest = npc.GetAcceptableQuest();
+        if (quest != null)
         {
-            return GetQuestIntro(acceptQuest, QuestState.ACCEPTABLE);
+            return GetQuestIntro(quest, QuestState.Inactive);
         }
 
         // 완료 가능한 퀘스트 확인
-        if (TryCompleteQuest(npc, out QuestData completeQuest))
+        quest = npc.GetCompletableQuest();
+        if (quest != null)
         {
-            return GetQuestIntro(completeQuest, QuestState.COMPLETABLE);
+            return GetQuestIntro(quest, QuestState.Completed);
         }
 
         // 이어질 퀘스트 대화가 없으면 null을 반환

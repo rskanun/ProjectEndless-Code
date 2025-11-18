@@ -2,21 +2,10 @@
 
 public class DialogueManager : MonoBehaviour
 {
-    [Header("대화창 종류")]
-    [SerializeField] private Dialogue normalDialogue;
-    [SerializeField] private Dialogue abyssDialogue;
+    [SerializeField]
+    private Dialogue dialogue;
 
-    public bool IsPrinting => current.IsPrinting;
-
-    private Dialogue current;
-
-    public void OnMapChanged()
-    {
-        MapData map = GameData.Instance.CurrentMap;
-
-        // 현재 플레이어가 있는 위치에 따라 대화창 스킨 바꾸기
-        current = map.IsAbyss ? abyssDialogue : normalDialogue;
-    }
+    public bool IsPrinting => dialogue.IsPrinting;
 
     /************************************************************
     * [대화 출력]
@@ -30,17 +19,17 @@ public class DialogueManager : MonoBehaviour
         var name = manager.GetLocalizedName(line.nameKey);
         var text = manager.GetLocalizedDialogue(line.dialogueKey);
 
-        current.SetName(name);
-        current.PrintText(text);
+        dialogue.SetName(name);
+        dialogue.PrintText(text);
     }
 
     public void TextSkip()
     {
-        current.TextSkip();
+        dialogue.TextSkip();
     }
 
     public void CloseDialogue()
     {
-        current.SetDialogView(false);
+        dialogue.SetDialogView(false);
     }
 }

@@ -30,8 +30,8 @@ public class QuestData : ScriptableObject
 
     [SerializeField]
     [TextArea]
-    private string _description;
-    public string Description => _description;
+    private string _content;
+    public string Content => _content;
 
     // 달성 조건
 

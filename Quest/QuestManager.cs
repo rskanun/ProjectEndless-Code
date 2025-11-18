@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System.Linq;
+using System;
+
 
 
 
@@ -64,8 +66,18 @@ public class QuestManager : ScriptableObject
     [ReadOnly, SerializeField]
     private List<QuestData> questDatas = new();
 
+    // 현재 추적 중인 퀘스트
+    private QuestData _trackedQuest;
+    public QuestData TrackedQuest => _trackedQuest;
+
     // 퀘스트 상태 정리 테이블 => 퀘스트 ID, 퀘스트 상태
     private Dictionary<int, QuestState> stateLookup = new();
+
+    // 퀘스트 변경 핸들러
+    public event Action onQuestChanged;
+
+    // 추적 퀘스트 변경 핸들러
+    public event Action<QuestData> onTrackedQuestChanged;
 
 #if UNITY_EDITOR
     [Button(ButtonSizes.Large, Name = "Reload Quest Files")]
@@ -85,7 +97,6 @@ public class QuestManager : ScriptableObject
             .ToList();
     }
 #endif
-
     public QuestData FindQuest(int id)
     {
         return questDatas.FirstOrDefault(quest => quest.ID == id);
@@ -116,9 +127,35 @@ public class QuestManager : ScriptableObject
         return GetQuestState(quest) == QuestState.OnGoing;
     }
 
-    public void SetState(QuestData quest, QuestState state)
+    public void CompleteQuest(QuestData quest)
     {
-        // 퀘스트 상태 갱신
-        stateLookup[quest.ID] = state;
+        // 퀘스트 완료 상태로 갱신
+        stateLookup[quest.ID] = QuestState.Completed;
+
+        // 알림 보내기
+        NotifyChanged();
+    }
+
+    public void AcceptQuest(QuestData quest)
+    {
+        // 퀘스트 진행 상태로 갱신
+        stateLookup[quest.ID] = QuestState.OnGoing;
+
+        // 알림 보내기
+        NotifyChanged();
+    }
+
+    public void SetTrackedQuest(QuestData quest)
+    {
+        if (quest == _trackedQuest) return;
+
+        _trackedQuest = quest;
+
+        onTrackedQuestChanged?.Invoke(quest);
+    }
+
+    private void NotifyChanged()
+    {
+        onQuestChanged?.Invoke();
     }
 }

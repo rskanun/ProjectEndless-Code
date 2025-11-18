@@ -14,7 +14,7 @@ public class Dialogue : MonoBehaviour
 
     [Header("대화 관련 오브젝트")]
     [SerializeField] private TextMeshProUGUI nameField;
-    [SerializeField] private TextMeshProUGUI lineField;
+    [SerializeField] private TextMeshProUGUI textField;
     [SerializeField] private GameObject endMark;
 
     // 텍스트 필드 사이즈 조정 컴포넌트
@@ -50,7 +50,7 @@ public class Dialogue : MonoBehaviour
         if (line == null) line = "";
 
         int textCnt = 0;
-        lineField.text = "";
+        textField.text = "";
 
         float typingSpeed = OptionData.Instance.TypingSpeed;
         WaitForSeconds typing = new WaitForSeconds(typingSpeed);
@@ -64,7 +64,7 @@ public class Dialogue : MonoBehaviour
             yield return typing;
 
             // 한 글자씩 대화를 출력
-            lineField.text += line[textCnt++];
+            textField.text += line[textCnt++];
         }
 
         // 텍스트 출력 종료 시 표시 띄우기
@@ -82,7 +82,7 @@ public class Dialogue : MonoBehaviour
         StopCoroutine(typingCoroutine);
 
         // 모든 텍스트 띄우기
-        lineField.text = currentText;
+        textField.text = currentText;
 
         // 텍스트 출력 종료 표시 띄우기
         endMark.SetActive(true);

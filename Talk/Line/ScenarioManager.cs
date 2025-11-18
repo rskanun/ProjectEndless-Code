@@ -133,12 +133,6 @@ public class ScenarioManager : ScriptableObject
         // 변경사항 저장
         EditorUtility.SetDirty(settings);
     }
-
-    [Button(ButtonSizes.Large, Name = "Test")]
-    public void Test()
-    {
-        Debug.Log(labelPrefix);
-    }
 #endif
 
     public string GetLocalizedName(string key)
@@ -179,6 +173,14 @@ public class ScenarioManager : ScriptableObject
         // Addressable에서 찾아올 레이블 이름
         string labelName = $"{labelPrefix}_{chapter}{root}{subChapter:d2}";
 
+        // 유효한지 먼저 판단
+        if (!await IsValidLabel(labelName))
+        {
+            // 유효하지 않다면 시나리오 로드 즉시 종료
+            Debug.LogError($"유효하지 않은 레이블입니다. 문제가 발생한 레이블: {labelName}");
+            return;
+        }
+
         // 현재 진행 상황에 맞는 Scenario 에셋 비동기로 로드
         var handle = Addressables.LoadAssetsAsync<Scenario>(labelName, null);
         IList<Scenario> scenarios = await handle.Task;
@@ -199,6 +201,32 @@ public class ScenarioManager : ScriptableObject
 
         // 시나리오 정보만을 가져온 후 해제
         Addressables.Release(handle);
+    }
+
+    private async UniTask<bool> IsValidLabel(string labelName)
+    {
+        // 미리 해당 레이블을 가진 에셋이 있는 지 주소 값을 불러오기
+        var handle = Addressables.LoadResourceLocationsAsync(labelName);
+
+        try
+        {
+            var locations = await handle.Task;
+
+            // 존재 여부로 유효한 레이블인지 판단
+            return handle.Status == AsyncOperationStatus.Succeeded &&
+                    locations == null &&
+                    locations.Count > 0;
+        }
+        catch
+        {
+            // 만약 로드 중에 오류가 있다면 유효하지 않다고 판단
+            return false;
+        }
+        finally
+        {
+            // 핸들은 어떠한 상황에서도 무조건 해제
+            Addressables.Release(handle);
+        }
     }
 
     private async UniTask LoadLocalizationTables(IEnumerable<Scenario> scenarios)

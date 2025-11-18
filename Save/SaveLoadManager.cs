@@ -255,7 +255,7 @@ public class SaveLoadManager : ScriptableObject
 
     private void SetQuestData(SaveQuestData data)
     {
-        QuestData quest = QuestManager.FindQuest(data.id);
+        QuestData quest = QuestManager.Instance.FindQuest(data.id);
 
         GameData.Instance.MainQuest = quest;
     }
