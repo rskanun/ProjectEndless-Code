@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,48 +5,40 @@ public class Npc : MonoBehaviour
 {
     [SerializeField]
     private NpcData npc;
-
-    [SerializeField] // 퀘스트 정보
-    private List<QuestData> quests;
+    private Line introLine;
 
     public int GetID()
     {
         return npc.ID;
     }
 
-    public List<Line> GetLines()
+    public Line GetIntroLine()
     {
-        return npc.Lines;
-    }
+        // 대사를 가지고 있지 않는 경우
+        if (introLine == null)
+        {
+            // 해당 npc의 id에 해당하는 대사 찾아 담기
+            introLine = ScenarioManager.Instance.GetNpcDialogueIntro(npc.ID);
+        }
 
-    public QuestData GetAcceptedQuest()
-    {
-        // 해당 NPC의 진행 중인 퀘스트 리턴
-        return quests.FirstOrDefault(quest
-            => GameData.Instance.CurrentQuest == quest);
+        return introLine;
     }
 
     public QuestData GetAcceptableQuest()
     {
-        // 조건을 만족하는 수주 가능한 퀘스트 리턴 
-        return quests.FirstOrDefault(quest
-            => QuestManager.Instance.IsCompletedQuest(quest) == false   // 완료 되지 않아야 함
-                && quest != GameData.Instance.CurrentQuest              // 현재 퀘스트가 아니어야 함
-                && (quest.RequiredQuest == null                         // 선행퀘가 없거나 완료되어야 함
-                || QuestManager.Instance.IsCompletedQuest(quest.RequiredQuest)));
+        return npc.Quests.FirstOrDefault(quest =>
+            QuestManager.Instance.IsAcceptableQuest(quest));
+    }
+
+    public QuestData GetAcceptedQuest()
+    {
+        return npc.Quests.FirstOrDefault(quest =>
+            QuestManager.Instance.GetQuestState(quest) == QuestState.OnGoing);
     }
 
     public QuestData GetCompletableQuest()
     {
-        // 현재 퀘스트 가져오기
-        QuestData currentQuest = GameData.Instance.CurrentQuest;
-
-        // 현재 퀘스트가 null이 아니고, 해당 NPC가 목표 대상이면 반환
-        return currentQuest != null && currentQuest.ObjectID == GetID() ? currentQuest : null;
-    }
-
-    public bool IsInteractive()
-    {
-        return npc.Lines != null;
+        return npc.Quests.FirstOrDefault(quest =>
+            QuestManager.Instance.IsCompletableQuest(quest));
     }
 }

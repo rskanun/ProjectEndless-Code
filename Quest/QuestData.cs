@@ -8,9 +8,9 @@ public enum QuestType
 
 public enum QuestState
 {
-    ACCEPTABLE = 0,
-    ONGOING = 1,
-    COMPLETABLE = 2
+    Inactive = 0,
+    OnGoing = 1,
+    Completed = 2
 }
 
 [CreateAssetMenu(menuName = "Scriptable Object/QuestData", fileName = "Quest_Data")]
@@ -18,37 +18,22 @@ public class QuestData : ScriptableObject
 {
     [SerializeField]
     private int _id;
-    public int ID
-    {
-        get { return _id; }
-    }
+    public int ID => _id;
 
     [SerializeField]
     private QuestType _type;
-    public QuestType Type
-    {
-        get { return _type; }
-    }
+    public QuestType Type => _type;
 
     [SerializeField]
     private string _title;
-    public string Title
-    {
-        get { return _title; }
-    }
+    public string Title => _title;
 
     [SerializeField]
     [TextArea]
     private string _description;
-    public string Description
-    {
-        get { return _description; }
-    }
+    public string Description => _description;
 
     // 달성 조건
 
-    public bool IsMainQuest
-    {
-        get { return _type == QuestType.Main; }
-    }
+    public bool IsMainQuest => _type == QuestType.Main;
 }

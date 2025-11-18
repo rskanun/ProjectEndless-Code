@@ -111,49 +111,34 @@ public class TalkManager : MonoBehaviour
         // 대화 처음 시작 시 해당되는 대화의 첫 부분 가져오기
         Line intro = GetIntroLine(npc);
 
-        // 현재 완료 및 수주가 가능한 퀘스트 처리
-        CheckToQuest(npc);
-
         // 대사 읽기 시작
         readLineCoroutine = StartCoroutine(ReadLines(npc, intro));
     }
 
-    private void CheckToQuest(Npc npc)
+    private Line GetIntroLine(Npc npc)
     {
-        // 완료할 퀘스트가 있는 경우 완료
-        if (!TryCompleteQuest(npc, out _))
-        {
-            // 수주할 퀘스트가 있는 경우 수주
-            TryAcceptQuest(npc, out _);
-        }
+        // 수주 가능한 퀘스트가 있는 경우
+        var quest = npc.GetAcceptableQuest();
+        if (quest != null) return GetQuestIntro(quest, QuestState.Inactive);
+
+        // 완료 가능한 퀘스트가 있는 경우
+        quest = npc.GetCompletableQuest();
+        if (quest != null) return GetQuestIntro(quest, QuestState.Completed);
+
+        // 진행 중인 퀘스트가 있는 경우
+        quest = npc.GetAcceptedQuest();
+        if (quest != null) return GetQuestIntro(quest, QuestState.OnGoing);
+
+        // 모든 조건에 충족하지 않으면 일반 대사
+        return npc.GetIntroLine();
     }
 
-    private bool TryCompleteQuest(Npc npc, out QuestData completeQuest)
+    private Line GetQuestIntro(QuestData quest, QuestState state)
     {
-        completeQuest = npc.GetCompletableQuest();
-        if (completeQuest != null)
-        {
-            // 퀘스트 완료
-            QuestManager.Instance.CompleteCurrentQuest();
+        if (quest == null)
+            return null;
 
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool TryAcceptQuest(Npc npc, out QuestData acceptQuest)
-    {
-        acceptQuest = npc.GetAcceptableQuest();
-        if (acceptQuest != null)
-        {
-            // 퀘스트 수주
-            QuestManager.Instance.AcceptQuest(acceptQuest);
-
-            return true;
-        }
-
-        return false;
+        return ScenarioManager.Instance.GetQuestIntro(quest.ID, state);
     }
 
     private IEnumerator ReadLines(Npc npc, Line intro)
@@ -166,6 +151,9 @@ public class TalkManager : MonoBehaviour
         readLine = intro;
         while (readLine != null)
         {
+            // 퀘스트 상태 갱신
+            UpdateQuestState(npc);
+
             // 대사 하나하나 출력
             while (readLine != null)
             {
@@ -184,6 +172,11 @@ public class TalkManager : MonoBehaviour
 
         // 대사를 모두 읽었다면 대사 출력 멈추기
         EndTalk();
+    }
+
+    private void UpdateQuestState(Npc npc)
+    {
+
     }
 
     private Line GetNextLine(Line currentLine)
@@ -232,35 +225,10 @@ public class TalkManager : MonoBehaviour
         imageRenderer.AllDestoryImages();
 
         // 플레이어 조작 컨트롤러 활성화
-        ControlContext.Instance.ConnectController(typeof(PlayerController));
+        ControlContext.Instance.EnableController(typeof(PlayerController));
 
         // 대화 조작 컨트롤러 비활성화
-        ControlContext.Instance.DisconnectController(typeof(TalkController));
-    }
-
-    private Line GetIntroLine(Npc npc)
-    {
-        // 진행 가능한 퀘스트가 있는 경우
-        QuestData quest = npc.GetAcceptableQuest();
-        if (quest != null) return GetQuestIntro(quest, QuestState.ACCEPTABLE);
-
-        // 완료 가능한 퀘스트가 있는 경우
-        quest = npc.GetCompletableQuest();
-        if (quest != null) return GetQuestIntro(quest, QuestState.COMPLETABLE);
-
-        // 진행 중인 퀘스트가 있는 경우
-        quest = npc.GetAcceptedQuest();
-        if (quest != null) return GetQuestIntro(quest, QuestState.ONGOING);
-
-        return npc.GetIntroLine();
-    }
-
-    private Line GetQuestIntro(QuestData quest, QuestState state)
-    {
-        if (quest == null)
-            return null;
-
-        return ScenarioManager.Instance.GetQuestIntro(quest.ID, state);
+        ControlContext.Instance.DisableController(typeof(TalkController));
     }
 
     /************************************************************
