@@ -2,14 +2,14 @@
 
 public class IdleState : IMonsterState
 {
-    private MonsterObject monster;
+    private FieldMonster monster;
 
     // 몬스터 이동 관련 변수
     private Vector2 targetPos;
     private int pointIndex;
     private float thinkDelay;
 
-    public IdleState(MonsterObject monster)
+    public IdleState(FieldMonster monster)
     {
         this.monster = monster;
     }

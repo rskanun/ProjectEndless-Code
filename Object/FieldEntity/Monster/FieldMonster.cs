@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AttackManager))]
-public class MonsterObject : MonoBehaviour
+public class FieldMonster : MonoBehaviour
 {
     [Header("참조 스크립트")]
     [SerializeField] private OrganManager organManager;

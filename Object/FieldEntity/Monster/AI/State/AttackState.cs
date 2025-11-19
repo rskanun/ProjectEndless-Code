@@ -2,9 +2,9 @@
 
 public class AttackState : IMonsterState
 {
-    private MonsterObject monster;
+    private FieldMonster monster;
 
-    public AttackState(MonsterObject monster)
+    public AttackState(FieldMonster monster)
     {
         this.monster = monster;
     }

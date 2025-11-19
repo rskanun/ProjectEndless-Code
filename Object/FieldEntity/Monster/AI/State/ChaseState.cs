@@ -2,11 +2,11 @@
 
 public class ChaseState : IMonsterState
 {
-    private MonsterObject monster;
+    private FieldMonster monster;
 
     private Vector3 lastPlayerPos;
 
-    public ChaseState(MonsterObject monster)
+    public ChaseState(FieldMonster monster)
     {
         this.monster = monster;
     }
