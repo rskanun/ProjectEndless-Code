@@ -37,16 +37,6 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
     [ShowInInspector]
     public int currentTime { get; private set; }
 
-    private void OnValidate()
-    {
-        if (mainTime == null || ceilTime == null || overCeilTime == null || floorTime == null || overFloorTime == null)
-        {
-            return;
-        }
-
-        SetTime(currentTime);
-    }
-
     public void OnSelect(BaseEventData eventData)
     {
         // 타이머 본래 위치 기억하기

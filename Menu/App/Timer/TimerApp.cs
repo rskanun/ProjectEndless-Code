@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -89,5 +88,10 @@ public class TimerApp : App
 
         // 타이머 선택
         timerUI.SelectFirstTimer();
+    }
+
+    protected override void OnClose()
+    {
+        timerUI.ResetUI();
     }
 }

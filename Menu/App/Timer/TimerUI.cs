@@ -126,4 +126,15 @@ public class TimerUI : AppUI
         hpBar.UpdateAmount((int)MathF.Min(hpPercent, 100), 100);
         spBar.UpdateAmount((int)MathF.Min(spPercent, 100), 100);
     }
+
+    public void ResetUI()
+    {
+        // 디테일 창 삭제
+        simpleInfo.gameObject.SetActive(true);
+        detailInfo.gameObject.SetActive(false);
+
+        // 모든 타이머의 제어 UI 비활성화
+        hourTimer.OnDeselect(null);
+        minTimer.OnDeselect(null);
+    }
 }
