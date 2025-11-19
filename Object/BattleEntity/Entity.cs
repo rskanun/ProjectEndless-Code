@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public enum BattlePosition
@@ -202,16 +203,16 @@ public abstract class Entity : MonoBehaviour
     {
         // 해당 엔티티의 공격 타입에 따라 공격 모션 선택
         if (AttackType == AttackType.Melee)
-            motionManager.ActMeleeAttackAnimation(target, onHit);
+            motionManager.ActMeleeAttackAnimation(target, onHit).Forget();
         else
-            motionManager.ActRangeAttackAnimation(target, onHit);
-
+            motionManager.ActRangeAttackAnimation(target, onHit).Forget();
     }
 
     public void Counterattack(Entity target)
     {
         // 반격 모션 실행
-        motionManager.ActCounterattackAnimation(() => target.OnDamage(AttackDmg, Stat.MP, 1.0f));
+        motionManager.ActCounterattackAnimation(() =>
+            target.OnDamage(AttackDmg, Stat.MP, 1.0f)).Forget();
     }
 
     public virtual float GetCriticalChance(Entity target)
@@ -328,7 +329,7 @@ public abstract class Entity : MonoBehaviour
             State.Remove(EntityState.Dodge);
 
             // 회피 모션 실행
-            motionManager.ActMotion("dodge");
+            motionManager.ActMotion(AnimParams.DodgeTrigger);
             return;
         }
 
@@ -341,7 +342,7 @@ public abstract class Entity : MonoBehaviour
         Stat.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
-        motionManager.ActHitAnimation();
+        motionManager.ActHitAnimation().Forget();
 
         // 데미지 표시
         DamagePopup.IndicateDamage(transform.position, lastDamage);
@@ -452,7 +453,7 @@ public abstract class Entity : MonoBehaviour
     {
         Debug.Log("Parrying");
         // 패링 모션 실행
-        motionManager.ActMotion("parry");
+        motionManager.ActMotion(AnimParams.ParryTrigger);
 
         // 모션 체크
         yield return new WaitUntil(() => IsActing == false);
