@@ -59,6 +59,9 @@ public class FieldArea : MonoBehaviour
     private void OnEnable()
     {
         manager.RegisterArea(this);
+
+        // 클리어 여부와 상관없이 몬스터는 전부 비활성화
+        SetActiveMonsters(false);
     }
 
     private void OnDisable()
