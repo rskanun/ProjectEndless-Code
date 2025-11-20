@@ -1,27 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class DropItem
-{
-    [Range(0, 100)]
-    public int dropChance;
-    public int maxCount;
-    public Item dropItem;
-}
+
 public abstract class Monster : Entity
 {
-    [Header("획득 보상")]
-    [SerializeField] private int minAmount;
-    [SerializeField] private int maxAmount;
-
-    [SerializeField]
-    private List<DropItem> _dropItems;
-    public List<DropItem> DropItems
-    {
-        get { return _dropItems; }
-    }
-
     private float AttackTurn => GetLastTurn(1.0f);
 
     protected override void Awake()
@@ -29,7 +11,7 @@ public abstract class Monster : Entity
         base.Awake();
 
         // 최종스텟 설정
-        Stat = OriginStat.Clone();
+        _finalStats = entityData.Stats.Clone();
 
         // HUD 업데이트
         InitHUD();
@@ -38,23 +20,26 @@ public abstract class Monster : Entity
     private void InitHUD()
     {
         // HUD 업데이트
-        hud.UpdateHP(Stat.HP, Stat.MaxHP);
-        hud.UpdateMP(Stat.MP, Stat.MaxMP);
-        hud.UpdateSP(Stat.SP, Stat.MaxSP);
+        hud.UpdateHP(FinalStats.HP, FinalStats.MaxHP);
+        hud.UpdateMP(FinalStats.MP, FinalStats.MaxMP);
+        hud.UpdateSP(FinalStats.SP, FinalStats.MaxSP);
     }
 
     public int GetDropGold()
     {
-        int dropGold = Random.Range(minAmount, maxAmount + 1);
+        var data = entityData as MonsterData;
+        int dropGold = Random.Range(data.MinAmount, data.MaxAmount + 1);
 
         return dropGold;
     }
 
     public Dictionary<Item, int> GetDropItems()
     {
+        var data = entityData as MonsterData;
+
         Dictionary<Item, int> result = new Dictionary<Item, int>();
 
-        foreach (DropItem dropItem in DropItems)
+        foreach (DropItem dropItem in data.DropItems)
         {
             int chance = Random.Range(0, 100) + 1;
 
@@ -84,7 +69,7 @@ public abstract class Monster : Entity
 
     protected virtual void SelectSkill(Skill skill, List<Entity> targets, int? index = null)
     {
-        Debug.Log($"{Name}: Select Skill");
+        Debug.Log($"{entityData.Name}: Select Skill");
         SkillAction action = new SkillAction();
 
         action.actor = this;
@@ -123,7 +108,7 @@ public abstract class Monster : Entity
         action.remainTurn = 10.0f;
         action.actor = this;
 
-        Debug.Log($"{Name}: {action.remainTurn} Turn Waiting...");
+        Debug.Log($"{entityData.Name}: {action.remainTurn} Turn Waiting...");
 
         // 선택한 행동 예약
         SelectAction(action);
@@ -134,8 +119,10 @@ public abstract class Monster : Entity
 
     private void SelectAction(BattleAction action, int? index = null)
     {
-        if (index.HasValue) battleSeq.AddTurn(action, index.Value);
-        else battleSeq.AddTurn(action);
+        var seq = BattleData.Instance.Sequence;
+
+        if (index.HasValue) seq.AddTurn(action, index.Value);
+        else seq.AddTurn(action);
     }
 
     /***************************************************************
@@ -153,7 +140,7 @@ public abstract class Monster : Entity
         GameEventManager.Instance.NotifyEnemyDefeated();
 
         // 처지 보상 업데이트
-        battleData.AddKillReward(this);
+        BattleData.Instance.AddKillReward(this);
     }
 
     public override void OnParried()
@@ -167,16 +154,18 @@ public abstract class Monster : Entity
 
     public void EnableParry()
     {
-        battleData.IsParryFrame = true;
+        BattleData.Instance.IsParryFrame = true;
     }
 
     public void EnableDodge()
     {
-        battleData.IsDodgeFrame = true;
+        BattleData.Instance.IsDodgeFrame = true;
     }
 
     public void DisableDefensive()
     {
+        var battleData = BattleData.Instance;
+
         battleData.IsParryFrame = false;
         battleData.IsDodgeFrame = false;
         battleData.IsUsedParry = false;

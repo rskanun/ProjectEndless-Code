@@ -21,7 +21,7 @@ public class Cautious : Personality
         float hpWeight = 1.0f;
 
         // 체력이 낮은 순서부터 순회
-        foreach (Entity target in targetList.OrderBy(entity => entity.Stat.HP))
+        foreach (Entity target in targetList.OrderBy(entity => entity.FinalStats.HP))
         {
             // 가중치 초기값 설정
             weightData[target] = 0.0f;

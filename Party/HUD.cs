@@ -17,8 +17,8 @@ public class HUD : MonoBehaviour
         nameText.text = chrData.Name;
 
         // Init HP & SP Bar
-        UpdateHP(chrData.Stat.HP, chrData.Stat.MaxHP);
-        UpdateSP(chrData.Stat.SP, chrData.Stat.MaxSP);
+        UpdateHP(chrData.Stats.HP, chrData.Stats.MaxHP);
+        UpdateSP(chrData.Stats.SP, chrData.Stats.MaxSP);
     }
 
     public void UpdateHP(int hp, int maxHP)

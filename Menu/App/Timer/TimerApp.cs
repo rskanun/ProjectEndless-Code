@@ -71,8 +71,8 @@ public class TimerApp : App
             if (!character.IsUnlocked) return;
 
             // 해당 캐릭터의 HP와 SP 일정 회복
-            character.Stat.HP += Mathf.RoundToInt(character.Stat.MaxHP * hpPercent);
-            character.Stat.SP += Mathf.RoundToInt(character.Stat.MaxSP * spPercent);
+            character.Stats.HP += Mathf.RoundToInt(character.Stats.MaxHP * hpPercent);
+            character.Stats.SP += Mathf.RoundToInt(character.Stats.MaxSP * spPercent);
         }
     }
 

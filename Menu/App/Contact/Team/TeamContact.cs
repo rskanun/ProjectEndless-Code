@@ -29,8 +29,8 @@ public class TeamContact : Contact, ISubmitHandler
 
         nameField.text = character.Name;
         partyMark.SetActive(character.IsParty);
-        hpHud.UpdateAmount(character.Stat.HP, character.Stat.MaxHP);
-        spHud.UpdateAmount(character.Stat.SP, character.Stat.MaxSP);
+        hpHud.UpdateAmount(character.Stats.HP, character.Stats.MaxHP);
+        spHud.UpdateAmount(character.Stats.SP, character.Stats.MaxSP);
     }
 
     public void SetPartyStatus(bool isInParty)

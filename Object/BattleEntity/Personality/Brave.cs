@@ -14,7 +14,7 @@ public class Brave : Personality
         float atkWeight = 2.0f;
 
         // 힘과 마력의 합이 높은 순서부터 순회
-        foreach (Entity target in targetList.OrderBy(entity => entity.Stat.STR + entity.Stat.MaxMP))
+        foreach (Entity target in targetList.OrderBy(entity => entity.FinalStats.STR + entity.FinalStats.MaxMP))
         {
             // 가중치 초기값 설정
             weightData[target] = 0.0f;

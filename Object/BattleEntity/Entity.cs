@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public enum BattlePosition
@@ -18,77 +19,39 @@ public enum AttackType
 
 public abstract class Entity : MonoBehaviour
 {
-    [Header("엔티티 정보")]
-    [SerializeField]
-    private string _name;
-    public string Name
-    {
-        get { return _name; }
-    }
+    [SerializeField, InlineEditor]
+    protected EntityData entityData;
 
-    [SerializeField]
-    private BattlePosition _position;
-    public BattlePosition Position
-    {
-        protected set { _position = value; }
-        get { return _position; }
-    }
+    // 외부 스크립트용
+    public string Name => entityData.Name;
+    public Sprite Icon => entityData.Icon;
+    public BattlePosition Position => entityData.Position;
+    public AttackType AttackType => entityData.AttackType;
+    public List<Skill> Skills => entityData.Skills;
 
-    [SerializeField]
-    private AttackType _attackType;
-    public AttackType AttackType
-    {
-        protected set { _attackType = value; }
-        get { return _attackType; }
-    }
-
-    [SerializeField]
-    private PersonalityType _personalityType;
-    protected PersonalityType PersonalityType
-    {
-        set { _personalityType = value; }
-    }
+    // 성격 AI
     private Personality _personality;
     public Personality Personality
     {
         get
         {
-            if (_personality == null || _personality.type != _personalityType)
-                _personality = Personality.OfType(_personalityType);
+            if (_personality == null || _personality.type != entityData.Personality)
+                _personality = Personality.OfType(entityData.Personality);
 
             return _personality;
         }
     }
 
-    [Header("스킬 목록")]
-    [SerializeField]
-    private List<Skill> _skillList;
-    public List<Skill> SkillList
-    {
-        protected set { _skillList = value; }
-        get { return _skillList; }
-    }
-
-    [Header("스텟")]
-    [SerializeField]
-    private EntityStat _originStat;
-    public EntityStat OriginStat
-    {
-        protected set { _originStat = value; }
-        get { return _originStat; }
-    }
+    // 최종 스탯
     [ReadOnly, SerializeField]
-    private EntityStat _lastStat;  // 상태 효과에 따른 최종 스탯값
-    public EntityStat Stat
-    {
-        protected set { _lastStat = value; }
-        get { return _lastStat; }
-    }
+    protected EntityStats _finalStats;  // 상태 효과에 따른 최종 스탯값
+    public EntityStats FinalStats => _finalStats;
+
     // 데미지 공식
     public float AttackDmg
     {
         // 임시 데미지 공식
-        get { return Stat.STR; }
+        get { return FinalStats.STR; }
     }
 
     [Header("참조 스크립트")]
@@ -100,11 +63,7 @@ public abstract class Entity : MonoBehaviour
 
     // 현재 상태
     private bool _isDead;
-    public bool IsDead
-    {
-        private set { _isDead = value; }
-        get { return _isDead; }
-    }
+    public bool IsDead => _isDead;
     public bool IsActing => motionManager.IsActing;
     public bool IsIdle => motionManager.IsIdle;
     private EntityStateManager _stateManager;
@@ -119,24 +78,15 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    // 전투 순서 데이터
-    protected BattleData battleData { private set; get; }
-    protected BattleSequence battleSeq { private set; get; }
 
     protected virtual void Awake()
     {
-        InitData();
-    }
 
-    private void InitData()
-    {
-        battleData = BattleData.Instance;
-        battleSeq = battleData.Sequence;
     }
 
     public float GetLastTurn(float originTurn)
     {
-        return originTurn * (1.0f - ((Stat.AGI / 10) / 10.0f));
+        return originTurn * (1.0f - ((FinalStats.AGI / 10) / 10.0f));
     }
 
     public void GatherCurTurnInfo()
@@ -191,18 +141,18 @@ public abstract class Entity : MonoBehaviour
         float criticalChance = GetCriticalChance(target);
 
         // 공격 모션 실행
-        ActAttackAnimation(target, () => target.OnDamage(AttackDmg, Stat.MP, criticalChance));
+        ActAttackAnimation(target, () => target.OnDamage(AttackDmg, FinalStats.MP, criticalChance));
 
         // 타겟에게 방어 유형 전달
         // 원거리는 패링 X
-        bool isUsedParry = AttackType == AttackType.Melee;
+        bool isUsedParry = entityData.AttackType == AttackType.Melee;
         target.OnTargetedAttack(this, isUsedParry, true);
     }
 
     private void ActAttackAnimation(Entity target, Action onHit)
     {
         // 해당 엔티티의 공격 타입에 따라 공격 모션 선택
-        if (AttackType == AttackType.Melee)
+        if (entityData.AttackType == AttackType.Melee)
             motionManager.ActMeleeAttackAnimation(target, onHit).Forget();
         else
             motionManager.ActRangeAttackAnimation(target, onHit).Forget();
@@ -212,14 +162,14 @@ public abstract class Entity : MonoBehaviour
     {
         // 반격 모션 실행
         motionManager.ActCounterattackAnimation(() =>
-            target.OnDamage(AttackDmg, Stat.MP, 1.0f)).Forget();
+            target.OnDamage(AttackDmg, FinalStats.MP, 1.0f)).Forget();
     }
 
     public virtual float GetCriticalChance(Entity target)
     {
         // 크리티컬 확률 계산
         if (target.HasState(EntityState.Stagger)) return 1.0f;
-        return (Stat.DEX - target.Stat.AGI) / (2.0f * Stat.DEX);
+        return (FinalStats.DEX - target.FinalStats.AGI) / (2.0f * FinalStats.DEX);
     }
 
     /***************************************************************
@@ -231,8 +181,8 @@ public abstract class Entity : MonoBehaviour
     public virtual void CastSkill(Skill skill, List<Entity> targets)
     {
         // SP 소모
-        Stat.SP -= skill.CostSP;
-        hud.UpdateSP(Stat.SP, Stat.MaxSP);
+        FinalStats.SP -= skill.CostSP;
+        hud.UpdateSP(FinalStats.SP, FinalStats.MaxSP);
 
         // 스킬 시전
         skill.OnCasting(this, targets);
@@ -276,7 +226,7 @@ public abstract class Entity : MonoBehaviour
         BattleCameraDirector.Instance.FocusFullScreen();
 
         // 해당 엔티티를 전투에서 영구 제외
-        battleData.RemoveEntity(this);
+        BattleData.Instance.RemoveEntity(this);
 
         // 오브젝트 비활성화
         gameObject.SetActive(false);
@@ -311,6 +261,8 @@ public abstract class Entity : MonoBehaviour
 
     private List<Entity> GetTargetableList()
     {
+        var battleData = BattleData.Instance;
+
         return (this is Monster) ? battleData.LivingCharacters
             : battleData.LivingEnemies;
     }
@@ -338,8 +290,8 @@ public abstract class Entity : MonoBehaviour
 
         // 크리티컬일 경우 기존 데미지의 1.2배 + 방어력 수치 무시
         int lastDamage = isCritical ? GetLastDmg(damage * 1.2f, true) : GetLastDmg(damage, false);
-        Stat.HP -= lastDamage;
-        Stat.MP -= GetLastMP(attackerMP);
+        FinalStats.HP -= lastDamage;
+        FinalStats.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
         motionManager.ActHitAnimation().Forget();
@@ -348,18 +300,18 @@ public abstract class Entity : MonoBehaviour
         DamagePopup.IndicateDamage(transform.position, lastDamage);
 
         // HUD 업데이트
-        hud.UpdateHP(Stat.HP, Stat.MaxHP);
-        hud.UpdateMP(Stat.MP, Stat.MaxMP);
+        hud.UpdateHP(FinalStats.HP, FinalStats.MaxHP);
+        hud.UpdateMP(FinalStats.MP, FinalStats.MaxMP);
 
         // 오브젝트 사망 처리
-        if (Stat.HP <= 0)
+        if (FinalStats.HP <= 0)
         {
             // HP 수치가 0 이하로 떨어질 경우 사망 처리
             OnDead();
         }
 
         // 오브젝트 마력 고갈 처리
-        if (Stat.MP <= 0)
+        if (FinalStats.MP <= 0)
         {
             // MP 수치가 0 이하로 떨어질 경우 마력 고갈 처리
             OnManaShort();
@@ -372,7 +324,7 @@ public abstract class Entity : MonoBehaviour
         if (isTrueDmg == false)
         {
             // 고정 데미지가 아닐 경우 원래 데미지에 방어력 수치만큼 경감
-            damage -= Stat.DEF;
+            damage -= FinalStats.DEF;
         }
 
         return Mathf.RoundToInt(damage > 0 ? damage : 0.0f);
@@ -387,22 +339,24 @@ public abstract class Entity : MonoBehaviour
     public virtual void OnDead()
     {
         // 엔티티 사망 처리
-        IsDead = true;
+        _isDead = true;
 
         // 시퀀스 삭제
-        battleSeq.RemoveTurn(this);
+        BattleData.Instance.Sequence.RemoveTurn(this);
     }
 
     public virtual void OnRevival(int hp)
     {
+        var seq = BattleData.Instance.Sequence;
+
         // 사망 판정 철회
-        IsDead = false;
+        _isDead = false;
 
         // 재생했을 때의 hp 설정(최소 1 이상의 HP로 부활)
-        Stat.HP = (hp > 0) ? hp : 1;
+        FinalStats.HP = (hp > 0) ? hp : 1;
 
         // 전투 시퀀스에 대기 상태로 행동 예약
-        battleSeq.AddTurn(new WaitAction(this, 0.0f));
+        seq.AddTurn(new WaitAction(this, 0.0f));
     }
 
     public virtual void OnManaShort()
@@ -529,8 +483,8 @@ public abstract class Entity : MonoBehaviour
 
     private void ApplyHaste(float range)
     {
-        float addAGI = OriginStat.AGI * range;
-        Stat.AGI += (int)Math.Round(addAGI, MidpointRounding.AwayFromZero);
+        float addAGI = entityData.Stats.AGI * range;
+        FinalStats.AGI += (int)Math.Round(addAGI, MidpointRounding.AwayFromZero);
     }
 
     private void ClearEffect(StatusEffect effect)
@@ -553,8 +507,8 @@ public abstract class Entity : MonoBehaviour
 
     private void ClearHaste(float range)
     {
-        float subAGI = OriginStat.AGI * range;
-        Stat.AGI -= (int)Math.Round(subAGI, MidpointRounding.AwayFromZero);
+        float subAGI = entityData.Stats.AGI * range;
+        FinalStats.AGI -= (int)Math.Round(subAGI, MidpointRounding.AwayFromZero);
     }
 
     /***************************************************************
@@ -575,7 +529,7 @@ public abstract class Entity : MonoBehaviour
 
     public void SetForecastHP(int change)
     {
-        surveyManager.SetForecastHP(Stat.HP, Stat.MaxHP, change);
+        surveyManager.SetForecastHP(FinalStats.HP, FinalStats.MaxHP, change);
     }
 
     public void SetActiveForecastHP(bool isActive)

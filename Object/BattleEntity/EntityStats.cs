@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class EntityStat
+public class EntityStats
 {
     const int MAX = 99;
 
@@ -149,9 +149,9 @@ public class EntityStat
         set => _sanity = Mathf.Clamp(value, 0, MAX);
     }
 
-    public EntityStat Clone()
+    public EntityStats Clone()
     {
-        EntityStat clone = new EntityStat();
+        EntityStats clone = new EntityStats();
 
         clone.MaxHP = MaxHP;
         clone.HP = HP;

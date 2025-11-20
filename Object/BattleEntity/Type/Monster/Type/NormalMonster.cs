@@ -19,7 +19,7 @@ public class NormalMonster : Monster
 
     private void OnThink()
     {
-        List<Entity> targetableChr = battleData.LivingCharacters;
+        List<Entity> targetableChr = BattleData.Instance.LivingCharacters;
         if (targetableChr.Count == 1)
         {
             // 플레이어 진형의 캐릭터가 한 명 남았을 경우의 선택
@@ -37,7 +37,7 @@ public class NormalMonster : Monster
         testDisplay.SetPriorityTarget(target);
 
         // 플레이어의 다음 턴에 맞춰 해당 턴 안에 사용 가능한 스킬 찾기
-        List<Skill> usableSkills = GetUsableSkills(SkillList, target);
+        List<Skill> usableSkills = GetUsableSkills(Skills, target);
 
         if (AnyUsableSkills(usableSkills))
         {
@@ -63,13 +63,15 @@ public class NormalMonster : Monster
 
     private void SelectAction(List<Entity> targetList)
     {
+        var seq = BattleData.Instance.Sequence;
+
         // 성격(우선 순위)에 따른 타겟 정렬 리스트
         List<Entity> sortList = Personality.GetPriorityTargetList(targetList);
 
         testDisplay.SetPriorityTargets(sortList);
         foreach (Entity target in sortList)
         {
-            int remainHP = target.Stat.HP - target.GetLastDmg(AttackDmg, false);
+            int remainHP = target.FinalStats.HP - target.GetLastDmg(AttackDmg, false);
             if (IsAttackTargetable(target) && remainHP <= 0)
             {
                 // 대상이 일반 공격으로 해치울 수 있는 피일 경우 일반 공격
@@ -78,11 +80,11 @@ public class NormalMonster : Monster
             }
 
             // 사용 가능한 스킬 탐지
-            List<Skill> usableSkills = GetUsableSkills(SkillList, target);
+            List<Skill> usableSkills = GetUsableSkills(Skills, target);
             if (AnyUsableSkills(usableSkills))
             {
                 // 타겟의 남은 턴 수 확인
-                BattleAction targetAction = battleSeq.GetEntityAction(target);
+                BattleAction targetAction = seq.GetEntityAction(target);
                 float remainTurn = targetAction.remainTurn;
 
                 // 턴 수 내에 사용 가능한 스킬 사용
@@ -138,6 +140,8 @@ public class NormalMonster : Monster
 
     private float GetPlayerNextTurn()
     {
+        var battleSeq = BattleData.Instance.Sequence;
+
         foreach (BattleAction action in battleSeq.Sequence)
         {
             if (action.actor is Character)
@@ -174,7 +178,7 @@ public class NormalMonster : Monster
     private List<Skill> GetUsableSkills(List<Skill> skillList, Entity target)
     {
         return FindSkills(skillList, (skill)
-            => IsSkillTargetable(target, skill) && skill.CostSP <= Stat.SP);
+            => IsSkillTargetable(target, skill) && skill.CostSP <= FinalStats.SP);
     }
 
     private List<Skill> GetUsableSkillsInTurn(List<Skill> skillList, float remainTurn)
@@ -252,7 +256,7 @@ public class NormalMonster : Monster
             // 해당 스킬이 대상을 해치울 수 있는 스킬인지 체크
             float skillDmg = attackSkill.GetSkillDmg(this);
             int lastDmg = target.GetLastDmg(skillDmg, false);
-            if (target.Stat.HP - lastDmg <= 0)
+            if (target.FinalStats.HP - lastDmg <= 0)
             {
                 // 대상을 해치울 스킬이 복수일 경우 더 효율적인 스킬 사용
                 if (finishingSkill == null || skill.CostTurn < finishingSkill.CostTurn)

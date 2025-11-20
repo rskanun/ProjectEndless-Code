@@ -116,16 +116,16 @@ public class SaveLoadManager : ScriptableObject
             memberData.name = member.Name;
             memberData.isUnlocked = member.IsUnlocked;
             memberData.isParty = member.IsParty;
-            memberData.hp = member.Stat.HP;
-            memberData.maxHP = member.Stat.MaxHP;
-            memberData.str = member.Stat.STR;
-            memberData.agi = member.Stat.AGI;
-            memberData.def = member.Stat.DEF;
-            memberData.mp = member.Stat.MP;
-            memberData.maxMP = member.Stat.MaxMP;
-            memberData.sp = member.Stat.SP;
-            memberData.maxSP = member.Stat.MaxSP;
-            memberData.SAN = member.Stat.SAN;
+            memberData.hp = member.Stats.HP;
+            memberData.maxHP = member.Stats.MaxHP;
+            memberData.str = member.Stats.STR;
+            memberData.agi = member.Stats.AGI;
+            memberData.def = member.Stats.DEF;
+            memberData.mp = member.Stats.MP;
+            memberData.maxMP = member.Stats.MaxMP;
+            memberData.sp = member.Stats.SP;
+            memberData.maxSP = member.Stats.MaxSP;
+            memberData.SAN = member.Stats.SAN;
 
             data.Add(memberData);
         }
@@ -226,16 +226,16 @@ public class SaveLoadManager : ScriptableObject
 
             characterData.IsUnlocked = memberData.isUnlocked;
             characterData.IsParty = memberData.isParty;
-            characterData.Stat.HP = memberData.hp;
-            characterData.Stat.MaxHP = memberData.maxHP;
-            characterData.Stat.STR = memberData.str;
-            characterData.Stat.AGI = memberData.agi;
-            characterData.Stat.DEF = memberData.def;
-            characterData.Stat.MP = memberData.mp;
-            characterData.Stat.MaxMP = memberData.maxMP;
-            characterData.Stat.SP = memberData.sp;
-            characterData.Stat.MaxSP = memberData.maxSP;
-            characterData.Stat.SAN = memberData.SAN;
+            characterData.Stats.HP = memberData.hp;
+            characterData.Stats.MaxHP = memberData.maxHP;
+            characterData.Stats.STR = memberData.str;
+            characterData.Stats.AGI = memberData.agi;
+            characterData.Stats.DEF = memberData.def;
+            characterData.Stats.MP = memberData.mp;
+            characterData.Stats.MaxMP = memberData.maxMP;
+            characterData.Stats.SP = memberData.sp;
+            characterData.Stats.MaxSP = memberData.maxSP;
+            characterData.Stats.SAN = memberData.SAN;
         }
     }
 

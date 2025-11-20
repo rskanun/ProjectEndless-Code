@@ -23,16 +23,20 @@ public class BattleManager : MonoBehaviour
     private Dictionary<(BattlePosition, int), Vector2> position;
 
     [Header("캐릭터 오브젝트")]
-    [SerializeField] private List<GameObject> allMemberObjs;
-
-    [Header("전투 데이터")]
-    public BattleData battleData;
-    private BattleSequence battleSeq;
-
-    private BattleCameraDirector director;
+    [SerializeField]
+    private List<GameObject> allMemberObjs;
+    private Dictionary<string, Character> memberLookup;
 
     // 전투 진행 상태
     private bool isTurnEnded = false;
+
+    private void OnValidate()
+    {
+        memberLookup = allMemberObjs
+            .Select(memberObj => memberObj?.GetComponent<Character>())
+            .Where(member => member != null)
+            .ToDictionary(member => member.Name);
+    }
 
     private void InitPosition()
     {
@@ -53,10 +57,6 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-        director = BattleCameraDirector.Instance;
-        battleData = BattleData.Instance;
-        battleSeq = battleData.Sequence;
-
         // 임시로 일반 전투 실행
         OnEncounter(BattleCache.Current.FieldData);
     }
@@ -85,16 +85,18 @@ public class BattleManager : MonoBehaviour
 
     private void StartBattle(BattleFieldData fieldData)
     {
+        var battleSeq = BattleData.Instance.Sequence;
+
         // 플레이어 진형 파티 설정
         List<Character> playerParty = GetPlayerParty();
         InitPlayerParty(playerParty);
 
         // 적 진형 파티 설정
-        List<Monster> enemyParty = GetEnemyParty(fieldData.EncountMonsters);
+        List<Monster> enemyParty = SummonEnemyParty(fieldData.EncountMonsters);
         InitEnemyParty(enemyParty);
 
         // 전투에 참여하는 엔티티 목록 설정
-        battleData.SetEnemyList(enemyParty);
+        BattleData.Instance.SetEnemyList(enemyParty);
 
         // 시퀀스 생성
         List<Entity> entityList = playerParty.Concat<Entity>(enemyParty).ToList();
@@ -112,28 +114,14 @@ public class BattleManager : MonoBehaviour
 
     private List<Character> GetPlayerParty()
     {
-        PartyData partyData = PartyData.Instance;
-
-        // 모든 멤버 오브젝트를 Dictionary로 변환
-        Dictionary<string, Character> memberMap = allMemberObjs
-            .Select(memberObj => memberObj.GetComponent<Character>())
-            .ToDictionary(member => member.Name);
-
         // 파티 멤버 데이터를 가져와서 검색
-        return partyData.GetPartyMembers()
-            .Where(memberData => memberMap.TryGetValue(memberData.Name, out _))
-            .Select(memberData =>
-            {
-                Character chr = memberMap[memberData.Name];
-
-                // 전투 돌입 시의 설정
-                chr.OnJoinBattle();
-
-                return chr;
-            }).ToList();
+        return PartyData.Instance.GetPartyMembers()
+            .Where(memberData => memberLookup.TryGetValue(memberData.Name, out _))
+            .Select(memberData => memberLookup[memberData.Name])
+            .ToList();
     }
 
-    private List<Monster> GetEnemyParty(List<GameObject> mobList)
+    private List<Monster> SummonEnemyParty(List<GameObject> mobList)
     {
         return mobList.Select(prefabObj =>
             {
@@ -147,17 +135,20 @@ public class BattleManager : MonoBehaviour
 
     private void InitPlayerParty(List<Character> party)
     {
-        // 카메라 셋팅
-        foreach (Entity chr in party)
+        foreach (Character chr in party)
         {
+            // 전투 돌입 셋팅
+            chr.OnJoinBattle();
+
+            // 카메라 셋팅
             int instanceID = chr.gameObject.GetInstanceID();
             Transform bodyPivot = chr.cameraOption.BodyPivot;
 
-            director.RegisterPlayerChrPivot(instanceID, bodyPivot);
+            BattleCameraDirector.Instance.RegisterPlayerChrPivot(instanceID, bodyPivot);
         }
 
         // 전투에 참여하는 엔티티 목록 설정
-        battleData.SetPartyList(party);
+        BattleData.Instance.SetPartyList(party);
     }
 
     private void InitEnemyParty(List<Monster> party)
@@ -168,11 +159,11 @@ public class BattleManager : MonoBehaviour
             int instanceID = chr.gameObject.GetInstanceID();
             Transform bodyPivot = chr.cameraOption.BodyPivot;
 
-            director.RegisterEnemyChrPivot(instanceID, bodyPivot);
+            BattleCameraDirector.Instance.RegisterEnemyChrPivot(instanceID, bodyPivot);
         }
 
         // 전투에 참여하는 엔티티 목록 설정
-        battleData.SetEnemyList(party);
+        BattleData.Instance.SetEnemyList(party);
     }
 
     /***************************************************************
@@ -183,10 +174,10 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator RunningBattle()
     {
-        yield return director.DirectBattleStart();
+        yield return BattleCameraDirector.Instance.DirectBattleStart();
 
         // 전투가 진행되는 동안 각자의 턴 진행
-        while (battleData.IsInBattle)
+        while (BattleData.Instance.IsInBattle)
         {
             isTurnEnded = false;
 
@@ -203,6 +194,8 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator TakeTurn()
     {
+        var battleSeq = BattleData.Instance.Sequence;
+
         BattleAction curAction = battleSeq.GetTurnAction(0);
         Entity actor = curAction.actor;
 
@@ -216,7 +209,7 @@ public class BattleManager : MonoBehaviour
         yield return new WaitUntil(() => actor.IsIdle);
 
         // 해당 행동으로 전투가 끝났거나, 해당 엔티티가 사망한 경우 턴 끝내기
-        if (battleData.IsInBattle == false || actor.IsDead)
+        if (BattleData.Instance.IsInBattle == false || actor.IsDead)
         {
             // 만약 사망으로 턴을 끝내는 경우
             if (actor.IsDead)
@@ -237,8 +230,10 @@ public class BattleManager : MonoBehaviour
     public void EndTurn()
     {
         // 적이 남아있다면 다음 턴 진행
-        if (battleData.IsInBattle)
+        if (BattleData.Instance.IsInBattle)
         {
+            var battleSeq = BattleData.Instance.Sequence;
+
             // 다음 턴 턴수만큼 상태이상 지속 시간 돌리기
             BattleAction nextAction = battleSeq.GetTurnAction(1);
             UpdateEffectTimers(nextAction.remainTurn);
@@ -253,12 +248,15 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle()
     {
-        if (!battleData.IsLivingCharacter)
+        if (!BattleData.Instance.IsLivingCharacter)
         {
             // 플레이어 파티가 죽거나 도망간 경우
             // 처치 보상 X
-            battleData.ClearReward();
+            BattleData.Instance.ClearReward();
         }
+
+        // 전투 종료 시 상태를 현재 상태로 갱신
+        UpdateCharacterStats();
 
         // 전투 종료 알림
         GameEventManager.Instance.NotifyBattleEnded();
@@ -273,11 +271,19 @@ public class BattleManager : MonoBehaviour
         resultUI.OpenResult();
     }
 
+    private void UpdateCharacterStats()
+    {
+        foreach (var character in BattleData.Instance.CharacterList)
+        {
+
+        }
+    }
+
     private BattleResult GetBattleResult()
     {
-        if (battleData.IsLivingCharacter) // 플레이어 파티가 살아있다면 승리
+        if (BattleData.Instance.IsLivingCharacter) // 플레이어 파티가 살아있다면 승리
             return BattleResult.Victory;
-        else if (battleData.CharacterList.Count > 0) // 전부 사망 판정에 필드에 남아있다면 패배
+        else if (BattleData.Instance.CharacterList.Count > 0) // 전부 사망 판정에 필드에 남아있다면 패배
             return BattleResult.Defeat;
         else // 필드에 한 명도 남아있지 않다면 도망
             return BattleResult.Escape;
@@ -286,13 +292,13 @@ public class BattleManager : MonoBehaviour
     private void UpdateEffectTimers(float turn)
     {
         // 캐릭터 버프 시간 돌리기
-        foreach (Entity entity in battleData.CharacterList)
+        foreach (Entity entity in BattleData.Instance.CharacterList)
         {
             entity.UpdateEffectTimer(turn);
         }
 
         // 적 버프 시간 돌리기
-        foreach (Entity entity in battleData.EnemyList)
+        foreach (Entity entity in BattleData.Instance.EnemyList)
         {
             entity.UpdateEffectTimer(turn);
         }

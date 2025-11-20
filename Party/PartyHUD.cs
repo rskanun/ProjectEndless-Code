@@ -7,7 +7,7 @@ public class PartyHUD : MonoBehaviour
     public Transform hudContainer;
     public GameObject hudPrefab;
 
-    // íŒŒí‹° HUD
+    // ?ŒŒ?‹° HUD
     private Dictionary<string, HUD> partyHUDs = new Dictionary<string, HUD>();
 
     private void Start()
@@ -27,11 +27,11 @@ public class PartyHUD : MonoBehaviour
 
     public void UpdateStat()
     {
-        // ë°ì´í„° ë¡œë“œë¡œ ì „ì²´ì ì¸ ë°ì´í„°ê°€ ë³€í•œ ê²½ìš°
+        // ?°?´?„° ë¡œë“œë¡? ? „ì²´ì ?¸ ?°?´?„°ê°? ë³??•œ ê²½ìš°
         List<CharacterData> party = PartyData.Instance.GetPartyMembers();
         foreach (CharacterData entity in party)
         {
-            EntityStat stat = entity.Stat;
+            EntityStats stat = entity.Stats;
             partyHUDs[entity.Name].UpdateHP(stat.HP, stat.MaxHP);
             partyHUDs[entity.Name].UpdateSP(stat.SP, stat.MaxSP);
         }

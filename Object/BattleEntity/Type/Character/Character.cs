@@ -15,18 +15,8 @@ public class Character : Entity
 
     public void OnJoinBattle()
     {
-        // 본인의 데이터를 파티데이터에서 가져옴
-        CharacterData data = PartyData.Instance.GetCharacter(Name);
-
-        // 데이터 덮어씌우기
-        Position = data.Position;
-        AttackType = data.AttackType;
-        PersonalityType = data.Personality;
-        SkillList = data.UsableSkills;
-        OriginStat = data.Stat;
-
         // 최종스텟 설정
-        Stat = OriginStat.Clone();
+        _finalStats = entityData.Stats.Clone();
 
         // HUD 설정
         InitHUD();
@@ -41,8 +31,8 @@ public class Character : Entity
         hud.gameObject.SetActive(true);
 
         // HUD 정보 업데이트
-        hud.UpdateHP(Stat.HP, Stat.MaxHP);
-        hud.UpdateSP(Stat.SP, Stat.MaxSP);
+        hud.UpdateHP(FinalStats.HP, FinalStats.MaxHP);
+        hud.UpdateSP(FinalStats.SP, FinalStats.MaxSP);
     }
 
     /***************************************************************
@@ -70,7 +60,7 @@ public class Character : Entity
 
     public override void Run()
     {
-        List<Character> partyList = battleData.CharacterList;
+        List<Character> partyList = BattleData.Instance.CharacterList;
 
         // 플레이어의 파티 모두 같이 도주
         for (int i = partyList.Count - 1; i >= 0; i--)
@@ -110,12 +100,12 @@ public class Character : Entity
 
     protected override void OnParryAction()
     {
-        battleData.IsUsedParry = true;
+        BattleData.Instance.IsUsedParry = true;
     }
 
     protected override void OnDodgeAction()
     {
-        battleData.IsUsedDodge = true;
+        BattleData.Instance.IsUsedDodge = true;
     }
 
     public override void OnParrying(Entity attacker)

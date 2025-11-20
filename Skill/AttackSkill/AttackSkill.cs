@@ -44,7 +44,7 @@ public class AttackSkill : Skill
         foreach (Entity target in targets)
         {
             float criticalChance = caster.GetCriticalChance(target);
-            target.OnDamage(damage, caster.Stat.MP, criticalChance);
+            target.OnDamage(damage, caster.FinalStats.MP, criticalChance);
 
             if (!Debuff.IsEmpty())
             {
@@ -57,7 +57,7 @@ public class AttackSkill : Skill
     public float GetSkillDmg(Entity caster)
     {
         // 데미지 공식 = 기본 데미지 + 시전자 MP 계수 + 시전자 STR 계수
-        return Damage + caster.Stat.MP * MpDegree + caster.Stat.STR * StrDegree;
+        return Damage + caster.FinalStats.MP * MpDegree + caster.FinalStats.STR * StrDegree;
     }
 
     public override string GetTypeName()

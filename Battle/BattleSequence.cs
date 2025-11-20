@@ -19,7 +19,7 @@ public class BattleSequence
 
         // 엔티티의 민첩 수치로 내림차순 정렬
         List<Entity> sortedList = new List<Entity>(entityList);
-        sortedList.Sort((x, y) => y.Stat.AGI.CompareTo(x.Stat.AGI));
+        sortedList.Sort((x, y) => y.FinalStats.AGI.CompareTo(x.FinalStats.AGI));
 
         // 모든 엔티티들은 0턴 대기 행동 시전
         foreach (Entity entity in sortedList)

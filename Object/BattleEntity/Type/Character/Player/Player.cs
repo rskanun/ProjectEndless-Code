@@ -7,7 +7,7 @@ public class Player : Character
     {
         // 주인공의 경우 마력이 더 높으면,
         // 모든 공격이 크리티컬 값을 띄움
-        if (target.Stat.MP < Stat.MP) return 1.0f;
+        if (target.FinalStats.MP < FinalStats.MP) return 1.0f;
         return base.GetCriticalChance(target);
     }
 }

@@ -16,6 +16,6 @@ public class HpTrigger : EventTrigger
             return true;
         }
 
-        return target.Stat.HP <= target.Stat.MaxHP * percentage;
+        return target.FinalStats.HP <= target.FinalStats.MaxHP * percentage;
     }
 }

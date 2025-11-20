@@ -58,8 +58,8 @@ public class PartyData : ScriptableObject
 
     [Header("게임 내 캐릭터 정보")]
     [SerializeField]
-    private PlayerData _player;
-    public PlayerData Player
+    private CharacterData _player;
+    public CharacterData Player
     {
         get { return _player; }
     }
@@ -107,33 +107,24 @@ public class PartyData : ScriptableObject
         return _characters.Where((chr) => chr.IsParty).ToList();
     }
 
-    public void AddMember(string name)
+    public void UnlockMember(string name)
     {
-        CharacterData addMember = charactersDict[name];
-
-        addMember.IsUnlocked = true;
-    }
-
-    public void RemoveMember(string name)
-    {
-        CharacterData removeMember = charactersDict[name];
-
-        removeMember.IsUnlocked = false;
+        charactersDict[name].IsUnlocked = true;
     }
 
     public void JoinParty(string name)
     {
+        // 풀 파티인 경우 가입 불가능
         if (GetPartyMembers().Count >= _maxPartySize) return;
 
-        CharacterData addMember = charactersDict[name];
-
-        addMember.IsParty = true;
+        charactersDict[name].IsParty = true;
     }
 
     public void KickParty(string name)
     {
-        CharacterData removeMember = charactersDict[name];
+        // 플레이어는 파티 탈퇴가 불가능함
+        if (name == Player.Name) return;
 
-        removeMember.IsParty = false;
+        charactersDict[name].IsParty = false;
     }
 }

@@ -1,76 +1,48 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-[System.Serializable]
-public class CharacterData
+[CreateAssetMenu(menuName = "Entity Data/Character", fileName = "Character Data")]
+public class CharacterData : EntityData
 {
-    [SerializeField]
-    private string _name;
-    public string Name
-    {
-        get { return _name; }
-    }
-
-    [SerializeField]
+    [SerializeField, PropertyOrder(0)]
     private bool _isUnlocked;
     public virtual bool IsUnlocked
     {
-        get { return _isUnlocked; }
-        set { _isUnlocked = value; }
+        get => _isUnlocked;
+        set => _isUnlocked = value;
     }
 
-    [SerializeField]
+    [SerializeField, PropertyOrder(0)]
     private bool _isParty;
     public virtual bool IsParty
     {
-        get { return _isParty; }
-        set
-        {
-            if (IsUnlocked)
-            {
-                _isParty = value;
-            }
-        }
+        get => _isParty;
+        set => _isParty = value;
     }
 
-    [SerializeField]
-    private bool _isDead; // 전투 사망 X
-    public bool IsDead
+    [SerializeField, PropertyOrder(0)]
+    private bool _isSlain; // 캐릭터의 영구적인 사망(주인공에게 토벌 당했는가)
+    public bool IsSlain
     {
-        get => _isDead;
-        set => _isDead = value;
+        get => _isSlain;
+        set => _isSlain = value;
     }
 
-    [SerializeField]
+    [SerializeField, PropertyOrder(0)]
     private CharacterProfile _profile;
     public CharacterProfile Profile => _profile;
 
-    [SerializeField]
-    private BattlePosition _position;
-    public BattlePosition Position => _position;
-
-    [SerializeField]
-    private AttackType _attackType;
-    public AttackType AttackType => _attackType;
-
-    [SerializeField]
-    private PersonalityType _personality;
-    public PersonalityType Personality => _personality;
-
-    [Header("스킬 정보")]
-    [SerializeField]
+    [SerializeField, PropertyOrder(10)]
     private List<Skill> _hasSkills; // 해당 캐릭터가 지닌 스킬 목록
     public List<Skill> HasSkills => _hasSkills;
-    [SerializeField]
-    private List<Skill> _usableSkills; // 해당 캐릭터의 사용 할 수 있는 스킬 목록
-    public List<Skill> UsableSkills => _usableSkills;
 
-    [Header("장비 정보")]
-    [SerializeField]
+    [Title("장비 정보")]
+    [SerializeField, PropertyOrder(10)]
     private WeaponType _usableWeaponType;
     public WeaponType UsableWeaponType => _usableWeaponType;
 
-    [SerializeField]
+    [SerializeField, PropertyOrder(10)]
     private Weapon _mainWeapon;
     public Weapon MainWeapon
     {
@@ -78,7 +50,7 @@ public class CharacterData
         set => _mainWeapon = value;
     }
 
-    [SerializeField]
+    [SerializeField, PropertyOrder(10)]
     private Weapon _offWeapon;
     public Weapon OffWeapon
     {
@@ -86,7 +58,7 @@ public class CharacterData
         set => _offWeapon = value;
     }
 
-    [SerializeField]
+    [SerializeField, PropertyOrder(10)]
     private Accessory _accessory1;
     public Accessory Accessory1
     {
@@ -94,24 +66,19 @@ public class CharacterData
         set => _accessory1 = value;
     }
 
-    [SerializeField]
+    [SerializeField, PropertyOrder(10)]
     private Accessory _accessory2;
     public Accessory Accessory2
     {
         get => _accessory2;
         set => _accessory2 = value;
     }
-
-    [Header("스탯")]
-    [SerializeField]
-    private EntityStat _stat;
-    public EntityStat Stat => _stat;
 }
 
 [System.Serializable]
 public class CharacterProfile
 {
-    [SerializeField]
+    [SerializeField, PreviewField]
     private Sprite _profileImage;
     public Sprite ProfileImage => _profileImage;
 

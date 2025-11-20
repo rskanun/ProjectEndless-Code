@@ -99,7 +99,7 @@ public class TeamContactWindow : ContactWindow
 
         // 받을 수 있는 파티 인원수를 초과한 경우 또는 해당 파티원이 사망한 경우 무시
         bool isPartyFull = partyData.GetPartyMembers().Count >= partyData.MaxPartySize;
-        bool isDead = joinMember.Character.IsDead;
+        bool isDead = joinMember.Character.IsSlain;
         if (isPartyFull || isDead)
         {
             return;
@@ -113,7 +113,7 @@ public class TeamContactWindow : ContactWindow
     private void KickParty(TeamContact kickMember)
     {
         // 플레이어는 파티에서 추방 X
-        if (kickMember.Character is PlayerData)
+        if (kickMember.Character == PartyData.Instance.Player)
         {
             return;
         }
@@ -139,7 +139,8 @@ public class TeamContactWindow : ContactWindow
         // 파티 편입이 가능한 캐릭터 수만큼 오브젝트 생성
         foreach (CharacterData character in unlockChrs)
         {
-            if (character is PlayerData) continue;
+            // 플레이어는 미리 생성되어 있기에 패스
+            if (character == PartyData.Instance.Player) continue;
 
             // 해당 캐릭터 정보를 토대로 한 연락처(=정보) 오브젝트 생성
             GameObject contactObj = Instantiate(contactPrefab, content);
@@ -191,7 +192,7 @@ public class TeamContactWindow : ContactWindow
     private void ModifyCharacter(CharacterData character)
     {
         // 해당 캐릭터가 사망했다면 목록 불러오기 X
-        if (character.IsDead) return;
+        if (character.IsSlain) return;
 
         // 다이어리로 넘어가기
         app.FocusDiary();

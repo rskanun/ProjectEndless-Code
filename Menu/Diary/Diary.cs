@@ -56,7 +56,7 @@ public class Diary : MonoBehaviour
     public void UpdateDiary(CharacterData character)
     {
         // 사망 판정
-        deadMark.SetActive(character.IsDead);
+        deadMark.SetActive(character.IsSlain);
 
         // 프로필 설정
         nameField.text = character.Name;
@@ -67,13 +67,13 @@ public class Diary : MonoBehaviour
         sanField.text = GetSanToText(character);
 
         // 스탯 설정
-        hpBar.UpdateAmount(character.Stat.HP, character.Stat.MaxHP);
-        spBar.UpdateAmount(character.Stat.SP, character.Stat.MaxSP);
-        strField.text = character.Stat.STR.ToString();
-        defField.text = character.Stat.DEF.ToString();
-        agiField.text = character.Stat.AGI.ToString();
-        dexField.text = character.Stat.DEX.ToString();
-        mpField.text = character.Stat.MaxMP.ToString();
+        hpBar.UpdateAmount(character.Stats.HP, character.Stats.MaxHP);
+        spBar.UpdateAmount(character.Stats.SP, character.Stats.MaxSP);
+        strField.text = character.Stats.STR.ToString();
+        defField.text = character.Stats.DEF.ToString();
+        agiField.text = character.Stats.AGI.ToString();
+        dexField.text = character.Stats.DEX.ToString();
+        mpField.text = character.Stats.MaxMP.ToString();
 
         // 장비 설정
         weaponField.UpdateInfo(character.MainWeapon);
@@ -88,10 +88,10 @@ public class Diary : MonoBehaviour
     private string GetSanToText(CharacterData character)
     {
         // 플레이어의 정신상태는 접근 불가
-        if (character is PlayerData) return "알 수 없음";
+        if (character == PartyData.Instance.Player) return "알 수 없음";
 
-        if (character.Stat.SAN >= 60) return "안정";
-        else if (character.Stat.SAN >= 20) return "불안";
+        if (character.Stats.SAN >= 60) return "안정";
+        else if (character.Stats.SAN >= 20) return "불안";
         else return "붕괴";
     }
 
@@ -100,7 +100,7 @@ public class Diary : MonoBehaviour
         for (int i = 0; i < skillFields.Count; i++)
         {
             // 유저가 가진 스킬 개수 이상의 슬롯은 비활성화
-            if (i >= character.UsableSkills.Count)
+            if (i >= character.Skills.Count)
             {
                 skillFields[i].gameObject.SetActive(false);
                 continue;
@@ -110,7 +110,7 @@ public class Diary : MonoBehaviour
             skillFields[i].gameObject.SetActive(true);
 
             // 플레이어가 가진 스킬 개수에 맞춰 칸에 스킬 넣기
-            skillFields[i].UpdateInfo(character.UsableSkills[i]);
+            skillFields[i].UpdateInfo(character.Skills[i]);
         }
     }
 

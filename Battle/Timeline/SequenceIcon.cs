@@ -26,19 +26,12 @@ public class SequenceIcon : TimelineIcon
 
         // 해당 행동을 하는 행위자의 외형을 타임라인의 이미지로 사용
         GameObject actor = action.actor.gameObject;
-        SpriteRenderer actorImg = actor.GetComponent<SpriteRenderer>();
 
         // 타임라인 아이콘 이미지 지정
-        InitImage(actorImg);
+        iconImage.sprite = action.actor.Icon;
 
         // 남은 턴 지정
         SetTurnTime(action.remainTurn);
-    }
-
-    private void InitImage(SpriteRenderer sprite)
-    {
-        // 임시 색으로 지정
-        iconImage.color = sprite.color;
     }
 
     private void SetTurnTime(float time)

@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Endless.GameData;
 using UnityEngine;
@@ -27,7 +26,7 @@ public class GameManager : MonoBehaviour
         select = EventSystem.current.currentSelectedGameObject;
     }
 
-    private async Task Awake()
+    private async UniTask Awake()
     {
         // 총 스크립트 개수
         string[] files = Directory.GetFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories);
