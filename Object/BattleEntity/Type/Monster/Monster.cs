@@ -11,7 +11,7 @@ public abstract class Monster : Entity
         base.Awake();
 
         // 최종스텟 설정
-        _finalStats = entityData.Stats.Clone();
+        _finalStats.CopyTo(entityData.Stats);
 
         // HUD 업데이트
         InitHUD();

@@ -34,4 +34,9 @@ public abstract class EntityData : ScriptableObject
     [SerializeField, PropertyOrder(20)]
     private EntityStats _stats;
     public EntityStats Stats => _stats;
+
+    public void UpdateStats(EntityStats newStats)
+    {
+        _stats.CopyTo(newStats);
+    }
 }

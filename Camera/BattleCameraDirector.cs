@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -236,19 +237,19 @@ public class BattleCameraDirector
     * 카메라 시점을 옮기며 연출
     ***************************************************************/
 
-    public IEnumerator DirectBattleStart()
+    public async UniTask DirectBattleStart()
     {
         // 전투 시작 상황을 위한 플레이어 그룹 카메라 잡아주기
         // (기습 or 일반 or 역기습 애니메이션 연출)
         FocusPlayerGroup();
-        yield return new WaitForSeconds(3.5f); // 현재는 시간이지만 나중엔 애니메이션이 끝나는데로
+        await UniTask.Delay(3500); // 현재는 시간이지만 나중엔 애니메이션이 끝나는데로
 
         // 전체적인 상황 보여주기
         FocusFullScreen();
-        yield return new WaitForSeconds(2.5f);
+        await UniTask.Delay(2500);
     }
 
-    public IEnumerator DirectSelectMotion()
+    public async UniTask DirectSelectMotion()
     {
         var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
 
@@ -268,10 +269,10 @@ public class BattleCameraDirector
         ).SetEase(Ease.InCirc));
 
         // DOTween 애니메이션이 끝날 때까지 대기
-        yield return seq.WaitForCompletion();
+        await seq.ToUniTask();
     }
 
-    public IEnumerator DirectSmoothFocusing(GameObject target)
+    public async UniTask DirectSmoothFocusing(GameObject target)
     {
         // 카메라가 부드럽게 움직이도록 지정
         var bodyComponent = manager.singleCam.GetCinemachineComponent<CinemachineHardLockToTarget>();
@@ -281,7 +282,7 @@ public class BattleCameraDirector
         FocusSingle(target);
 
         // 목표까지 대기
-        yield return new WaitUntil(() => target.transform.position == Camera.main.transform.position);
+        await UniTask.WaitUntil(() => target.transform.position == Camera.main.transform.position);
 
         // 본래대로 딱딱하게 움직이도록 지정
         bodyComponent.m_Damping = 0.0f;

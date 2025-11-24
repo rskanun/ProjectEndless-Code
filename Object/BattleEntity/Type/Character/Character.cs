@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Character : Entity
@@ -16,7 +17,7 @@ public class Character : Entity
     public void OnJoinBattle()
     {
         // 최종스텟 설정
-        _finalStats = entityData.Stats.Clone();
+        _finalStats.CopyTo(entityData.Stats);
 
         // HUD 설정
         InitHUD();
@@ -43,16 +44,16 @@ public class Character : Entity
 
     protected override void SelectAction()
     {
-        StartCoroutine(SelectMotion());
+        SelectMotion().Forget();
     }
 
-    private IEnumerator SelectMotion()
+    private async UniTask SelectMotion()
     {
         // 해당 턴인 캐릭터를 싱글샷
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
         // 행동 선택창을 열기 위한 카메라 이동
-        yield return BattleCameraDirector.Instance.DirectSelectMotion();
+        await BattleCameraDirector.Instance.DirectSelectMotion();
 
         // 행동 선택창 열기
         actionSelection.OnSelect(this);

@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [System.Serializable]
@@ -5,7 +6,7 @@ public class EntityStats
 {
     const int MAX = 99;
 
-    [SerializeField]
+    [ShowInInspector]
     private int _healthPoint;
     /***************************************************************
      * [ 체력 (Health Point) ]
@@ -18,7 +19,7 @@ public class EntityStats
         set => _healthPoint = Mathf.Clamp(value, 0, MaxHP);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _maxHP;
     public int MaxHP
     {
@@ -26,7 +27,7 @@ public class EntityStats
         set => _maxHP = Mathf.Clamp(value, 1, MAX);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _strength;
     /***************************************************************
     * [ 근력 (Strength) ]
@@ -40,7 +41,7 @@ public class EntityStats
         set => _strength = Mathf.Clamp(value, 0, MAX);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _defensive;
     /***************************************************************
     * [ 방어력 (Defensive) ]
@@ -54,7 +55,7 @@ public class EntityStats
         set => _defensive = Mathf.Clamp(value, 0, MAX);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _agility;
     /***************************************************************
     * [ 민첩 (Agility) ]
@@ -73,7 +74,7 @@ public class EntityStats
         set => _agility = Mathf.Clamp(value, 0, MAX);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _dexterity;
     /***************************************************************
     * [ 기교 (Dexterity) ]
@@ -89,7 +90,7 @@ public class EntityStats
         set => _dexterity = Mathf.Clamp(value, 0, MAX);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _magicPower;
     /***************************************************************
      * [ 마력 (Magic Power) ]
@@ -105,7 +106,7 @@ public class EntityStats
         set => _magicPower = Mathf.Clamp(value, 0, MaxMP);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _maxMP;
     public int MaxMP
     {
@@ -127,7 +128,7 @@ public class EntityStats
         set => _stamina = Mathf.Clamp(value, 0, MaxSP);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _maxSP;
     public int MaxSP
     {
@@ -135,7 +136,7 @@ public class EntityStats
         set => _maxSP = Mathf.Clamp(value, 1, MAX);
     }
 
-    [SerializeField]
+    [ShowInInspector]
     private int _sanity;
     /***************************************************************
     * [ 정신력 (Sanity) ]
@@ -149,22 +150,18 @@ public class EntityStats
         set => _sanity = Mathf.Clamp(value, 0, MAX);
     }
 
-    public EntityStats Clone()
+    public void CopyTo(EntityStats origin)
     {
-        EntityStats clone = new EntityStats();
-
-        clone.MaxHP = MaxHP;
-        clone.HP = HP;
-        clone.STR = STR;
-        clone.DEF = DEF;
-        clone.AGI = AGI;
-        clone.DEX = DEX;
-        clone.MaxMP = MaxMP;
-        clone.MP = MP;
-        clone.MaxSP = MaxSP;
-        clone.SP = SP;
-        clone.SAN = SAN;
-
-        return clone;
+        MaxHP = origin.MaxHP;
+        HP = origin.HP;
+        STR = origin.STR;
+        DEF = origin.DEF;
+        AGI = origin.AGI;
+        DEX = origin.DEX;
+        MaxMP = origin.MaxMP;
+        MP = origin.MP;
+        MaxSP = origin.MaxSP;
+        SP = origin.SP;
+        SAN = origin.SAN;
     }
 }

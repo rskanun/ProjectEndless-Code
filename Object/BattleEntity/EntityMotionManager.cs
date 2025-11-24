@@ -168,7 +168,7 @@ public class EntityMotionManager : MonoBehaviour
         await UniTask.WaitWhile(() => IsPlayAnimation(AnimParams.AttackReadyMotion));
 
         // 타겟을 향해 카메라 포커싱
-        StartCoroutine(BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject));
+        BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject).Forget();
 
         // 타겟 앞으로 이동
         var range = meleeRangeLookup[AnimParams.AttackTrigger];
@@ -180,6 +180,9 @@ public class EntityMotionManager : MonoBehaviour
             // 공격 모션 중간 패링을 당했을 경우
             if (entity.HasState(EntityState.Stagger))
             {
+                // 기존 타격 이벤트 삭제
+                onHitAction = null;
+
                 // 패링 애니메이션 실행 및 공격 애니메이션 종료
                 await ParriedAnimation(target, originPos);
                 return;
@@ -248,7 +251,7 @@ public class EntityMotionManager : MonoBehaviour
         await UniTask.WaitWhile(() => IsPlayAnimation(AnimParams.AttackMotion));
 
         // 타겟을 향해 카메라 포커싱
-        StartCoroutine(BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject));
+        BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject).Forget();
 
         // 원거리 오브젝트 생성
 
@@ -303,6 +306,9 @@ public class EntityMotionManager : MonoBehaviour
             if (entity.IsDead)
             {
                 await DeadAnimation();
+
+                // 행동 모션이 끝났음을 알림
+                IsIdle = true;
                 return;
             }
 

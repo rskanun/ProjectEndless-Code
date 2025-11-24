@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
@@ -109,7 +110,7 @@ public class BattleManager : MonoBehaviour
         GameEventManager.Instance.NotifyBattleStarted();
 
         // 처음 턴 진행
-        StartCoroutine(RunningBattle());
+        RunningBattle().Forget();
     }
 
     private List<Character> GetPlayerParty()
@@ -172,9 +173,9 @@ public class BattleManager : MonoBehaviour
     * 전투 순서에 따른 현재 턴 진행
     ***************************************************************/
 
-    private IEnumerator RunningBattle()
+    private async UniTask RunningBattle()
     {
-        yield return BattleCameraDirector.Instance.DirectBattleStart();
+        await BattleCameraDirector.Instance.DirectBattleStart();
 
         // 전투가 진행되는 동안 각자의 턴 진행
         while (BattleData.Instance.IsInBattle)
@@ -182,17 +183,17 @@ public class BattleManager : MonoBehaviour
             isTurnEnded = false;
 
             // 턴 진행
-            StartCoroutine(TakeTurn());
+            await TakeTurn();
 
             // 턴이 끝날 때까지 대기
-            yield return new WaitUntil(() => isTurnEnded);
+            await UniTask.WaitUntil(() => isTurnEnded);
         }
 
         // 전투 끝내기
         EndBattle();
     }
 
-    private IEnumerator TakeTurn()
+    private async UniTask TakeTurn()
     {
         var battleSeq = BattleData.Instance.Sequence;
 
@@ -206,7 +207,7 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        yield return new WaitUntil(() => actor.IsIdle);
+        await UniTask.WaitUntil(() => actor.IsIdle);
 
         // 해당 행동으로 전투가 끝났거나, 해당 엔티티가 사망한 경우 턴 끝내기
         if (BattleData.Instance.IsInBattle == false || actor.IsDead)
@@ -220,7 +221,7 @@ public class BattleManager : MonoBehaviour
             }
 
             isTurnEnded = true;
-            yield break;
+            return;
         }
 
         // 다음 턴에 진행할 행동 선택
@@ -273,9 +274,16 @@ public class BattleManager : MonoBehaviour
 
     private void UpdateCharacterStats()
     {
+        var partyData = PartyData.Instance;
+
+        // 전투에 참여한 캐릭터만 스탯 업데이트
         foreach (var character in BattleData.Instance.CharacterList)
         {
+            var originData = partyData.GetCharacter(character.Name);
 
+            // HP, SP 적용
+            originData.Stats.HP = character.FinalStats.HP;
+            originData.Stats.SP = character.FinalStats.SP;
         }
     }
 
