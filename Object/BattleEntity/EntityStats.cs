@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 [System.Serializable]
@@ -6,7 +5,7 @@ public class EntityStats
 {
     const int MAX = 99;
 
-    [ShowInInspector]
+    [SerializeField]
     private int _healthPoint;
     /***************************************************************
      * [ 체력 (Health Point) ]
@@ -19,7 +18,7 @@ public class EntityStats
         set => _healthPoint = Mathf.Clamp(value, 0, MaxHP);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _maxHP;
     public int MaxHP
     {
@@ -27,7 +26,7 @@ public class EntityStats
         set => _maxHP = Mathf.Clamp(value, 1, MAX);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _strength;
     /***************************************************************
     * [ 근력 (Strength) ]
@@ -41,7 +40,7 @@ public class EntityStats
         set => _strength = Mathf.Clamp(value, 0, MAX);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _defensive;
     /***************************************************************
     * [ 방어력 (Defensive) ]
@@ -55,7 +54,7 @@ public class EntityStats
         set => _defensive = Mathf.Clamp(value, 0, MAX);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _agility;
     /***************************************************************
     * [ 민첩 (Agility) ]
@@ -74,7 +73,7 @@ public class EntityStats
         set => _agility = Mathf.Clamp(value, 0, MAX);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _dexterity;
     /***************************************************************
     * [ 기교 (Dexterity) ]
@@ -90,7 +89,7 @@ public class EntityStats
         set => _dexterity = Mathf.Clamp(value, 0, MAX);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _magicPower;
     /***************************************************************
      * [ 마력 (Magic Power) ]
@@ -106,7 +105,7 @@ public class EntityStats
         set => _magicPower = Mathf.Clamp(value, 0, MaxMP);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _maxMP;
     public int MaxMP
     {
@@ -128,7 +127,7 @@ public class EntityStats
         set => _stamina = Mathf.Clamp(value, 0, MaxSP);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _maxSP;
     public int MaxSP
     {
@@ -136,7 +135,7 @@ public class EntityStats
         set => _maxSP = Mathf.Clamp(value, 1, MAX);
     }
 
-    [ShowInInspector]
+    [SerializeField]
     private int _sanity;
     /***************************************************************
     * [ 정신력 (Sanity) ]
