@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Collections;
 using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
@@ -137,9 +136,6 @@ public class EntityMotionManager : MonoBehaviour
     {
         // 타격 이벤트 실행
         onHitAction?.Invoke();
-
-        // 한 번 실행 후 초기화
-        onHitAction = null;
     }
 
     /***************************************************************
@@ -147,7 +143,7 @@ public class EntityMotionManager : MonoBehaviour
     * 
     * 대상을 공격하는 모션을 근거리와 원거리로 나눠 애니메이션 진행
     ***************************************************************/
-    public async UniTask ActMeleeAttackAnimation(Entity target, Action onHit)
+    public async UniTask ActMeleeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, int animMotionHash, int animTriggerHash, Action onHit)
     {
         IsIdle = false;
 
@@ -158,20 +154,22 @@ public class EntityMotionManager : MonoBehaviour
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
         // 모션 실행
-        ActMotion(AnimParams.AttackTrigger);
+        ActMotion(animTriggerHash);
 
         // 타격 타이밍에 맞춰 데미지 넣기
         onHitAction += onHit;
 
-        // 시전 모션이 끝날 때까지 대기
-        await UniTask.WaitUntil(() => IsPlayAnimation(AnimParams.AttackReadyMotion));
-        await UniTask.WaitWhile(() => IsPlayAnimation(AnimParams.AttackReadyMotion));
+        // 타격 모션까지 대기
+        await UniTask.WaitUntil(() => IsPlayAnimation(animMotionHash));
+
+        // 대상에게 타겟에 선택되었음을 알림
+        target.OnTargetedAttack(entity, isParryable, isDodgeable);
 
         // 타겟을 향해 카메라 포커싱
         BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject).Forget();
 
         // 타겟 앞으로 이동
-        var range = meleeRangeLookup[AnimParams.AttackTrigger];
+        var range = meleeRangeLookup[animTriggerHash];
         transform.position = GetMovePoint(target.transform.position, range);
 
         // 모션 체크
@@ -197,6 +195,9 @@ public class EntityMotionManager : MonoBehaviour
 
         // 히트 & 사망 모션 대기
         await UniTask.WaitUntil(() => target.IsIdle);
+
+        // 타격 이벤트 삭제
+        onHitAction = null;
 
         // 행동 모션이 끝났음을 알림
         IsIdle = true;
@@ -236,7 +237,7 @@ public class EntityMotionManager : MonoBehaviour
         transform.position = originPos;
     }
 
-    public async UniTask ActRangeAttackAnimation(Entity target, Action onHit)
+    public async UniTask ActRangeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, Action onHit)
     {
         IsIdle = false;
 
@@ -260,13 +261,6 @@ public class EntityMotionManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ 스킬 애니메이션 ]
-    * 
-    * 스킬 모션을 근거리, 원거리로 나눠 애니메이션 진행
-    ***************************************************************/
-    public async UniTask ActSkillAnimation(Entity target, )
-
-    /***************************************************************
     * [ 반격 애니메이션 ]
     * 
     * 패링 성공 시, 일반 반격 공격 모션 실행
@@ -288,6 +282,9 @@ public class EntityMotionManager : MonoBehaviour
         // 모션이 끝날 때까지 대기
         await UniTask.WaitUntil(() => IsPlayAnimation(AnimParams.CounterattackMotion));
         await UniTask.WaitWhile(() => IsActing);
+
+        // 타격 이벤트 삭제
+        onHitAction = null;
 
         // 행동 모션이 끝났음을 알림
         IsIdle = true;

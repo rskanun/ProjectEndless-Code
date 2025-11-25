@@ -155,7 +155,18 @@ public class BattleData
     [ReadOnly]
     [SerializeField]
     private bool _isUsedDodge;
-    public bool IsUsedDodge { get => _isUsedDodge; set => _isUsedDodge = value; }
+    public bool IsUsedDodge
+    {
+        get => _isUsedDodge;
+        set => _isUsedDodge = value;
+    }
+
+    private bool _extraDodgeCount;
+    public bool ExtraDodgeCount
+    {
+        get => _extraDodgeCount;
+        set => _extraDodgeCount = value;
+    }
 
     public bool IsInBattle // 적이나 주인공 파티 맴버가 남아있다면 전투를 지속하는 것으로 판단
         => IsLivingEnemy && IsLivingCharacter;

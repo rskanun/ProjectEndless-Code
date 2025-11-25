@@ -7,35 +7,31 @@ public class AttackSkill : Skill
     [Header("공격 정보")]
     [SerializeField]
     private bool _isAssistable;
-    public bool IsAssistable
-    {
-        get { return _isAssistable; }
-    }
+    public bool IsAssistable => _isAssistable;
+
+    [SerializeField]
+    private bool _isParryable;
+    public bool IsParryable => _isParryable;
+
+    [SerializeField]
+    private bool _isDodgeable;
+    public bool IsDodgeable => _isDodgeable;
+
     [SerializeField]
     private float _damage;
-    public float Damage
-    {
-        get { return _damage; }
-    }
+    public float Damage => _damage;
+
     [SerializeField]
     private float _mpDegree;
-    public float MpDegree
-    {
-        get { return _mpDegree; }
-    }
+    public float MpDegree => _mpDegree;
+
     [SerializeField]
     private float _strDegree;
-    public float StrDegree
-    {
-        get { return _strDegree; }
-    }
+    public float StrDegree => _strDegree;
 
     [SerializeField]
     private Debuff _debuff;
-    public Debuff Debuff
-    {
-        get { return _debuff; }
-    }
+    public Debuff Debuff => _debuff;
 
     public override void OnCasting(Entity caster, List<Entity> targets)
     {

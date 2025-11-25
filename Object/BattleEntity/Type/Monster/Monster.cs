@@ -170,5 +170,12 @@ public abstract class Monster : Entity
         battleData.IsDodgeFrame = false;
         battleData.IsUsedParry = false;
         battleData.IsUsedDodge = false;
+
+        // 회피에 성공했다면 추가 기회가 주어짐
+        if (battleData.ExtraDodgeCount)
+        {
+            battleData.ExtraDodgeCount = false;
+            battleData.IsUsedDodge = true;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -142,20 +143,15 @@ public abstract class Entity : MonoBehaviour
 
         // 공격 모션 실행
         ActAttackAnimation(target, () => target.OnDamage(AttackDmg, FinalStats.MP, criticalChance));
-
-        // 타겟에게 방어 유형 전달
-        // 원거리는 패링 X
-        bool isUsedParry = entityData.AttackType == AttackType.Melee;
-        target.OnTargetedAttack(this, isUsedParry, true);
     }
 
     private void ActAttackAnimation(Entity target, Action onHit)
     {
         // 해당 엔티티의 공격 타입에 따라 공격 모션 선택
         if (entityData.AttackType == AttackType.Melee)
-            motionManager.ActMeleeAttackAnimation(target, onHit).Forget();
+            motionManager.ActMeleeAttackAnimation(target, true, true, AnimParams.AttackMotion, AnimParams.AttackTrigger, onHit).Forget();
         else
-            motionManager.ActRangeAttackAnimation(target, onHit).Forget();
+            motionManager.ActRangeAttackAnimation(target, false, true, onHit).Forget();
     }
 
     public void Counterattack(Entity target)
@@ -185,7 +181,28 @@ public abstract class Entity : MonoBehaviour
         hud.UpdateSP(FinalStats.SP, FinalStats.MaxSP);
 
         // 스킬 시전
-        skill.OnCasting(this, targets);
+        ActSkillAnimation(targets, skill, () => skill.OnCasting(this, targets));
+    }
+
+    private void ActSkillAnimation(List<Entity> targets, Skill skill, Action onHit)
+    {
+        // 현재는 단일 타겟 위주의 애니메이션만 진행
+        if (targets.Count > 1 || skill is not AttackSkill atkSkill)
+        {
+            onHit?.Invoke();
+            return;
+        }
+
+        if (skill.ActionType == AttackType.Melee)
+            motionManager.ActMeleeAttackAnimation(
+                targets.First(),
+                atkSkill.IsParryable,
+                atkSkill.IsDodgeable,
+                skill.SkillMotion,
+                skill.SkillTrigger,
+                onHit).Forget();
+        else
+            motionManager.ActRangeAttackAnimation(targets.First(), atkSkill.IsParryable, atkSkill.IsDodgeable, onHit).Forget();
     }
 
     /***************************************************************
@@ -365,7 +382,7 @@ public abstract class Entity : MonoBehaviour
         // 마방 0 + 기절?
     }
 
-    public void OnTargetedAttack(Entity attacker, bool isUsedParry, bool isUsedDodge)
+    public void OnTargetedAttack(Entity attacker, bool isParryable, bool isDodgeable)
     {
         if (State.HasState(EntityState.Stagger))
         {
@@ -374,8 +391,8 @@ public abstract class Entity : MonoBehaviour
         }
 
         // 제일 리턴이 큰 패링부터 행동
-        if (isUsedParry) OnParryAction();
-        if (isUsedDodge) OnDodgeAction();
+        if (isParryable) OnParryAction();
+        if (isDodgeable) OnDodgeAction();
     }
 
     protected virtual void OnParryAction()

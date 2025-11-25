@@ -166,10 +166,10 @@ public class NormalMonster : Monster
     {
         return castSkill.TargetType switch
         {
-            TargetType.FrontEnemy => target is Monster && target.Position == BattlePosition.Front,
-            TargetType.Enemy or TargetType.EnemyParty => target is Monster,
-            TargetType.FrontMember => target is Character && target.Position == BattlePosition.Front,
-            TargetType.Member or TargetType.PlayerParty => target is Character,
+            TargetType.FrontMember => target is Monster && target.Position == BattlePosition.Front,
+            TargetType.Member or TargetType.EnemyParty => target is Monster,
+            TargetType.FrontEnemy => target is Character && target.Position == BattlePosition.Front,
+            TargetType.Enemy or TargetType.PlayerParty => target is Character,
             TargetType.One or TargetType.Every => true,
             _ => false
         };

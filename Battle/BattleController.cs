@@ -115,14 +115,19 @@ public class BattleController : MonoBehaviour, IController
 
     private void OnDodgeKeyPressed(InputAction.CallbackContext context)
     {
-        Debug.Log("Dodge Action");
         if (battleData.IsUsedDodge)
         {
+            Debug.Log("Dodge Action");
             // 공격 방어 기능을 한 번 사용하면 다른 기능 사용 X
             DisableDefensive();
 
+            // 회피 타이밍에 누른 경우
             if (battleData.IsDodgeFrame)
             {
+                // 다음 회피 기회 주기
+                battleData.ExtraDodgeCount = true;
+
+                // 현재 공격에 대한 회피 처리
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
                 foreach (Entity target in curAction.GetTargets())
                 {

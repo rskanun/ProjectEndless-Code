@@ -30,6 +30,7 @@ public class BattleManager : MonoBehaviour
 
     // 전투 진행 상태
     private bool isTurnEnded = false;
+    public BattleData battleData;
 
     private void OnValidate()
     {
@@ -58,6 +59,8 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
+        battleData = BattleData.Instance;
+
         // 임시로 일반 전투 실행
         OnEncounter(BattleCache.Current.FieldData);
     }
