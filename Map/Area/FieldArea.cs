@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(PolygonCollider2D))]
@@ -25,15 +26,14 @@ public class FieldArea : MonoBehaviour
         get { return _isClearArea; }
         set { _isClearArea = value; }
     }
+    private List<GameObject> fieldMonsters;
     private PolygonCollider2D _areaCollider;
     public PolygonCollider2D AreaCollider => _areaCollider;
-    [SerializeField]
-    private List<GameObject> fieldMonsters;
     [SerializeField]
     private BattleFieldData _fieldData;
     public BattleFieldData FieldData => _fieldData;
 
-    private AreaManager manager;
+    private Map manager;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -42,7 +42,7 @@ public class FieldArea : MonoBehaviour
 
         if (manager == null)
         {
-            manager = transform.GetComponentInParent<AreaManager>();
+            manager = transform.GetComponentInParent<Map>();
         }
 
         // ID값 할당
@@ -55,6 +55,14 @@ public class FieldArea : MonoBehaviour
             _id = GetInstanceID();
     }
 #endif
+
+    private void Awake()
+    {
+        // 해당 오브젝트 하위에 있는 활성화 오브젝트를 탐색하여 채우기
+        fieldMonsters = GetComponentsInChildren<FieldMonster>(false)
+                        .Select(mob => mob.gameObject)
+                        .ToList();
+    }
 
     private void OnEnable()
     {

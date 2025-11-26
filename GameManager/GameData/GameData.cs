@@ -83,8 +83,8 @@ public class GameData : ScriptableObject
     private Chapter _chapter = new Chapter(9, 0, 0);
     public Chapter Chapter
     {
-        get { return _chapter; }
-        set { _chapter = value; }
+        get => _chapter;
+        set => _chapter = value;
     }
 
     /************************************************************
@@ -96,8 +96,8 @@ public class GameData : ScriptableObject
     private Date _date = new Date(11, 19);
     public Date Date
     {
-        get { return _date; }
-        set { _date = value; }
+        get => _date;
+        set => _date = value;
     }
 
     [SerializeField]
@@ -127,8 +127,8 @@ public class GameData : ScriptableObject
     private QuestData _questData;
     public QuestData MainQuest
     {
-        get { return _questData; }
-        set { _questData = value; }
+        get => _questData;
+        set => _questData = value;
     }
 
     /************************************************************
@@ -137,26 +137,42 @@ public class GameData : ScriptableObject
     * 현재 플레이어가 있는 지형 및 위치 관련 데이터
     ************************************************************/
     [SerializeField]
-    private MapData _mapData;
-    public MapData MapData
+    private string _mapScene;
+    public string MapScene
     {
-        get { return _mapData; }
-        set { _mapData = value; }
+        get => _mapScene;
+        set => _mapScene = value;
+    }
+
+    [SerializeField]
+    private string _mapName;
+    public string MapName
+    {
+        get => _mapName;
+        set => _mapName = value;
     }
 
     private HashSet<AreaData> _areaDatas = new();
     public HashSet<AreaData> AreaDatas
     {
-        get { return _areaDatas; }
-        set { _areaDatas = value; }
+        get => _areaDatas;
+        set => _areaDatas = value;
     }
 
     [SerializeField]
     private Vector2 _pos;
     public Vector2 Position
     {
-        get { return _pos; }
-        set { _pos = value; }
+        get => _pos;
+        set => _pos = value;
+    }
+
+    [SerializeField]
+    private string _respawnMapScene;
+    public string RespawnMapScene
+    {
+        get => _respawnMapScene;
+        set => _respawnMapScene = value;
     }
 
     /************************************************************
@@ -189,7 +205,7 @@ public class GameData : ScriptableObject
     private int _awakenPoint;
     public int AP
     {
-        get { return _awakenPoint; }
+        get => _awakenPoint;
         set
         {
             if (_awakenPoint != value)

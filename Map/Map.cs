@@ -1,15 +1,30 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class AreaManager : MonoBehaviour
+public class Map : MonoBehaviour
 {
     private static int curAreaID;
     private static int lastEntedAreaID;
 
+    [SerializeField]
+    private MapData mapInfo;
+
     // 해당 맵의 구역 정보
     private Dictionary<int, FieldArea> areaDict = new();
+
+    private void Awake()
+    {
+        // 현재 맵으로 설정
+        GameData.Instance.MapScene = gameObject.scene.name;
+        GameData.Instance.MapName = mapInfo.Name;
+
+        // 해당 맵이 거점 맵인 경우
+        if (this is BaseMap)
+        {
+            // 전투 패배시 돌아올 장소로 지정
+            GameData.Instance.RespawnMapScene = gameObject.scene.name;
+        }
+    }
 
     public void RegisterArea(FieldArea area)
     {
@@ -58,7 +73,7 @@ public class AreaManager : MonoBehaviour
     /// <summary>
     /// 전투에서 승리했을 경우 해당 구역을 클리어 했다고 설정
     /// </summary>
-    public void OnBattleEnded()
+    public void OnEndBattle()
     {
         // 필드로 복귀한 게 아니라면 무시
         if (GameData.Instance.State != GameState.Field) return;
@@ -108,7 +123,7 @@ public class AreaManager : MonoBehaviour
         curAreaID = area.ID;
 
         // 해당 구역을 카메라 영역으로 지정
-        MapManager.SetCurrentArea(area.AreaCollider);
+        SetCurrentArea(area);
 
         // 해당 구역의 몬스터 정보를 캐시 데이터에 저장
         BattleCache.Current.FieldData = area.FieldData;
@@ -125,6 +140,15 @@ public class AreaManager : MonoBehaviour
         {
             DisableArea(prevArea);
         }
+    }
+
+    private void SetCurrentArea(FieldArea area)
+    {
+        // 카메라 영역 지정
+        PlayerTrackerCamera.cameraArea = area.AreaCollider;
+
+        // 구역 변경 알림
+        GameEventManager.Instance.NotifyAreaChanged();
     }
 
     private void DisableArea(FieldArea area)

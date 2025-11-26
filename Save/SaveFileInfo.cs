@@ -65,8 +65,8 @@ public struct SaveStoryData
 [System.Serializable]
 public struct SaveMapData
 {
-    public string id;
     public string name;
+    public string scene;
     public List<AreaData> areas;
 }
 

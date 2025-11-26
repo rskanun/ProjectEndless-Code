@@ -29,8 +29,13 @@ public class ResultWindow : MonoBehaviour
         // UI 닫고 기존 씬으로 이동
         resultWindow.SetActive(false);
 
+        // 승리 여부에 따라 돌아갈 맵이 달라짐
+        var isVictory = BattleCache.Current.Result == BattleResult.Victory;
+        var map = (isVictory) ? GameData.Instance.MapScene
+                        : GameData.Instance.RespawnMapScene;
+
         SceneLoadManager.LoadFieldScene(
-            GameData.Instance.MapData.SceneName,
+            map,
             UnloadSceneOptions.None,
             SceneFadeEffect.BlurFadeOut,
             SceneFadeEffect.BlurFadeIn,

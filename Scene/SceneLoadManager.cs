@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Cysharp.Threading.Tasks;
 
 public enum SceneFadeEffect
 {
@@ -99,15 +100,13 @@ public static class SceneLoadManager
         loadingScreen.EnableScreen(loadScenes, unloadScenes, unloadOptions, startEffect, endEffect, screen);
     }
 
-    private static async Task<SceneLoadingScreen> LoadSceneAsyncTask(string sceneName, LoadSceneMode mode)
+    private static async UniTask<SceneLoadingScreen> LoadSceneAsyncTask(string sceneName, LoadSceneMode mode)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, mode);
         if (asyncLoad == null) return null;
 
-        // TaskCompletionSource를 사용하여 완료될 때까지 대기
-        TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-        asyncLoad.completed += _ => tcs.SetResult(true);
-        await tcs.Task;
+        // 씬 로드까지 대기
+        await asyncLoad.ToUniTask();
 
         // 해당 씬에서 컴포넌트 찾기
         GameObject[] rootObjects = SceneManager.GetSceneByName(sceneName).GetRootGameObjects();

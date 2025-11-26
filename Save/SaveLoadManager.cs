@@ -151,8 +151,8 @@ public class SaveLoadManager : ScriptableObject
     {
         SaveMapData data = new SaveMapData();
 
-        data.id = GameData.Instance.MapData.ID;
-        data.name = GameData.Instance.MapData.Name;
+        data.name = GameData.Instance.MapName;
+        data.scene = GameData.Instance.MapScene;
         data.areas = GameData.Instance.AreaDatas.ToList();
 
         return data;
@@ -247,9 +247,8 @@ public class SaveLoadManager : ScriptableObject
 
     private void SetMapData(SaveMapData data)
     {
-        MapData map = MapManager.FindMap(data.id);
-
-        GameData.Instance.MapData = map;
+        GameData.Instance.MapName = data.name;
+        GameData.Instance.MapScene = data.scene;
         GameData.Instance.AreaDatas = data.areas.ToHashSet();
     }
 
@@ -264,11 +263,10 @@ public class SaveLoadManager : ScriptableObject
     {
         // 회귀 여부에 따라 로딩 연출을 다르게 함
         LoadingScreen screen = IsRequireReturn(data) ? LoadingScreen.ClockLoading : LoadingScreen.Loading;
-        MapData map = MapManager.FindMap(data.mapData.id);
 
         // 로딩 과정에서 데이터 불러오기
         SceneLoadManager.onLoaded += () => LoadGameData(data);
-        SceneLoadManager.LoadFieldScene(map.SceneName, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
+        SceneLoadManager.LoadFieldScene(data.mapData.scene, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
     }
 
     private bool IsRequireReturn(SaveData data)
