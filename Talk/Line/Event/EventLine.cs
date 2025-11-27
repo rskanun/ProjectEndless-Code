@@ -1,10 +1,20 @@
-﻿public class EventLine : Line
-{
-    public string Command { get { return command; } }
-    private string command;
+﻿using UnityEngine;
 
-    public EventLine(string command) : base(LineType.Event)
+public class EventLine : Line
+{
+    [SerializeField]
+    private IDialogueEvent _dialogueEvent;
+    public IDialogueEvent dialogueEvent => _dialogueEvent;
+
+    public EventLine(IDialogueEvent dialogueEvent) : base(LineType.Event)
     {
-        this.command = command;
+        _dialogueEvent = dialogueEvent;
     }
+
+#if UNITY_EDITOR
+    public EventLine(EventNodeData nodeData) : base(nodeData.guid, LineType.Event)
+    {
+
+    }
+#endif
 }

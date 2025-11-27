@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Dialogue : MonoBehaviour
 {
@@ -16,14 +15,6 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameField;
     [SerializeField] private TextMeshProUGUI textField;
     [SerializeField] private GameObject endMark;
-
-    // 텍스트 필드 사이즈 조정 컴포넌트
-    private ContentSizeFitter nameFitter;
-
-    private void OnValidate()
-    {
-        nameFitter = nameField.GetComponent<ContentSizeFitter>();
-    }
 
     public void SetDialogView(bool isView)
     {
@@ -91,8 +82,5 @@ public class Dialogue : MonoBehaviour
     public void SetName(string name)
     {
         nameField.text = name;
-
-        // 이름 설정 후, 필드 사이즈 변경
-        nameFitter.SetLayoutHorizontal();
     }
 }

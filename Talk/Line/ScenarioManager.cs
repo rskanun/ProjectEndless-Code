@@ -214,7 +214,7 @@ public class ScenarioManager : ScriptableObject
 
             // 존재 여부로 유효한 레이블인지 판단
             return handle.Status == AsyncOperationStatus.Succeeded &&
-                    locations == null &&
+                    locations != null &&
                     locations.Count > 0;
         }
         catch

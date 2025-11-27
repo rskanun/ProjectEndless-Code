@@ -52,20 +52,11 @@ public class GameManager : MonoBehaviour
 
     private async UniTask InitGame()
     {
-        // 게임 상태 초기화
-        GameData.Instance.State = state;
-
         // 로컬리제이션 로드
         await InitLocalized();
 
         // 시나리오 로드
         await LoadScenario(GameData.Instance.Chapter);
-
-        // 플레이어 위치 초기화
-        GameData.Instance.Position = pos;
-
-        // 날짜 데이터 초기화
-        GameData.Instance.Date = date;
     }
 
     private async UniTask InitLocalized()

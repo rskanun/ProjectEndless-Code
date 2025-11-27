@@ -45,11 +45,13 @@ public class TalkManager : MonoBehaviour
     private void OnEnable()
     {
         LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+        TalkContext.Instance.RegisterManager(this);
     }
 
     private void OnDisable()
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        TalkContext.Instance.RemoveManager();
     }
 
     private void OnLocaleChanged(Locale newLocale)

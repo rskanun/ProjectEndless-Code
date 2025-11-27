@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    private static PlayerManager _currentPlayer;
+    public static PlayerManager CurrentPlayer => _currentPlayer;
+
     [SerializeField] private InteractManager interactManager;
 
     [Header("이동속도")]
@@ -24,6 +27,16 @@ public class PlayerManager : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
     }
 #endif
+
+    private void OnEnable()
+    {
+        _currentPlayer = this;
+    }
+
+    private void OnDisable()
+    {
+        _currentPlayer = null;
+    }
 
     public void HideCharacter()
     {
@@ -54,9 +67,20 @@ public class PlayerManager : MonoBehaviour
      * 플레이어의 이동을 제어
      ************************************************************/
 
+    public void Teleport(Vector2 pos)
+    {
+        // 플레이어의 위치 변경
+        transform.position = pos;
+
+        // 인게임 데이터에도 변화 주기
+        GameData.Instance.Position = transform.position;
+    }
+
+    /// <summary>
+    /// 인게임 데이터를 기준으로 플레이어의 위치 다시 불러오기
+    /// </summary>
     public void UpdateLocation()
     {
-        // 현재 게임 데이터에 저장된 값의 위치 데이터 불러오기
         transform.position = GameData.Instance.Position;
     }
 

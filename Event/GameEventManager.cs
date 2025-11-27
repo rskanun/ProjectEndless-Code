@@ -58,6 +58,7 @@ public class GameEventManager : ScriptableObject
     [SerializeField] private GameEvent _dataLoadEvent;
     [SerializeField] private GameEvent _fieldReturnEvent;
     [SerializeField] private GameEvent _equipUpdateEvent;
+    [SerializeField] private GameEvent _statsUpdateEvent;
 
     [Header("전투 이벤트")]
     [SerializeField] private GameEvent _sequenceUpdateEvent;
@@ -112,6 +113,14 @@ public class GameEventManager : ScriptableObject
     public void NotifyEquipUpdate()
     {
         _equipUpdateEvent.NotifyUpdate();
+    }
+
+    /// <summary>
+    /// 파티 내 캐릭터들의 HP및 AP 스탯 변경 알림
+    /// </summary>
+    public void NotifyPartyStatsUpdate()
+    {
+        _statsUpdateEvent.NotifyUpdate();
     }
 
     /************************************************************
