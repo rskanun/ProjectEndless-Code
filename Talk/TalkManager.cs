@@ -310,7 +310,6 @@ public class TalkManager : MonoBehaviour
 
     private void ActiveEvent(EventLine line)
     {
-        string command = line.Command;
-        eventManager.GetCommandEvent(command);
+
     }
 }
