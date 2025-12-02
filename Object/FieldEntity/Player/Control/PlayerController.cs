@@ -74,6 +74,10 @@ public class PlayerController : MonoBehaviour, IController
 
     private void OnInteractKeyPressed(InputAction.CallbackContext context)
     {
+        // 이동 방향을 (0,0)으로 설정
+        player.MoveTo(Vector2.zero);
+
+        // 상호작용 시작
         player.Interact();
     }
 }

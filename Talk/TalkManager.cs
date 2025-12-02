@@ -38,7 +38,7 @@ public class TalkManager : MonoBehaviour
             {LineType.Transform,    line => TransformImage((TransformLine)line)},
             {LineType.BGM,          line => { } },
             {LineType.SE,           line => { } },
-            {LineType.Event,        line => { } },
+            {LineType.Event,        line => ExcuteEvent((EventLine)line) },
         };
     }
 
@@ -272,7 +272,13 @@ public class TalkManager : MonoBehaviour
     {
         isPrinting = true;
 
-        selectManager.OpenSelect(line, idx => selectIndex = idx);
+        selectManager.OpenSelect(line, SelectOption);
+    }
+
+    private void SelectOption(int index)
+    {
+        selectIndex = index;
+        isPrinting = false;
     }
 
     /// <summary>
@@ -308,8 +314,11 @@ public class TalkManager : MonoBehaviour
 
     }
 
-    private void ActiveEvent(EventLine line)
+    /// <summary>
+    /// EventLine에 따른 이벤트 실행 함수
+    /// </summary>
+    private void ExcuteEvent(EventLine line)
     {
-
+        line.dialogueEvent?.Execute();
     }
 }

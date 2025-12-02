@@ -2,7 +2,7 @@
 
 public class EventLine : Line
 {
-    [SerializeField]
+    [SerializeReference]
     private IDialogueEvent _dialogueEvent;
     public IDialogueEvent dialogueEvent => _dialogueEvent;
 
@@ -12,9 +12,9 @@ public class EventLine : Line
     }
 
 #if UNITY_EDITOR
-    public EventLine(EventNodeData nodeData) : base(nodeData.guid, LineType.Event)
+    public EventLine(string guid, IDialogueEvent dialogueEvent) : base(guid, LineType.Event)
     {
-
+        _dialogueEvent = dialogueEvent;
     }
 #endif
 }
