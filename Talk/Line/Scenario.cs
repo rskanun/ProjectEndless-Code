@@ -6,7 +6,7 @@ using UnityEngine.Localization.Tables;
 
 public class Scenario : ScriptableObject, ISerializationCallbackReceiver
 {
-    private Dictionary<int, List<Line>> scenarios = new();
+    private Dictionary<int, ScenarioScene> scenarios = new();
     public IEnumerable<int> IDs => scenarios.Keys;
 
     [SerializeField]
@@ -174,7 +174,7 @@ public class Scenario : ScriptableObject, ISerializationCallbackReceiver
     public void OnAfterDeserialize()
     {
         // 직렬화시킨 구조를 Dictionary 형태로 변경
-        scenarios = serializedScenarios.ToDictionary(entry => entry.id, entry => entry.lines);
+        scenarios = serializedScenarios.ToDictionary(entry => entry.id, entry => new ScenarioScene(entry.lines));
 
         // guid로 저장된 연결 라인 값에 실제 값 넣기
         // 빠른 탐색을 위한 Dictionary 타입으로 변경
@@ -216,7 +216,7 @@ public class Scenario : ScriptableObject, ISerializationCallbackReceiver
     /// 번호에 맞는 Line 배열의 시작 부분 가져오기
     /// </summary>
     /// <param name="num">가져올 시나리오 번호</param>
-    public Line GetIntroLine(int num)
+    public ScenarioScene GetScenarioScene(int num)
     {
         // 해당 번호의 시나리오가 없거나 로드되지 않았다면
         if (ContainsKey(num) == false)
@@ -225,8 +225,8 @@ public class Scenario : ScriptableObject, ISerializationCallbackReceiver
             return null;
         }
 
-        // 해당 번호의 가장 처음 등록된 대사 리턴
-        return scenarios[num].First();
+        // 해당 번호의 씬 리턴
+        return scenarios[num];
     }
 
     public bool ContainsKey(int id)

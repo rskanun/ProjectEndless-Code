@@ -5,23 +5,23 @@ public class Npc : MonoBehaviour
 {
     [SerializeField]
     private NpcData npc;
-    private Line introLine;
+    private ScenarioScene dialogueScene;
 
     public int GetID()
     {
         return npc.ID;
     }
 
-    public Line GetIntroLine()
+    public ScenarioScene GetDialogueScene()
     {
         // 대사를 가지고 있지 않는 경우
-        if (introLine == null)
+        if (dialogueScene == null)
         {
             // 해당 npc의 id에 해당하는 대사 찾아 담기
-            introLine = ScenarioManager.Instance.GetNpcDialogueIntro(npc.ID);
+            dialogueScene = ScenarioManager.Instance.GetNpcDialogueScene(npc.ID);
         }
 
-        return introLine;
+        return dialogueScene;
     }
 
     public QuestData GetAcceptableQuest()

@@ -72,7 +72,7 @@ public class ScenarioManager : ScriptableObject
     [SerializeField] private string labelPrefix;
 
     // 현재 읽혀지는 시나리오
-    private Dictionary<int, Line> scenarioTable = new();
+    private Dictionary<int, ScenarioScene> scenarioTable = new();
 
     // 현재 시나리오에 쓰이는 로컬라이제이션 테이블
     private List<StringTable> nameTableList = new();
@@ -189,7 +189,7 @@ public class ScenarioManager : ScriptableObject
         {
             foreach (var id in scenario.IDs)
             {
-                var intro = scenario.GetIntroLine(id);
+                var intro = scenario.GetScenarioScene(id);
 
                 // 읽기 전용 리스트를 일반 리스트로 변환해서 넣어주기
                 scenarioTable.Add(id, intro);
@@ -303,18 +303,18 @@ public class ScenarioManager : ScriptableObject
         return null;
     }
 
-    public Line GetNpcDialogueIntro(int npcID)
+    public ScenarioScene GetNpcDialogueScene(int npcID)
     {
         int scenarioNum = GetScenarioNumByNpc(npcID);
 
-        return GetIntroLine(scenarioNum);
+        return GetScenarioScene(scenarioNum);
     }
 
-    public Line GetQuestIntro(int questID, QuestState state)
+    public ScenarioScene GetQuestScenarioScene(int questID, QuestState state)
     {
         int scenarioNum = GetScenarioNumByQuest(questID, (int)state);
 
-        return GetIntroLine(scenarioNum);
+        return GetScenarioScene(scenarioNum);
     }
 
     public int GetScenarioNumByNpc(int npcID)
@@ -333,7 +333,7 @@ public class ScenarioManager : ScriptableObject
         return int.Parse("2" + questID.ToString("D5") + stateNum);
     }
 
-    private Line GetIntroLine(int id)
+    private ScenarioScene GetScenarioScene(int id)
     {
         return scenarioTable[id];
     }
