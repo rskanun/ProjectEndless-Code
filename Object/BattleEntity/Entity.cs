@@ -66,7 +66,8 @@ public abstract class Entity : MonoBehaviour
     private bool _isDead;
     public bool IsDead => _isDead;
     public bool IsActing => motionManager.IsActing;
-    public bool IsIdle => motionManager.IsIdle;
+    public bool IsAttackEnd
+        => !IsActing || motionManager.IsPlayAnimation(AnimParams.ReturnMotion);
     private EntityStateManager _stateManager;
     protected EntityStateManager State
     {
@@ -149,16 +150,16 @@ public abstract class Entity : MonoBehaviour
     {
         // 해당 엔티티의 공격 타입에 따라 공격 모션 선택
         if (entityData.AttackType == AttackType.Melee)
-            motionManager.ActMeleeAttackAnimation(target, true, true, AnimParams.AttackMotion, AnimParams.AttackTrigger, onHit).Forget();
+            motionManager.ActMeleeAttackAnimation(target, true, true, AnimParams.AttackMotion, AnimParams.AttackTrigger, onHit);
         else
-            motionManager.ActRangeAttackAnimation(target, false, true, onHit).Forget();
+            motionManager.ActRangeAttackAnimation(target, false, true, onHit);
     }
 
     public void Counterattack(Entity target)
     {
         // 반격 모션 실행
         motionManager.ActCounterattackAnimation(() =>
-            target.OnDamage(AttackDmg, FinalStats.MP, 1.0f)).Forget();
+            target.OnDamage(AttackDmg, FinalStats.MP, 1.0f));
     }
 
     public virtual float GetCriticalChance(Entity target)
@@ -200,9 +201,9 @@ public abstract class Entity : MonoBehaviour
                 atkSkill.IsDodgeable,
                 skill.SkillMotion,
                 skill.SkillTrigger,
-                onHit).Forget();
+                onHit);
         else
-            motionManager.ActRangeAttackAnimation(targets.First(), atkSkill.IsParryable, atkSkill.IsDodgeable, onHit).Forget();
+            motionManager.ActRangeAttackAnimation(targets.First(), atkSkill.IsParryable, atkSkill.IsDodgeable, onHit);
     }
 
     /***************************************************************
@@ -311,7 +312,7 @@ public abstract class Entity : MonoBehaviour
         FinalStats.MP -= GetLastMP(attackerMP);
 
         // 데미지 모션
-        motionManager.ActHitAnimation().Forget();
+        motionManager.ActHitAnimation();
 
         // 데미지 표시
         DamagePopup.IndicateDamage(transform.position, lastDamage);
@@ -319,13 +320,6 @@ public abstract class Entity : MonoBehaviour
         // HUD 업데이트
         hud.UpdateHP(FinalStats.HP, FinalStats.MaxHP);
         hud.UpdateMP(FinalStats.MP, FinalStats.MaxMP);
-
-        // 오브젝트 사망 처리
-        if (FinalStats.HP <= 0)
-        {
-            // HP 수치가 0 이하로 떨어질 경우 사망 처리
-            OnDead();
-        }
 
         // 오브젝트 마력 고갈 처리
         if (FinalStats.MP <= 0)
@@ -360,6 +354,9 @@ public abstract class Entity : MonoBehaviour
 
         // 시퀀스 삭제
         BattleData.Instance.Sequence.RemoveTurn(this);
+
+        // 사망 애니메이션 실행
+        motionManager.ActDeadAnimation();
     }
 
     public virtual void OnRevival(int hp)
@@ -417,17 +414,17 @@ public abstract class Entity : MonoBehaviour
     public virtual void OnParrying(Entity attacker)
     {
         // 패링에 성공했을 경우 패링 모션 실행
-        StartCoroutine(OnParryAction(attacker));
+        OnParryAction(attacker);
     }
 
-    private IEnumerator OnParryAction(Entity attacker)
+    private async void OnParryAction(Entity attacker)
     {
         Debug.Log("Parrying");
         // 패링 모션 실행
         motionManager.ActMotion(AnimParams.ParryTrigger);
 
         // 모션 체크
-        yield return new WaitUntil(() => IsActing == false);
+        await UniTask.WaitWhile(() => IsActing);
 
         // 패링 모션이 끝까지 진행되었을 경우 통상적인 엔티티는 자신이 한 번 더 공격
         Attack(attacker);

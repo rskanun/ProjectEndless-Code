@@ -210,7 +210,16 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        await UniTask.WaitUntil(() => actor.IsIdle);
+        await UniTask.WaitUntil(() => actor.IsAttackEnd);
+
+        // 사망 확인
+        foreach (var target in curAction.GetTargets())
+        {
+            if (target.FinalStats.HP > 0) continue;
+
+            // 체력이 0이하로 떨어진 경우 사망 판정
+            target.OnDead();
+        }
 
         // 해당 행동으로 전투가 끝났거나, 해당 엔티티가 사망한 경우 턴 끝내기
         if (BattleData.Instance.IsInBattle == false || actor.IsDead)

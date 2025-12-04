@@ -18,7 +18,7 @@ public class WaitAction : BattleAction
 
     public override List<Entity> GetTargets()
     {
-        return null;
+        return new List<Entity>();
     }
 
     public override void SetTarget(List<Entity> targets)

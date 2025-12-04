@@ -21,7 +21,9 @@ public static class AnimParams
     public static readonly int ParryTrigger = Animator.StringToHash("parry");
     public static readonly int ReturnTrigger = Animator.StringToHash("return");
     public static readonly int DeathTrigger = Animator.StringToHash("death");
-    public static readonly int HitTrigger = Animator.StringToHash("hit");
+
+    // Bool
+    public static readonly int HitBool = Animator.StringToHash("isHit");
 
     // Motion Name
     public static readonly int IdleMotion = Animator.StringToHash("Idle");
@@ -30,6 +32,7 @@ public static class AnimParams
     public static readonly int CounterattackMotion = Animator.StringToHash("Counterattack");
     public static readonly int DeathMotion = Animator.StringToHash("Death");
     public static readonly int HitMotion = Animator.StringToHash("Hit");
+    public static readonly int ReturnMotion = Animator.StringToHash("Return");
 }
 
 [Serializable]
@@ -42,6 +45,12 @@ public class Motion
 [RequireComponent(typeof(Entity))]
 public class EntityMotionManager : MonoBehaviour
 {
+    private enum MotionType
+    {
+        Trigger,
+        Bool,
+    }
+
     #region [Settings & References]
     [SerializeField, ReadOnly] private Entity entity;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -62,14 +71,8 @@ public class EntityMotionManager : MonoBehaviour
         private set { _isActing = value; }
         get { return _isActing; }
     }
-    private bool _isIdle = true;
-    public bool IsIdle
-    {
-        private set { _isIdle = value; }
-        get { return _isIdle; }
-    }
     private Action onHitAction;
-    private Queue<int> motionQueue = new Queue<int>();
+    private Queue<(MotionType, int)> motionQueue = new();
     #endregion
 
     [Serializable]
@@ -97,7 +100,7 @@ public class EntityMotionManager : MonoBehaviour
         return new Vector2(target.x + (motionRange - range) * vectorX, target.y);
     }
 
-    private bool IsPlayAnimation(int stateHash)
+    public bool IsPlayAnimation(int stateHash)
     {
         return animator.GetCurrentAnimatorStateInfo(0).shortNameHash == stateHash;
     }
@@ -112,8 +115,16 @@ public class EntityMotionManager : MonoBehaviour
     {
         IsActing = true;
 
-        motionQueue.Enqueue(id);
+        motionQueue.Enqueue((MotionType.Trigger, id));
         animator.SetTrigger(id);
+    }
+
+    public void SetMotion(int id)
+    {
+        IsActing = true;
+
+        motionQueue.Enqueue((MotionType.Bool, id));
+        animator.SetBool(id, true);
     }
 
     public void OnEndMotion()
@@ -122,7 +133,14 @@ public class EntityMotionManager : MonoBehaviour
         if (motionQueue.Count <= 0) return;
 
         IsActing = false;
-        motionQueue.Dequeue();
+        var (motionType, id) = motionQueue.Dequeue();
+
+        // bool 타입의 모션인 경우
+        if (motionType == MotionType.Bool)
+        {
+            // false로 바꿔 멈추기
+            animator.SetBool(id, false);
+        }
 
         // 아직 남은 모션이 실행 중이라면
         if (motionQueue.Count > 0)
@@ -143,10 +161,8 @@ public class EntityMotionManager : MonoBehaviour
     * 
     * 대상을 공격하는 모션을 근거리와 원거리로 나눠 애니메이션 진행
     ***************************************************************/
-    public async UniTask ActMeleeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, int animMotionHash, int animTriggerHash, Action onHit)
+    public async void ActMeleeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, int animMotionHash, int animTriggerHash, Action onHit)
     {
-        IsIdle = false;
-
         // 본래 위치 기억
         Vector2 originPos = transform.position;
 
@@ -194,13 +210,10 @@ public class EntityMotionManager : MonoBehaviour
         await ReturnAnimation(originPos);
 
         // 히트 & 사망 모션 대기
-        await UniTask.WaitUntil(() => target.IsIdle);
+        await UniTask.WaitWhile(() => target.IsActing);
 
         // 타격 이벤트 삭제
         onHitAction = null;
-
-        // 행동 모션이 끝났음을 알림
-        IsIdle = true;
     }
 
     private async UniTask ParriedAnimation(Entity target, Vector2 originPos)
@@ -237,10 +250,8 @@ public class EntityMotionManager : MonoBehaviour
         transform.position = originPos;
     }
 
-    public async UniTask ActRangeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, Action onHit)
+    public async void ActRangeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, Action onHit)
     {
-        IsIdle = false;
-
         // 공격하는 엔티티를 향해 카메라 포커싱
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
@@ -255,9 +266,6 @@ public class EntityMotionManager : MonoBehaviour
         BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject).Forget();
 
         // 원거리 오브젝트 생성
-
-        // 행동 모션이 끝났음을 알림
-        IsIdle = true;
     }
 
     /***************************************************************
@@ -266,10 +274,8 @@ public class EntityMotionManager : MonoBehaviour
     * 패링 성공 시, 일반 반격 공격 모션 실행
     ***************************************************************/
 
-    public async UniTask ActCounterattackAnimation(Action onHit)
+    public async void ActCounterattackAnimation(Action onHit)
     {
-        IsIdle = false;
-
         // 반격 대상 포커싱
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
@@ -285,9 +291,6 @@ public class EntityMotionManager : MonoBehaviour
 
         // 타격 이벤트 삭제
         onHitAction = null;
-
-        // 행동 모션이 끝났음을 알림
-        IsIdle = true;
     }
 
     /***************************************************************
@@ -296,36 +299,17 @@ public class EntityMotionManager : MonoBehaviour
     * 타격 모션 실행, 이후 사망했다면 사망 모션까지 실행
     ***************************************************************/
 
-    public async UniTask ActHitAnimation()
+    public void ActHitAnimation()
     {
-        IsIdle = false;
-
         // 타격 모션 실행
-        ActMotion(AnimParams.HitTrigger);
-
-        // 사망 체크
-        while (IsActing)
-        {
-            // 사망한 경우 해당 애니메이션 실행
-            if (entity.IsDead)
-            {
-                await DeadAnimation();
-
-                // 행동 모션이 끝났음을 알림
-                IsIdle = true;
-                return;
-            }
-
-            // 1프레임씩 확인
-            await UniTask.Yield();
-        }
-
-        // 행동 모션이 끝났음을 알림
-        IsIdle = true;
+        SetMotion(AnimParams.HitBool);
     }
 
-    protected virtual async UniTask DeadAnimation()
+    public virtual async void ActDeadAnimation()
     {
+        // 히트 모션 종료
+        OnEndMotion();
+
         // 사망 모션 실행
         ActMotion(AnimParams.DeathTrigger);
 
