@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[System.Serializable]
+[Serializable]
 public class GridNode : IComparable<GridNode>
 {
     // 항상 고정되는 값
@@ -12,6 +12,7 @@ public class GridNode : IComparable<GridNode>
     public Vector2Int gridPos;
 
     // 인게임 내에서 바뀌는 값
+    [NonSerialized] public Vector2Int prevPos;
     [NonSerialized] public int gCost;
     [NonSerialized] public int hCost;
     public int fCost => gCost + hCost;
@@ -30,11 +31,17 @@ public class GridNode : IComparable<GridNode>
 
 public class MapGrid : SerializedMonoBehaviour
 {
-    [SerializeField] private Tilemap tilemap;
-    [SerializeField] private LayerMask obstacle;
-    [SerializeField, MinValue(0.5f)] private float nodeSize = 1.0f;
-    [SerializeField] private Vector2 offset;
-    [SerializeField, Range(0.1f, 1.0f)] private float collisionScale = 1.0f;
+    [SerializeField]
+    private Tilemap tilemap;
+    [SerializeField]
+    private LayerMask obstacle;
+    [SerializeField, MinValue(0.5f)]
+    private float nodeSize = 1.0f;
+    public float NodeSize => nodeSize;
+    [SerializeField]
+    private Vector2 offset;
+    [SerializeField, Range(0.1f, 1.0f)]
+    private float collisionScale = 1.0f;
 
     [SerializeField, HideInInspector]
     private GridNode[,] mapNodes;

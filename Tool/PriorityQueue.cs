@@ -5,6 +5,8 @@ public class PriorityQueue<T> where T : IComparable<T>
 {
     private List<T> data = new List<T>();
 
+    public int Count => data.Count;
+
     public void Enqueue(T item)
     {
         data.Add(item);
@@ -63,6 +65,4 @@ public class PriorityQueue<T> where T : IComparable<T>
 
         return frontItem;
     }
-
-    public int Count => data.Count;
 }
