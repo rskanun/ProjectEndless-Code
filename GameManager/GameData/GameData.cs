@@ -158,6 +158,13 @@ public class GameData : ScriptableObject
         set => _mapName = value;
     }
 
+    private MapGrid _mapGrid;
+    public MapGrid MapGrid
+    {
+        get => _mapGrid;
+        set => _mapGrid = value;
+    }
+
     private HashSet<AreaData> _areaDatas = new();
     public HashSet<AreaData> AreaDatas
     {

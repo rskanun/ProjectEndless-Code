@@ -46,6 +46,17 @@ public class MapGrid : SerializedMonoBehaviour
     [SerializeField, HideInInspector]
     private GridNode[,] mapNodes;
 
+    private void OnEnable()
+    {
+        GameData.Instance.MapGrid = this;
+    }
+
+    private void OnDisable()
+    {
+        if (GameData.Instance.MapGrid == this)
+            GameData.Instance.MapGrid = null;
+    }
+
     [Button("Reload Grid", ButtonSizes.Large)]
     public void ReloadGrid()
     {
@@ -101,7 +112,7 @@ public class MapGrid : SerializedMonoBehaviour
     public GridNode GetNode(int x, int y)
     {
         // 범위에서 벗어난 값인 경우 빈 값 리턴
-        if ((0 > x || x >= mapNodes.GetLength(1)) || 0 > y || y >= mapNodes.GetLength(0))
+        if ((0 > x || x >= mapNodes.GetLength(1)) || (0 > y || y >= mapNodes.GetLength(0)))
         {
             return null;
         }

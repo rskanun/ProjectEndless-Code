@@ -4,10 +4,6 @@ using Sirenix.OdinInspector;
 using System.Linq;
 using System;
 
-
-
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -67,6 +63,7 @@ public class QuestManager : ScriptableObject
     private List<QuestData> questDatas = new();
 
     // 현재 추적 중인 퀘스트
+    [SerializeField]
     private QuestData _trackedQuest;
     public QuestData TrackedQuest => _trackedQuest;
 

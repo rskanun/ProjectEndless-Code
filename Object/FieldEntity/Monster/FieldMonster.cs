@@ -151,11 +151,6 @@ public class FieldMonster : MonoBehaviour
 
         // 현재 위치에서 움직일 위치와 목표까지의 거리 계산
         Vector2 movePoint = Vector2.MoveTowards(transform.position, target, speed);
-        float cur2Move = Vector2.Distance(transform.position, movePoint); // 현재 좌표에서 움직인 뒤까지의 
-        float cur2Target = Vector2.Distance(transform.position, target); // 현재 좌표에서 목표까지의 거리
-
-        // 현재 위치에서 목표까지 갈 수 있다면 이동 목표를 목적지로 설정
-        movePoint = (cur2Move > cur2Target) ? target : movePoint;
 
         // 이동 방향으로 회전
         RotateTo(movePoint);
