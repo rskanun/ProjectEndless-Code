@@ -16,7 +16,7 @@ public class PriorityQueue<T> where T : IComparable<T>
         {
             int parentIndex = (childIndex - 1) / 2;
 
-            // ºÎ¸ğ°¡ ÀÚ½Äº¸´Ù Å©¸é ¾ÈµÇ¹Ç·Î(ÃÖ¼Ò Èü), ±³È¯(Swap)
+            // ë¶€ëª¨ê°€ ìì‹ë³´ë‹¤ í¬ë©´ ì•ˆë˜ë¯€ë¡œ(ìµœì†Œ í™), êµí™˜(Swap)
             if (data[childIndex].CompareTo(data[parentIndex]) >= 0)
                 break;
 
@@ -33,7 +33,7 @@ public class PriorityQueue<T> where T : IComparable<T>
         if (data.Count == 0) throw new InvalidOperationException("Queue is empty");
 
         int lastIndex = data.Count - 1;
-        T frontItem = data[0]; // ÃÖ»óÀ§(ÃÖ¼Ò°ª) °¡Á®¿À±â
+        T frontItem = data[0]; // ìµœìƒìœ„(ìµœì†Œê°’) ê°€ì ¸ì˜¤ê¸°
 
         data[0] = data[lastIndex];
         data.RemoveAt(lastIndex);

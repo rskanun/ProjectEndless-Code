@@ -10,16 +10,16 @@ public abstract class Monster : Entity
     {
         base.Awake();
 
-        // ÃÖÁ¾½ºÅİ ¼³Á¤
+        // ìµœì¢…ìŠ¤í…Ÿ ì„¤ì •
         _finalStats.CopyTo(entityData.Stats);
 
-        // HUD ¾÷µ¥ÀÌÆ®
+        // HUD ì—…ë°ì´íŠ¸
         InitHUD();
     }
 
     private void InitHUD()
     {
-        // HUD ¾÷µ¥ÀÌÆ®
+        // HUD ì—…ë°ì´íŠ¸
         hud.UpdateHP(FinalStats.HP, FinalStats.MaxHP);
         hud.UpdateMP(FinalStats.MP, FinalStats.MaxMP);
         hud.UpdateSP(FinalStats.SP, FinalStats.MaxSP);
@@ -56,9 +56,9 @@ public abstract class Monster : Entity
     }
 
     /***************************************************************
-    * [ ÅÏ ÁøÇà ]
+    * [ í„´ ì§„í–‰ ]
     * 
-    * ÇØ´ç ¿ÀºêÁ§Æ®ÀÇ ÅÏ ÁøÇà
+    * í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ì˜ í„´ ì§„í–‰
     ***************************************************************/
 
     protected void SelectSkill(Skill skill, Entity target, int? index = null)
@@ -77,10 +77,10 @@ public abstract class Monster : Entity
         action.remainTurn = skill.CostTurn;
         action.SetTarget(targets);
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¿¹¾à
+        // ì„ íƒí•œ í–‰ë™ ì˜ˆì•½
         SelectAction(action, index);
 
-        // ÅÏ Á¾·á
+        // í„´ ì¢…ë£Œ
         EndTurn();
     }
 
@@ -93,16 +93,16 @@ public abstract class Monster : Entity
         action.target = target;
         action.remainTurn = AttackTurn;
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¿¹¾à
+        // ì„ íƒí•œ í–‰ë™ ì˜ˆì•½
         SelectAction(action, index);
 
-        // ÅÏ Á¾·á
+        // í„´ ì¢…ë£Œ
         EndTurn();
     }
 
     private void SelectWait()
     {
-        // ÀÓ½Ã ´ë±â
+        // ì„ì‹œ ëŒ€ê¸°
         WaitAction action = new WaitAction();
 
         action.remainTurn = 10.0f;
@@ -110,10 +110,10 @@ public abstract class Monster : Entity
 
         Debug.Log($"{entityData.Name}: {action.remainTurn} Turn Waiting...");
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¿¹¾à
+        // ì„ íƒí•œ í–‰ë™ ì˜ˆì•½
         SelectAction(action);
 
-        // ÅÏ Á¾·á
+        // í„´ ì¢…ë£Œ
         EndTurn();
     }
 
@@ -126,20 +126,20 @@ public abstract class Monster : Entity
     }
 
     /***************************************************************
-    * [ »óÅÂ Ã³¸® ]
+    * [ ìƒíƒœ ì²˜ë¦¬ ]
     * 
-    * ¿ÀºêÁ§Æ®ÀÇ ÀÌº¥Æ®¿¡ ÀÇÇÑ »óÅÂ Ã³¸®
+    * ì˜¤ë¸Œì íŠ¸ì˜ ì´ë²¤íŠ¸ì— ì˜í•œ ìƒíƒœ ì²˜ë¦¬
     ***************************************************************/
 
     public override void OnDead()
     {
-        // ±âÁ¸ »ç¸Á Ã³¸® ½ÇÇà
+        // ê¸°ì¡´ ì‚¬ë§ ì²˜ë¦¬ ì‹¤í–‰
         base.OnDead();
 
-        // »ç¸Á ¾Ë¸²
+        // ì‚¬ë§ ì•Œë¦¼
         GameEventManager.Instance.NotifyEnemyDefeated();
 
-        // Ã³Áö º¸»ó ¾÷µ¥ÀÌÆ®
+        // ì²˜ì§€ ë³´ìƒ ì—…ë°ì´íŠ¸
         BattleData.Instance.AddKillReward(this);
     }
 
@@ -148,7 +148,7 @@ public abstract class Monster : Entity
         base.OnParried();
         Debug.Log("Parried");
 
-        // ¸ó½ºÅÍ°¡ ÆĞ¸µ ´çÇßÀ» °æ¿ì °ü·Ã º¯¼ö ÃÊ±âÈ­
+        // ëª¬ìŠ¤í„°ê°€ íŒ¨ë§ ë‹¹í–ˆì„ ê²½ìš° ê´€ë ¨ ë³€ìˆ˜ ì´ˆê¸°í™”
         DisableDefensive();
     }
 
@@ -171,7 +171,7 @@ public abstract class Monster : Entity
         battleData.IsUsedParry = false;
         battleData.IsUsedDodge = false;
 
-        // È¸ÇÇ¿¡ ¼º°øÇß´Ù¸é Ãß°¡ ±âÈ¸°¡ ÁÖ¾îÁü
+        // íšŒí”¼ì— ì„±ê³µí–ˆë‹¤ë©´ ì¶”ê°€ ê¸°íšŒê°€ ì£¼ì–´ì§
         if (battleData.ExtraDodgeCount)
         {
             battleData.ExtraDodgeCount = false;

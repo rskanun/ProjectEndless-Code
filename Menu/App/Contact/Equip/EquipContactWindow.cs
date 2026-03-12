@@ -10,7 +10,7 @@ public abstract class EquipContactWindow : ContactWindow
     [SerializeField] protected ContactApp app;
     [SerializeField] private NavigationGroup naviGroup;
 
-    [Header("¿¬¶ôÃ³ ¿ÀºêÁ§Æ®")]
+    [Header("ì—°ë½ì²˜ ì˜¤ë¸Œì íŠ¸")]
     [SerializeField] private GameObject contactPrefab;
     [SerializeField] private Transform contactTrans;
 
@@ -24,68 +24,68 @@ public abstract class EquipContactWindow : ContactWindow
 
     private void OnDisable()
     {
-        // ÇØ´ç Ã¢ÀÌ ºñÈ°¼ºÈ­ µÉ ¶§, ¸ğµç ¿ÀºêÁ§Æ® ¸ñ·ÏÀ» Áö¿ì±â
+        // í•´ë‹¹ ì°½ì´ ë¹„í™œì„±í™” ë  ë•Œ, ëª¨ë“  ì˜¤ë¸Œì íŠ¸ ëª©ë¡ì„ ì§€ìš°ê¸°
         DestroyContactObjs();
 
         contactList.Clear();
         contactsY.Clear();
 
-        // ½ºÅ©·Ñ À§Ä¡¸¦ Ã³À½¿¡ À§Ä¡½ÃÅ°±â
+        // ìŠ¤í¬ë¡¤ ìœ„ì¹˜ë¥¼ ì²˜ìŒì— ìœ„ì¹˜ì‹œí‚¤ê¸°
         content.localPosition = new Vector2(content.localPosition.x, 0);
     }
 
     protected override void InitContact()
     {
-        // ÇÃ·¹ÀÌ¾î°¡ °¡Áø ¸ğµç ¹«±â ¸ñ·Ï ¶ç¿ì±â
+        // í”Œë ˆì´ì–´ê°€ ê°€ì§„ ëª¨ë“  ë¬´ê¸° ëª©ë¡ ë„ìš°ê¸°
         foreach ((Item item, int count) in InventoryData.Instance.GetItems(EquipType))
         {
             Equip equip = item as Equip;
             CharacterData character = app.SelectCharacter;
 
-            // ÇØ´ç Ä­¿¡ ¼±ÅÃµÈ Ä³¸¯ÅÍ°¡ ¾µ ¼ö ÀÖ´Â ¹«±â ¸ñ·Ï¸¸ ¶ç¿ì±â
+            // í•´ë‹¹ ì¹¸ì— ì„ íƒëœ ìºë¦­í„°ê°€ ì“¸ ìˆ˜ ìˆëŠ” ë¬´ê¸° ëª©ë¡ë§Œ ë„ìš°ê¸°
             if (!IsEquipType(character, equip)) continue;
 
-            // ÇØ´ç ¹«±â Á¤º¸¸¦ Åä´ë·Î ÇÑ ¿¬¶ôÃ³(=Á¤º¸) ¿ÀºêÁ§Æ® »ı¼º
+            // í•´ë‹¹ ë¬´ê¸° ì •ë³´ë¥¼ í† ëŒ€ë¡œ í•œ ì—°ë½ì²˜(=ì •ë³´) ì˜¤ë¸Œì íŠ¸ ìƒì„±
             GameObject contactObj = Instantiate(contactPrefab, contactTrans);
             EquipContact contact = contactObj.GetComponent<EquipContact>();
 
-            // Á¤º¸ ¹× ÇÚµé·¯ µî·Ï
+            // ì •ë³´ ë° í•¸ë“¤ëŸ¬ ë“±ë¡
             contact.UpdateInfo(equip, count, IsEquipAnyone(equip));
             contact.SetSelectAction(() => UpdateScrollPosition(contactObj));
             contact.SetSubmitHandler(() => OnClickContact(contact, character, equip));
 
-            // ÈÄ¿¡ ÆÄ±«¸¦ À§ÇÑ ¸®½ºÆ®¿¡ Ãß°¡
+            // í›„ì— íŒŒê´´ë¥¼ ìœ„í•œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
             contactList.Add(contactObj);
 
-            // ÇØ´ç Ä³¸¯ÅÍ°¡ µé°í ÀÖ´Â ¹«±â¸¦ ¸ÕÀú, ¾ø´Ù¸é °¡Àå Ã¹ ¹«±â¸¦ ¸ÕÀú ¼±ÅÃ
+            // í•´ë‹¹ ìºë¦­í„°ê°€ ë“¤ê³  ìˆëŠ” ë¬´ê¸°ë¥¼ ë¨¼ì €, ì—†ë‹¤ë©´ ê°€ì¥ ì²« ë¬´ê¸°ë¥¼ ë¨¼ì € ì„ íƒ
             bool isEquipped = IsEquip(character, equip);
             if (firstSelect == null || isEquipped)
             {
                 firstSelect = contactObj;
 
-                // Ä³¸¯ÅÍ°¡ µé°í ÀÖ´Â Àåºñ´Â ÀúÀåÇØ³õ±â
+                // ìºë¦­í„°ê°€ ë“¤ê³  ìˆëŠ” ì¥ë¹„ëŠ” ì €ì¥í•´ë†“ê¸°
                 if (isEquipped)
                     currentEquip = contact;
             }
         }
 
-        // ¸ñ·Ï »çÀÌÁî ¾÷µ¥ÀÌÆ®
+        // ëª©ë¡ ì‚¬ì´ì¦ˆ ì—…ë°ì´íŠ¸
         ContentResize();
 
-        // ±âº» »çÀÌÁî ¼³Á¤
+        // ê¸°ë³¸ ì‚¬ì´ì¦ˆ ì„¤ì •
         originContentSize = content.rect.height;
 
-        // °¢ ¿ÀºêÁ§Æ® À§Ä¡ ÀúÀå
+        // ê° ì˜¤ë¸Œì íŠ¸ ìœ„ì¹˜ ì €ì¥
         UpdateContactPos();
 
-        // ¹öÆ° ³×ºñ°ÔÀÌ¼Ç ¼³Á¤
+        // ë²„íŠ¼ ë„¤ë¹„ê²Œì´ì…˜ ì„¤ì •
         naviGroup.SetupChildsNavigation();
     }
 
     /// <summary>
-    /// ´©±º°¡ ÇØ´ç Àåºñ¸¦ Âø¿ëÇÏ°í ÀÖ´Â Áö ¿©ºÎ¸¦ ¸®ÅÏ
+    /// ëˆ„êµ°ê°€ í•´ë‹¹ ì¥ë¹„ë¥¼ ì°©ìš©í•˜ê³  ìˆëŠ” ì§€ ì—¬ë¶€ë¥¼ ë¦¬í„´
     /// </summary>
-    /// <param name="equip">È®ÀÎÇÏ°íÀÚ ÇÏ´Â Àåºñ</param>
+    /// <param name="equip">í™•ì¸í•˜ê³ ì í•˜ëŠ” ì¥ë¹„</param>
     /// <returns></returns>
     private bool IsEquipAnyone(Equip equip)
     {
@@ -100,19 +100,19 @@ public abstract class EquipContactWindow : ContactWindow
 
     private void OnClickContact(EquipContact contact, CharacterData character, Equip selectEquip)
     {
-        // Àåºñ ÀåÂø
+        // ì¥ë¹„ ì¥ì°©
         EquipItem(character, selectEquip);
 
-        // ÀÌÀü Àåºñ ÀåÂø ¸¶Å© ÇØÁ¦
+        // ì´ì „ ì¥ë¹„ ì¥ì°© ë§ˆí¬ í•´ì œ
         currentEquip?.SetEquipMark(false);
 
-        // ÇöÀç Àåºñ ¾÷µ¥ÀÌÆ®
+        // í˜„ì¬ ì¥ë¹„ ì—…ë°ì´íŠ¸
         currentEquip = contact;
 
-        // ÇöÀç Àåºñ ÀåÂø ¸¶Å© ¼³Á¤
+        // í˜„ì¬ ì¥ë¹„ ì¥ì°© ë§ˆí¬ ì„¤ì •
         currentEquip.SetEquipMark(true);
 
-        // Àåºñ ±³Ã¼ ÈÄ ¾Ë¸²
+        // ì¥ë¹„ êµì²´ í›„ ì•Œë¦¼
         GameEventManager.Instance.NotifyEquipUpdate();
     }
 
@@ -125,16 +125,16 @@ public abstract class EquipContactWindow : ContactWindow
         {
             RectTransform child = content.GetChild(i) as RectTransform;
 
-            // ºñÈ°¼ºÈ­ µÈ ¿ÀºêÁ§Æ®´Â °è»ê¿¡¼­ Á¦¿Ü
+            // ë¹„í™œì„±í™” ëœ ì˜¤ë¸Œì íŠ¸ëŠ” ê³„ì‚°ì—ì„œ ì œì™¸
             if (!child.gameObject.activeSelf) continue;
 
             height += child.rect.height;
 
-            // ¸¶Áö¸· ¿ä¼Ò¸¦ Á¦¿ÜÇÏ°í¼­ spacing °è»ê
+            // ë§ˆì§€ë§‰ ìš”ì†Œë¥¼ ì œì™¸í•˜ê³ ì„œ spacing ê³„ì‚°
             if (i < count - 1) height += layoutGroup.spacing;
         }
 
-        // »çÀÌÁî ¹İ¿µ
+        // ì‚¬ì´ì¦ˆ ë°˜ì˜
         content.sizeDelta = new Vector2(content.sizeDelta.x, height);
     }
 
@@ -143,7 +143,7 @@ public abstract class EquipContactWindow : ContactWindow
         float contactHeight = contactPrefab.GetComponent<RectTransform>().rect.height;
         float posY = -layoutGroup.padding.top;
 
-        // °¢ Ç×¸ñµéÀÇ º»·¡ À§Ä¡ ÀúÀåÇØµÎ±â
+        // ê° í•­ëª©ë“¤ì˜ ë³¸ë˜ ìœ„ì¹˜ ì €ì¥í•´ë‘ê¸°
         foreach (GameObject contact in contactList)
         {
             contactsY[contact] = posY;
@@ -154,37 +154,37 @@ public abstract class EquipContactWindow : ContactWindow
 
     protected override void UpdateScrollPosition(GameObject focusContact)
     {
-        // contact »çÀÌÁî º¯µ¿À» °í·ÁÇÏ¿© ½ºÅ©·Ñ »çÀÌÁî ¾÷µ¥ÀÌÆ®
+        // contact ì‚¬ì´ì¦ˆ ë³€ë™ì„ ê³ ë ¤í•˜ì—¬ ìŠ¤í¬ë¡¤ ì‚¬ì´ì¦ˆ ì—…ë°ì´íŠ¸
         float detailSize = focusContact.GetComponent<EquipContact>().DetailSize;
         float originSize = focusContact.GetComponent<RectTransform>().rect.height;
         float addSize = detailSize - originSize;
 
-        // ½ºÅ©·Ñ »çÀÌÁî Àû¿ë
+        // ìŠ¤í¬ë¡¤ ì‚¬ì´ì¦ˆ ì ìš©
         content.sizeDelta = new Vector2(0, originContentSize + addSize);
 
-        // È­¸é¿¡ º¸¿©Áö´Â ÃÖ¼Ò ÃÖ´ë y°ª
+        // í™”ë©´ì— ë³´ì—¬ì§€ëŠ” ìµœì†Œ ìµœëŒ€ yê°’
         float minY = -content.localPosition.y - viewportRect.rect.height + layoutGroup.padding.bottom;
         float maxY = -content.localPosition.y - layoutGroup.padding.top;
 
-        // ÇØ´ç ¿¬¶ôÃ³ ¿ÀºêÁ§Æ®ÀÇ ÃÖÇÏ´Ü ¹× ÃÖ»ó´Ü y°ª
+        // í•´ë‹¹ ì—°ë½ì²˜ ì˜¤ë¸Œì íŠ¸ì˜ ìµœí•˜ë‹¨ ë° ìµœìƒë‹¨ yê°’
         float contactY = contactsY[focusContact];
         float contactMinY = contactY - focusContact.GetComponent<EquipContact>().DetailSize;
         float contactMaxY = contactY;
 
-        // È­¸é¿¡ ¿ÀºêÁ§Æ®°¡ ÀÏºÎ¶óµµ Àß¸®´Â Áö ÆÇ´Ü
+        // í™”ë©´ì— ì˜¤ë¸Œì íŠ¸ê°€ ì¼ë¶€ë¼ë„ ì˜ë¦¬ëŠ” ì§€ íŒë‹¨
         float endValue = contactY;
         if (contactMinY < minY)
         {
-            // ÇÏ´ÜÀÌ Àß·È´Ù¸é Àß·Á³ª°¡´Â ºÎºĞ¸¸Å­ ½ºÅ©·ÑÀ» À§·Î ¿Ã¸®±â
+            // í•˜ë‹¨ì´ ì˜ë ¸ë‹¤ë©´ ì˜ë ¤ë‚˜ê°€ëŠ” ë¶€ë¶„ë§Œí¼ ìŠ¤í¬ë¡¤ì„ ìœ„ë¡œ ì˜¬ë¦¬ê¸°
             endValue = content.localPosition.y + minY - contactMinY;
         }
         else if (contactMaxY > maxY)
         {
-            // »ó´ÜÀÌ Àß·È´Ù¸é Àß·Á³ª°¡´Â ºÎºĞ¸¸Å­ ½ºÅ©·ÑÀ» ¾Æ·¡·Î ³»¸®±â
+            // ìƒë‹¨ì´ ì˜ë ¸ë‹¤ë©´ ì˜ë ¤ë‚˜ê°€ëŠ” ë¶€ë¶„ë§Œí¼ ìŠ¤í¬ë¡¤ì„ ì•„ë˜ë¡œ ë‚´ë¦¬ê¸°
             endValue = content.localPosition.y - contactMaxY + maxY;
         }
 
-        // Àß·Á³ª°£ ºÎºĞÀÌ ³ª¿Àµµ·Ï ½ºÅ©·Ñ Á¶Á¤
+        // ì˜ë ¤ë‚˜ê°„ ë¶€ë¶„ì´ ë‚˜ì˜¤ë„ë¡ ìŠ¤í¬ë¡¤ ì¡°ì •
         if (endValue != contactY)
         {
             content.DOLocalMoveY(endValue, 0.2f);
@@ -193,16 +193,16 @@ public abstract class EquipContactWindow : ContactWindow
 
     protected override IEnumerator OpenAnimation()
     {
-        // ¸ğµç ¹«±â ¸ñ·ÏÀ» ºÒ·¯¿À´Â ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¿Ï·á µÉ ¶§±îÁö Å° ÀÔ·Â ±İÁö
+        // ëª¨ë“  ë¬´ê¸° ëª©ë¡ì„ ë¶ˆëŸ¬ì˜¤ëŠ” ì• ë‹ˆë©”ì´ì…˜ì´ ì™„ë£Œ ë  ë•Œê¹Œì§€ í‚¤ ì…ë ¥ ê¸ˆì§€
         ControlContext.Instance.KeyLock();
 
         yield return StartCoroutine(base.OpenAnimation());
 
-        // ¸ñ·ÏÀ» ´Ù ºÒ·¯¿Â ÈÄ Ã³À½À¸·Î ¼±ÅÃÇÒ ¹«±â ¼³Á¤
+        // ëª©ë¡ì„ ë‹¤ ë¶ˆëŸ¬ì˜¨ í›„ ì²˜ìŒìœ¼ë¡œ ì„ íƒí•  ë¬´ê¸° ì„¤ì •
         if (firstSelect != null)
             EventSystem.current.SetSelectedGameObject(firstSelect);
 
-        // Å° ÀÔ·Â ÇØÁ¦
+        // í‚¤ ì…ë ¥ í•´ì œ
         ControlContext.Instance.KeyUnlock();
     }
 

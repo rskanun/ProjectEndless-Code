@@ -10,7 +10,7 @@ public class QuestNavigation : MonoBehaviour
     private QuestNavigatorArrow navigatorArrow;
     private SpriteRenderer naviRenderer;
 
-    [Title("³×ºñ°ÔÀÌ¼Ç ¼³Á¤")]
+    [Title("ë„¤ë¹„ê²Œì´ì…˜ ì„¤ì •")]
     [SerializeField]
     private float reachDistance;
     [SerializeField, MinValue(0.5f)]
@@ -45,10 +45,10 @@ public class QuestNavigation : MonoBehaviour
         if (animCoroutine != null) StopCoroutine(animCoroutine);
         if (arriveCheckCoroutine != null) StopCoroutine(arriveCheckCoroutine);
 
-        // ¾Ö´Ï¸ÞÀÌ¼Ç ÄÚ·çÆ¾
+        // ì• ë‹ˆë©”ì´ì…˜ ì½”ë£¨í‹´
         animCoroutine = StartCoroutine(DrawRoute(target));
 
-        // µµ´Þ È®ÀÎ ÄÚ·çÆ¾
+        // ë„ë‹¬ í™•ì¸ ì½”ë£¨í‹´
         arriveCheckCoroutine = StartCoroutine(CheckArrived(target));
     }
 
@@ -57,30 +57,30 @@ public class QuestNavigation : MonoBehaviour
         var gameData = GameData.Instance;
         var originColor = naviRenderer.color;
 
-        // ¹æÇâ ¿ÀºêÁ§Æ® ÄÑ±â
+        // ë°©í–¥ ì˜¤ë¸Œì íŠ¸ ì¼œê¸°
         navigatorArrow.gameObject.SetActive(true);
 
-        // ¾Ö´Ï¸ÞÀÌ¼Ç °è¼Ó ÁøÇà
-        // Á¾·á´Â ´Ù¸¥ ÄÚ·çÆ¾¿¡¼­ Ã¼Å©ÇÏ°í ÁøÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ê³„ì† ì§„í–‰
+        // ì¢…ë£ŒëŠ” ë‹¤ë¥¸ ì½”ë£¨í‹´ì—ì„œ ì²´í¬í•˜ê³  ì§„í–‰
         while (true)
         {
-            // ÇöÀç ÇÃ·¹ÀÌ¾î À§Ä¡¿¡¼­ ¸ñÇ¥±îÁöÀÇ °æ·Î Å½»ö
+            // í˜„ìž¬ í”Œë ˆì´ì–´ ìœ„ì¹˜ì—ì„œ ëª©í‘œê¹Œì§€ì˜ ê²½ë¡œ íƒìƒ‰
             var path = Navigator.FindPath(gameData.MapGrid, gameData.Position, target);
 
-            // ³×ºñ ¼³Á¤
+            // ë„¤ë¹„ ì„¤ì •
             naviRenderer.color = originColor;
             navigatorArrow.transform.position = path.FirstOrDefault();
 
-            // ÇØ´ç °æ·Î¸¦ µû¶ó È­»ìÇ¥ ¿ÀºêÁ§Æ® ¿òÁ÷ÀÌ±â
+            // í•´ë‹¹ ê²½ë¡œë¥¼ ë”°ë¼ í™”ì‚´í‘œ ì˜¤ë¸Œì íŠ¸ ì›€ì§ì´ê¸°
             navigatorArrow.StartMove(path);
 
-            // Á¡Á¡ »ç¶óÁö´Â ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà
+            // ì ì  ì‚¬ë¼ì§€ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
             naviRenderer.DOFade(0.0f, duration);
 
-            // ¾Ö´Ï¸ÞÀÌ¼Ç + µô·¹ÀÌ±îÁö ´ë±â
+            // ì• ë‹ˆë©”ì´ì…˜ + ë”œë ˆì´ê¹Œì§€ ëŒ€ê¸°
             yield return new WaitForSeconds(duration + delay);
 
-            // ¿ÏÀüÈ÷ »ç¶óÁø °æ¿ì È­»ìÇ¥ ÀÌµ¿ ¸ØÃß±â
+            // ì™„ì „ížˆ ì‚¬ë¼ì§„ ê²½ìš° í™”ì‚´í‘œ ì´ë™ ë©ˆì¶”ê¸°
             navigatorArrow.StopMove();
         }
     }
@@ -91,16 +91,16 @@ public class QuestNavigation : MonoBehaviour
         bool isArrived()
             => Vector2.Distance(gameData.Position, target) < reachDistance;
 
-        // µµÂøÇÒ ¶§±îÁö ´ë±â
+        // ë„ì°©í•  ë•Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitUntil(isArrived);
 
-        // ÁøÇà ÁßÀÌ´ø ¾Ö´Ï¸ÞÀÌ¼Ç Á¾·á
+        // ì§„í–‰ ì¤‘ì´ë˜ ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
         StopCoroutine(animCoroutine);
 
-        // ÁøÇà ÁßÀÌ´ø DOTween ¾Ö´Ï¸ÞÀÌ¼Ç Á¾·á
+        // ì§„í–‰ ì¤‘ì´ë˜ DOTween ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
         naviRenderer.DOKill();
 
-        // ¹æÇâ ¿ÀºêÁ§Æ® ÃÊ±âÈ­ ¹× ºñÈ°¼ºÈ­
+        // ë°©í–¥ ì˜¤ë¸Œì íŠ¸ ì´ˆê¸°í™” ë° ë¹„í™œì„±í™”
         var color = naviRenderer.color;
         color.a = 1.0f;
         naviRenderer.color = color;

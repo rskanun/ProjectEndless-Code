@@ -26,7 +26,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         set { _prevButton = value; }
         get
         {
-            // ÀÌÀü ¹öÆ°ÀÌ ¼±ÅÃ °¡´ÉÇÑ ¹öÆ°ÀÎ °Í¸¸ ¸®ÅÏ
+            // ì´ì „ ë²„íŠ¼ì´ ì„ íƒ ê°€ëŠ¥í•œ ë²„íŠ¼ì¸ ê²ƒë§Œ ë¦¬í„´
             TargetSelectButton button = _prevButton;
 
             while (button != this && !button.interactable)
@@ -43,7 +43,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
         set { _nextButton = value; }
         get
         {
-            // ´ÙÀ½ ¹öÆ°ÀÌ ¼±ÅÃ °¡´ÉÇÑ ¹öÆ°ÀÎ °Í¸¸ ¸®ÅÏ
+            // ë‹¤ìŒ ë²„íŠ¼ì´ ì„ íƒ ê°€ëŠ¥í•œ ë²„íŠ¼ì¸ ê²ƒë§Œ ë¦¬í„´
             TargetSelectButton button = _nextButton;
 
             while (button != this && !button.interactable)
@@ -66,7 +66,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (target == null || target.gameObject.activeSelf == false)
         {
-            // ÀüÅõ¿¡ Âü¿©µÇÁö ¾ÊÀº Ä³¸¯ÅÍ´Â Á¦¿Ü
+            // ì „íˆ¬ì— ì°¸ì—¬ë˜ì§€ ì•Šì€ ìºë¦­í„°ëŠ” ì œì™¸
             return;
         }
 
@@ -77,7 +77,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (target == null || target.gameObject.activeSelf == false)
         {
-            // ÀüÅõ¿¡ Âü¿©µÇÁö ¾ÊÀº Ä³¸¯ÅÍ´Â Á¦¿Ü
+            // ì „íˆ¬ì— ì°¸ì—¬ë˜ì§€ ì•Šì€ ìºë¦­í„°ëŠ” ì œì™¸
             return;
         }
 
@@ -88,7 +88,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (eventData.selectedObject == gameObject)
         {
-            // ¼±ÅÃµÈ »óÅÂÀÎ °æ¿ì Å¬¸¯ ½Ã ÀÌº¥Æ® ½ÇÇà
+            // ì„ íƒëœ ìƒíƒœì¸ ê²½ìš° í´ë¦­ ì‹œ ì´ë²¤íŠ¸ ì‹¤í–‰
             OnClick();
         }
     }
@@ -131,41 +131,41 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
     public void Selected()
     {
-        // ÀÌ¹Ì ¼±ÅÃµÈ °æ¿ì ¹«½Ã
+        // ì´ë¯¸ ì„ íƒëœ ê²½ìš° ë¬´ì‹œ
         if (isSelected) return;
 
-        // ¼±ÅÃµÈ ¹öÆ°ÀÌ ÀÌ°Í°ú ´Ù¸¥ °æ¿ì
+        // ì„ íƒëœ ë²„íŠ¼ì´ ì´ê²ƒê³¼ ë‹¤ë¥¸ ê²½ìš°
         GameObject selectObj = EventSystem.current.currentSelectedGameObject;
         TargetSelectButton selectedButton = selectObj?.GetComponent<TargetSelectButton>();
         if (selectedButton == null || selectedButton != this)
         {
-            // ¼±ÅÃµÈ ¹öÆ°ÀÌ ÀÖ´Â °æ¿ì ÇØ´ç ¹öÆ° ÇØÁ¦
+            // ì„ íƒëœ ë²„íŠ¼ì´ ìˆëŠ” ê²½ìš° í•´ë‹¹ ë²„íŠ¼ í•´ì œ
             if (selectedButton != null)
             {
                 selectedButton.Deselected();
             }
 
-            // ÇØ´ç ¹öÆ°À» ¼±ÅÃµÈ ¹öÆ°À¸·Î ¼±ÅÃ
+            // í•´ë‹¹ ë²„íŠ¼ì„ ì„ íƒëœ ë²„íŠ¼ìœ¼ë¡œ ì„ íƒ
             EventSystem.current.SetSelectedGameObject(gameObject);
         }
 
-        // ¹öÆ° ¼±ÅÃ
+        // ë²„íŠ¼ ì„ íƒ
         SelectedButton();
 
-        // ¿¹»ó Ã¼·Â º¸¿©ÁÖ±â
+        // ì˜ˆìƒ ì²´ë ¥ ë³´ì—¬ì£¼ê¸°
         ForecastHP(BattleData.Instance.SelectionData.action);
     }
 
     public void MultiSelected()
     {
-        // ÀÌ¹Ì ¼±ÅÃµÈ °æ¿ì ¹«½Ã
+        // ì´ë¯¸ ì„ íƒëœ ê²½ìš° ë¬´ì‹œ
         if (isSelected) return;
 
-        // ¸ÖÆ¼·Î ¹öÆ° ¼±ÅÃ
+        // ë©€í‹°ë¡œ ë²„íŠ¼ ì„ íƒ
         isMultiSelected = true;
         SelectedButton();
 
-        // ¿¹»ó Ã¼·Â º¸¿©ÁÖ±â
+        // ì˜ˆìƒ ì²´ë ¥ ë³´ì—¬ì£¼ê¸°
         ForecastHP(BattleData.Instance.SelectionData.action);
     }
 
@@ -188,7 +188,7 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (action is AttackAction)
         {
-            // ÀÏ¹İ °ø°İÀº ÇØ´ç Ä³¸¯ÅÍÀÇ ÀÚÃ¼ µ¥¹ÌÁö °¡Á®¿À±â
+            // ì¼ë°˜ ê³µê²©ì€ í•´ë‹¹ ìºë¦­í„°ì˜ ìì²´ ë°ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸°
             return action.actor.AttackDmg;
         }
         else if (action is SkillAction)
@@ -198,12 +198,12 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
 
             if (skill != null)
             {
-                // °ø°İ ½ºÅ³¸¸ µ¥¹ÌÁö °è»ê
+                // ê³µê²© ìŠ¤í‚¬ë§Œ ë°ë¯¸ì§€ ê³„ì‚°
                 return skill.GetSkillDmg(action.actor);
             }
         }
 
-        // ³ª¸ÓÁö Çàµ¿Àº µ¥¹ÌÁö X
+        // ë‚˜ë¨¸ì§€ í–‰ë™ì€ ë°ë¯¸ì§€ X
         return 0.0f;
     }
 
@@ -216,26 +216,26 @@ public class TargetSelectButton : MonoBehaviour, IPointerEnterHandler, IPointerC
     {
         if (isMultiSelected)
         {
-            // ¸ÖÆ¼ ¼±ÅÃ ÁßÀÌ¶ó¸é ¼±ÅÃÇØÁ¦ X
+            // ë©€í‹° ì„ íƒ ì¤‘ì´ë¼ë©´ ì„ íƒí•´ì œ X
             return;
         }
 
-        // ¼±ÅÃ ÇØÁ¦
+        // ì„ íƒ í•´ì œ
         isSelected = false;
 
-        // ±×·¡ÇÈ º¯°æ
+        // ê·¸ë˜í”½ ë³€ê²½
         targetGraphic.sprite = originSprite;
 
-        // ¿¹»ó Ã¼·Â¹Ù ºñÈ°¼ºÈ­
+        // ì˜ˆìƒ ì²´ë ¥ë°” ë¹„í™œì„±í™”
         target.SetActiveForecastHP(false);
     }
 
     public void DeselectedMultiButton()
     {
-        // ¸ÖÆ¼ ¼±ÅÃ ÇØÁ¦
+        // ë©€í‹° ì„ íƒ í•´ì œ
         isMultiSelected = false;
 
-        // ±âÁ¸ ¼±ÅÃ ÇØÁ¦ ½ÇÇà
+        // ê¸°ì¡´ ì„ íƒ í•´ì œ ì‹¤í–‰
         Deselected();
     }
 

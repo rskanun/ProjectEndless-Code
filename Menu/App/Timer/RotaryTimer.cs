@@ -18,13 +18,13 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
     [SerializeField] private int interval;
     [Space]
 
-    // ÀÎ½ºÆåÅÍÃ¢¿¡¼­ °¡Àå ³ªÁß¿¡ Ç¥½Ã
+    // ì¸ìŠ¤í™í„°ì°½ì—ì„œ ê°€ì¥ ë‚˜ì¤‘ì— í‘œì‹œ
     [SerializeField, PropertyOrder(100)]
     private UnityEvent onChanged;
     [SerializeField, PropertyOrder(100)]
     private UnityEvent onSubmit;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç º¯¼ö
+    // ì• ë‹ˆë©”ì´ì…˜ ë³€ìˆ˜
     private Sequence selectAnimation;
     private Sequence rollAnimation;
     private int timerDistance = 30;
@@ -39,30 +39,30 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
 
     public void OnSelect(BaseEventData eventData)
     {
-        // Å¸ÀÌ¸Ó º»·¡ À§Ä¡ ±â¾ïÇÏ±â
+        // íƒ€ì´ë¨¸ ë³¸ë˜ ìœ„ì¹˜ ê¸°ì–µí•˜ê¸°
         Vector3 ceilPos = ceilTime.transform.localPosition;
         Vector3 floorPos = floorTime.transform.localPosition;
 
-        // ¸ŞÀÎ Å¸ÀÌ¸Ó À§Ä¡ ÀÌµ¿
+        // ë©”ì¸ íƒ€ì´ë¨¸ ìœ„ì¹˜ ì´ë™
         ceilTime.transform.position = mainTime.transform.position;
         floorTime.transform.position = mainTime.transform.position;
 
-        // À§¾Æ·¡·Î Å¸ÀÌ¸Ó ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ìœ„ì•„ë˜ë¡œ íƒ€ì´ë¨¸ ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         Sequence moveAnimation = DOTween.Sequence()
             .Join(ceilTime.transform.DOLocalMoveY(ceilPos.y, duration))
             .Join(floorTime.transform.DOLocalMoveY(floorPos.y, duration))
             .SetEase(moveEase);
 
-        // Å¸ÀÌ¸Ó ¾ËÆÄ°ª ¼³Á¤
+        // íƒ€ì´ë¨¸ ì•ŒíŒŒê°’ ì„¤ì •
         ceilTime.alpha = 0.0f;
         floorTime.alpha = 0.0f;
 
-        // Å¸ÀÌ¸Ó ÆäÀÌµå ¾Ö´Ï¸ŞÀÌ¼Ç
+        // íƒ€ì´ë¨¸ í˜ì´ë“œ ì• ë‹ˆë©”ì´ì…˜
         Sequence fadeAnimation = DOTween.Sequence()
             .Join(ceilTime.DOFade(fadeAlpha, duration))
             .Join(floorTime.DOFade(fadeAlpha, duration));
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         selectAnimation = DOTween.Sequence()
             .Join(moveAnimation)
             .Join(fadeAnimation)
@@ -75,11 +75,11 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
 
     public void OnDeselect(BaseEventData eventData)
     {
-        // ½ÇÇà ÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÖ´Ù¸é ÁßÁö
+        // ì‹¤í–‰ ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ì´ ìˆë‹¤ë©´ ì¤‘ì§€
         selectAnimation?.Kill();
         rollAnimation?.Kill();
 
-        // Å¸ÀÌ¸Ó ¾ËÆÄ°ªÀ» Á¶Á¤ÇÏ¿© ¼û±â±â
+        // íƒ€ì´ë¨¸ ì•ŒíŒŒê°’ì„ ì¡°ì •í•˜ì—¬ ìˆ¨ê¸°ê¸°
         ceilTime.alpha = 0.0f;
         floorTime.alpha = 0.0f;
     }
@@ -99,7 +99,7 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
     {
         this.maxTime = maxTime;
 
-        // ÃÖ´ë ½Ã°£ º¯È­¿¡ µû¸¥ ÇöÀç ½Ã°£ º¯°æ
+        // ìµœëŒ€ ì‹œê°„ ë³€í™”ì— ë”°ë¥¸ í˜„ì¬ ì‹œê°„ ë³€ê²½
         SetTime(currentTime);
     }
 
@@ -118,7 +118,7 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
 
     private int ClampTime(int time)
     {
-        // ½Ã°£¿¡ ¸Â°Ô ¼øÈ¯
+        // ì‹œê°„ì— ë§ê²Œ ìˆœí™˜
         if (time < 0)
             return (int)MathF.Max(maxTime + time, 0);
         if (time >= maxTime)
@@ -128,35 +128,35 @@ public class RotaryTimer : MonoBehaviour, ISelectHandler, IDeselectHandler, IMov
 
     public void RollTimer(bool isUpper)
     {
-        // ÀÌ¹Ì ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÛµ¿ ÁßÀÌ¸é ¹«½Ã
+        // ì´ë¯¸ ì• ë‹ˆë©”ì´ì…˜ì´ ì‘ë™ ì¤‘ì´ë©´ ë¬´ì‹œ
         if (isRolled) return;
 
         isRolled = true;
         var origin = mainTime.transform.localPosition;
         var animTime = isUpper ? floorTime : ceilTime;
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         float endPos = isUpper ? timerDistance : -timerDistance;
         rollAnimation = DOTween.Sequence()
-            .Append(mainTime.transform.DOLocalMoveY(endPos, rollDuration)) // ½Ã°è µ¹¾Æ°¡´Â ¾Ö´Ï¸ŞÀÌ¼Ç
-            .Join(mainTime.DOFade(fadeAlpha, rollDuration)) // º»·¡ ½Ã°èÀÇ ¾ËÆÄ°ª ³·Ãß±â
-            .Join(animTime.DOFade(1.0f, rollDuration)) // ¾Ö´Ï¸ŞÀÌ¼Ç¿ë ½Ã°è´Â ¾ËÆÄ°ª ³ôÀÌ±â
+            .Append(mainTime.transform.DOLocalMoveY(endPos, rollDuration)) // ì‹œê³„ ëŒì•„ê°€ëŠ” ì• ë‹ˆë©”ì´ì…˜
+            .Join(mainTime.DOFade(fadeAlpha, rollDuration)) // ë³¸ë˜ ì‹œê³„ì˜ ì•ŒíŒŒê°’ ë‚®ì¶”ê¸°
+            .Join(animTime.DOFade(1.0f, rollDuration)) // ì• ë‹ˆë©”ì´ì…˜ìš© ì‹œê³„ëŠ” ì•ŒíŒŒê°’ ë†’ì´ê¸°
             .OnKill(() =>
             {
                 int direction = isUpper ? 1 : -1;
 
-                // ½Ã°èÀÇ ¹®ÀÚ ¹Ù²Ù±â
+                // ì‹œê³„ì˜ ë¬¸ì ë°”ê¾¸ê¸°
                 if (maxTime > 0)
                     SetTime((currentTime + maxTime + interval * direction) % maxTime);
 
-                mainTime.transform.localPosition = origin; // º»·¡ À§Ä¡·Î µ¹¸®±â
-                mainTime.alpha = 1.0f; // º»·¡ ½Ã°èÀÇ ±ÛÀÚÀÇ ¾ËÆÄ°ª µÇµ¹¸®±â
-                animTime.alpha = fadeAlpha; // ¾Ö´Ï¸ŞÀÌ¼Ç¿¡ ¾²ÀÎ ±ÛÀÚµµ µÇµ¹¸®±â
+                mainTime.transform.localPosition = origin; // ë³¸ë˜ ìœ„ì¹˜ë¡œ ëŒë¦¬ê¸°
+                mainTime.alpha = 1.0f; // ë³¸ë˜ ì‹œê³„ì˜ ê¸€ìì˜ ì•ŒíŒŒê°’ ë˜ëŒë¦¬ê¸°
+                animTime.alpha = fadeAlpha; // ì• ë‹ˆë©”ì´ì…˜ì— ì“°ì¸ ê¸€ìë„ ë˜ëŒë¦¬ê¸°
 
-                // ¾÷µ¥ÀÌÆ® ¾Ë¸²
+                // ì—…ë°ì´íŠ¸ ì•Œë¦¼
                 onChanged?.Invoke();
 
-                // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á
+                // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
                 isRolled = false;
             });
     }

@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoadingScreen : MonoBehaviour
 {
-    [Header("¾À ÀüÈ¯ ¿¬Ãâ")]
+    [Header("ì”¬ ì „í™˜ ì—°ì¶œ")]
     [SerializeField] private BlurFadeOutEffect blurFadeOut;
     [SerializeField] private BlurFadeInEffect blurFadeIn;
 
-    [Header("¾À ·Îµù ¾Ö´Ï¸ŞÀÌ¼Ç")]
+    [Header("ì”¬ ë¡œë”© ì• ë‹ˆë©”ì´ì…˜")]
     [SerializeField] private LoadingAnimation loading;
     [SerializeField] private ClockLoadingAnimation clockLoading;
 
@@ -36,16 +36,16 @@ public class SceneLoadingScreen : MonoBehaviour
     }
 
     /************************************************************
-     * [¾À ºÒ·¯¿À±â]
+     * [ì”¬ ë¶ˆëŸ¬ì˜¤ê¸°]
      * 
-     * ÇöÀç È°¼ºÈ­ µÈ ¾À Áß¿¡ ÇÊ¿ä¾ø´Â ¾ÀÀ» Áö¿ì°í ÇÊ¿äÇÑ ¾À ºÒ·¯¿À±â
+     * í˜„ì¬ í™œì„±í™” ëœ ì”¬ ì¤‘ì— í•„ìš”ì—†ëŠ” ì”¬ì„ ì§€ìš°ê³  í•„ìš”í•œ ì”¬ ë¶ˆëŸ¬ì˜¤ê¸°
      ************************************************************/
 
     public void EnableScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
         if (loadingCoroutine != null)
         {
-            // ÀÌ¹Ì ·Îµù ÁßÀÎ °æ¿ì ¹«½Ã
+            // ì´ë¯¸ ë¡œë”© ì¤‘ì¸ ê²½ìš° ë¬´ì‹œ
             return;
         }
 
@@ -54,31 +54,31 @@ public class SceneLoadingScreen : MonoBehaviour
 
     private IEnumerator SceneLoading(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
     {
-        // ·Îµù Áß¿£ ¾î¶°ÇÑ Å° ÀÔ·Âµµ ¹ŞÁö ¾Ê±â
+        // ë¡œë”© ì¤‘ì—” ì–´ë– í•œ í‚¤ ì…ë ¥ë„ ë°›ì§€ ì•Šê¸°
         ControlContext.Instance.KeyLock();
 
-        // ·Îµù È­¸éÀ» ¶ç¿ì±â À§ÇÑ ÀüÈ¯ ¿¬Ãâ ½ÇÇà
+        // ë¡œë”© í™”ë©´ì„ ë„ìš°ê¸° ìœ„í•œ ì „í™˜ ì—°ì¶œ ì‹¤í–‰
         PlayTransitionEffect(startEffect);
         yield return new WaitWhile(() => isPlayAnimation);
 
-        // ÇöÀç ÁøÇà ÁßÀÎ ¸ğµç DOTween ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á
+        // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ëª¨ë“  DOTween ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
         DOTween.KillAll();
 
-        // ¾À ·Îµù °£¿£ ½Ã°£ ¸ØÃß±â
+        // ì”¬ ë¡œë”© ê°„ì—” ì‹œê°„ ë©ˆì¶”ê¸°
         Time.timeScale = 0.0f;
 
-        // ¾À ·Îµù ¾Ö´Ï¸ŞÀÌ¼Ç ¶ç¿ì±â
+        // ì”¬ ë¡œë”© ì• ë‹ˆë©”ì´ì…˜ ë„ìš°ê¸°
         EnableLoadingScreen(loadScenes, unloadScenes, unloadOptions, screen);
         yield return new WaitWhile(() => isPlayAnimation);
 
-        // ·ÎµùÀÌ ³¡³ª¸é º»·¡ ½Ã°£ µÇµ¹¸®±â
+        // ë¡œë”©ì´ ëë‚˜ë©´ ë³¸ë˜ ì‹œê°„ ë˜ëŒë¦¬ê¸°
         Time.timeScale = 1.0f;
 
-        // ·Îµù ÀÌÈÄ ÀüÈ¯ ¿¬Ãâ ½ÇÇà
+        // ë¡œë”© ì´í›„ ì „í™˜ ì—°ì¶œ ì‹¤í–‰
         PlayTransitionEffect(endEffect);
         yield return new WaitWhile(() => isPlayAnimation);
 
-        // ·ÎµùÀÌ ³¡³µ´Ù¸é Å° ÀÔ·Â ¹Ş±â
+        // ë¡œë”©ì´ ëë‚¬ë‹¤ë©´ í‚¤ ì…ë ¥ ë°›ê¸°
         ControlContext.Instance.KeyUnlock();
 
         loadingCoroutine = null;
@@ -86,9 +86,9 @@ public class SceneLoadingScreen : MonoBehaviour
     }
 
     /************************************************************
-     * [¾À ÀüÈ¯ ¿¬Ãâ]
+     * [ì”¬ ì „í™˜ ì—°ì¶œ]
      * 
-     * ·Îµù ¾À ÀüÈ¯ °£¿¡ ¶ç¿ï ¿¬Ãâ °ü¸®
+     * ë¡œë”© ì”¬ ì „í™˜ ê°„ì— ë„ìš¸ ì—°ì¶œ ê´€ë¦¬
      ************************************************************/
 
     private void PlayTransitionEffect(SceneFadeEffect type)
@@ -98,9 +98,9 @@ public class SceneLoadingScreen : MonoBehaviour
     }
 
     /************************************************************
-     * [·Îµù ¾Ö´Ï¸ŞÀÌ¼Ç]
+     * [ë¡œë”© ì• ë‹ˆë©”ì´ì…˜]
      * 
-     * ¾ÀÀ» ºÒ·¯¿Ã µ¿¾ÈÀÇ ·Îµù °£¿¡ ¶ç¿ï ¾Ö´Ï¸ŞÀÌ¼Ç °ü¸®
+     * ì”¬ì„ ë¶ˆëŸ¬ì˜¬ ë™ì•ˆì˜ ë¡œë”© ê°„ì— ë„ìš¸ ì• ë‹ˆë©”ì´ì…˜ ê´€ë¦¬
      ************************************************************/
 
     private void EnableLoadingScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, LoadingScreen screen)

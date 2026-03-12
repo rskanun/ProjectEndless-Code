@@ -18,38 +18,38 @@ public class Crusty : Personality
         BattleSequence seq = BattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // °ø°İ ¼ø¼­¿¡ µû¸¥ °¡ÁßÄ¡ °ª
+        // ê³µê²© ìˆœì„œì— ë”°ë¥¸ ê°€ì¤‘ì¹˜ ê°’
         float actionWeight = 1.0f;
 
-        // °¡Àå »¡¸® Çàµ¿ÇÏ´Â ¼ø¼­´ë·Î ÀçÁ¤·Ä
+        // ê°€ì¥ ë¹¨ë¦¬ í–‰ë™í•˜ëŠ” ìˆœì„œëŒ€ë¡œ ì¬ì •ë ¬
         foreach (Entity target in targetList.OrderBy(entity => seq.GetSeqIndex(entity)))
         {
-            // °¡ÁßÄ¡ ÃÊ±â°ª ¼³Á¤
+            // ê°€ì¤‘ì¹˜ ì´ˆê¸°ê°’ ì„¤ì •
             weightData[target] = 0.0f;
 
-            // ÇØ´ç ¿£Æ¼Æ¼ÀÇ ¿¹Á¤µÈ Çàµ¿ °¡Á®¿À±â
+            // í•´ë‹¹ ì—”í‹°í‹°ì˜ ì˜ˆì •ëœ í–‰ë™ ê°€ì ¸ì˜¤ê¸°
             BattleAction action = seq.GetEntityAction(target);
 
-            // ÀÏ¹İ °ø°İÀÌ³ª ½ºÅ³À» ¾µ ¿¹Á¤ÀÌ¶ó¸é °¡ÁßÄ¡ Áõ°¡
+            // ì¼ë°˜ ê³µê²©ì´ë‚˜ ìŠ¤í‚¬ì„ ì“¸ ì˜ˆì •ì´ë¼ë©´ ê°€ì¤‘ì¹˜ ì¦ê°€
             if (action is AttackAction || action is SkillAction)
             {
                 weightData[target] += actionWeight;
 
-                // ´ÙÀ½ Çàµ¿ÀÚ´Â °¡ÁßÄ¡ Áõ°¡·® °¨¼Ò
+                // ë‹¤ìŒ í–‰ë™ìëŠ” ê°€ì¤‘ì¹˜ ì¦ê°€ëŸ‰ ê°ì†Œ
                 actionWeight -= 0.1f;
             }
 
-            // ÇØ´ç Å¸°ÙÀÌ ¿ø°Å¸® °ø°İÀ» Çß´ø ÀûÀÌ ÀÖ´ÂÁö
+            // í•´ë‹¹ íƒ€ê²Ÿì´ ì›ê±°ë¦¬ ê³µê²©ì„ í–ˆë˜ ì ì´ ìˆëŠ”ì§€
             if (rangeAttackEntities.Contains(target))
             {
-                // °É¾ú´ø ÀûÀÌ ÀÖ´Ù¸é °¡ÁßÄ¡ ºÎ¿©
+                // ê±¸ì—ˆë˜ ì ì´ ìˆë‹¤ë©´ ê°€ì¤‘ì¹˜ ë¶€ì—¬
                 weightData[target] += 4.0f;
             }
 
-            // ÇØ´ç Å¸°ÙÀÌ »óÅÂ È¿°ú¸¦ °É¾ú´ø ÀûÀÌ ÀÖ´ÂÁö
+            // í•´ë‹¹ íƒ€ê²Ÿì´ ìƒíƒœ íš¨ê³¼ë¥¼ ê±¸ì—ˆë˜ ì ì´ ìˆëŠ”ì§€
             if (statusEffectCasters.Contains(target))
             {
-                // °É¾ú´ø ÀûÀÌ ÀÖ´Ù¸é °¡ÁßÄ¡ ºÎ¿©
+                // ê±¸ì—ˆë˜ ì ì´ ìˆë‹¤ë©´ ê°€ì¤‘ì¹˜ ë¶€ì—¬
                 weightData[target] += 2.0f;
             }
         }
@@ -59,21 +59,21 @@ public class Crusty : Personality
 
     protected override void GatherCurTurnAction(BattleAction action)
     {
-        // »óÅÂÀÌ»ó ½ºÅ³ »ç¿ëÀÚÀÎÁö ÆÇº° ÈÄ ¸Ş¸ğ¸®¿¡ Ãß°¡
+        // ìƒíƒœì´ìƒ ìŠ¤í‚¬ ì‚¬ìš©ìì¸ì§€ íŒë³„ í›„ ë©”ëª¨ë¦¬ì— ì¶”ê°€
         AddStatusEffectCaster(action);
 
-        // ¿ø°Å¸® °ø°İÀ» ÇÒ ¼ö ÀÖ´ÂÁö ÆÇº° ÈÄ ¸Ş¸ğ¸®¿¡ Ãß°¡
+        // ì›ê±°ë¦¬ ê³µê²©ì„ í•  ìˆ˜ ìˆëŠ”ì§€ íŒë³„ í›„ ë©”ëª¨ë¦¬ì— ì¶”ê°€
         AddRangeAttacker(action);
     }
 
     private void AddStatusEffectCaster(BattleAction action)
     {
-        // ÇØ´ç Çàµ¿¿¡¼­ ½ºÅ³À» »ç¿ëÇÏ°í »óÅÂ ÀÌ»ó ½ºÅ³ÀÎ °æ¿ì
+        // í•´ë‹¹ í–‰ë™ì—ì„œ ìŠ¤í‚¬ì„ ì‚¬ìš©í•˜ê³  ìƒíƒœ ì´ìƒ ìŠ¤í‚¬ì¸ ê²½ìš°
         if (action is SkillAction skillAction && skillAction.castSkill is EffectSkill)
         {
             Entity caster = action.actor;
 
-            // ±â¾ï»ó¿¡ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì Ãß°¡
+            // ê¸°ì–µìƒì— ì¡´ì¬í•˜ì§€ ì•Šì„ ê²½ìš° ì¶”ê°€
             if (!statusEffectCasters.Contains(caster))
             {
                 statusEffectCasters.Add(caster);
@@ -84,7 +84,7 @@ public class Crusty : Personality
 
     private void AddRangeAttacker(BattleAction action)
     {
-        // Çàµ¿ÀÌ ¿ø°Å¸® ÀÏ¹İ °ø°İÀÌ°Å³ª, ¿ø°Å¸® °ø°İ ½ºÅ³À» »ç¿ëÇÏ´Â °æ¿ì
+        // í–‰ë™ì´ ì›ê±°ë¦¬ ì¼ë°˜ ê³µê²©ì´ê±°ë‚˜, ì›ê±°ë¦¬ ê³µê²© ìŠ¤í‚¬ì„ ì‚¬ìš©í•˜ëŠ” ê²½ìš°
         bool isRangedAttackAction = action is AttackAction && action.actor.AttackType == AttackType.Ranged;
         bool isRangedSkillAction = action is SkillAction skillAction && skillAction.castSkill is AttackSkill && IsRangeAttackSkill(skillAction.castSkill);
 
@@ -92,7 +92,7 @@ public class Crusty : Personality
         {
             Entity attacker = action.actor;
 
-            // ¸®½ºÆ®¿¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì¿¡¸¸ Ãß°¡
+            // ë¦¬ìŠ¤íŠ¸ì— ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°ì—ë§Œ ì¶”ê°€
             if (!statusEffectCasters.Contains(attacker))
             {
                 statusEffectCasters.Add(attacker);

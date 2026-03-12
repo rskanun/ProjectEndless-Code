@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Skill/EffectSkill", fileName = "Effect_Skill")]
 public class EffectSkill : Skill
 {
-    [Header("¹öÇÁ Á¤º¸")]
+    [Header("ë²„í”„ ì •ë³´")]
     [SerializeReference]
     [ContextMenuItem("Buff", "SetBuff")]
     [ContextMenuItem("Debuff", "SetDebuff")]
@@ -35,8 +35,8 @@ public class EffectSkill : Skill
     public override string GetTypeName()
     {
         if (_effect is Buff)
-            return "¹öÇÁ ½ºÅ³";
+            return "ë²„í”„ ìŠ¤í‚¬";
 
-        return "µð¹öÇÁ ½ºÅ³";
+        return "ë””ë²„í”„ ìŠ¤í‚¬";
     }
 }

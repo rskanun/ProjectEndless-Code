@@ -25,14 +25,14 @@ public class BattleCameraDirector
     private BattleCameraManager manager;
     private CinemachineBrain brain;
 
-    // Ä«¸Ş¶ó Áß½ÉÁ¡(´ë»ó)
+    // ì¹´ë©”ë¼ ì¤‘ì‹¬ì (ëŒ€ìƒ)
     private Dictionary<int, Transform> bodyTransforms;
 
-    // °¢ ÁøÇü º° InstanceID°ª
+    // ê° ì§„í˜• ë³„ InstanceIDê°’
     private HashSet<int> playerIDs;
     private HashSet<int> enemyIDs;
 
-    // ¼±ÅÃÃ¢ ¸ğ¼Ç À§Ä¡
+    // ì„ íƒì°½ ëª¨ì…˜ ìœ„ì¹˜
     private float selectionPosX = 3.0f;
     private float selectionPosY = 1.0f;
 
@@ -42,13 +42,13 @@ public class BattleCameraDirector
         {
             if (manager.brain == null)
             {
-                // ¸Å´ÏÁ®¿¡ µî·ÏµÈ ½Ã³×¸Ó½ÅÀÌ ¾ø´Â °æ¿ì Á÷Á¢ Ã£¾Æ¿À±â
+                // ë§¤ë‹ˆì ¸ì— ë“±ë¡ëœ ì‹œë„¤ë¨¸ì‹ ì´ ì—†ëŠ” ê²½ìš° ì§ì ‘ ì°¾ì•„ì˜¤ê¸°
                 Scene mainScene = SceneManager.GetSceneByName(SceneResource.Instance.MainScene);
 
-                // ¾ÀÀÌ ·Îµå µÇÁö ¾Ê¾Ò´Ù¸é false ¹İÈ¯
+                // ì”¬ì´ ë¡œë“œ ë˜ì§€ ì•Šì•˜ë‹¤ë©´ false ë°˜í™˜
                 if (!mainScene.isLoaded) return false;
 
-                // ¾ÀÀÌ ÇöÀç ·ÎµåµÈ »óÅÂ¶ó¸é Ã£¾Æ¼­ µî·Ï
+                // ì”¬ì´ í˜„ì¬ ë¡œë“œëœ ìƒíƒœë¼ë©´ ì°¾ì•„ì„œ ë“±ë¡
                 foreach (GameObject obj in mainScene.GetRootGameObjects())
                 {
                     CinemachineBrain brain = obj.GetComponentInChildren<CinemachineBrain>();
@@ -61,7 +61,7 @@ public class BattleCameraDirector
                 }
             }
 
-            // ÀüÈ¯ÀÌ ÀÏ¾î³ª°í ÀÖ´ÂÁö, ÀüÈ¯ ½Ã°¢°ú ÀüÈ¯¿¡ °É¸®´Â ½Ã°£À» ºñ±³ÇØ¼­ ÀüÈ¯ ÁßÀÎÁö¸¦ ¹İÈ¯
+            // ì „í™˜ì´ ì¼ì–´ë‚˜ê³  ìˆëŠ”ì§€, ì „í™˜ ì‹œê°ê³¼ ì „í™˜ì— ê±¸ë¦¬ëŠ” ì‹œê°„ì„ ë¹„êµí•´ì„œ ì „í™˜ ì¤‘ì¸ì§€ë¥¼ ë°˜í™˜
             return manager.brain.IsBlending;
         }
     }
@@ -78,7 +78,7 @@ public class BattleCameraDirector
     {
         this.manager = manager;
 
-        // ÇöÀç ºê·¹ÀÎÀÌ µî·ÏµÇ¾î ÀÖ´Ù¸é ¸Å´ÏÁ®¿¡ ºê·¹ÀÎ Àû¿ë
+        // í˜„ì¬ ë¸Œë ˆì¸ì´ ë“±ë¡ë˜ì–´ ìˆë‹¤ë©´ ë§¤ë‹ˆì ¸ì— ë¸Œë ˆì¸ ì ìš©
         if (brain != null)
             manager.brain = brain;
     }
@@ -92,7 +92,7 @@ public class BattleCameraDirector
     {
         brain = brainCamera;
 
-        // ÇöÀç ¸Å´ÏÁ®°¡ µî·ÏµÇ¾î ÀÖ´Ù¸é ¸Å´ÏÁ®¿¡¼­µµ ÀÌ¸¦ Àû¿ë
+        // í˜„ì¬ ë§¤ë‹ˆì ¸ê°€ ë“±ë¡ë˜ì–´ ìˆë‹¤ë©´ ë§¤ë‹ˆì ¸ì—ì„œë„ ì´ë¥¼ ì ìš©
         if (manager != null)
             manager.brain = brain;
     }
@@ -101,7 +101,7 @@ public class BattleCameraDirector
     {
         manager.brain = null;
 
-        // ÇöÀç ¸Å´ÏÁ®°¡ µî·ÏµÇ¾î ÀÖ´Ù¸é ¸Å´ÏÁ®¿¡¼­µµ ÀÌ¸¦ Àû¿ë
+        // í˜„ì¬ ë§¤ë‹ˆì ¸ê°€ ë“±ë¡ë˜ì–´ ìˆë‹¤ë©´ ë§¤ë‹ˆì ¸ì—ì„œë„ ì´ë¥¼ ì ìš©
         if (manager != null)
             manager.brain = null;
     }
@@ -118,33 +118,33 @@ public class BattleCameraDirector
         enemyIDs.Add(instanceID);
     }
 
-    // ÀüÅõ ¿¬Ãâ
+    // ì „íˆ¬ ì—°ì¶œ
     //
-    // °³Àü ½Ã:
-    // ÇÃ·¹ÀÌ¾î ±×·ì ºñÃß±â(±â½À or ÀÏ¹İ or ¿ª±â½À »óÈ² º¸¿©ÁÖ±â)
-    // -> Á¡Á¡ ÀüÃ¼ È­¸é ºñÃß±â(¾î¶² ¸ó½ºÅÍ°¡ ¾î´À À§Ä¡¿¡ ÀÖ´Â Áö º¸¿©ÁÖ±â)
+    // ê°œì „ ì‹œ:
+    // í”Œë ˆì´ì–´ ê·¸ë£¹ ë¹„ì¶”ê¸°(ê¸°ìŠµ or ì¼ë°˜ or ì—­ê¸°ìŠµ ìƒí™© ë³´ì—¬ì£¼ê¸°)
+    // -> ì ì  ì „ì²´ í™”ë©´ ë¹„ì¶”ê¸°(ì–´ë–¤ ëª¬ìŠ¤í„°ê°€ ì–´ëŠ ìœ„ì¹˜ì— ìˆëŠ” ì§€ ë³´ì—¬ì£¼ê¸°)
     //
-    // ÅÏÀÌ µ¹¾Æ¿Ã ½Ã:
-    // º° ´Ù¸¥ ¸ğ¼Ç ¾øÀÌ ÇØ´ç Ä³¸¯ÅÍ¿Í Å¸°ÙÀ» ±×·ì¼¦
+    // í„´ì´ ëŒì•„ì˜¬ ì‹œ:
+    // ë³„ ë‹¤ë¥¸ ëª¨ì…˜ ì—†ì´ í•´ë‹¹ ìºë¦­í„°ì™€ íƒ€ê²Ÿì„ ê·¸ë£¹ìƒ·
     //
-    // Çàµ¿ ¼±ÅÃ ½Ã:
-    // º° ´Ù¸¥ ¸ğ¼Ç ¾øÀÌ ÇØ´ç Ä³¸¯ÅÍÀÇ ½Ì±Û¼¦
-    // -> Çàµ¿ ¼±ÅÃ ¸ğ¼ÇÀ» ÃëÇÏ¸ç ºü¸£°Ô »ìÂ¦ ¿·À¸·Î Ä«¸Ş¶ó ÀÌµ¿
+    // í–‰ë™ ì„ íƒ ì‹œ:
+    // ë³„ ë‹¤ë¥¸ ëª¨ì…˜ ì—†ì´ í•´ë‹¹ ìºë¦­í„°ì˜ ì‹±ê¸€ìƒ·
+    // -> í–‰ë™ ì„ íƒ ëª¨ì…˜ì„ ì·¨í•˜ë©° ë¹ ë¥´ê²Œ ì‚´ì§ ì˜†ìœ¼ë¡œ ì¹´ë©”ë¼ ì´ë™
     //
     //
-    // Çàµ¿ ¼±ÅÃ ½Ã ¹Ù·Î Çàµ¿ ¸ğ¼Ç¿¡ µé¾î°¨
-    // ¿ø°Å¸® Çàµ¿ -> Á¦ÀÚ¸®¿¡¼­ »ç¿ë ¸ğ¼Ç
-    // ±Ù°Å¸® Çàµ¿ -> Å¸°Ù¿¡°Ô ´Ş·Á°¡´Â ¸ğ¼Ç
+    // í–‰ë™ ì„ íƒ ì‹œ ë°”ë¡œ í–‰ë™ ëª¨ì…˜ì— ë“¤ì–´ê°
+    // ì›ê±°ë¦¬ í–‰ë™ -> ì œìë¦¬ì—ì„œ ì‚¬ìš© ëª¨ì…˜
+    // ê·¼ê±°ë¦¬ í–‰ë™ -> íƒ€ê²Ÿì—ê²Œ ë‹¬ë ¤ê°€ëŠ” ëª¨ì…˜
     //
-    // Â÷·Ê°¡ µ¹¾Æ¿À¸é ¿ÏÀüÇÑ »ç¿ë ¸ğ¼Ç
+    // ì°¨ë¡€ê°€ ëŒì•„ì˜¤ë©´ ì™„ì „í•œ ì‚¬ìš© ëª¨ì…˜
     //
-    // Çàµ¿ ¸ğ¼Ç ÀÌÈÄ °ğ¹Ù·Î ´ÙÀ½ ¼±ÅÃµÈ Çàµ¿ °³½Ã
+    // í–‰ë™ ëª¨ì…˜ ì´í›„ ê³§ë°”ë¡œ ë‹¤ìŒ ì„ íƒëœ í–‰ë™ ê°œì‹œ
 
 
     /***************************************************************
-    * [ Ä«¸Ş¶ó ¼³Á¤ ]
+    * [ ì¹´ë©”ë¼ ì„¤ì • ]
     * 
-    * ´©±¼ ÇâÇØ Ä«¸Ş¶ó¸¦ ÀâÀ» Áö ¼³Á¤
+    * ëˆ„êµ´ í–¥í•´ ì¹´ë©”ë¼ë¥¼ ì¡ì„ ì§€ ì„¤ì •
     ***************************************************************/
 
     public void FocusFullScreen()
@@ -154,7 +154,7 @@ public class BattleCameraDirector
 
     public void FocusPlayerGroup()
     {
-        // ÇÃ·¹ÀÌ¾î ±×·ìÀÇ Áß½ÉÁ¡¸¸ °¡Á®¿À±â
+        // í”Œë ˆì´ì–´ ê·¸ë£¹ì˜ ì¤‘ì‹¬ì ë§Œ ê°€ì ¸ì˜¤ê¸°
         List<Transform> group = bodyTransforms
             .Where(v => playerIDs.Contains(v.Key))
             .Select(v => v.Value)
@@ -162,14 +162,14 @@ public class BattleCameraDirector
 
         if (group.Count > 0)
         {
-            // ±×·ìÀ¸·Î ÀâÀ» ¿£Æ¼Æ¼°¡ ÀÖ´Â °æ¿ì¿¡¸¸ Ä«¸Ş¶ó ¶óÀÌºê
+            // ê·¸ë£¹ìœ¼ë¡œ ì¡ì„ ì—”í‹°í‹°ê°€ ìˆëŠ” ê²½ìš°ì—ë§Œ ì¹´ë©”ë¼ ë¼ì´ë¸Œ
             manager.LiveGroupCamera(group);
         }
     }
 
     public void FocusEnemyGroup()
     {
-        // Àû ±×·ìÀÇ Áß½ÉÁ¡¸¸ °¡Á®¿À±â
+        // ì  ê·¸ë£¹ì˜ ì¤‘ì‹¬ì ë§Œ ê°€ì ¸ì˜¤ê¸°
         List<Transform> group = bodyTransforms
             .Where(v => enemyIDs.Contains(v.Key))
             .Select(v => v.Value)
@@ -177,14 +177,14 @@ public class BattleCameraDirector
 
         if (group.Count > 0)
         {
-            // ±×·ìÀ¸·Î ÀâÀ» ¿£Æ¼Æ¼°¡ ÀÖ´Â °æ¿ì¿¡¸¸ Ä«¸Ş¶ó ¶óÀÌºê
+            // ê·¸ë£¹ìœ¼ë¡œ ì¡ì„ ì—”í‹°í‹°ê°€ ìˆëŠ” ê²½ìš°ì—ë§Œ ì¹´ë©”ë¼ ë¼ì´ë¸Œ
             manager.LiveGroupCamera(group);
         }
     }
 
     public void FocusGroup(List<GameObject> groupObjs)
     {
-        // Áß½ÉÁ¡ÀÌ µî·ÏµÈ ¿ÀºêÁ§Æ®¸¸ ±×·ìÀ¸·Î ¼±Á¤
+        // ì¤‘ì‹¬ì ì´ ë“±ë¡ëœ ì˜¤ë¸Œì íŠ¸ë§Œ ê·¸ë£¹ìœ¼ë¡œ ì„ ì •
         List<Transform> group = groupObjs
             .Select(obj => bodyTransforms.GetValueOrDefault(obj.GetInstanceID()))
             .Where(transform => transform != null)
@@ -192,7 +192,7 @@ public class BattleCameraDirector
 
         if (group.Count > 0)
         {
-            // ±×·ìÀ¸·Î ÀâÀ» ¿£Æ¼Æ¼°¡ ÀÖ´Â °æ¿ì¿¡¸¸ Ä«¸Ş¶ó ¶óÀÌºê
+            // ê·¸ë£¹ìœ¼ë¡œ ì¡ì„ ì—”í‹°í‹°ê°€ ìˆëŠ” ê²½ìš°ì—ë§Œ ì¹´ë©”ë¼ ë¼ì´ë¸Œ
             manager.LiveGroupCamera(group);
         }
     }
@@ -205,11 +205,11 @@ public class BattleCameraDirector
         {
             var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
 
-            // Ä«¸Ş¶ó À§Ä¡ Á¶Á¤
+            // ì¹´ë©”ë¼ ìœ„ì¹˜ ì¡°ì •
             cmOffset.m_Offset.x = 0;
             cmOffset.m_Offset.y = 0;
 
-            // Ä«¸Ş¶ó ¶óÀÌºê
+            // ì¹´ë©”ë¼ ë¼ì´ë¸Œ
             manager.LiveSingleCamera(bodyTransforms[instanceID]);
         }
     }
@@ -222,29 +222,29 @@ public class BattleCameraDirector
         {
             var cmOffset = manager.singleCam.GetComponent<CinemachineCameraOffset>();
 
-            // Ä«¸Ş¶ó À§Ä¡ Á¶Á¤
+            // ì¹´ë©”ë¼ ìœ„ì¹˜ ì¡°ì •
             cmOffset.m_Offset.x = selectionPosX;
             cmOffset.m_Offset.y = selectionPosY;
 
-            // Ä«¸Ş¶ó ¶óÀÌºê
+            // ì¹´ë©”ë¼ ë¼ì´ë¸Œ
             manager.LiveSingleCamera(bodyTransforms[instanceID]);
         }
     }
 
     /***************************************************************
-    * [ Ä«¸Ş¶ó ¿¬Ãâ ]
+    * [ ì¹´ë©”ë¼ ì—°ì¶œ ]
     * 
-    * Ä«¸Ş¶ó ½ÃÁ¡À» ¿Å±â¸ç ¿¬Ãâ
+    * ì¹´ë©”ë¼ ì‹œì ì„ ì˜®ê¸°ë©° ì—°ì¶œ
     ***************************************************************/
 
     public async UniTask DirectBattleStart()
     {
-        // ÀüÅõ ½ÃÀÛ »óÈ²À» À§ÇÑ ÇÃ·¹ÀÌ¾î ±×·ì Ä«¸Ş¶ó Àâ¾ÆÁÖ±â
-        // (±â½À or ÀÏ¹İ or ¿ª±â½À ¾Ö´Ï¸ŞÀÌ¼Ç ¿¬Ãâ)
+        // ì „íˆ¬ ì‹œì‘ ìƒí™©ì„ ìœ„í•œ í”Œë ˆì´ì–´ ê·¸ë£¹ ì¹´ë©”ë¼ ì¡ì•„ì£¼ê¸°
+        // (ê¸°ìŠµ or ì¼ë°˜ or ì—­ê¸°ìŠµ ì• ë‹ˆë©”ì´ì…˜ ì—°ì¶œ)
         FocusPlayerGroup();
-        await UniTask.Delay(3500); // ÇöÀç´Â ½Ã°£ÀÌÁö¸¸ ³ªÁß¿£ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³ª´Âµ¥·Î
+        await UniTask.Delay(3500); // í˜„ì¬ëŠ” ì‹œê°„ì´ì§€ë§Œ ë‚˜ì¤‘ì—” ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚˜ëŠ”ë°ë¡œ
 
-        // ÀüÃ¼ÀûÀÎ »óÈ² º¸¿©ÁÖ±â
+        // ì „ì²´ì ì¸ ìƒí™© ë³´ì—¬ì£¼ê¸°
         FocusFullScreen();
         await UniTask.Delay(2500);
     }
@@ -268,23 +268,23 @@ public class BattleCameraDirector
             0.4f
         ).SetEase(Ease.InCirc));
 
-        // DOTween ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // DOTween ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await seq.ToUniTask();
     }
 
     public async UniTask DirectSmoothFocusing(GameObject target)
     {
-        // Ä«¸Ş¶ó°¡ ºÎµå·´°Ô ¿òÁ÷ÀÌµµ·Ï ÁöÁ¤
+        // ì¹´ë©”ë¼ê°€ ë¶€ë“œëŸ½ê²Œ ì›€ì§ì´ë„ë¡ ì§€ì •
         var bodyComponent = manager.singleCam.GetCinemachineComponent<CinemachineHardLockToTarget>();
         bodyComponent.m_Damping = 0.1f;
 
-        // ¸ñÇ¥ º¯°æ
+        // ëª©í‘œ ë³€ê²½
         FocusSingle(target);
 
-        // ¸ñÇ¥±îÁö ´ë±â
+        // ëª©í‘œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => target.transform.position == Camera.main.transform.position);
 
-        // º»·¡´ë·Î µüµüÇÏ°Ô ¿òÁ÷ÀÌµµ·Ï ÁöÁ¤
+        // ë³¸ë˜ëŒ€ë¡œ ë”±ë”±í•˜ê²Œ ì›€ì§ì´ë„ë¡ ì§€ì •
         bodyComponent.m_Damping = 0.0f;
     }
 }

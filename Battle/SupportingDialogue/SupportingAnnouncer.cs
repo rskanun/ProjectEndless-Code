@@ -3,40 +3,40 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Announcer", menuName = "Supporting Announcer")]
 public class SupportingAnnouncer : ScriptableObject
 {
-    [Header("°³Àü ´ë»ç")]
+    [Header("ê°œì „ ëŒ€ì‚¬")]
     [SerializeField, TextArea(1, 2)]
-    private string _battleStart; // ÀÏ¹Ý ÀüÅõ ½ÃÀÛ
+    private string _battleStart; // ì¼ë°˜ ì „íˆ¬ ì‹œìž‘
     public string BattleStart => _battleStart;
 
     [SerializeField, TextArea(1, 2)]
-    private string _playerAmbush; // ÇÃ·¹ÀÌ¾î ±â½ÀÀ¸·Î ½ÃÀÛ
+    private string _playerAmbush; // í”Œë ˆì´ì–´ ê¸°ìŠµìœ¼ë¡œ ì‹œìž‘
     public string PlayerAmbush => _playerAmbush;
 
     [SerializeField, TextArea(1, 2)]
-    private string _enemyAmbush; // Àû ±â½ÀÀ¸·Î ½ÃÀÛ
+    private string _enemyAmbush; // ì  ê¸°ìŠµìœ¼ë¡œ ì‹œìž‘
     public string EnemyAmbush => _enemyAmbush;
 
     [SerializeField, TextArea(1, 2)]
-    private string _bossEncount; // º¸½ºÀü ½ÃÀÛ
+    private string _bossEncount; // ë³´ìŠ¤ì „ ì‹œìž‘
     public string BossEncount => _bossEncount;
 
-    [Header("¹Ý°Ý ´ë»ç")]
+    [Header("ë°˜ê²© ëŒ€ì‚¬")]
     [SerializeField, TextArea(1, 2)]
-    private string _parryingSuccess; // ÆÐ¸µ¿¡ ¼º°øÇÏ¿© ÀûÀ» ÈåÆ®·¯³õ¾ÒÀ» ¶§
+    private string _parryingSuccess; // íŒ¨ë§ì— ì„±ê³µí•˜ì—¬ ì ì„ ííŠ¸ëŸ¬ë†“ì•˜ì„ ë•Œ
     public string ParryingSuccess => _parryingSuccess;
 
-    [Header("Àû Ã³¸® ´ë»ç")]
+    [Header("ì  ì²˜ë¦¬ ëŒ€ì‚¬")]
     [SerializeField, TextArea(1, 2)]
-    private string _killEnemy; // ÀûÀ» Ã³¸®ÇÑ °æ¿ì
+    private string _killEnemy; // ì ì„ ì²˜ë¦¬í•œ ê²½ìš°
     public string KillEnemy => _killEnemy;
 
-    [Header("ÆÄÆ¼ ±âÀý ´ë»ç")]
+    [Header("íŒŒí‹° ê¸°ì ˆ ëŒ€ì‚¬")]
     [SerializeField, TextArea(1, 2)]
-    private string _knockdownPlayer; // ÇÃ·¹ÀÌ¾îÀÇ ÆÄÆ¼ Áß ´©±º°¡ ¾²·¯Áø °æ¿ì
+    private string _knockdownPlayer; // í”Œë ˆì´ì–´ì˜ íŒŒí‹° ì¤‘ ëˆ„êµ°ê°€ ì“°ëŸ¬ì§„ ê²½ìš°
     public string KnockdownPlayer => _knockdownPlayer;
 
-    [Header("ÀüÅõ ½Â¸® ´ë»ç")]
+    [Header("ì „íˆ¬ ìŠ¹ë¦¬ ëŒ€ì‚¬")]
     [SerializeField, TextArea(1, 2)]
-    private string _battleVictory; // ÀüÅõ ½Â¸® ½Ã ´ë»ç
+    private string _battleVictory; // ì „íˆ¬ ìŠ¹ë¦¬ ì‹œ ëŒ€ì‚¬
     public string BattleVictory => _battleVictory;
 }

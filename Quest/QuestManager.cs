@@ -10,7 +10,7 @@ using UnityEditor;
 
 public class QuestManager : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Quests";
     private const string FILE_PATH = "Assets/Resources/Quests/QuestManager.asset";
 
@@ -26,7 +26,7 @@ public class QuestManager : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -42,7 +42,7 @@ public class QuestManager : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<QuestManager>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -62,29 +62,29 @@ public class QuestManager : ScriptableObject
     [ReadOnly, SerializeField]
     private List<QuestData> questDatas = new();
 
-    // ÇöÀç ÃßÀû ÁßÀÎ Äù½ºÆ®
+    // í˜„ì¬ ì¶”ì  ì¤‘ì¸ í€˜ìŠ¤íŠ¸
     [SerializeField]
     private QuestData _trackedQuest;
     public QuestData TrackedQuest => _trackedQuest;
 
-    // Äù½ºÆ® »óÅÂ Á¤¸® Å×ÀÌºí => Äù½ºÆ® ID, Äù½ºÆ® »óÅÂ
+    // í€˜ìŠ¤íŠ¸ ìƒíƒœ ì •ë¦¬ í…Œì´ë¸” => í€˜ìŠ¤íŠ¸ ID, í€˜ìŠ¤íŠ¸ ìƒíƒœ
     private Dictionary<int, QuestState> stateLookup = new();
 
-    // Äù½ºÆ® º¯°æ ÇÚµé·¯
+    // í€˜ìŠ¤íŠ¸ ë³€ê²½ í•¸ë“¤ëŸ¬
     public event Action onQuestChanged;
 
-    // ÃßÀû Äù½ºÆ® º¯°æ ÇÚµé·¯
+    // ì¶”ì  í€˜ìŠ¤íŠ¸ ë³€ê²½ í•¸ë“¤ëŸ¬
     public event Action<QuestData> onTrackedQuestChanged;
 
 #if UNITY_EDITOR
     [Button(ButtonSizes.Large, Name = "Reload Quest Files")]
     public void LoadQuestAssets()
     {
-        // °æ·Î»ó Æú´õ°¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì
+        // ê²½ë¡œìƒ í´ë”ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°
         if (string.IsNullOrEmpty(filePath) || !AssetDatabase.IsValidFolder(filePath))
         {
-            // ½ÇÇàÇÏÁö ¾Ê°í Á¾·á
-            Debug.LogError("°æ·Î »ó¿¡ Æú´õ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù. Æú´õ °æ·Î: " + filePath);
+            // ì‹¤í–‰í•˜ì§€ ì•Šê³  ì¢…ë£Œ
+            Debug.LogError("ê²½ë¡œ ìƒì— í´ë”ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. í´ë” ê²½ë¡œ: " + filePath);
             return;
         }
 
@@ -106,39 +106,39 @@ public class QuestManager : ScriptableObject
             return state;
         }
 
-        // »óÅÂ°¡ ÀúÀåµÇÁö ¾ÊÀº Äù½ºÆ®ÀÎ °æ¿ì ¾ÆÁ÷ ¾È ¹ŞÀº Äù½ºÆ®·Î Ã³¸®
+        // ìƒíƒœê°€ ì €ì¥ë˜ì§€ ì•Šì€ í€˜ìŠ¤íŠ¸ì¸ ê²½ìš° ì•„ì§ ì•ˆ ë°›ì€ í€˜ìŠ¤íŠ¸ë¡œ ì²˜ë¦¬
         return QuestState.Inactive;
     }
 
     public bool IsAcceptableQuest(QuestData quest)
     {
-        // Äù½ºÆ® ¼öÁÖ °¡´É Á¶°Ç ÆÇ´Ü
-        // ÇöÀç´Â ÁøÇà ÁßÀÌ°Å³ª ¿Ï·áµÇÁö ¾ÊÀº Äù½ºÆ®¸é °¡´É
+        // í€˜ìŠ¤íŠ¸ ìˆ˜ì£¼ ê°€ëŠ¥ ì¡°ê±´ íŒë‹¨
+        // í˜„ì¬ëŠ” ì§„í–‰ ì¤‘ì´ê±°ë‚˜ ì™„ë£Œë˜ì§€ ì•Šì€ í€˜ìŠ¤íŠ¸ë©´ ê°€ëŠ¥
         return !stateLookup.ContainsKey(quest.ID);
     }
 
     public bool IsCompletableQuest(QuestData quest)
     {
-        // Äù½ºÆ® ¿Ï·á Á¶°Ç ÆÇ´Ü
-        // ÇöÀç´Â ÁøÇà ÁßÀÎ Äù½ºÆ®¸é °¡´É
+        // í€˜ìŠ¤íŠ¸ ì™„ë£Œ ì¡°ê±´ íŒë‹¨
+        // í˜„ì¬ëŠ” ì§„í–‰ ì¤‘ì¸ í€˜ìŠ¤íŠ¸ë©´ ê°€ëŠ¥
         return GetQuestState(quest) == QuestState.OnGoing;
     }
 
     public void CompleteQuest(QuestData quest)
     {
-        // Äù½ºÆ® ¿Ï·á »óÅÂ·Î °»½Å
+        // í€˜ìŠ¤íŠ¸ ì™„ë£Œ ìƒíƒœë¡œ ê°±ì‹ 
         stateLookup[quest.ID] = QuestState.Completed;
 
-        // ¾Ë¸² º¸³»±â
+        // ì•Œë¦¼ ë³´ë‚´ê¸°
         NotifyChanged();
     }
 
     public void AcceptQuest(QuestData quest)
     {
-        // Äù½ºÆ® ÁøÇà »óÅÂ·Î °»½Å
+        // í€˜ìŠ¤íŠ¸ ì§„í–‰ ìƒíƒœë¡œ ê°±ì‹ 
         stateLookup[quest.ID] = QuestState.OnGoing;
 
-        // ¾Ë¸² º¸³»±â
+        // ì•Œë¦¼ ë³´ë‚´ê¸°
         NotifyChanged();
     }
 

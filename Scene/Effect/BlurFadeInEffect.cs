@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BlurFadeInEffect : MonoBehaviour, ITransitionEffect
 {
-    [Header("»ç¿ë ¿ÀºêÁ§Æ®")]
+    [Header("ì‚¬ìš© ì˜¤ë¸Œì íŠ¸")]
     [SerializeField] private CanvasGroup background;
     [SerializeField] private Material blurMaterial;
 

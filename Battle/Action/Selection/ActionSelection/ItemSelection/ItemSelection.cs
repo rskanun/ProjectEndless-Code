@@ -4,66 +4,66 @@ using UnityEngine.EventSystems;
 
 public class ItemSelection : MonoBehaviour, ISelection
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private ActionManager actionManager;
     [SerializeField] private ItemSelectionUI ui;
 
-    // ÇöÀç ¾ÆÀÌÅÛÃ¢ ³» ¾ÆÀÌÅÛ Á¤º¸ ¿ÀºêÁ§Æ®
+    // í˜„ì¬ ì•„ì´í…œì°½ ë‚´ ì•„ì´í…œ ì •ë³´ ì˜¤ë¸Œì íŠ¸
     private List<GameObject> itemInfoList = new List<GameObject>();
 
-    // ¸¶Áö¸· ¼±ÅÃ ¹öÆ°
+    // ë§ˆì§€ë§‰ ì„ íƒ ë²„íŠ¼
     private GameObject lastSelected;
 
     public void OpenSelection()
     {
-        // ¾ÆÀÌÅÛÃ¢ ¿­±â
+        // ì•„ì´í…œì°½ ì—´ê¸°
         ui.SetActiveWindow(true);
 
-        // ÃÊ±â ¾ÆÀÌÅÛ ¼±ÅÃ
+        // ì´ˆê¸° ì•„ì´í…œ ì„ íƒ
         SelectLastButton();
     }
 
     public void CloseSelection()
     {
-        // ¾ÆÀÌÅÛÃ¢ ´İ±â
+        // ì•„ì´í…œì°½ ë‹«ê¸°
         ui.SetActiveWindow(false);
     }
 
     public void ReopenSelection()
     {
-        // ÇöÀç ÅÏÀÎ Ä³¸¯ÅÍ
+        // í˜„ì¬ í„´ì¸ ìºë¦­í„°
         Character actor = BattleData.Instance.SelectionData.actor;
 
-        // ¸ğ¼Ç ¾øÀÌ ¼±ÅÃÃ¢¿¡ ¸Â°Ô Ä«¸Ş¶ó ÀÌµ¿
+        // ëª¨ì…˜ ì—†ì´ ì„ íƒì°½ì— ë§ê²Œ ì¹´ë©”ë¼ ì´ë™
         BattleCameraDirector.Instance.FocusSelection(actor.gameObject);
 
-        // ±âÁ¸ ¾ÆÀÌÅÛÃ¢ ¿­±â¿Í µ¿ÀÏÇÑ Èå¸§
+        // ê¸°ì¡´ ì•„ì´í…œì°½ ì—´ê¸°ì™€ ë™ì¼í•œ íë¦„
         OpenSelection();
     }
 
     public void UndoSelection()
     {
-        // ¾ÆÀÌÅÛÃ¢ ´İ±â
+        // ì•„ì´í…œì°½ ë‹«ê¸°
         CloseSelection();
     }
 
     /***************************************************************
-    * [ ¾ÆÀÌÅÛ ¸ñ·Ï °ü¸® ]
+    * [ ì•„ì´í…œ ëª©ë¡ ê´€ë¦¬ ]
     * 
-    * ¼Òºñ ¾ÆÀÌÅÛ ¼±ÅÃÃ¢ÀÇ ±¸¼º UI °ü¸®
+    * ì†Œë¹„ ì•„ì´í…œ ì„ íƒì°½ì˜ êµ¬ì„± UI ê´€ë¦¬
     ***************************************************************/
 
     public void UpdateItemInfo()
     {
         Dictionary<Item, int> items = GetConsumableItems();
 
-        ClearItemInfos();       // ¾ÆÀÌÅÛ ¸ñ·Ï ÃÊ±âÈ­
-        InitItemInfo(items);    // ¾ÆÀÌÅÛ ¸ñ·Ï »ı¼º
+        ClearItemInfos();       // ì•„ì´í…œ ëª©ë¡ ì´ˆê¸°í™”
+        InitItemInfo(items);    // ì•„ì´í…œ ëª©ë¡ ìƒì„±
     }
 
     private void ClearItemInfos()
     {
-        // ¸ğµç ¾ÆÀÌÅÛ ¸ñ·Ï ÃÊ±âÈ­
+        // ëª¨ë“  ì•„ì´í…œ ëª©ë¡ ì´ˆê¸°í™”
         for (int i = itemInfoList.Count - 1; i >= 0; i--)
         {
             RemoveItemInfoObject(itemInfoList[i]);
@@ -72,14 +72,14 @@ public class ItemSelection : MonoBehaviour, ISelection
 
     private void RemoveItemInfoObject(GameObject itemInfoObj)
     {
-        // ¸¸¾à ¸¶Áö¸·À¸·Î ¼±ÅÃÇÑ ¾ÆÀÌÅÛÀÏ °æ¿ì
+        // ë§Œì•½ ë§ˆì§€ë§‰ìœ¼ë¡œ ì„ íƒí•œ ì•„ì´í…œì¼ ê²½ìš°
         if (lastSelected == itemInfoObj)
         {
-            // ¸¶Áö¸· ¼±ÅÃ ¾ÆÀÌÅÛ¿¡¼­ »èÁ¦
+            // ë§ˆì§€ë§‰ ì„ íƒ ì•„ì´í…œì—ì„œ ì‚­ì œ
             lastSelected = null;
         }
 
-        // ¾ÆÀÌÅÛ »èÁ¦
+        // ì•„ì´í…œ ì‚­ì œ
         itemInfoList.Remove(itemInfoObj);
         Destroy(itemInfoObj);
     }
@@ -91,27 +91,27 @@ public class ItemSelection : MonoBehaviour, ISelection
             Consumable consumable = itemPair.Key as Consumable;
             int itemCount = itemPair.Value;
 
-            // ¾ÆÀÌÅÛ Á¤º¸ ¿ÀºêÁ§Æ® »ı¼º
+            // ì•„ì´í…œ ì •ë³´ ì˜¤ë¸Œì íŠ¸ ìƒì„±
             GameObject itemInfoObj = CreateItemInfoObject(consumable, itemCount);
 
-            // ¾ÆÀÌÅÛ ¼±ÅÃÀ» À§ÇÑ ¸®½ºÆ®¿¡ Ãß°¡
+            // ì•„ì´í…œ ì„ íƒì„ ìœ„í•œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
             itemInfoList.Add(itemInfoObj);
         }
     }
 
     private GameObject CreateItemInfoObject(Consumable consumable, int count)
     {
-        // ¾ÆÀÌÅÛ Á¤º¸¸¦ ´ãÀº ¿ÀºêÁ§Æ® »ı¼º
+        // ì•„ì´í…œ ì •ë³´ë¥¼ ë‹´ì€ ì˜¤ë¸Œì íŠ¸ ìƒì„±
         GameObject itemInfoObj = ui.CreateItemInfo(consumable);
 
-        // ¾ÆÀÌÅÛ Á¤º¸ ¼³Á¤
+        // ì•„ì´í…œ ì •ë³´ ì„¤ì •
         ItemInfo itemInfo = itemInfoObj.GetComponent<ItemInfo>();
         itemInfo.SetItem(consumable, count);
 
-        // hover ¼³Á¤
+        // hover ì„¤ì •
         itemInfo.SetHoverHandler(() => ui.SetDescription(consumable.Description));
 
-        // ¹öÆ° Å¬¸¯ ¼³Á¤
+        // ë²„íŠ¼ í´ë¦­ ì„¤ì •
         itemInfo.SetClickHandler(() =>
         {
             OnItemClicked(consumable, itemInfoObj);
@@ -137,28 +137,28 @@ public class ItemSelection : MonoBehaviour, ISelection
 
         if (lastSelected == null)
         {
-            // ÀÌÀü¿¡ ¼±ÅÃÇÑ ¹öÆ°ÀÌ ¾ø´Â °æ¿ì ¼±ÅÃ °¡´ÉÇÑ Ã¹¹øÂ° ¿ä¼Ò¸¦ ¼±ÅÃ
+            // ì´ì „ì— ì„ íƒí•œ ë²„íŠ¼ì´ ì—†ëŠ” ê²½ìš° ì„ íƒ ê°€ëŠ¥í•œ ì²«ë²ˆì§¸ ìš”ì†Œë¥¼ ì„ íƒ
             lastSelected = GetFirstUsableItem();
         }
 
-        // ¹öÆ° ¼±ÅÃ
+        // ë²„íŠ¼ ì„ íƒ
         EventSystem.current.SetSelectedGameObject(lastSelected);
 
-        // ¾ÆÀÌÅÛ ¼³¸í ¼³Á¤
+        // ì•„ì´í…œ ì„¤ëª… ì„¤ì •
         UpdateDescription(lastSelected);
     }
 
     private GameObject GetFirstUsableItem()
     {
-        // Ã¹¹øÂ° ¼±ÅÃ ¿ä¼Ò Ã£±â
+        // ì²«ë²ˆì§¸ ì„ íƒ ìš”ì†Œ ì°¾ê¸°
         foreach (GameObject itemInfoObj in itemInfoList)
         {
             ItemInfo itemInfo = itemInfoObj.GetComponent<ItemInfo>();
 
-            // ÇØ´ç ¾ÆÀÌÅÛÀ» »ç¿ë°¡´ÉÇÑ °æ¿ì
+            // í•´ë‹¹ ì•„ì´í…œì„ ì‚¬ìš©ê°€ëŠ¥í•œ ê²½ìš°
             if (itemInfo.IsUsable())
             {
-                // ÇØ´ç ¾ÆÀÌÅÛÀ» Ã¹¹øÂ° ¼±ÅÃ ¿ä¼Ò·Î ¹İÈ¯
+                // í•´ë‹¹ ì•„ì´í…œì„ ì²«ë²ˆì§¸ ì„ íƒ ìš”ì†Œë¡œ ë°˜í™˜
                 return itemInfoObj;
             }
         }

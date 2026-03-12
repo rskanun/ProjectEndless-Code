@@ -11,7 +11,7 @@ public class Diary : MonoBehaviour
     [Space]
     [SerializeField] private GameObject deadMark;
 
-    [Header("ÇÁ·ÎÇÊ ±¸¼º")]
+    [Header("í”„ë¡œí•„ êµ¬ì„±")]
     [SerializeField] private TextMeshProUGUI nameField;
     [SerializeField] private TextMeshProUGUI occupationField;
     [SerializeField] private Image profileImage;
@@ -19,7 +19,7 @@ public class Diary : MonoBehaviour
     [SerializeField] private TextMeshProUGUI hobbyField;
     [SerializeField] private TextMeshProUGUI sanField;
 
-    [Header("½ºÅÈ ±¸¼º")]
+    [Header("ìŠ¤íƒ¯ êµ¬ì„±")]
     [SerializeField] private AmountTextBar hpBar;
     [SerializeField] private AmountTextBar spBar;
     [SerializeField] private TextMeshProUGUI strField;
@@ -28,13 +28,13 @@ public class Diary : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dexField;
     [SerializeField] private TextMeshProUGUI mpField;
 
-    [Header("Àåºñ ±¸¼º")]
+    [Header("ì¥ë¹„ êµ¬ì„±")]
     [SerializeField] private EquipInfo weaponField;
     [SerializeField] private EquipInfo offWeaponField;
     [SerializeField] private EquipInfo AccesssoryField1;
     [SerializeField] private EquipInfo AccesssoryField2;
 
-    [Header("½ºÅ³ ±¸¼º")]
+    [Header("ìŠ¤í‚¬ êµ¬ì„±")]
     [SerializeField] private List<SkillInfo> skillFields;
 
     private DiaryInfo _lastSelectedInfo;
@@ -55,10 +55,10 @@ public class Diary : MonoBehaviour
 
     public void UpdateDiary(CharacterData character)
     {
-        // »ç¸Á ÆÇÁ¤
+        // ì‚¬ë§ íŒì •
         deadMark.SetActive(character.IsSlain);
 
-        // ÇÁ·ÎÇÊ ¼³Á¤
+        // í”„ë¡œí•„ ì„¤ì •
         nameField.text = character.Name;
         profileImage.sprite = character.Profile.ProfileImage;
         occupationField.text = character.Profile.Occupation;
@@ -66,7 +66,7 @@ public class Diary : MonoBehaviour
         hobbyField.text = character.Profile.Hobby;
         sanField.text = GetSanToText(character);
 
-        // ½ºÅÈ ¼³Á¤
+        // ìŠ¤íƒ¯ ì„¤ì •
         hpBar.UpdateAmount(character.Stats.HP, character.Stats.MaxHP);
         spBar.UpdateAmount(character.Stats.SP, character.Stats.MaxSP);
         strField.text = character.Stats.STR.ToString();
@@ -75,51 +75,51 @@ public class Diary : MonoBehaviour
         dexField.text = character.Stats.DEX.ToString();
         mpField.text = character.Stats.MaxMP.ToString();
 
-        // Àåºñ ¼³Á¤
+        // ì¥ë¹„ ì„¤ì •
         weaponField.UpdateInfo(character.MainWeapon);
         offWeaponField.UpdateInfo(character.OffWeapon);
         AccesssoryField1.UpdateInfo(character.Accessory1);
         AccesssoryField2.UpdateInfo(character.Accessory2);
 
-        // ½ºÅ³ ¼³Á¤
+        // ìŠ¤í‚¬ ì„¤ì •
         InitSkillInfo(character);
     }
 
     private string GetSanToText(CharacterData character)
     {
-        // ÇÃ·¹ÀÌ¾îÀÇ Á¤½Å»óÅÂ´Â Á¢±Ù ºÒ°¡
-        if (character == PartyData.Instance.Player) return "¾Ë ¼ö ¾øÀ½";
+        // í”Œë ˆì´ì–´ì˜ ì •ì‹ ìƒíƒœëŠ” ì ‘ê·¼ ë¶ˆê°€
+        if (character == PartyData.Instance.Player) return "ì•Œ ìˆ˜ ì—†ìŒ";
 
-        if (character.Stats.SAN >= 60) return "¾ÈÁ¤";
-        else if (character.Stats.SAN >= 20) return "ºÒ¾È";
-        else return "ºØ±«";
+        if (character.Stats.SAN >= 60) return "ì•ˆì •";
+        else if (character.Stats.SAN >= 20) return "ë¶ˆì•ˆ";
+        else return "ë¶•ê´´";
     }
 
     private void InitSkillInfo(CharacterData character)
     {
         for (int i = 0; i < skillFields.Count; i++)
         {
-            // À¯Àú°¡ °¡Áø ½ºÅ³ °³¼ö ÀÌ»óÀÇ ½½·ÔÀº ºñÈ°¼ºÈ­
+            // ìœ ì €ê°€ ê°€ì§„ ìŠ¤í‚¬ ê°œìˆ˜ ì´ìƒì˜ ìŠ¬ë¡¯ì€ ë¹„í™œì„±í™”
             if (i >= character.Skills.Count)
             {
                 skillFields[i].gameObject.SetActive(false);
                 continue;
             }
 
-            // ÀÌÀü ºñÈ°¼ºÈ­ µÈ Ä­ ÀçÈ°¼ºÈ­
+            // ì´ì „ ë¹„í™œì„±í™” ëœ ì¹¸ ì¬í™œì„±í™”
             skillFields[i].gameObject.SetActive(true);
 
-            // ÇÃ·¹ÀÌ¾î°¡ °¡Áø ½ºÅ³ °³¼ö¿¡ ¸ÂÃç Ä­¿¡ ½ºÅ³ ³Ö±â
+            // í”Œë ˆì´ì–´ê°€ ê°€ì§„ ìŠ¤í‚¬ ê°œìˆ˜ì— ë§ì¶° ì¹¸ì— ìŠ¤í‚¬ ë„£ê¸°
             skillFields[i].UpdateInfo(character.Skills[i]);
         }
     }
 
     /// <summary>
-    /// ´ÙÀÌ¾î¸® ³» ¸¶Áö¸·À¸·Î ¼±ÅÃÇÑ ¹öÆ° ¼±ÅÃ
+    /// ë‹¤ì´ì–´ë¦¬ ë‚´ ë§ˆì§€ë§‰ìœ¼ë¡œ ì„ íƒí•œ ë²„íŠ¼ ì„ íƒ
     /// </summary>
     public void SelectLastButton()
     {
-        // ÀÌÀü¿¡ ¼±ÅÃÇÑ ¹öÆ°ÀÌ ¾ø´Ù¸é ¸ÕÀú ¼±ÅÃÇÒ ¹öÆ° ¼±ÅÃ
+        // ì´ì „ì— ì„ íƒí•œ ë²„íŠ¼ì´ ì—†ë‹¤ë©´ ë¨¼ì € ì„ íƒí•  ë²„íŠ¼ ì„ íƒ
         if (_lastSelectedInfo == null) _lastSelectedInfo = firstSelectInfo;
 
         EventSystem.current.SetSelectedGameObject(_lastSelectedInfo.gameObject);

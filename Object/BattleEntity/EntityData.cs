@@ -6,8 +6,8 @@ using UnityEngine;
 public abstract class EntityData : ScriptableObject
 {
 #if UNITY_EDITOR
-    // Å×½ºÆ® ÇÃ·¹ÀÌ ½Ã º¯°æµÇ´Â °ªÀ» µÇµ¹¸®±â À§ÇÑ
-    // ¹é¾÷ µ¥ÀÌÅÍÀÇ Json ÇüÅÂ
+    // í…ŒìŠ¤íŠ¸ í”Œë ˆì´ ì‹œ ë³€ê²½ë˜ëŠ” ê°’ì„ ë˜ëŒë¦¬ê¸° ìœ„í•œ
+    // ë°±ì—… ë°ì´í„°ì˜ Json í˜•íƒœ
     private string backupJson;
 #endif
 
@@ -32,12 +32,12 @@ public abstract class EntityData : ScriptableObject
     private PersonalityType _personality;
     public PersonalityType Personality => _personality;
 
-    [Title("½ºÅ³ Á¤º¸")]
+    [Title("ìŠ¤í‚¬ ì •ë³´")]
     [SerializeField, PropertyOrder(10)]
     private List<Skill> _skills;
     public List<Skill> Skills => _skills;
 
-    [Title("´É·ÂÄ¡ Á¤º¸")]
+    [Title("ëŠ¥ë ¥ì¹˜ ì •ë³´")]
     [SerializeField, PropertyOrder(20)]
     private EntityStats _stats;
     public EntityStats Stats => _stats;
@@ -60,34 +60,34 @@ public abstract class EntityData : ScriptableObject
 
     private void OnPlayModeChanged(PlayModeStateChange state)
     {
-        // Å×½ºÆ® ÇÃ·¹ÀÌ Á÷ÀüÀÏ °æ¿ì
+        // í…ŒìŠ¤íŠ¸ í”Œë ˆì´ ì§ì „ì¼ ê²½ìš°
         if (state == PlayModeStateChange.ExitingEditMode)
         {
-            // ÇöÀç µ¥ÀÌÅÍ ¹é¾÷
+            // í˜„ì¬ ë°ì´í„° ë°±ì—…
             BackupData();
         }
-        // ¿¡µğÅÍ·Î µ¹¾Æ¿Â °æ¿ì
+        // ì—ë””í„°ë¡œ ëŒì•„ì˜¨ ê²½ìš°
         else if (state == PlayModeStateChange.EnteredEditMode)
         {
-            // ¹é¾÷ÇÑ µ¥ÀÌÅÍ·Î µÇµ¹¸®±â
+            // ë°±ì—…í•œ ë°ì´í„°ë¡œ ë˜ëŒë¦¬ê¸°
             RestoreData();
         }
     }
     private void BackupData()
     {
-        // ÇöÀç µ¥ÀÌÅÍ¸¦ Json ÇüÅÂ·Î ÀúÀå
+        // í˜„ì¬ ë°ì´í„°ë¥¼ Json í˜•íƒœë¡œ ì €ì¥
         backupJson = JsonUtility.ToJson(this);
     }
 
     private void RestoreData()
     {
-        // ¹é¾÷ µ¥ÀÌÅÍ°¡ ¾ø´Â °æ¿ì ¹«½Ã
+        // ë°±ì—… ë°ì´í„°ê°€ ì—†ëŠ” ê²½ìš° ë¬´ì‹œ
         if (string.IsNullOrEmpty(backupJson))
         {
             return;
         }
 
-        // Json ÇüÅÂ·Î ÀúÀåÇÑ µ¥ÀÌÅÍ¸¦ ÇöÀç °´Ã¼¿¡ µÇµ¹¸®±â
+        // Json í˜•íƒœë¡œ ì €ì¥í•œ ë°ì´í„°ë¥¼ í˜„ì¬ ê°ì²´ì— ë˜ëŒë¦¬ê¸°
         JsonUtility.FromJsonOverwrite(backupJson, this);
     }
 #endif

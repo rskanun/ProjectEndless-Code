@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class SurveyEffectManager : MonoBehaviour
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private SurveyEffectUI ui;
     [SerializeField] private StatusEffectUI effectUI;
     [SerializeField] private StatusEffectManager effectManager;
 
-    // ¿¹»ó »óÅÂÈ¿°ú ¸ñ·Ï
+    // ì˜ˆìƒ ìƒíƒœíš¨ê³¼ ëª©ë¡
     private List<StatusEffect> forecastEffects;
 
     private void Awake()
@@ -18,17 +18,17 @@ public class SurveyEffectManager : MonoBehaviour
 
     public void CreateForecastEffect(StatusEffect effect)
     {
-        // ¿¹¾à ¾ÆÀÌÄÜ »ı¼º
+        // ì˜ˆì•½ ì•„ì´ì½˜ ìƒì„±
         if (effect.IsBuff) ui.CreateTempBuffIcon(effect);
         else ui.CreateDebuffIcon(effect);
 
-        // ¸¸¾à ÇöÀç Á¸ÀçÇÏ´Â ¾ÆÀÌÄÜÀÏ °æ¿ì ÇØ´ç ¾ÆÀÌÄÜÀ» Àá½Ã ¼û±è
+        // ë§Œì•½ í˜„ì¬ ì¡´ì¬í•˜ëŠ” ì•„ì´ì½˜ì¼ ê²½ìš° í•´ë‹¹ ì•„ì´ì½˜ì„ ì ì‹œ ìˆ¨ê¹€
         if (effectManager.HasEffect(effect))
         {
             effectUI.HideIcon(effect);
         }
 
-        // ¿¹»ó »óÅÂÈ¿°ú ¸ñ·Ï¿¡ Ãß°¡
+        // ì˜ˆìƒ ìƒíƒœíš¨ê³¼ ëª©ë¡ì— ì¶”ê°€
         forecastEffects.Add(effect);
     }
 
@@ -36,7 +36,7 @@ public class SurveyEffectManager : MonoBehaviour
     {
         foreach (StatusEffect effect in forecastEffects)
         {
-            // ÀÓ½Ã·Î ¼û±ä ¾ÆÀÌÄÜÀÏ °æ¿ì ÇØ´ç ¾ÆÀÌÄÜ ´Ù½Ã È°¼ºÈ­
+            // ì„ì‹œë¡œ ìˆ¨ê¸´ ì•„ì´ì½˜ì¼ ê²½ìš° í•´ë‹¹ ì•„ì´ì½˜ ë‹¤ì‹œ í™œì„±í™”
             if (effectManager.HasEffect(effect))
             {
                 Debug.Log("Has Effect");
@@ -44,10 +44,10 @@ public class SurveyEffectManager : MonoBehaviour
             }
         }
 
-        // »ı¼ºµÈ ÀÓ½Ã ¾ÆÀÌÄÜ »èÁ¦
+        // ìƒì„±ëœ ì„ì‹œ ì•„ì´ì½˜ ì‚­ì œ
         ui.ClearIcons();
 
-        // ¿¹»ó »óÅÂÈ¿°ú ¸ñ·Ï ÃÊ±âÈ­
+        // ì˜ˆìƒ ìƒíƒœíš¨ê³¼ ëª©ë¡ ì´ˆê¸°í™”
         forecastEffects.Clear();
     }
 }

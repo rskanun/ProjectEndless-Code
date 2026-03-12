@@ -17,11 +17,11 @@ public class AttackManager : MonoBehaviour
 
     public void UpdateAttackCollider()
     {
-        // ÇöÀç ÇÁ·¹ÀÓÀÇ °ø°İ ¹üÀ§(Äİ¶óÀÌ´õ) °¡Á®¿À±â
+        // í˜„ì¬ í”„ë ˆì„ì˜ ê³µê²© ë²”ìœ„(ì½œë¼ì´ë”) ê°€ì ¸ì˜¤ê¸°
         List<Vector2> shapes = new List<Vector2>();
         spriteRenderer.sprite.GetPhysicsShape(0, shapes);
 
-        // ÇØ´ç Äİ¶óÀÌ´õ¸¦ ÀÌ¿¡ ¸Â°Ô º¯Çü
+        // í•´ë‹¹ ì½œë¼ì´ë”ë¥¼ ì´ì— ë§ê²Œ ë³€í˜•
         atkCollider.SetPath(0, shapes);
     }
 }

@@ -6,12 +6,12 @@ using UnityEngine.Tilemaps;
 [Serializable]
 public class GridNode : IComparable<GridNode>
 {
-    // Ç×»ó °íÁ¤µÇ´Â °ª
+    // í•­ìƒ ê³ ì •ë˜ëŠ” ê°’
     public bool isWalkable;
     public Vector2 pos;
     public Vector2Int gridPos;
 
-    // ÀÎ°ÔÀÓ ³»¿¡¼­ ¹Ù²î´Â °ª
+    // ì¸ê²Œì„ ë‚´ì—ì„œ ë°”ë€ŒëŠ” ê°’
     [NonSerialized] public Vector2Int prevPos;
     [NonSerialized] public int gCost;
     [NonSerialized] public int hCost;
@@ -21,7 +21,7 @@ public class GridNode : IComparable<GridNode>
     {
         var compare = fCost.CompareTo(other.fCost);
 
-        // fCost°¡ °°Àº °æ¿ì Á÷¼± °Å¸®(hCost)°¡ ´õ °¡±î¿î °ª ¸®ÅÏ
+        // fCostê°€ ê°™ì€ ê²½ìš° ì§ì„  ê±°ë¦¬(hCost)ê°€ ë” ê°€ê¹Œìš´ ê°’ ë¦¬í„´
         if (compare == 0)
             return hCost.CompareTo(other.hCost);
 
@@ -60,43 +60,43 @@ public class MapGrid : SerializedMonoBehaviour
     [Button("Reload Grid", ButtonSizes.Large)]
     public void ReloadGrid()
     {
-        // Å¸ÀÏ¸ÊÀÌ ¾ø´Â °æ¿ì Àû¿ë X
+        // íƒ€ì¼ë§µì´ ì—†ëŠ” ê²½ìš° ì ìš© X
         if (tilemap == null) return;
 
-        // ¸Ê Å©±â
+        // ë§µ í¬ê¸°
         float width = tilemap.cellBounds.size.x;
         float height = tilemap.cellBounds.size.y;
 
-        // ³ëµå ¹èÄ¡ »çÀÌÁî
+        // ë…¸ë“œ ë°°ì¹˜ ì‚¬ì´ì¦ˆ
         int horizonCount = Mathf.CeilToInt((width - offset.x * 2) / nodeSize);
         int verticalCount = Mathf.CeilToInt((height - offset.y * 2) / nodeSize);
 
-        // ±×¸®µå ¿µ¿ª¿¡ Æ÷ÇÔµÇÁö ¸øÇÑ ¿©¹é °ø°£
-        // ±×¸®µå ¿µ¿ªÀº °¡¿îµ¥¸¦ ±âÁØ
+        // ê·¸ë¦¬ë“œ ì˜ì—­ì— í¬í•¨ë˜ì§€ ëª»í•œ ì—¬ë°± ê³µê°„
+        // ê·¸ë¦¬ë“œ ì˜ì—­ì€ ê°€ìš´ë°ë¥¼ ê¸°ì¤€
         float gridOffsetX = (width - horizonCount * nodeSize) / 2.0f;
         float gridOffsetY = (height - verticalCount * nodeSize) / 2.0f;
 
-        // ³ëµå¸¦ »ı¼ºÇÒ Ã¹ ÁÂÇ¥
-        // Å¸ÀÏ¸Ê ½ÃÀÛ ÁÂÇ¥ + ¿©¹é + Áß½É
+        // ë…¸ë“œë¥¼ ìƒì„±í•  ì²« ì¢Œí‘œ
+        // íƒ€ì¼ë§µ ì‹œì‘ ì¢Œí‘œ + ì—¬ë°± + ì¤‘ì‹¬
         float pivotX = tilemap.cellBounds.xMin + gridOffsetX + nodeSize / 2.0f;
         float pivotY = tilemap.cellBounds.yMin + gridOffsetY + nodeSize / 2.0f;
         var pivot = new Vector2(pivotX, pivotY);
 
-        // °Ë»ç »çÀÌÁî(100%·Î ÇÒ °æ¿ì °æ°è¼±µµ Æ÷ÇÔµÇ±â ¶§¹®¿¡ ¹Ì¼¼ÇÏ°Ô ÁÙ¿©¼­ Ã¼Å©)
+        // ê²€ì‚¬ ì‚¬ì´ì¦ˆ(100%ë¡œ í•  ê²½ìš° ê²½ê³„ì„ ë„ í¬í•¨ë˜ê¸° ë•Œë¬¸ì— ë¯¸ì„¸í•˜ê²Œ ì¤„ì—¬ì„œ ì²´í¬)
         var checkSize = Vector2.one * nodeSize * collisionScale;
 
-        // °¢ ³ëµå¿¡ Á¤º¸ ³Ö±â
+        // ê° ë…¸ë“œì— ì •ë³´ ë„£ê¸°
         mapNodes = new GridNode[verticalCount, horizonCount];
         for (int y = 0; y < verticalCount; y++)
         {
             for (int x = 0; x < horizonCount; x++)
             {
-                // ³ëµå Áß½É ÁÂÇ¥
+                // ë…¸ë“œ ì¤‘ì‹¬ ì¢Œí‘œ
                 float posX = pivot.x + x * nodeSize;
                 float posY = pivot.y + y * nodeSize;
                 var pos = new Vector2(posX, posY);
 
-                // ¿µ¿ª ³» Àå¾Ö¹° À¯¹«
+                // ì˜ì—­ ë‚´ ì¥ì• ë¬¼ ìœ ë¬´
                 var hitCollider = Physics2D.OverlapBox(pos, checkSize, 0f, obstacle);
 
                 var node = new GridNode();
@@ -111,7 +111,7 @@ public class MapGrid : SerializedMonoBehaviour
 
     public GridNode GetNode(int x, int y)
     {
-        // ¹üÀ§¿¡¼­ ¹ş¾î³­ °ªÀÎ °æ¿ì ºó °ª ¸®ÅÏ
+        // ë²”ìœ„ì—ì„œ ë²—ì–´ë‚œ ê°’ì¸ ê²½ìš° ë¹ˆ ê°’ ë¦¬í„´
         if ((0 > x || x >= mapNodes.GetLength(1)) || (0 > y || y >= mapNodes.GetLength(0)))
         {
             return null;

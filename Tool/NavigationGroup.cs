@@ -20,10 +20,10 @@ public class NavigationGroup : MonoBehaviour
 
     private void SetupVerticalNavigation()
     {
-        // ÀÚ½Ä ¿ÀºêÁ§Æ® Áß ¹öÆ° ÄÄÆ÷³ÍÆ® ¼öÁı
+        // ìì‹ ì˜¤ë¸Œì íŠ¸ ì¤‘ ë²„íŠ¼ ì»´í¬ë„ŒíŠ¸ ìˆ˜ì§‘
         List<Button> buttons = new List<Button>(GetComponentsInChildren<Button>());
 
-        // y°ª¿¡ µû¸¥ ³»¸²Â÷¼ø Á¤·Ä
+        // yê°’ì— ë”°ë¥¸ ë‚´ë¦¼ì°¨ìˆœ ì •ë ¬
         buttons.Sort((a, b) =>
         {
             float ay = a.transform.position.y;
@@ -31,25 +31,25 @@ public class NavigationGroup : MonoBehaviour
             return by.CompareTo(ay);
         });
 
-        // ³×ºñ°ÔÀÌ¼Ç ¿¬°á
+        // ë„¤ë¹„ê²Œì´ì…˜ ì—°ê²°
         for (int i = 0; i < buttons.Count; i++)
         {
             Navigation navi = new Navigation();
-            navi.mode = Navigation.Mode.Explicit; // ¼öµ¿ ÀúÀå ¸ğµå
+            navi.mode = Navigation.Mode.Explicit; // ìˆ˜ë™ ì €ì¥ ëª¨ë“œ
             navi.selectOnUp = (i > 0) ? buttons[i - 1] : null;
             navi.selectOnDown = (i < buttons.Count - 1) ? buttons[i + 1] : null;
 
-            // »õ ³×ºñ°ÔÀÌ¼Ç µî·Ï
+            // ìƒˆ ë„¤ë¹„ê²Œì´ì…˜ ë“±ë¡
             buttons[i].navigation = navi;
         }
     }
 
     private void SetupHorizontalNavigation()
     {
-        // ÀÚ½Ä ¿ÀºêÁ§Æ® Áß ¹öÆ° ÄÄÆ÷³ÍÆ® ¼öÁı
+        // ìì‹ ì˜¤ë¸Œì íŠ¸ ì¤‘ ë²„íŠ¼ ì»´í¬ë„ŒíŠ¸ ìˆ˜ì§‘
         List<Button> buttons = new List<Button>(GetComponentsInChildren<Button>());
 
-        // x°ª¿¡ µû¸¥ ³»¸²Â÷¼ø Á¤·Ä
+        // xê°’ì— ë”°ë¥¸ ë‚´ë¦¼ì°¨ìˆœ ì •ë ¬
         buttons.Sort((a, b) =>
         {
             float ax = a.transform.position.x;
@@ -57,15 +57,15 @@ public class NavigationGroup : MonoBehaviour
             return bx.CompareTo(ax);
         });
 
-        // ³×ºñ°ÔÀÌ¼Ç ¿¬°á
+        // ë„¤ë¹„ê²Œì´ì…˜ ì—°ê²°
         for (int i = 0; i < buttons.Count; i++)
         {
             Navigation navi = new Navigation();
-            navi.mode = Navigation.Mode.Explicit; // ¼öµ¿ ÀúÀå ¸ğµå
+            navi.mode = Navigation.Mode.Explicit; // ìˆ˜ë™ ì €ì¥ ëª¨ë“œ
             navi.selectOnLeft = (i > 0) ? buttons[i - 1] : null;
             navi.selectOnRight = (i < buttons.Count - 1) ? buttons[i + 1] : null;
 
-            // »õ ³×ºñ°ÔÀÌ¼Ç µî·Ï
+            // ìƒˆ ë„¤ë¹„ê²Œì´ì…˜ ë“±ë¡
             buttons[i].navigation = navi;
         }
     }

@@ -1,4 +1,4 @@
-﻿public class NoteContext
+public class NoteContext
 {
     private static NoteContext _instance;
     public static NoteContext Instance

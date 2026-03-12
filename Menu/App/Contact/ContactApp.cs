@@ -49,12 +49,12 @@ public class ContactApp : App
 
     protected override void OnOpen()
     {
-        // ÆÄÆ¼ ¸É¹ö È­¸éºÎÅÍ ¿­±â
+        // íŒŒí‹° ë§´ë²„ í™”ë©´ë¶€í„° ì—´ê¸°
         ShowContact(ContactState.Party);
     }
 
     /// <summary>
-    /// ÇöÀç Ã¢¿¡ ¶ç¿öÁø ¸ñ·ÏÀ» ¹«±â ¸ñ·ÏÀ¸·Î ¹Ù²Ù±â
+    /// í˜„ì¬ ì°½ì— ë„ì›Œì§„ ëª©ë¡ì„ ë¬´ê¸° ëª©ë¡ìœ¼ë¡œ ë°”ê¾¸ê¸°
     /// </summary>
     public void ShowWeapons()
     {
@@ -62,7 +62,7 @@ public class ContactApp : App
     }
 
     /// <summary>
-    /// ÇöÀç Ã¢¿¡ ¶ç¿öÁø ¸ñ·ÏÀ» º¸Á¶ ¹«±â ¸ñ·ÏÀ¸·Î ¹Ù²Ù±â
+    /// í˜„ì¬ ì°½ì— ë„ì›Œì§„ ëª©ë¡ì„ ë³´ì¡° ë¬´ê¸° ëª©ë¡ìœ¼ë¡œ ë°”ê¾¸ê¸°
     /// </summary>
     public void ShowOffWeapons()
     {
@@ -70,7 +70,7 @@ public class ContactApp : App
     }
 
     /// <summary>
-    /// ÇöÀç Ã¢¿¡ ¶ç¿öÁø ¸ñ·ÏÀ» 1¹ø ½½·ÔÀÇ ¾Ç¼¼»ç¸® ¸ñ·ÏÀ¸·Î ¹Ù²Ù±â
+    /// í˜„ì¬ ì°½ì— ë„ì›Œì§„ ëª©ë¡ì„ 1ë²ˆ ìŠ¬ë¡¯ì˜ ì•…ì„¸ì‚¬ë¦¬ ëª©ë¡ìœ¼ë¡œ ë°”ê¾¸ê¸°
     /// </summary>
     public void ShowSlot1Accessory()
     {
@@ -78,7 +78,7 @@ public class ContactApp : App
     }
 
     /// <summary>
-    /// ÇöÀç Ã¢¿¡ ¶ç¿öÁø ¸ñ·ÏÀ» 2¹ø ½½·ÔÀÇ ¾Ç¼¼»ç¸® ¸ñ·ÏÀ¸·Î ¹Ù²Ù±â
+    /// í˜„ì¬ ì°½ì— ë„ì›Œì§„ ëª©ë¡ì„ 2ë²ˆ ìŠ¬ë¡¯ì˜ ì•…ì„¸ì‚¬ë¦¬ ëª©ë¡ìœ¼ë¡œ ë°”ê¾¸ê¸°
     /// </summary>
     public void ShowSlot2Accessory()
     {
@@ -86,21 +86,21 @@ public class ContactApp : App
     }
 
     /// <summary>
-    /// ÇöÀç Ã¢¿¡¼­ ½ºÅ³ Á¤º¸¸¦ º¸¿©ÁÖ´Â Ã¢À¸·Î ¹Ù²Ù±â
+    /// í˜„ì¬ ì°½ì—ì„œ ìŠ¤í‚¬ ì •ë³´ë¥¼ ë³´ì—¬ì£¼ëŠ” ì°½ìœ¼ë¡œ ë°”ê¾¸ê¸°
     /// </summary>
     public void ShowSkillInformation(Skill skill)
     {
         _state = ContactState.Skill;
 
-        // ¸É¹ö Á¤º¸ È­¸é ¼û±â±â
+        // ë§´ë²„ ì •ë³´ í™”ë©´ ìˆ¨ê¸°ê¸°
         mainWindow.HideWindow();
 
-        // ½ºÅ³ Á¤º¸ ºÒ·¯¿À±â
+        // ìŠ¤í‚¬ ì •ë³´ ë¶ˆëŸ¬ì˜¤ê¸°
         skillWindow.OpenWindow(skill);
     }
 
     /// <summary>
-    /// ½ºÅ³ Á¤º¸°¡ ¶ç¿öÁø »óÅÂ¿¡¼­ ´Ù¸¥ ½ºÅ³ Á¤º¸·Î ³Ñ¾î°¡±â
+    /// ìŠ¤í‚¬ ì •ë³´ê°€ ë„ì›Œì§„ ìƒíƒœì—ì„œ ë‹¤ë¥¸ ìŠ¤í‚¬ ì •ë³´ë¡œ ë„˜ì–´ê°€ê¸°
     /// </summary>
     /// <param name="skill"></param>
     public void SwapSkillInformation(Skill skill, bool isReverseMove)
@@ -112,74 +112,74 @@ public class ContactApp : App
     {
         diary.IsFocusToSkill = false;
 
-        // ½ºÅ³ Á¤º¸ ¼û±â±â
+        // ìŠ¤í‚¬ ì •ë³´ ìˆ¨ê¸°ê¸°
         skillWindow.CloseWindow();
 
-        // ¸É¹ö Á¤º¸ È­¸é µÇµ¹¸®±â
+        // ë§´ë²„ ì •ë³´ í™”ë©´ ë˜ëŒë¦¬ê¸°
         mainWindow.ShowWindow();
     }
 
     private void ShowContact(ContactState state)
     {
-        // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÇÇà ÁßÀÌ¶ó¸é Ã¢ º¯°æ ÁßÁö
+        // ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ ì¤‘ì´ë¼ë©´ ì°½ ë³€ê²½ ì¤‘ì§€
         if (currentWindow?.IsTweening == true) return;
 
-        // ÀÌÀü È­¸éÀÌ ºñÈ°¼ºÈ­ µÇ°í ³­ ÈÄ¿¡ ¹Ù²Ü È­¸é È°¼ºÈ­
+        // ì´ì „ í™”ë©´ì´ ë¹„í™œì„±í™” ë˜ê³  ë‚œ í›„ì— ë°”ê¿€ í™”ë©´ í™œì„±í™”
         StartCoroutine(SwapWindow(state));
     }
 
     private IEnumerator SwapWindow(ContactState state)
     {
-        // ÇöÀç È°¼ºÈ­µÈ ¸ñ·Ï°ú µ¿ÀÏÇÑ °æ¿ì ³Ñ¾î°¡±â
+        // í˜„ì¬ í™œì„±í™”ëœ ëª©ë¡ê³¼ ë™ì¼í•œ ê²½ìš° ë„˜ì–´ê°€ê¸°
         if (currentWindow != null && _state == state) yield break;
 
         _state = state;
 
-        // ÀÌÀü È­¸é ºñÈ°¼ºÈ­
+        // ì´ì „ í™”ë©´ ë¹„í™œì„±í™”
         currentWindow?.CloseWindow();
 
-        // ÀÌÀü È­¸éÀÌ ºñÈ°¼ºÈ­ µÉ ¶§±îÁö ´ë±â
+        // ì´ì „ í™”ë©´ì´ ë¹„í™œì„±í™” ë  ë•Œê¹Œì§€ ëŒ€ê¸°
         if (currentWindow != null) yield return new WaitUntil(() => !currentWindow.IsTweening);
 
-        // »õ ¸ñ·Ï È­¸é È°¼ºÈ­
+        // ìƒˆ ëª©ë¡ í™”ë©´ í™œì„±í™”
         windows[state].gameObject.SetActive(true);
         windows[state].OpenWindow();
 
-        // ÇöÀç »óÅÂ ¾÷µ¥ÀÌÆ®
+        // í˜„ì¬ ìƒíƒœ ì—…ë°ì´íŠ¸
         currentWindow = windows[state];
     }
 
     public void OnSelectCharacter(CharacterData character)
     {
-        // ÇöÀç ¼±ÅÃµÈ Ä³¸¯ÅÍ Á¤º¸ ¾÷µ¥ÀÌÆ®
+        // í˜„ì¬ ì„ íƒëœ ìºë¦­í„° ì •ë³´ ì—…ë°ì´íŠ¸
         SelectCharacter = character;
 
-        // ´ÙÀÌ¾î¸® Á¤º¸ ¾÷µ¥ÀÌÆ®
+        // ë‹¤ì´ì–´ë¦¬ ì •ë³´ ì—…ë°ì´íŠ¸
         diary.UpdateDiary(character);
     }
 
     public override void Close()
     {
-        // ÇöÀç ¿­¸° Ã¢¿¡¼­ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÇÇà ÁßÀÌ¸é ¹«½Ã
+        // í˜„ì¬ ì—´ë¦° ì°½ì—ì„œ ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ ì¤‘ì´ë©´ ë¬´ì‹œ
         if (currentWindow?.IsTweening == true) return;
 
-        // Ã¹ È­¸éÀÌ ¾Æ´Ñ °æ¿ì
+        // ì²« í™”ë©´ì´ ì•„ë‹Œ ê²½ìš°
         if (_state != ContactState.Party)
         {
             switch (_state)
             {
-                // ´ÙÀÌ¾î¸®¶ó¸é ÆÄÆ¼ ¸Ş´º ³»ÀÇ ¹öÆ° ¼±ÅÃÀ¸·Î ³Ñ¾î°¡±â
+                // ë‹¤ì´ì–´ë¦¬ë¼ë©´ íŒŒí‹° ë©”ë‰´ ë‚´ì˜ ë²„íŠ¼ ì„ íƒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
                 case ContactState.Diary:
                     FocusContactMenu();
                     break;
 
-                // ½ºÅ³Àº ¿¹¿ÜÀûÀ¸·Î Ã³¸®
+                // ìŠ¤í‚¬ì€ ì˜ˆì™¸ì ìœ¼ë¡œ ì²˜ë¦¬
                 case ContactState.Skill:
                     HideSkillInformation();
                     FocusContactMenu();
                     break;
 
-                // ±× ¿Ü¿£ ¸ŞÀÎ ÆÄÆ¼ ¸Ş´º·Î µ¹¾Æ°¡¼­ ´ÙÀÌ¾î¸® ³» ¹öÆ° ¼±ÅÃÀ¸·Î ³Ñ¾î°¡±â
+                // ê·¸ ì™¸ì—” ë©”ì¸ íŒŒí‹° ë©”ë‰´ë¡œ ëŒì•„ê°€ì„œ ë‹¤ì´ì–´ë¦¬ ë‚´ ë²„íŠ¼ ì„ íƒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
                 default:
                     ShowContact(ContactState.Party);
                     FocusDiary();
@@ -188,13 +188,13 @@ public class ContactApp : App
         }
         else
         {
-            // ÇöÀç Ã¢ Á¤º¸ ÃÊ±âÈ­
+            // í˜„ì¬ ì°½ ì •ë³´ ì´ˆê¸°í™”
             currentWindow = null;
 
-            // ¼±ÅÃ Ä³¸¯ÅÍ Á¤º¸ ÃÊ±âÈ­
+            // ì„ íƒ ìºë¦­í„° ì •ë³´ ì´ˆê¸°í™”
             SelectCharacter = null;
 
-            // Ã³À½ Ã¢ÀÎ °æ¿ì ¾Û Á¾·á
+            // ì²˜ìŒ ì°½ì¸ ê²½ìš° ì•± ì¢…ë£Œ
             base.Close();
         }
     }
@@ -203,22 +203,22 @@ public class ContactApp : App
     {
         currentWindow.KillAnimations();
 
-        // ÇöÀç Ã¢ Á¤º¸ ÃÊ±âÈ­
+        // í˜„ì¬ ì°½ ì •ë³´ ì´ˆê¸°í™”
         currentWindow = null;
 
-        // ¼±ÅÃ Ä³¸¯ÅÍ Á¤º¸ ÃÊ±âÈ­
+        // ì„ íƒ ìºë¦­í„° ì •ë³´ ì´ˆê¸°í™”
         SelectCharacter = null;
 
-        // ¿­·ÁÀÖ´Â Ã¢ ¸ğµÎ ´İ±â
+        // ì—´ë ¤ìˆëŠ” ì°½ ëª¨ë‘ ë‹«ê¸°
         CloseAllWindows();
 
-        // ¾Û ¼Ë´Ù¿î
+        // ì•± ì…§ë‹¤ìš´
         base.Shutdown();
     }
 
     private void CloseAllWindows()
     {
-        // ¸ğµç Ã¢ ´İ±â
+        // ëª¨ë“  ì°½ ë‹«ê¸°
         mainWindow.gameObject.SetActive(false);
         weaponWindow.gameObject.SetActive(false);
         offWeaponWindow.gameObject.SetActive(false);
@@ -227,40 +227,40 @@ public class ContactApp : App
     }
 
     /************************************************************
-    * [´ÙÀÌ¾î¸®]
+    * [ë‹¤ì´ì–´ë¦¬]
     * 
-    * Ä³¸¯ÅÍÀÇ Á¤º¸¸¦ º¸ÀÌ´Â ´ÙÀÌ¾î¸® °ü¸®
+    * ìºë¦­í„°ì˜ ì •ë³´ë¥¼ ë³´ì´ëŠ” ë‹¤ì´ì–´ë¦¬ ê´€ë¦¬
     ************************************************************/
 
     /// <summary>
-    /// ´ÙÀÌ¾î¸® ³»ÀÇ ¹öÆ° ¼±ÅÃÀ¸·Î ³Ñ¾î°¡±â
+    /// ë‹¤ì´ì–´ë¦¬ ë‚´ì˜ ë²„íŠ¼ ì„ íƒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
     /// </summary>
     public void FocusDiary()
     {
-        // ÇöÀç »óÅÂ º¯°æ
+        // í˜„ì¬ ìƒíƒœ ë³€ê²½
         _state = ContactState.Diary;
 
-        // ´ÙÀÌ¾î¸® ³» ¹öÆ° ¼±ÅÃ
+        // ë‹¤ì´ì–´ë¦¬ ë‚´ ë²„íŠ¼ ì„ íƒ
         diary.SelectLastButton();
     }
 
     /// <summary>
-    /// ¸Ş´º ³»ÀÇ ¹öÆ° ¼±ÅÃÀ¸·Î ³Ñ¾Æ°¡±â
+    /// ë©”ë‰´ ë‚´ì˜ ë²„íŠ¼ ì„ íƒìœ¼ë¡œ ë„˜ì•„ê°€ê¸°
     /// </summary>
     public void FocusContactMenu()
     {
-        // ÇöÀç »óÅÂ º¯°æ
+        // í˜„ì¬ ìƒíƒœ ë³€ê²½
         _state = ContactState.Party;
 
-        // ´ÙÀÌ¾î¸® ³» ¹öÆ° ¼±ÅÃ ¸¶Å© Á¦°Å
+        // ë‹¤ì´ì–´ë¦¬ ë‚´ ë²„íŠ¼ ì„ íƒ ë§ˆí¬ ì œê±°
         diary.LastSelectedInfo?.OnDeselect(null);
 
-        // ¼±ÅÃµÈ Ä³¸¯ÅÍ ¼±ÅÃÀ¸·Î ³Ñ¾î°¡±â
+        // ì„ íƒëœ ìºë¦­í„° ì„ íƒìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
         mainWindow.SelectLastSelectedContact();
     }
 
     /// <summary>
-    /// ÇöÀç ¼±ÅÃµÈ Ä³¸¯ÅÍÀÇ ´ÙÀÌ¾î¸® Á¤º¸ ¾÷µ¥ÀÌÆ®
+    /// í˜„ì¬ ì„ íƒëœ ìºë¦­í„°ì˜ ë‹¤ì´ì–´ë¦¬ ì •ë³´ ì—…ë°ì´íŠ¸
     /// </summary>
     public void UpdateDiaryInfo()
     {

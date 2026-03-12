@@ -9,26 +9,26 @@ public class Analytical : Personality
     {
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // Ã¼·Â¿¡ µû¸¥ °¡ÁßÄ¡ °ª
+        // ì²´ë ¥ì— ë”°ë¥¸ ê°€ì¤‘ì¹˜ ê°’
         float hpWeight = 1.0f;
 
-        // Ã¼·ÂÀÌ ³·Àº ¼ø¼­ºÎÅÍ ¼øÈ¸
+        // ì²´ë ¥ì´ ë‚®ì€ ìˆœì„œë¶€í„° ìˆœíšŒ
         foreach (Entity target in targetList.OrderBy(entity => entity.FinalStats.HP))
         {
-            // °¡ÁßÄ¡ ÃÊ±â°ª ¼³Á¤
+            // ê°€ì¤‘ì¹˜ ì´ˆê¸°ê°’ ì„¤ì •
             weightData[target] = 0.0f;
 
-            // Ã¼·ÂÀÌ ³·Àº ÀûºÎÅÍ ³ôÀº °¡ÁßÄ¡ ºÎ¿©
+            // ì²´ë ¥ì´ ë‚®ì€ ì ë¶€í„° ë†’ì€ ê°€ì¤‘ì¹˜ ë¶€ì—¬
             weightData[target] += hpWeight;
 
-            // Àü¹æ¿¡ À§Ä¡ÇÑ ÀûÀÎ °æ¿ì
+            // ì „ë°©ì— ìœ„ì¹˜í•œ ì ì¸ ê²½ìš°
             if (target.Position == BattlePosition.Front)
             {
-                // °¡ÁßÄ¡ ºÎ¿©
+                // ê°€ì¤‘ì¹˜ ë¶€ì—¬
                 weightData[target] += 1.0f;
             }
 
-            // Ã¼·Â °¡ÁßÄ¡ ³·Ãß±â
+            // ì²´ë ¥ ê°€ì¤‘ì¹˜ ë‚®ì¶”ê¸°
             hpWeight -= 0.1f;
         }
 

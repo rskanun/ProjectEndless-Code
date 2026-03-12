@@ -5,8 +5,8 @@ public class Player : Character
 
     public override sealed float GetCriticalChance(Entity target)
     {
-        // ÁÖÀÎ°øÀÇ °æ¿ì ¸¶·ÂÀÌ ´õ ³ôÀ¸¸é,
-        // ¸ğµç °ø°İÀÌ Å©¸®Æ¼ÄÃ °ªÀ» ¶ç¿ò
+        // ì£¼ì¸ê³µì˜ ê²½ìš° ë§ˆë ¥ì´ ë” ë†’ìœ¼ë©´,
+        // ëª¨ë“  ê³µê²©ì´ í¬ë¦¬í‹°ì»¬ ê°’ì„ ë„ì›€
         if (target.FinalStats.MP < FinalStats.MP) return 1.0f;
         return base.GetCriticalChance(target);
     }

@@ -9,6 +9,6 @@ public class PassiveSkill : Skill
 
     public override string GetTypeName()
     {
-        return "�нú� ��ų";
+        return "패시브 스킬";
     }
 }

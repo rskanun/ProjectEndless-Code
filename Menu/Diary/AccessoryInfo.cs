@@ -8,12 +8,12 @@ public class AccessoryInfo : EquipInfo
         Slot2,
     }
 
-    [Header("¾Ç¼¼»ç¸® ÀåÂø ½½·Ô")]
+    [Header("ì•…ì„¸ì‚¬ë¦¬ ìž¥ì°© ìŠ¬ë¡¯")]
     [SerializeField] private AccessorySlot slot;
 
     protected override string GetTagName()
     {
-        return "<¾Ç¼¼»ç¸® Ä­>";
+        return "<ì•…ì„¸ì‚¬ë¦¬ ì¹¸>";
     }
 
     protected override void ShowEquips()

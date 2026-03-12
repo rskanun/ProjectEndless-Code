@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class StatusEffectUI : MonoBehaviour
 {
-    [Header("¾ÆÀÌÄÜ »ı¼º À§Ä¡")]
+    [Header("ì•„ì´ì½˜ ìƒì„± ìœ„ì¹˜")]
     public Transform container;
 
-    // ¹öÇÁ ¾ÆÀÌÄÜ ¸ñ·Ï
+    // ë²„í”„ ì•„ì´ì½˜ ëª©ë¡
     private Dictionary<StatusEffect, GameObject> effectIconDic;
 
     private void Awake()
@@ -27,10 +27,10 @@ public class StatusEffectUI : MonoBehaviour
 
     private void CreateEffectIcon(GameObject prefab, StatusEffect effect)
     {
-        // ¾ÆÀÌÄÜ »ı¼º
+        // ì•„ì´ì½˜ ìƒì„±
         GameObject iconObj = CreateIcon(prefab, effect);
 
-        // ÇØ´ç ¾ÆÀÌÄÜÀ» ¸ñ·Ï¿¡ ÀúÀå
+        // í•´ë‹¹ ì•„ì´ì½˜ì„ ëª©ë¡ì— ì €ì¥
         effectIconDic.Add(effect, iconObj);
     }
 
@@ -38,14 +38,14 @@ public class StatusEffectUI : MonoBehaviour
     {
         GameObject iconObj = Instantiate(prefab, container);
 
-        // »ı¼ºµÈ ¾ÆÀÌÄÜÀ» °¡Àå Ã³À½À¸·Î ÀÌµ¿
+        // ìƒì„±ëœ ì•„ì´ì½˜ì„ ê°€ì¥ ì²˜ìŒìœ¼ë¡œ ì´ë™
         iconObj.transform.SetAsFirstSibling();
 
-        // ¾ÆÀÌÄÜ ÀÌ¹ÌÁö µî·Ï
+        // ì•„ì´ì½˜ ì´ë¯¸ì§€ ë“±ë¡
         StatusEffectIcon icon = iconObj.GetComponent<StatusEffectIcon>();
         icon.SetIcon(effect.Icon);
 
-        // »ı¼ºµÈ ¾ÆÀÌÄÜ ¸®ÅÏ
+        // ìƒì„±ëœ ì•„ì´ì½˜ ë¦¬í„´
         return iconObj;
     }
 

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class NormalMonster : Monster
 {
-    [Header("Å×½ºÆ®¿ë Å¸°Ù ¼±Á¤ µğ½ºÇÃ·¹ÀÌ")]
+    [Header("í…ŒìŠ¤íŠ¸ìš© íƒ€ê²Ÿ ì„ ì • ë””ìŠ¤í”Œë ˆì´")]
     public TestAiDisplay testDisplay;
     /***************************************************************
-    * [ Çàµ¿ ÆĞÅÏ ]
+    * [ í–‰ë™ íŒ¨í„´ ]
     * 
-    * ÀÏ¹İ ¸ó½ºÅÍÀÇ °ø°İ ÆĞÅÏ AI
+    * ì¼ë°˜ ëª¬ìŠ¤í„°ì˜ ê³µê²© íŒ¨í„´ AI
     ***************************************************************/
 
     protected override void SelectAction()
@@ -22,12 +22,12 @@ public class NormalMonster : Monster
         List<Entity> targetableChr = BattleData.Instance.LivingCharacters;
         if (targetableChr.Count == 1)
         {
-            // ÇÃ·¹ÀÌ¾î ÁøÇüÀÇ Ä³¸¯ÅÍ°¡ ÇÑ ¸í ³²¾ÒÀ» °æ¿ìÀÇ ¼±ÅÃ
+            // í”Œë ˆì´ì–´ ì§„í˜•ì˜ ìºë¦­í„°ê°€ í•œ ëª… ë‚¨ì•˜ì„ ê²½ìš°ì˜ ì„ íƒ
             SelectAction(targetableChr[0]);
         }
         else if (targetableChr.Count > 1)
         {
-            // ÇÃ·¹ÀÌ¾î ÁøÇüÀÇ Ä³¸¯ÅÍ°¡ ¿©·¯ ¸í ³²¾ÒÀ» °æ¿ìÀÇ ¼±ÅÃ
+            // í”Œë ˆì´ì–´ ì§„í˜•ì˜ ìºë¦­í„°ê°€ ì—¬ëŸ¬ ëª… ë‚¨ì•˜ì„ ê²½ìš°ì˜ ì„ íƒ
             SelectAction(targetableChr);
         }
     }
@@ -36,28 +36,28 @@ public class NormalMonster : Monster
     {
         testDisplay.SetPriorityTarget(target);
 
-        // ÇÃ·¹ÀÌ¾îÀÇ ´ÙÀ½ ÅÏ¿¡ ¸ÂÃç ÇØ´ç ÅÏ ¾È¿¡ »ç¿ë °¡´ÉÇÑ ½ºÅ³ Ã£±â
+        // í”Œë ˆì´ì–´ì˜ ë‹¤ìŒ í„´ì— ë§ì¶° í•´ë‹¹ í„´ ì•ˆì— ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ ì°¾ê¸°
         List<Skill> usableSkills = GetUsableSkills(Skills, target);
 
         if (AnyUsableSkills(usableSkills))
         {
-            // ÇÃ·¹ÀÌ¾îÀÇ ´ÙÀ½ ÅÏ ¾È¿¡ »ç¿ë °¡´ÉÇÑ ½ºÅ³ Ã£±â
+            // í”Œë ˆì´ì–´ì˜ ë‹¤ìŒ í„´ ì•ˆì— ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ ì°¾ê¸°
             List<Skill> inTurnSkills = GetUsableSkillsInTurn(usableSkills, GetPlayerNextTurn());
 
-            // ÅÏ ¾È¿¡ »ç¿ë °¡´ÉÇÑ ½ºÅ³ÀÌ ÀÖÀ» °æ¿ì °¡Àå ÅÏ ¼ö°¡ ±ä ½ºÅ³ »ç¿ë
+            // í„´ ì•ˆì— ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ì´ ìˆì„ ê²½ìš° ê°€ì¥ í„´ ìˆ˜ê°€ ê¸´ ìŠ¤í‚¬ ì‚¬ìš©
             Skill castSkill = GetMaxTurnSkill(inTurnSkills);
             if (castSkill == null)
             {
-                // ÅÏ ¾È¿¡ »ç¿ë °¡´ÉÇÑ ½ºÅ³ÀÌ ¾ø´Â °æ¿ì °¡Àå ÂªÀº ÅÏÀÇ ½ºÅ³ »ç¿ë
+                // í„´ ì•ˆì— ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ì´ ì—†ëŠ” ê²½ìš° ê°€ì¥ ì§§ì€ í„´ì˜ ìŠ¤í‚¬ ì‚¬ìš©
                 castSkill = GetMinTurnSkill(usableSkills);
             }
 
-            // ¼±ÅÃµÈ ½ºÅ³ »ç¿ë
+            // ì„ íƒëœ ìŠ¤í‚¬ ì‚¬ìš©
             SelectSkill(castSkill, target);
             return;
         }
 
-        // ¾î¶°ÇÑ ½ºÅ³µµ »ç¿ëÇÒ ¼ö ¾øÀ¸¸é ÀÏ¹İ °ø°İ
+        // ì–´ë– í•œ ìŠ¤í‚¬ë„ ì‚¬ìš©í•  ìˆ˜ ì—†ìœ¼ë©´ ì¼ë°˜ ê³µê²©
         SelectAttack(target);
     }
 
@@ -65,7 +65,7 @@ public class NormalMonster : Monster
     {
         var seq = BattleData.Instance.Sequence;
 
-        // ¼º°İ(¿ì¼± ¼øÀ§)¿¡ µû¸¥ Å¸°Ù Á¤·Ä ¸®½ºÆ®
+        // ì„±ê²©(ìš°ì„  ìˆœìœ„)ì— ë”°ë¥¸ íƒ€ê²Ÿ ì •ë ¬ ë¦¬ìŠ¤íŠ¸
         List<Entity> sortList = Personality.GetPriorityTargetList(targetList);
 
         testDisplay.SetPriorityTargets(sortList);
@@ -74,59 +74,59 @@ public class NormalMonster : Monster
             int remainHP = target.FinalStats.HP - target.GetLastDmg(AttackDmg, false);
             if (IsAttackTargetable(target) && remainHP <= 0)
             {
-                // ´ë»óÀÌ ÀÏ¹İ °ø°İÀ¸·Î ÇØÄ¡¿ï ¼ö ÀÖ´Â ÇÇÀÏ °æ¿ì ÀÏ¹İ °ø°İ
+                // ëŒ€ìƒì´ ì¼ë°˜ ê³µê²©ìœ¼ë¡œ í•´ì¹˜ìš¸ ìˆ˜ ìˆëŠ” í”¼ì¼ ê²½ìš° ì¼ë°˜ ê³µê²©
                 SelectAttack(target);
                 return;
             }
 
-            // »ç¿ë °¡´ÉÇÑ ½ºÅ³ Å½Áö
+            // ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ íƒì§€
             List<Skill> usableSkills = GetUsableSkills(Skills, target);
             if (AnyUsableSkills(usableSkills))
             {
-                // Å¸°ÙÀÇ ³²Àº ÅÏ ¼ö È®ÀÎ
+                // íƒ€ê²Ÿì˜ ë‚¨ì€ í„´ ìˆ˜ í™•ì¸
                 BattleAction targetAction = seq.GetEntityAction(target);
                 float remainTurn = targetAction.remainTurn;
 
-                // ÅÏ ¼ö ³»¿¡ »ç¿ë °¡´ÉÇÑ ½ºÅ³ »ç¿ë
+                // í„´ ìˆ˜ ë‚´ì— ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ ì‚¬ìš©
                 List<Skill> inTurnSkillList = GetUsableSkillsInTurn(usableSkills, remainTurn);
 
                 if (AnyUsableSkills(inTurnSkillList))
                 {
-                    // ´ë»óÀ» ¸¶¹«¸® ÁöÀ» ½ºÅ³ Ã£±â
+                    // ëŒ€ìƒì„ ë§ˆë¬´ë¦¬ ì§€ì„ ìŠ¤í‚¬ ì°¾ê¸°
                     Skill castSkill = GetFinishingSkill(inTurnSkillList, target);
 
                     if (castSkill == null)
                     {
-                        // ´ë»óÀ» ¸¶¹«¸® ÁöÀ» ½ºÅ³ÀÌ ¾øÀ¸¸é °¡Àå ÅÏ ¼ö°¡ ±ä ½ºÅ³ Ã£±â
+                        // ëŒ€ìƒì„ ë§ˆë¬´ë¦¬ ì§€ì„ ìŠ¤í‚¬ì´ ì—†ìœ¼ë©´ ê°€ì¥ í„´ ìˆ˜ê°€ ê¸´ ìŠ¤í‚¬ ì°¾ê¸°
                         castSkill = GetMaxTurnSkill(inTurnSkillList);
                     }
 
-                    // Ã£¾Æ³½ ½ºÅ³ »ç¿ë
+                    // ì°¾ì•„ë‚¸ ìŠ¤í‚¬ ì‚¬ìš©
                     SelectSkill(castSkill, target);
                     return;
                 }
                 else
                 {
-                    // ÅÏ ¼ö ³»¿¡ »ç¿ëÇÒ ½ºÅ³ÀÌ ¾ø´Â °æ¿ì
-                    // SP ³»¿¡ »ç¿ë °¡´ÉÇÑ ½ºÅ³ Áß ´ë»óÀ» ¸¶¹«¸® ÁöÀ» ½ºÅ³ Ã£±â
+                    // í„´ ìˆ˜ ë‚´ì— ì‚¬ìš©í•  ìŠ¤í‚¬ì´ ì—†ëŠ” ê²½ìš°
+                    // SP ë‚´ì— ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ ì¤‘ ëŒ€ìƒì„ ë§ˆë¬´ë¦¬ ì§€ì„ ìŠ¤í‚¬ ì°¾ê¸°
                     Skill castSkill = GetFinishingSkill(usableSkills, target);
 
                     if (castSkill == null)
                     {
-                        // ´ë»óÀ» ¸¶¹«¸® ÁöÀ» ½ºÅ³ÀÌ ¾øÀ¸¸é °¡Àå ÅÏ ¼ö°¡ ÂªÀº ½ºÅ³ Ã£±â
+                        // ëŒ€ìƒì„ ë§ˆë¬´ë¦¬ ì§€ì„ ìŠ¤í‚¬ì´ ì—†ìœ¼ë©´ ê°€ì¥ í„´ ìˆ˜ê°€ ì§§ì€ ìŠ¤í‚¬ ì°¾ê¸°
                         castSkill = GetMinTurnSkill(usableSkills);
                     }
 
-                    // Ã£¾Æ³½ ½ºÅ³ »ç¿ë
+                    // ì°¾ì•„ë‚¸ ìŠ¤í‚¬ ì‚¬ìš©
                     SelectSkill(castSkill, target);
                     return;
                 }
             }
 
-            // »ç¿ë °¡´ÉÇÑ ½ºÅ³ÀÌ ¾ø´Â °æ¿ì
+            // ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ì´ ì—†ëŠ” ê²½ìš°
             if (IsAttackTargetable(target))
             {
-                // ÀÏ¹İ °ø°İÀÌ °¡´ÉÇÑ °æ¿ì¿£ ÀÏ¹İ °ø°İ ½ÇÇà
+                // ì¼ë°˜ ê³µê²©ì´ ê°€ëŠ¥í•œ ê²½ìš°ì—” ì¼ë°˜ ê³µê²© ì‹¤í–‰
                 SelectAttack(target);
                 return;
             }
@@ -146,20 +146,20 @@ public class NormalMonster : Monster
         {
             if (action.actor is Character)
             {
-                // °¡Àå °¡±î¿î Ä³¸¯ÅÍÀÇ ÅÏ ¸®ÅÏ
+                // ê°€ì¥ ê°€ê¹Œìš´ ìºë¦­í„°ì˜ í„´ ë¦¬í„´
                 return action.remainTurn;
             }
         }
 
-        // ÇÃ·¹ÀÌ¾î°¡ ¾øÀ» °æ¿ì ´õ¹Ì µ¥ÀÌÅÍ ¸®ÅÏ
+        // í”Œë ˆì´ì–´ê°€ ì—†ì„ ê²½ìš° ë”ë¯¸ ë°ì´í„° ë¦¬í„´
         return -1;
     }
 
     private bool IsAttackTargetable(Entity target)
     {
-        // ÇØ´ç Å¸°Ù¿¡°Ô ÀÏ¹İ °ø°İÀÌ °¡´ÉÇÒ Á¶°Ç
-        return (target.Position == BattlePosition.Front) // °ø°İ ´ë»óÀÌ Àü¹æÀÌ°Å³ª
-            || (AttackType == AttackType.Ranged); // °ø°İÀ» °¡ÇÏ´Â ´ë»óÀÌ ¿ø°Å¸® °ø°İÀ» ÇÒ °æ¿ì
+        // í•´ë‹¹ íƒ€ê²Ÿì—ê²Œ ì¼ë°˜ ê³µê²©ì´ ê°€ëŠ¥í•  ì¡°ê±´
+        return (target.Position == BattlePosition.Front) // ê³µê²© ëŒ€ìƒì´ ì „ë°©ì´ê±°ë‚˜
+            || (AttackType == AttackType.Ranged); // ê³µê²©ì„ ê°€í•˜ëŠ” ëŒ€ìƒì´ ì›ê±°ë¦¬ ê³µê²©ì„ í•  ê²½ìš°
     }
 
     private bool IsSkillTargetable(Entity target, Skill castSkill)
@@ -195,11 +195,11 @@ public class NormalMonster : Monster
     {
         if (skillList == null || skillList.Count <= 0)
         {
-            // ½ºÅ³ ¸®½ºÆ®°¡ ºñ¾îÀÖÀ» °æ¿ì null °ª ¸®ÅÏ
+            // ìŠ¤í‚¬ ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ìˆì„ ê²½ìš° null ê°’ ë¦¬í„´
             return null;
         }
 
-        // ¸Å°³º¯¼ö·Î ¹ŞÀº ¸®½ºÆ® Áß °¡Àå ³ôÀº ÅÏÀ» ¼Ò¸ğÇÏ´Â ½ºÅ³ ¸®ÅÏ
+        // ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì€ ë¦¬ìŠ¤íŠ¸ ì¤‘ ê°€ì¥ ë†’ì€ í„´ì„ ì†Œëª¨í•˜ëŠ” ìŠ¤í‚¬ ë¦¬í„´
         Skill maxTurnSkill = skillList[0];
         foreach (Skill skill in skillList)
         {
@@ -216,11 +216,11 @@ public class NormalMonster : Monster
     {
         if (skillList == null || skillList.Count <= 0)
         {
-            // ½ºÅ³ ¸®½ºÆ®°¡ ºñ¾îÀÖÀ» °æ¿ì null °ª ¸®ÅÏ
+            // ìŠ¤í‚¬ ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ìˆì„ ê²½ìš° null ê°’ ë¦¬í„´
             return null;
         }
 
-        // ¸Å°³º¯¼ö·Î ¹ŞÀº ¸®½ºÆ® Áß °¡Àå ³·Àº ÅÏÀ» ¼Ò¸ğÇÏ´Â ½ºÅ³ ¸®ÅÏ
+        // ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì€ ë¦¬ìŠ¤íŠ¸ ì¤‘ ê°€ì¥ ë‚®ì€ í„´ì„ ì†Œëª¨í•˜ëŠ” ìŠ¤í‚¬ ë¦¬í„´
         Skill minTurnSkill = skillList[0];
         foreach (Skill skill in skillList)
         {
@@ -237,11 +237,11 @@ public class NormalMonster : Monster
     {
         if (skillList == null || skillList.Count <= 0)
         {
-            // ½ºÅ³ ¸®½ºÆ®°¡ ºñ¾îÀÖÀ» °æ¿ì null °ª ¸®ÅÏ
+            // ìŠ¤í‚¬ ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ìˆì„ ê²½ìš° null ê°’ ë¦¬í„´
             return null;
         }
 
-        // ¸Å°³º¯¼ö·Î ¹ŞÀº ¸®½ºÆ® Áß Å¸°ÙÀ» Á×ÀÏ ¼ö ÀÖ´Â ½ºÅ³ ¸®ÅÏ
+        // ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì€ ë¦¬ìŠ¤íŠ¸ ì¤‘ íƒ€ê²Ÿì„ ì£½ì¼ ìˆ˜ ìˆëŠ” ìŠ¤í‚¬ ë¦¬í„´
         Skill finishingSkill = null;
         foreach (Skill skill in skillList)
         {
@@ -249,19 +249,19 @@ public class NormalMonster : Monster
 
             if (attackSkill == null)
             {
-                // °ø°İ ½ºÅ³ÀÌ ¾Æ´Ñ °æ¿ì ½ºÅµ
+                // ê³µê²© ìŠ¤í‚¬ì´ ì•„ë‹Œ ê²½ìš° ìŠ¤í‚µ
                 continue;
             }
 
-            // ÇØ´ç ½ºÅ³ÀÌ ´ë»óÀ» ÇØÄ¡¿ï ¼ö ÀÖ´Â ½ºÅ³ÀÎÁö Ã¼Å©
+            // í•´ë‹¹ ìŠ¤í‚¬ì´ ëŒ€ìƒì„ í•´ì¹˜ìš¸ ìˆ˜ ìˆëŠ” ìŠ¤í‚¬ì¸ì§€ ì²´í¬
             float skillDmg = attackSkill.GetSkillDmg(this);
             int lastDmg = target.GetLastDmg(skillDmg, false);
             if (target.FinalStats.HP - lastDmg <= 0)
             {
-                // ´ë»óÀ» ÇØÄ¡¿ï ½ºÅ³ÀÌ º¹¼öÀÏ °æ¿ì ´õ È¿À²ÀûÀÎ ½ºÅ³ »ç¿ë
+                // ëŒ€ìƒì„ í•´ì¹˜ìš¸ ìŠ¤í‚¬ì´ ë³µìˆ˜ì¼ ê²½ìš° ë” íš¨ìœ¨ì ì¸ ìŠ¤í‚¬ ì‚¬ìš©
                 if (finishingSkill == null || skill.CostTurn < finishingSkill.CostTurn)
                 {
-                    // ¸®ÅÏÇÒ ½ºÅ³ÀÌ ÇöÀç ¾ø°Å³ª, ´õ »¡¸® »ç¿ë°¡´ÉÇÒ °æ¿ì ÇØ´ç ½ºÅ³À» ÈÄº¸·Î ¼±Á¤
+                    // ë¦¬í„´í•  ìŠ¤í‚¬ì´ í˜„ì¬ ì—†ê±°ë‚˜, ë” ë¹¨ë¦¬ ì‚¬ìš©ê°€ëŠ¥í•  ê²½ìš° í•´ë‹¹ ìŠ¤í‚¬ì„ í›„ë³´ë¡œ ì„ ì •
                     finishingSkill = skill;
                 }
             }
@@ -271,7 +271,7 @@ public class NormalMonster : Monster
     }
 
 
-    // Å×½ºÆ®¿ë µğ½ºÇÃ·¹ÀÌ ÇÔ¼ö
+    // í…ŒìŠ¤íŠ¸ìš© ë””ìŠ¤í”Œë ˆì´ í•¨ìˆ˜
     protected override void SelectAttack(Entity target, int? index = null)
     {
         testDisplay.SetSelectTarget(target);

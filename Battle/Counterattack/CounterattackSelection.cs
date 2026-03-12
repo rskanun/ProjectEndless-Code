@@ -12,9 +12,9 @@ public class CounterattackSelection : MonoBehaviour
 
     public float selectTimer;
 
-    // ¹İ°İÇÏ´Â Ä³¸¯ÅÍ
-    private const int DefenderIdx = 0; // 0¹øÂ°´Â °ø°İÀ» ¸·¾Æ³½ ´ë»óÀÚ
-    private int attackerIdx = -1; // -1Àº ´ë»óÀ» °í¸£Áö ¾ÊÀ½À» ³ªÅ¸³¿
+    // ë°˜ê²©í•˜ëŠ” ìºë¦­í„°
+    private const int DefenderIdx = 0; // 0ë²ˆì§¸ëŠ” ê³µê²©ì„ ë§‰ì•„ë‚¸ ëŒ€ìƒì
+    private int attackerIdx = -1; // -1ì€ ëŒ€ìƒì„ ê³ ë¥´ì§€ ì•ŠìŒì„ ë‚˜íƒ€ëƒ„
 
     public void SelectAttacker(int index)
     {
@@ -28,53 +28,53 @@ public class CounterattackSelection : MonoBehaviour
 
     private IEnumerator ActiveSelection(Entity target, Entity defender)
     {
-        // ¸ğµç UI°¡ È°¼ºÈ­ µÉ ¶§±îÁö Á¶ÀÛ ±İÁö
+        // ëª¨ë“  UIê°€ í™œì„±í™” ë  ë•Œê¹Œì§€ ì¡°ì‘ ê¸ˆì§€
         ControlContext.Instance.KeyLock();
 
-        // Á¡Á¡ ½Ã°£ÀÌ ´À·ÁÁö´Â ¿¬Ãâ
+        // ì ì  ì‹œê°„ì´ ëŠë ¤ì§€ëŠ” ì—°ì¶œ
         yield return DOTween.To(() => Time.timeScale, t => Time.timeScale = t, 0.05f, 0.8f)
             .SetEase(Ease.InOutSine)
             .SetUpdate(true)
             .WaitForCompletion();
 
-        // Å¸ÀÌ¸Ó ¶ç¿ì±â(Å¸ÀÌ¸Ó Á¾·á ½Ã ÇÃ·¹ÀÌ¾î ÀÚµ¿ ¼±ÅÃ)
+        // íƒ€ì´ë¨¸ ë„ìš°ê¸°(íƒ€ì´ë¨¸ ì¢…ë£Œ ì‹œ í”Œë ˆì´ì–´ ìë™ ì„ íƒ)
         ui.ActiveTimer(selectTimer);
 
-        // ÇÃ·¹ÀÌ¾î ¼±ÅÃÅ° ¶ç¿ì±â
+        // í”Œë ˆì´ì–´ ì„ íƒí‚¤ ë„ìš°ê¸°
         ui.SetActivePlayerSelectIcon(true);
 
-        // ÆĞ¸µ ´ë»ó ¿Ü ÁÖº¯¿¡¼­ ¹İ°İ °¡´ÉÇÑ Ä³¸¯ÅÍ ¸ñ·Ï ¶ç¿ì±â
+        // íŒ¨ë§ ëŒ€ìƒ ì™¸ ì£¼ë³€ì—ì„œ ë°˜ê²© ê°€ëŠ¥í•œ ìºë¦­í„° ëª©ë¡ ë„ìš°ê¸°
         List<Entity> assistableChrs = GetAssistableChrs(BattleData.Instance.LivingCharacters);
         ui.ActiveAssistableChrs(assistableChrs);
 
-        // ÄÁÆ®·Ñ·¯ º¯°æ
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ë³€ê²½
         ControlContext.Instance.SetController(controller);
 
-        // Á¶ÀÛ ±İÁö ÇØÁ¦
+        // ì¡°ì‘ ê¸ˆì§€ í•´ì œ
         ControlContext.Instance.KeyUnlock();
 
-        // ¹İ°İÇÒ Ä³¸¯ÅÍ¸¦ °í¸¦ ¶§±îÁö ´ë±â 
+        // ë°˜ê²©í•  ìºë¦­í„°ë¥¼ ê³ ë¥¼ ë•Œê¹Œì§€ ëŒ€ê¸° 
         yield return new WaitUntil(() => 0 <= attackerIdx && attackerIdx <= assistableChrs.Count);
 
-        // ½Ã°£ ¿ø·¡´ë·Î µÇµ¹¸®±â
+        // ì‹œê°„ ì›ë˜ëŒ€ë¡œ ë˜ëŒë¦¬ê¸°
         Time.timeScale = 1.0f;
 
-        // ÄÁÆ®·Ñ·¯ º¯°æ
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ë³€ê²½
         ControlContext.Instance.SetController(mainController);
 
-        // Å¸ÀÌ¸Ó Á¾·á
+        // íƒ€ì´ë¨¸ ì¢…ë£Œ
         ui.DeactiveTimer();
 
-        // ÇÃ·¹ÀÌ¾î ¼±ÅÃÅ° Áö¿ì±â
+        // í”Œë ˆì´ì–´ ì„ íƒí‚¤ ì§€ìš°ê¸°
         ui.SetActivePlayerSelectIcon(false);
 
-        // Áö¿ø°¡´ÉÇÑ Ä³¸¯ÅÍ ¸ñ·Ï Áö¿ì±â±â
+        // ì§€ì›ê°€ëŠ¥í•œ ìºë¦­í„° ëª©ë¡ ì§€ìš°ê¸°ê¸°
         ui.DeactiveAssistableChrs();
 
-        // ¹İ°İ ½ÇÇà
-        // 0 -> °ø°İÀ» ¸·¾Æ³½ ´ë»óÀÚ, 1~ -> Áö¿ø °¡´ÉÇÑ Ä³¸¯ÅÍ
+        // ë°˜ê²© ì‹¤í–‰
+        // 0 -> ê³µê²©ì„ ë§‰ì•„ë‚¸ ëŒ€ìƒì, 1~ -> ì§€ì› ê°€ëŠ¥í•œ ìºë¦­í„°
         if (attackerIdx == DefenderIdx) PerformCounterattack(defender, target);
-        else PerformCounterSkill(assistableChrs[attackerIdx - 1], target); // ¹è¿­Àº 0ºÎÅÍ ½ÃÀÛ
+        else PerformCounterSkill(assistableChrs[attackerIdx - 1], target); // ë°°ì—´ì€ 0ë¶€í„° ì‹œì‘
     }
 
     private List<Entity> GetAssistableChrs(List<Entity> livingChrs)
@@ -84,8 +84,8 @@ public class CounterattackSelection : MonoBehaviour
 
     private bool IsAssistableChr(Entity entity)
     {
-        // ÇöÀç Ä³¸¯ÅÍ°¡ ÀûÀÇ °ø°İÀ» ¸·¾Æ³½ ´ë»óÀÌ ¾Æ´Ñ °æ¿ì
-        // ¿òÁ÷ÀÏ ¼ö ÀÖ°í, ´ÙÀ½ Çàµ¿ÀÌ ¹İ°İ °¡´É ½ºÅ³À» °¡Áö°í ÀÖ´Â Áö È®ÀÎ
+        // í˜„ì¬ ìºë¦­í„°ê°€ ì ì˜ ê³µê²©ì„ ë§‰ì•„ë‚¸ ëŒ€ìƒì´ ì•„ë‹Œ ê²½ìš°
+        // ì›€ì§ì¼ ìˆ˜ ìˆê³ , ë‹¤ìŒ í–‰ë™ì´ ë°˜ê²© ê°€ëŠ¥ ìŠ¤í‚¬ì„ ê°€ì§€ê³  ìˆëŠ” ì§€ í™•ì¸
         return !entity.HasState(EntityState.Stun) && HasAssistableSkill(entity, out _);
     }
 
@@ -100,14 +100,14 @@ public class CounterattackSelection : MonoBehaviour
 
         BattleSequence sequence = BattleData.Instance.Sequence;
 
-        // ½ºÅ³ ¾Õ´ç°Ü »ç¿ë
+        // ìŠ¤í‚¬ ì•ë‹¹ê²¨ ì‚¬ìš©
         skillAction.SetTarget(new List<Entity> { target });
 
-        // º»·¡ »ç¿ëÇÒ Çàµ¿ ´ë½Å ´ë±â ¸ğ¼Ç ¿¹¾à
+        // ë³¸ë˜ ì‚¬ìš©í•  í–‰ë™ ëŒ€ì‹  ëŒ€ê¸° ëª¨ì…˜ ì˜ˆì•½
         sequence.RemoveTurn(skillAction.actor);
         sequence.AddTurn(new WaitAction(skillAction.actor, 0f), 1);
 
-        // Áö¿ø ½ºÅ³ ½ÇÇà
+        // ì§€ì› ìŠ¤í‚¬ ì‹¤í–‰
         skillAction.OnAction();
     }
 
@@ -117,7 +117,7 @@ public class CounterattackSelection : MonoBehaviour
 
         skillAction = action as SkillAction;
 
-        // ½ºÅ³À» »ç¿ëÇÏ´Â Çàµ¿ÀÎÁö, ±×·¸´Ù¸é ÇØ´ç ½ºÅ³ÀÌ Áö¿ø°¡´ÉÇÑÁö ¿©ºÎ ¸®ÅÏ
+        // ìŠ¤í‚¬ì„ ì‚¬ìš©í•˜ëŠ” í–‰ë™ì¸ì§€, ê·¸ë ‡ë‹¤ë©´ í•´ë‹¹ ìŠ¤í‚¬ì´ ì§€ì›ê°€ëŠ¥í•œì§€ ì—¬ë¶€ ë¦¬í„´
         return skillAction?.castSkill is AttackSkill skill && skill.IsAssistable;
     }
 }

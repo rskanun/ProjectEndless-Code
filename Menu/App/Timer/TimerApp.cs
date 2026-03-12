@@ -19,7 +19,7 @@ public class TimerApp : App
     {
         currentTime = timerUI.GetTime();
 
-        // ½Ã°£ º¯È­¿¡ µû¸¥ UI ¾÷µ¥ÀÌÆ®
+        // ì‹œê°„ ë³€í™”ì— ë”°ë¥¸ UI ì—…ë°ì´íŠ¸
         timerUI.SetRemainTime(GameData.Instance.RespiteTime - currentTime);
         timerUI.SetTimeRange(GameData.Instance.RespiteTime);
         UpdateDetailInfo();
@@ -29,18 +29,18 @@ public class TimerApp : App
     {
         if (currentTime.TotalSeconds == 0)
         {
-            // È¸º¹·® ¼û±â±â
+            // íšŒë³µëŸ‰ ìˆ¨ê¸°ê¸°
             timerUI.HideRegenAmount();
         }
         else
         {
             OptionData option = OptionData.Instance;
 
-            // sp, hp °è»ê
+            // sp, hp ê³„ì‚°
             int hp = option.RotaryRegenHP * currentTime.TotalSeconds / 600;
             int sp = option.RotaryRegenSP * currentTime.TotalSeconds / 600;
 
-            // È¸º¹·® ¶ç¿ì±â
+            // íšŒë³µëŸ‰ ë„ìš°ê¸°
             timerUI.ShowRegenAmount();
             timerUI.SetRegenAmount(hp, sp);
         }
@@ -48,13 +48,13 @@ public class TimerApp : App
 
     public void RotaryStart()
     {
-        // ÈŞ½Ä ½Ã°£ÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò´Ù¸é ¹«½Ã
+        // íœ´ì‹ ì‹œê°„ì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ë‹¤ë©´ ë¬´ì‹œ
         if (currentTime.TotalSeconds == 0) return;
 
-        // ¸Ş´º ´İ±â
+        // ë©”ë‰´ ë‹«ê¸°
         menuManager.CloseMenu();
 
-        // ÀÓ½Ã È­¸é ÀüÈ¯
+        // ì„ì‹œ í™”ë©´ ì „í™˜
         SceneLoadManager.onLoaded += () => RegenStat();
         SceneLoadManager.LoadFieldScene(GameData.Instance.MapScene, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
     }
@@ -67,10 +67,10 @@ public class TimerApp : App
 
         foreach (CharacterData character in PartyData.Instance.Characters)
         {
-            // ÇØ±İµÇÁö ¾ÊÀº Ä³¸¯ÅÍ¸é ¹«½Ã
+            // í•´ê¸ˆë˜ì§€ ì•Šì€ ìºë¦­í„°ë©´ ë¬´ì‹œ
             if (!character.IsUnlocked) return;
 
-            // ÇØ´ç Ä³¸¯ÅÍÀÇ HP¿Í SP ÀÏÁ¤ È¸º¹
+            // í•´ë‹¹ ìºë¦­í„°ì˜ HPì™€ SP ì¼ì • íšŒë³µ
             character.Stats.HP += Mathf.RoundToInt(character.Stats.MaxHP * hpPercent);
             character.Stats.SP += Mathf.RoundToInt(character.Stats.MaxSP * spPercent);
         }
@@ -80,13 +80,13 @@ public class TimerApp : App
     {
         currentTime = new Endless.GameData.Time(0);
 
-        // Å¸ÀÌ¸Ó UI ¾÷µ¥ÀÌÆ®
+        // íƒ€ì´ë¨¸ UI ì—…ë°ì´íŠ¸
         timerUI.SetTime(currentTime);
         timerUI.SetRemainTime(GameData.Instance.RespiteTime);
         timerUI.SetTimeRange(GameData.Instance.RespiteTime);
         UpdateDetailInfo();
 
-        // Å¸ÀÌ¸Ó ¼±ÅÃ
+        // íƒ€ì´ë¨¸ ì„ íƒ
         timerUI.SelectFirstTimer();
     }
 

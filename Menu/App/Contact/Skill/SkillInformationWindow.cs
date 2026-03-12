@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class SkillInformationWindow : MonoBehaviour
 {
-    [SerializeField] private SkillInformationWindow upSubWindow; // ¾Ö´Ï¸ŞÀÌ¼Ç¿ë ¼­ºêÃ¢
-    [SerializeField] private SkillInformationWindow downSubWindow; // ¾Ö´Ï¸ŞÀÌ¼Ç¿ë ¼­ºêÃ¢
+    [SerializeField] private SkillInformationWindow upSubWindow; // ì• ë‹ˆë©”ì´ì…˜ìš© ì„œë¸Œì°½
+    [SerializeField] private SkillInformationWindow downSubWindow; // ì• ë‹ˆë©”ì´ì…˜ìš© ì„œë¸Œì°½
     [Space]
     [SerializeField] private Transform content;
     [SerializeField] private Image icon;
@@ -17,7 +17,7 @@ public class SkillInformationWindow : MonoBehaviour
 
     private RectTransform rectTrans;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤
+    // ì• ë‹ˆë©”ì´ì…˜ ì„¤ì •
     private float openDuration = 0.2f;
     private float swapDuration = 0.35f;
     private Ease swapEase = Ease.InCubic;
@@ -30,69 +30,69 @@ public class SkillInformationWindow : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇöÀç ¸Ş´º È­¸é¿¡ ½ºÅ³ Á¤º¸ ¶ç¿ì±â
+    /// í˜„ì¬ ë©”ë‰´ í™”ë©´ì— ìŠ¤í‚¬ ì •ë³´ ë„ìš°ê¸°
     /// </summary>
-    /// <param name="skill">Ã³À½ È­¸é¿¡ ¶ç¿öÁú ½ºÅ³</param>
+    /// <param name="skill">ì²˜ìŒ í™”ë©´ì— ë„ì›Œì§ˆ ìŠ¤í‚¬</param>
     public void OpenWindow(Skill skill)
     {
-        // Á¤º¸ ¼³Á¤
+        // ì •ë³´ ì„¤ì •
         SetupInformation(skill);
 
-        // È­¸é È°¼ºÈ­
+        // í™”ë©´ í™œì„±í™”
         gameObject.SetActive(true);
 
-        // ÃÊ±â À§Ä¡ ¼³Á¤
+        // ì´ˆê¸° ìœ„ì¹˜ ì„¤ì •
         float width = rectTrans.rect.width;
         transform.localPosition += new Vector3(width, 0);
 
-        // Å° Àá±İ
+        // í‚¤ ì ê¸ˆ
         ControlContext.Instance.KeyLock();
 
-        // È­¸é ÀüÈ¯ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
-        // Á¾·á ÈÄ Å° Àá±İ ÇØÁ¦
+        // í™”ë©´ ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
+        // ì¢…ë£Œ í›„ í‚¤ ì ê¸ˆ í•´ì œ
         transform.DOLocalMoveX(0, openDuration)
             .OnComplete(() => ControlContext.Instance.KeyUnlock());
     }
 
     /// <summary>
-    /// ÇöÀç ¸Ş´º È­¸éÀ» ´İ°í¼­ Ä³¸¯ÅÍ Á¤º¸ ºÒ·¯¿À±â
+    /// í˜„ì¬ ë©”ë‰´ í™”ë©´ì„ ë‹«ê³ ì„œ ìºë¦­í„° ì •ë³´ ë¶ˆëŸ¬ì˜¤ê¸°
     /// </summary>
     public void CloseWindow()
     {
-        // À§Ä¡ ÀúÀå
+        // ìœ„ì¹˜ ì €ì¥
         Vector3 originPos = transform.localPosition;
 
-        // Å° Àá±İ
+        // í‚¤ ì ê¸ˆ
         ControlContext.Instance.KeyLock();
 
-        // È­¸é ÀüÈ¯ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // í™”ë©´ ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         float width = rectTrans.rect.width;
         transform.DOLocalMoveX(width, openDuration)
             .OnComplete(() =>
             {
-                // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ÈÄ, È­¸é ºñÈ°¼ºÈ­
+                // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ í›„, í™”ë©´ ë¹„í™œì„±í™”
                 gameObject.SetActive(false);
 
-                // º»·¡ À§Ä¡ µ¹¾Æ°¡±â
+                // ë³¸ë˜ ìœ„ì¹˜ ëŒì•„ê°€ê¸°
                 transform.localPosition = originPos;
 
-                // Å° Àá±İ ÇØÁ¦
+                // í‚¤ ì ê¸ˆ í•´ì œ
                 ControlContext.Instance.KeyUnlock();
             });
     }
 
     /// <summary>
-    /// ´Ù¸¥ ½ºÅ³ Á¤º¸·Î ³Ñ¾î°¡±â
+    /// ë‹¤ë¥¸ ìŠ¤í‚¬ ì •ë³´ë¡œ ë„˜ì–´ê°€ê¸°
     /// </summary>
     /// <param name="skill"></param>
-    /// <param name="isReverseMove">¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¹İ´ë·Î ÀÛµ¿ÇÒ °ÍÀÎÁö ¿©ºÎ</param>
+    /// <param name="isReverseMove">ì• ë‹ˆë©”ì´ì…˜ì´ ë°˜ëŒ€ë¡œ ì‘ë™í•  ê²ƒì¸ì§€ ì—¬ë¶€</param>
     public void SwapInfo(Skill skill, bool isReverseMove = false)
     {
-        // ¼­ºêÃ¢ Á¤º¸ ¼³Á¤
+        // ì„œë¸Œì°½ ì •ë³´ ì„¤ì •
         upSubWindow.SetupInformation(skill);
         downSubWindow.SetupInformation(skill);
 
-        // Á¤º¸ ÀüÈ¯ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì •ë³´ ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         Vector3 originPos = content.localPosition;
 
         float scrollAmount = rectTrans.rect.height / 3;
@@ -103,10 +103,10 @@ public class SkillInformationWindow : MonoBehaviour
             .SetEase(swapEase)
             .OnComplete(() =>
             {
-                // ÇØ´ç Ã¢ÀÇ Á¤º¸ °»½Å
+                // í•´ë‹¹ ì°½ì˜ ì •ë³´ ê°±ì‹ 
                 SetupInformation(skill);
 
-                // º»·¡ À§Ä¡ µ¹¾Æ°¡±â
+                // ë³¸ë˜ ìœ„ì¹˜ ëŒì•„ê°€ê¸°
                 content.localPosition = originPos;
             });
     }
@@ -124,9 +124,9 @@ public class SkillInformationWindow : MonoBehaviour
     {
         var sb = new System.Text.StringBuilder();
 
-        sb.AppendLine($"¼Ò¸ğ ±â·Â: {skill.CostSP}");
-        sb.AppendLine($"»ç¿ë ÅÏ: {skill.CostTurn}");
-        sb.Append($"Å¸°İ ¹üÀ§: {skill.TargetType.GetTypeName()}");
+        sb.AppendLine($"ì†Œëª¨ ê¸°ë ¥: {skill.CostSP}");
+        sb.AppendLine($"ì‚¬ìš© í„´: {skill.CostTurn}");
+        sb.Append($"íƒ€ê²© ë²”ìœ„: {skill.TargetType.GetTypeName()}");
 
         return sb.ToString();
     }

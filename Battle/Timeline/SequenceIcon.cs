@@ -21,16 +21,16 @@ public class SequenceIcon : TimelineIcon
     {
         Action = action;
 
-        // ÀÓ½Ã
+        // ì„ì‹œ
         name = $"{action.actor.Name} Timeline";
 
-        // ÇØ´ç Çàµ¿À» ÇÏ´Â ÇàÀ§ÀÚÀÇ ¿ÜÇüÀ» Å¸ÀÓ¶óÀÎÀÇ ÀÌ¹ÌÁö·Î »ç¿ë
+        // í•´ë‹¹ í–‰ë™ì„ í•˜ëŠ” í–‰ìœ„ìì˜ ì™¸í˜•ì„ íƒ€ì„ë¼ì¸ì˜ ì´ë¯¸ì§€ë¡œ ì‚¬ìš©
         GameObject actor = action.actor.gameObject;
 
-        // Å¸ÀÓ¶óÀÎ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö ÁöÁ¤
+        // íƒ€ì„ë¼ì¸ ì•„ì´ì½˜ ì´ë¯¸ì§€ ì§€ì •
         iconImage.sprite = action.actor.Icon;
 
-        // ³²Àº ÅÏ ÁöÁ¤
+        // ë‚¨ì€ í„´ ì§€ì •
         SetTurnTime(action.remainTurn);
     }
 
@@ -41,29 +41,29 @@ public class SequenceIcon : TimelineIcon
 
     public override void SetMarking()
     {
-        // ¸¶Å·µÈ ¾ÆÀÌÄÜ »çÀÌÁî Á¶Á¤
+        // ë§ˆí‚¹ëœ ì•„ì´ì½˜ ì‚¬ì´ì¦ˆ ì¡°ì •
         RectTransform rect = gameObject.GetComponent<RectTransform>();
 
         rect.sizeDelta = originSize + new Vector2(10f, 10f);
 
-        // Å×µÎ¸® È°¼ºÈ­
+        // í…Œë‘ë¦¬ í™œì„±í™”
         border.SetActive(true);
 
-        // ÇöÀç Å¸ÀÓ¶óÀÎÀÇ °æ¿ì ³²Àº ÅÏ ¼ö ¼û±â±â
+        // í˜„ì¬ íƒ€ì„ë¼ì¸ì˜ ê²½ìš° ë‚¨ì€ í„´ ìˆ˜ ìˆ¨ê¸°ê¸°
         turnTimer.SetActive(false);
     }
 
     public override void ClearMarking()
     {
-        // º»·¡ »çÀÌÁî·Î Á¶Á¤
+        // ë³¸ë˜ ì‚¬ì´ì¦ˆë¡œ ì¡°ì •
         RectTransform rect = gameObject.GetComponent<RectTransform>();
 
         rect.sizeDelta = originSize;
 
-        // ÇÏÀÌ¶óÀÌÆ® ºñÈ°¼ºÈ­
+        // í•˜ì´ë¼ì´íŠ¸ ë¹„í™œì„±í™”
         border.SetActive(false);
 
-        // ÇöÀç Å¸ÀÓ¶óÀÎÀÇ °æ¿ì ³²Àº ÅÏ ¼ö ³ªÅ¸³»±â
+        // í˜„ì¬ íƒ€ì„ë¼ì¸ì˜ ê²½ìš° ë‚¨ì€ í„´ ìˆ˜ ë‚˜íƒ€ë‚´ê¸°
         turnTimer.SetActive(true);
     }
 

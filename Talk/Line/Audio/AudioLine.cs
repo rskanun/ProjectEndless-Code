@@ -13,11 +13,11 @@ public abstract class AudioLine : Line
     public AudioState State { get; private set; }
     public AudioLine(LineType type, AudioState state, string fileName) : base(type)
     {
-        // BGM, SE¸¸ ¹Şµµ·Ï À¯È¿¼º °Ë»ç
+        // BGM, SEë§Œ ë°›ë„ë¡ ìœ íš¨ì„± ê²€ì‚¬
         if (type != LineType.BGM && type != LineType.SE)
         {
-            // Çã¿ëµÇÁö ¾ÊÀº Å¸ÀÔÀÇ °æ¿ì, ArgumentException ¹ß»ı
-            throw new ArgumentException($"AudioLine¿¡ ÀûÇÕÇÑ Å¸ÀÔÀÌ ¾Æ´Õ´Ï´Ù! \r\n(ÀÔ·ÂµÈ Å¸ÀÔ: {type})", nameof(type));
+            // í—ˆìš©ë˜ì§€ ì•Šì€ íƒ€ì…ì˜ ê²½ìš°, ArgumentException ë°œìƒ
+            throw new ArgumentException($"AudioLineì— ì í•©í•œ íƒ€ì…ì´ ì•„ë‹™ë‹ˆë‹¤! \r\n(ì…ë ¥ëœ íƒ€ì…: {type})", nameof(type));
         }
 
         FileName = fileName;

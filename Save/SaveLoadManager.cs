@@ -12,7 +12,7 @@ using UnityEditor;
 
 public class SaveLoadManager : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources";
     private const string FILE_PATH = "Assets/Resources/SaveLoadManager.asset";
 
@@ -28,7 +28,7 @@ public class SaveLoadManager : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -44,7 +44,7 @@ public class SaveLoadManager : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<SaveLoadManager>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -57,13 +57,13 @@ public class SaveLoadManager : ScriptableObject
         }
     }
 
-    [Header("ÀúÀå µ¥ÀÌÅÍ")]
+    [Header("ì €ì¥ ë°ì´í„°")]
     [SerializeField] private PartyData partyData;
 
     /************************************************************
-    * [°ÔÀÓ µ¥ÀÌÅÍ ÀúÀå]
+    * [ê²Œì„ ë°ì´í„° ì €ì¥]
     * 
-    * ÇöÀç ÁøÇà »óÈ²À» ÀúÀå
+    * í˜„ì¬ ì§„í–‰ ìƒí™©ì„ ì €ì¥
     ************************************************************/
 
     public SaveData SaveGameData(string path)
@@ -170,15 +170,15 @@ public class SaveLoadManager : ScriptableObject
 
     private string Encrypt(string data)
     {
-        // json µ¥ÀÌÅÍ ¾ÏÈ£È­
+        // json ë°ì´í„° ì•”í˜¸í™”
 
         return data;
     }
 
     /************************************************************
-    * [°ÔÀÓ µ¥ÀÌÅÍ ºÒ·¯¿À±â]
+    * [ê²Œì„ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°]
     * 
-    * ÇöÀç ÁøÇà »óÈ²¿¡ ¼¼ÀÌºê µ¥ÀÌÅÍ¸¦ ºÒ·¯¿À±â
+    * í˜„ì¬ ì§„í–‰ ìƒí™©ì— ì„¸ì´ë¸Œ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì˜¤ê¸°
     ************************************************************/
 
     public SaveData ReadSaveFile(string path)
@@ -195,7 +195,7 @@ public class SaveLoadManager : ScriptableObject
 
     private string Decrypt(string data)
     {
-        // ÆÄÀÏ º¹È£È­
+        // íŒŒì¼ ë³µí˜¸í™”
 
         return data;
     }
@@ -208,7 +208,7 @@ public class SaveLoadManager : ScriptableObject
         SetMapData(data.mapData);
         SetQuestData(data.questData);
 
-        // ¼¼ÀÌºê µ¥ÀÌÅÍ ·Îµå·Î ÀÎÇØ º¯¼ö°¡ ¹Ù²î¾úÀ½À» ¾Ë¸²
+        // ì„¸ì´ë¸Œ ë°ì´í„° ë¡œë“œë¡œ ì¸í•´ ë³€ìˆ˜ê°€ ë°”ë€Œì—ˆìŒì„ ì•Œë¦¼
         GameEventManager.Instance.NotifyDataLoaded();
     }
 
@@ -261,18 +261,18 @@ public class SaveLoadManager : ScriptableObject
 
     public void LoadSaveFile(SaveData data)
     {
-        // È¸±Í ¿©ºÎ¿¡ µû¶ó ·Îµù ¿¬ÃâÀ» ´Ù¸£°Ô ÇÔ
+        // íšŒê·€ ì—¬ë¶€ì— ë”°ë¼ ë¡œë”© ì—°ì¶œì„ ë‹¤ë¥´ê²Œ í•¨
         LoadingScreen screen = IsRequireReturn(data) ? LoadingScreen.ClockLoading : LoadingScreen.Loading;
 
-        // ·Îµù °úÁ¤¿¡¼­ µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // ë¡œë”© ê³¼ì •ì—ì„œ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
         SceneLoadManager.onLoaded += () => LoadGameData(data);
         SceneLoadManager.LoadFieldScene(data.mapData.scene, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, screen);
     }
 
     private bool IsRequireReturn(SaveData data)
     {
-        // ÇöÀç µ¥ÀÌÅÍ¿Í ºÒ·¯¿Ã µ¥ÀÌÅÍ¸¦ ´ëÁ¶ÇÏ¿© È¸±ÍÇÒ ÇÊ¿ä°¡ ÀÖ´ÂÁö ÆÇ´Ü
-        // #Áö±İ ´Ü°è¿¡¼± ½Ã°£´ë°¡ °ú°ÅÀÎÁö¸¸ ÆÇ´Ü
+        // í˜„ì¬ ë°ì´í„°ì™€ ë¶ˆëŸ¬ì˜¬ ë°ì´í„°ë¥¼ ëŒ€ì¡°í•˜ì—¬ íšŒê·€í•  í•„ìš”ê°€ ìˆëŠ”ì§€ íŒë‹¨
+        // #ì§€ê¸ˆ ë‹¨ê³„ì—ì„  ì‹œê°„ëŒ€ê°€ ê³¼ê±°ì¸ì§€ë§Œ íŒë‹¨
         Date loadDate = Date.StrToDate(data.storyData.date);
         return loadDate < GameData.Instance.Date;
     }

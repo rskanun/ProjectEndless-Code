@@ -5,7 +5,7 @@ public class ActionIcon : MonoBehaviour
 {
     public Image icon;
 
-    [Header("¾ÆÀÌÄÚ ´ë½Å ¾²ÀÏ ÀÓ½Ã »ö")]
+    [Header("ì•„ì´ì½” ëŒ€ì‹  ì“°ì¼ ì„ì‹œ ìƒ‰")]
     public Color attackColor;
     public Color skillColor;
     public Color itemColor;
@@ -15,13 +15,13 @@ public class ActionIcon : MonoBehaviour
 
     public void SetIcon(ActionType type)
     {
-        // ¾ÆÀÌÄÜ ´ë½Å ÀÓ½Ã·Î »ö ¹Ù²Ù±â
+        // ì•„ì´ì½˜ ëŒ€ì‹  ì„ì‹œë¡œ ìƒ‰ ë°”ê¾¸ê¸°
         icon.color = GetColor(type);
     }
 
     public void ClearIcon()
     {
-        // ¾ÆÀÌÄÜ ´ë½Å ÀÓ½Ã·Î »ö ¹Ù²Ù±â
+        // ì•„ì´ì½˜ ëŒ€ì‹  ì„ì‹œë¡œ ìƒ‰ ë°”ê¾¸ê¸°
         icon.color = noneColor;
     }
 

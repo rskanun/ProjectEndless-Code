@@ -4,16 +4,16 @@ using UnityEngine.UI;
 
 public class Timeline : MonoBehaviour
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private TimelineUI ui;
 
-    [Header("ÂüÁ¶ ÄÄÆ÷³ÍÆ®")]
+    [Header("ì°¸ì¡° ì»´í¬ë„ŒíŠ¸")]
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
 
-    // ½ÃÄö½º µ¥ÀÌÅÍ
+    // ì‹œí€€ìŠ¤ ë°ì´í„°
     private BattleSequence battleSeq;
 
-    // Å¸ÀÓ¶óÀÎ ¾ÆÀÌÄÜ °ü¸®
+    // íƒ€ì„ë¼ì¸ ì•„ì´ì½˜ ê´€ë¦¬
     private List<TimelineIcon> timelines;
     private int centerIndex;
     public int CenterIndex
@@ -26,19 +26,19 @@ public class Timeline : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ÀüÅõ Å¸ÀÓ¶óÀÎ ]
+    * [ ì „íˆ¬ íƒ€ì„ë¼ì¸ ]
     * 
-    * ÀüÅõ ÁøÇà¿¡ µû¸¥ ÅÏ ¼ø¼­¸¦ ³ªÅ¸³»´Â Å¸ÀÓ¶óÀÎ Ã³¸®
+    * ì „íˆ¬ ì§„í–‰ì— ë”°ë¥¸ í„´ ìˆœì„œë¥¼ ë‚˜íƒ€ë‚´ëŠ” íƒ€ì„ë¼ì¸ ì²˜ë¦¬
     ***************************************************************/
 
     public void SetupTimeline(BattleSequence battleSeq)
     {
         this.battleSeq = battleSeq;
 
-        // ÀüÅõ ½ÃÄö½º¿¡ µû¸¥ Å¸ÀÓ¶óÀÎ ¸ñ·Ï »ı¼º
+        // ì „íˆ¬ ì‹œí€€ìŠ¤ì— ë”°ë¥¸ íƒ€ì„ë¼ì¸ ëª©ë¡ ìƒì„±
         InitTimeLine();
 
-        // Å¸ÀÓ¶óÀÎ À§Ä¡ Ã³À½À¸·Î ÀÌµ¿
+        // íƒ€ì„ë¼ì¸ ìœ„ì¹˜ ì²˜ìŒìœ¼ë¡œ ì´ë™
         MoveStart();
     }
 
@@ -50,23 +50,23 @@ public class Timeline : MonoBehaviour
         {
             TimelineIcon icon = ui.CreateTimelineIcon(action);
 
-            // ¾ÆÀÌÄÜ ¸ñ·Ï¿¡ Ãß°¡
+            // ì•„ì´ì½˜ ëª©ë¡ì— ì¶”ê°€
             timelines.Add(icon);
         }
     }
 
     public void UpdateTimeline()
     {
-        // ÇöÀç ¸Ç ¾Õ¿¡ ÀÖ´Â Å¸ÀÓ¶óÀÎ »èÁ¦
+        // í˜„ì¬ ë§¨ ì•ì— ìˆëŠ” íƒ€ì„ë¼ì¸ ì‚­ì œ
         RemoveTimeline();
 
-        // »õ Å¸ÀÓ¶óÀÎ Ãß°¡
+        // ìƒˆ íƒ€ì„ë¼ì¸ ì¶”ê°€
         AddTimeline();
 
-        // Å¸ÀÓ¶óÀÎ À§Ä¡ ÃÊ±âÈ­
+        // íƒ€ì„ë¼ì¸ ìœ„ì¹˜ ì´ˆê¸°í™”
         MoveStart();
 
-        // Å¸ÀÓ¶óÀÎ ÅÏÅ¸ÀÌ¸Ó ¾÷µ¥ÀÌÆ®
+        // íƒ€ì„ë¼ì¸ í„´íƒ€ì´ë¨¸ ì—…ë°ì´íŠ¸
         foreach (TimelineIcon icon in timelines)
         {
             icon.UpdateTurnTime();
@@ -77,7 +77,7 @@ public class Timeline : MonoBehaviour
     {
         List<BattleAction> seq = battleSeq.Sequence;
 
-        // Å¸ÀÓ¶óÀÎÀ» ¿ª¼øÀ¸·Î ¼øÈ¸ÇÏ¿© Á¶°Ç¿¡ ¸ÂÁö ¾Ê´Â Å¸ÀÓ¶óÀÎÀ» Á¦°Å
+        // íƒ€ì„ë¼ì¸ì„ ì—­ìˆœìœ¼ë¡œ ìˆœíšŒí•˜ì—¬ ì¡°ê±´ì— ë§ì§€ ì•ŠëŠ” íƒ€ì„ë¼ì¸ì„ ì œê±°
         for (int i = timelines.Count - 1; i >= 0; i--)
         {
             if (!seq.Contains(timelines[i].Action))
@@ -94,27 +94,27 @@ public class Timeline : MonoBehaviour
 
         for (int i = 0; i < seq.Count; i++)
         {
-            // ÇöÀç Å¸ÀÓ¶óÀÎ¿¡ ¾ø´Â ½ÃÄö½º°¡ ÀÖÀ» °æ¿ì Å¸ÀÓ¶óÀÎ¿¡ Ãß°¡
+            // í˜„ì¬ íƒ€ì„ë¼ì¸ì— ì—†ëŠ” ì‹œí€€ìŠ¤ê°€ ìˆì„ ê²½ìš° íƒ€ì„ë¼ì¸ì— ì¶”ê°€
             if (timelines.Count <= i || seq[i] != timelines[i].Action)
             {
-                // Å¸ÀÓ¶óÀÎ Ãß°¡
+                // íƒ€ì„ë¼ì¸ ì¶”ê°€
                 TimelineIcon icon = ui.CreateTimelineIcon(seq[i], i);
 
-                // ¾ÆÀÌÄÜ ¸ñ·Ï¿¡ Ãß°¡
+                // ì•„ì´ì½˜ ëª©ë¡ì— ì¶”ê°€
                 timelines.Insert(i, icon);
             }
         }
     }
 
     /***************************************************************
-    * [ Å¸ÀÓ¶óÀÎ ÀÌµ¿ ]
+    * [ íƒ€ì„ë¼ì¸ ì´ë™ ]
     * 
-    * ±Ô°İ¿¡ ¸ÂÃá Å¸ÀÓ¶óÀÎ ÀÌµ¿ Ã³¸®
+    * ê·œê²©ì— ë§ì¶˜ íƒ€ì„ë¼ì¸ ì´ë™ ì²˜ë¦¬
     ***************************************************************/
 
     public void MoveStart()
     {
-        // Ã³À½ ¾ÆÀÌÄÜÀÇ À§Ä¡·Î ÀÌµ¿
+        // ì²˜ìŒ ì•„ì´ì½˜ì˜ ìœ„ì¹˜ë¡œ ì´ë™
         MoveIndex(0);
     }
 
@@ -136,10 +136,10 @@ public class Timeline : MonoBehaviour
 
     public void MoveIndex(int index)
     {
-        // Å¸ÀÓ¶óÀÎ ÀÌµ¿
+        // íƒ€ì„ë¼ì¸ ì´ë™
         MoveTimelineAtIndex(index);
 
-        // ¸¶Å· º¯°æ
+        // ë§ˆí‚¹ ë³€ê²½
         SetCenterIcon(index);
     }
 
@@ -153,14 +153,14 @@ public class Timeline : MonoBehaviour
         TimelineIcon centerIcon = timelines[centerIndex];
         TimelineIcon nextIcon = timelines[index];
 
-        // ÀÌÀü ¾ÆÀÌÄÜÀÇ ¸¶Å· ÇØÁ¦ ¹× ÇöÀç ¾ÆÀÌÄÜ ¸¶Å·
+        // ì´ì „ ì•„ì´ì½˜ì˜ ë§ˆí‚¹ í•´ì œ ë° í˜„ì¬ ì•„ì´ì½˜ ë§ˆí‚¹
         centerIcon.ClearMarking();
         nextIcon.SetMarking();
 
-        // ¼¾ÅÍ ¾ÆÀÌÄÜ º¯°æ
+        // ì„¼í„° ì•„ì´ì½˜ ë³€ê²½
         centerIndex = index;
 
-        // ·¹ÀÌ¾Æ¿ô ¾÷µ¥ÀÌÆ®
+        // ë ˆì´ì•„ì›ƒ ì—…ë°ì´íŠ¸
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.GetComponent<RectTransform>());
     }
 }

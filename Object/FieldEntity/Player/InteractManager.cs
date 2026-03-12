@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class InteractManager : MonoBehaviour
 {
-    // »óÈ£ÀÛ¿ëÀÌ °¡´ÉÇÑ ¿ÀºêÁ§Æ® ¸ñ·Ï
+    // ìƒí˜¸ì‘ìš©ì´ ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ ëª©ë¡
     private List<Npc> npcs = new List<Npc>();
 
     public void OnInteract()
     {
         if (npcs.Count <= 0)
         {
-            // ¹üÀ§ ¾È¿¡ ´ëÈ­ÇÒ ´ë»óÀÌ ¾ø´Â °æ¿ì ¹«½Ã
+            // ë²”ìœ„ ì•ˆì— ëŒ€í™”í•  ëŒ€ìƒì´ ì—†ëŠ” ê²½ìš° ë¬´ì‹œ
             return;
         }
 
-        // ÇöÀç »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¹üÀ§¿¡ ÀÖ´Â ´ë»ó Áß °¡Àå ¸ÕÀú ¹üÀ§¿¡ µé¾î¿Â ´ë»ó°ú ´ëÈ­
+        // í˜„ì¬ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ë²”ìœ„ì— ìˆëŠ” ëŒ€ìƒ ì¤‘ ê°€ì¥ ë¨¼ì € ë²”ìœ„ì— ë“¤ì–´ì˜¨ ëŒ€ìƒê³¼ ëŒ€í™”
         TalkContext.Instance.ActiveDialogue(npcs[0]);
     }
 
@@ -22,21 +22,21 @@ public class InteractManager : MonoBehaviour
     {
         if (direction == Vector2.zero)
         {
-            // ¸ØÃèÀ» ¶§´Â ¹İ¿µ ¾È ÇÏ±â
+            // ë©ˆì·„ì„ ë•ŒëŠ” ë°˜ì˜ ì•ˆ í•˜ê¸°
             return;
         }
 
-        // ÇØ´ç ¹æÇâÀ¸·Î ½Ã¾ß°¢ µ¹¸®±â
+        // í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ì‹œì•¼ê° ëŒë¦¬ê¸°
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90.0f;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ¸Â´êÀº ¿ÀºêÁ§Æ®°¡ »óÈ£ÀÛ¿ë °¡´ÉÇÒ °æ¿ì
+        // ë§ë‹¿ì€ ì˜¤ë¸Œì íŠ¸ê°€ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•  ê²½ìš°
         if (collision.CompareTag("NPC"))
         {
-            // ÇØ´ç ¿ÀºêÁ§Æ®ÀÇ Á¤º¸¸¦ °¡Á®¿À±â
+            // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ì˜ ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ê¸°
             Npc npc = collision.gameObject.GetComponent<Npc>();
             npcs.Add(npc);
 
@@ -50,10 +50,10 @@ public class InteractManager : MonoBehaviour
         {
             Npc npc = collision.gameObject.GetComponent<Npc>();
 
-            // ¹üÀ§¿¡¼­ ¹ş¾î³­ ¿ÀºêÁ§Æ®°¡ ÇöÀç »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®ÀÏ °æ¿ì
+            // ë²”ìœ„ì—ì„œ ë²—ì–´ë‚œ ì˜¤ë¸Œì íŠ¸ê°€ í˜„ì¬ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ì¼ ê²½ìš°
             if (npcs.Contains(npc))
             {
-                // ¿ÀºêÁ§Æ®ÀÇ Á¤º¸¸¦ ÃÊ±âÈ­
+                // ì˜¤ë¸Œì íŠ¸ì˜ ì •ë³´ë¥¼ ì´ˆê¸°í™”
                 npcs.Remove(npc);
                 Debug.Log($"{collision.name} exit");
             }

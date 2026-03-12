@@ -28,10 +28,10 @@ public abstract class EquipInfo : DiaryInfo, ISubmitHandler
 
     private void SubmitHandler()
     {
-        // 사용할 수 없는 칸이면 장비 및 교체 X
+        // ?ъ⑺ ? ?? 移몄대㈃ ?λ? 諛 援泥?X
         if (!isAvailable) return;
 
-        // 장비 목록 띄우기
+        // ?λ? 紐⑸? ??곌린
         ShowEquips();
     }
 
@@ -39,10 +39,10 @@ public abstract class EquipInfo : DiaryInfo, ISubmitHandler
     {
         if (!diary.IsFocusToSkill) return;
 
-        // 장비 선택 시엔 스킬 초점 해제
+        // ?λ? ?? ?? ?ㅽ?珥? ?댁
         diary.IsFocusToSkill = false;
 
-        // 스킬 정보창 닫기
+        // ?ㅽ??蹂댁갹 ?リ린
         app.HideSkillInformation();
     }
 

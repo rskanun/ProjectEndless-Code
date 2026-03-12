@@ -12,17 +12,17 @@ public class TeamContactWindow : ContactWindow
     [SerializeField] private NavigationGroup naviGroup;
     [SerializeField] private TeamContactController controller;
 
-    [Header("¿¬¶ôÃ³ ¿ÀºêÁ§Æ®")]
+    [Header("ì—°ë½ì²˜ ì˜¤ë¸Œì íŠ¸")]
     [SerializeField] private List<GameObject> fadeOutObjects;
     [SerializeField] private GameObject contactPrefab;
 
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private ContactApp app;
     [SerializeField] private TeamContact playerContact;
 
     private TeamContact lastSelected;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç Á¤º¸
+    // ì• ë‹ˆë©”ì´ì…˜ ì •ë³´
     private float hideShowMoveRange = 80.0f;
     private float hideShowDuration = 0.15f;
 
@@ -30,7 +30,7 @@ public class TeamContactWindow : ContactWindow
     {
         CharacterData playerData = PartyData.Instance.Player;
 
-        // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®ÀÇ ÇÚµé·¯ µî·Ï
+        // í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ì˜ í•¸ë“¤ëŸ¬ ë“±ë¡
         playerContact.SetSelectAction(() => OnSelectContact(playerContact, playerData));
         playerContact.SetClickHandler(() => OnClickContact());
         playerContact.SetSubmitHandler(() => ModifyCharacter(playerData));
@@ -38,37 +38,37 @@ public class TeamContactWindow : ContactWindow
 
     private void OnDisable()
     {
-        // ÇØ´ç Ã¢ÀÌ ºñÈ°¼ºÈ­ µÉ ¶§, ¸ğµç ¿ÀºêÁ§Æ® ¸ñ·ÏÀ» Áö¿ì±â
+        // í•´ë‹¹ ì°½ì´ ë¹„í™œì„±í™” ë  ë•Œ, ëª¨ë“  ì˜¤ë¸Œì íŠ¸ ëª©ë¡ì„ ì§€ìš°ê¸°
         DestroyContactObjs();
     }
 
     /// <summary>
-    /// ½ºÅ³ Á¤º¸¸¦ À§ÇØ Àá½Ã ¼û°Ü³õ¾Ò´ø È­¸é ºÒ·¯¿À±â
+    /// ìŠ¤í‚¬ ì •ë³´ë¥¼ ìœ„í•´ ì ì‹œ ìˆ¨ê²¨ë†“ì•˜ë˜ í™”ë©´ ë¶ˆëŸ¬ì˜¤ê¸°
     /// </summary>
     public void ShowWindow()
     {
-        // º»·¡ À§Ä¡ ÀúÀå
+        // ë³¸ë˜ ìœ„ì¹˜ ì €ì¥
         float originPosX = content.localPosition.x;
 
-        // È­¸é À§Ä¡ ¿Å°Ü³õ±â
+        // í™”ë©´ ìœ„ì¹˜ ì˜®ê²¨ë†“ê¸°
         content.transform.localPosition -= new Vector3(hideShowMoveRange, 0);
 
-        // È­¸é º¹±¸ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // í™”ë©´ ë³µêµ¬ ì• ë‹ˆë©”ì´ì…˜
         DOTween.Sequence()
             .Join(content.transform.DOLocalMoveX(originPosX, hideShowDuration));
     }
 
     /// <summary>
-    /// ½ºÅ³ Á¤º¸¸¦ À§ÇØ È­¸é Àá½Ã ¼û±â±â
+    /// ìŠ¤í‚¬ ì •ë³´ë¥¼ ìœ„í•´ í™”ë©´ ì ì‹œ ìˆ¨ê¸°ê¸°
     /// </summary>
     public void HideWindow()
     {
         float originPosX = content.localPosition.x;
 
-        // È­¸é ¼û±è ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // í™”ë©´ ìˆ¨ê¹€ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         DOTween.Sequence()
-            .Join(content.transform.DOLocalMoveX(originPosX - hideShowMoveRange, hideShowDuration)) // È­¸éÀ» ÅëÂ°·Î ¿·À¸·Î ÀÌµ¿
-            .Join(darkPanel.DOFade(0.5f, hideShowDuration)) // È­¸é Á¡Á¡ ¾îµÓ°Ô
+            .Join(content.transform.DOLocalMoveX(originPosX - hideShowMoveRange, hideShowDuration)) // í™”ë©´ì„ í†µì§¸ë¡œ ì˜†ìœ¼ë¡œ ì´ë™
+            .Join(darkPanel.DOFade(0.5f, hideShowDuration)) // í™”ë©´ ì ì  ì–´ë‘¡ê²Œ
             .OnKill(() =>
             {
                 content.transform.localPosition = new Vector3(originPosX, content.transform.localPosition.y);
@@ -77,7 +77,7 @@ public class TeamContactWindow : ContactWindow
     }
 
     /// <summary>
-    /// ¸¶Áö¸·À¸·Î ¼±ÅÃµÈ ¿¬¶ôÃ³ ¿ÀºêÁ§Æ® ¼±ÅÃ
+    /// ë§ˆì§€ë§‰ìœ¼ë¡œ ì„ íƒëœ ì—°ë½ì²˜ ì˜¤ë¸Œì íŠ¸ ì„ íƒ
     /// </summary>
     public void SelectLastSelectedContact()
     {
@@ -85,7 +85,7 @@ public class TeamContactWindow : ContactWindow
     }
 
     /// <summary>
-    /// ÇöÀç ¼±ÅÃµÈ ÆÄÆ¼¿øÀÇ ÆÄÆ¼ Âü¿© »óÅÂ¸¦ ½ºÀ§Äª
+    /// í˜„ì¬ ì„ íƒëœ íŒŒí‹°ì›ì˜ íŒŒí‹° ì°¸ì—¬ ìƒíƒœë¥¼ ìŠ¤ìœ„ì¹­
     /// </summary>
     public void SwitchPartyState()
     {
@@ -97,7 +97,7 @@ public class TeamContactWindow : ContactWindow
     {
         PartyData partyData = PartyData.Instance;
 
-        // ¹ŞÀ» ¼ö ÀÖ´Â ÆÄÆ¼ ÀÎ¿ø¼ö¸¦ ÃÊ°úÇÑ °æ¿ì ¶Ç´Â ÇØ´ç ÆÄÆ¼¿øÀÌ »ç¸ÁÇÑ °æ¿ì ¹«½Ã
+        // ë°›ì„ ìˆ˜ ìˆëŠ” íŒŒí‹° ì¸ì›ìˆ˜ë¥¼ ì´ˆê³¼í•œ ê²½ìš° ë˜ëŠ” í•´ë‹¹ íŒŒí‹°ì›ì´ ì‚¬ë§í•œ ê²½ìš° ë¬´ì‹œ
         bool isPartyFull = partyData.GetPartyMembers().Count >= partyData.MaxPartySize;
         bool isDead = joinMember.Character.IsSlain;
         if (isPartyFull || isDead)
@@ -105,69 +105,69 @@ public class TeamContactWindow : ContactWindow
             return;
         }
 
-        // ÇØ´ç Ä³¸¯ÅÍ¸¦ ÆÄÆ¼¿¡ Ãß°¡
+        // í•´ë‹¹ ìºë¦­í„°ë¥¼ íŒŒí‹°ì— ì¶”ê°€
         joinMember.SetPartyStatus(true);
         partyData.JoinParty(joinMember.Character.Name);
     }
 
     private void KickParty(TeamContact kickMember)
     {
-        // ÇÃ·¹ÀÌ¾î´Â ÆÄÆ¼¿¡¼­ Ãß¹æ X
+        // í”Œë ˆì´ì–´ëŠ” íŒŒí‹°ì—ì„œ ì¶”ë°© X
         if (kickMember.Character == PartyData.Instance.Player)
         {
             return;
         }
 
-        // ÇØ´ç Ä³¸¯ÅÍ¸¦ ÆÄÆ¼¿¡¼­ Ãß¹æ
+        // í•´ë‹¹ ìºë¦­í„°ë¥¼ íŒŒí‹°ì—ì„œ ì¶”ë°©
         kickMember.SetPartyStatus(false);
         PartyData.Instance.KickParty(kickMember.Character.Name);
     }
 
     /// <summary>
-    /// ÃÊ±â ¿¬¶ôÃ³ ¸ñ·Ï »ı¼º
+    /// ì´ˆê¸° ì—°ë½ì²˜ ëª©ë¡ ìƒì„±
     /// </summary>
     protected override void InitContact()
     {
         lastSelected = playerContact;
 
-        // ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ¼³Á¤
+        // í”Œë ˆì´ì–´ ë°ì´í„° ì„¤ì •
         playerContact.UpdateInfo(PartyData.Instance.Player);
 
-        // ¸ğµç Ä³¸¯ÅÍ Áß ÆÄÆ¼ ÆíÀÔÀÌ °¡´ÉÇÑ Ä³¸¯ÅÍ¸¸ »Ì¾Æ³»±â
+        // ëª¨ë“  ìºë¦­í„° ì¤‘ íŒŒí‹° í¸ì…ì´ ê°€ëŠ¥í•œ ìºë¦­í„°ë§Œ ë½‘ì•„ë‚´ê¸°
         List<CharacterData> unlockChrs = PartyData.Instance.Characters.Where(chr => chr.IsUnlocked).ToList();
 
-        // ÆÄÆ¼ ÆíÀÔÀÌ °¡´ÉÇÑ Ä³¸¯ÅÍ ¼ö¸¸Å­ ¿ÀºêÁ§Æ® »ı¼º
+        // íŒŒí‹° í¸ì…ì´ ê°€ëŠ¥í•œ ìºë¦­í„° ìˆ˜ë§Œí¼ ì˜¤ë¸Œì íŠ¸ ìƒì„±
         foreach (CharacterData character in unlockChrs)
         {
-            // ÇÃ·¹ÀÌ¾î´Â ¹Ì¸® »ı¼ºµÇ¾î ÀÖ±â¿¡ ÆĞ½º
+            // í”Œë ˆì´ì–´ëŠ” ë¯¸ë¦¬ ìƒì„±ë˜ì–´ ìˆê¸°ì— íŒ¨ìŠ¤
             if (character == PartyData.Instance.Player) continue;
 
-            // ÇØ´ç Ä³¸¯ÅÍ Á¤º¸¸¦ Åä´ë·Î ÇÑ ¿¬¶ôÃ³(=Á¤º¸) ¿ÀºêÁ§Æ® »ı¼º
+            // í•´ë‹¹ ìºë¦­í„° ì •ë³´ë¥¼ í† ëŒ€ë¡œ í•œ ì—°ë½ì²˜(=ì •ë³´) ì˜¤ë¸Œì íŠ¸ ìƒì„±
             GameObject contactObj = Instantiate(contactPrefab, content);
             TeamContact contact = contactObj.GetComponent<TeamContact>();
 
-            // Á¤º¸ ¹× ÇÚµé·¯ µî·Ï
+            // ì •ë³´ ë° í•¸ë“¤ëŸ¬ ë“±ë¡
             contact.UpdateInfo(character);
             contact.SetSelectAction(() => OnSelectContact(contact, character));
             contact.SetClickHandler(() => OnClickContact());
             contact.SetSubmitHandler(() => ModifyCharacter(character));
 
-            // ÈÄ¿¡ ÆÄ±«¸¦ À§ÇÑ ¸®½ºÆ®¿¡ Ãß°¡
+            // í›„ì— íŒŒê´´ë¥¼ ìœ„í•œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
             contactList.Add(contactObj);
 
-            // ¸¶Áö¸·¿¡ ¼±ÅÃÇÑ ¿ÀºêÁ§Æ®ÀÎ °æ¿ì ÇØ´ç ¿ÀºêÁ§Æ®¸¦ ¼±ÅÃÇÏ±â
+            // ë§ˆì§€ë§‰ì— ì„ íƒí•œ ì˜¤ë¸Œì íŠ¸ì¸ ê²½ìš° í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ë¥¼ ì„ íƒí•˜ê¸°
             if (character == app.SelectCharacter) lastSelected = contact;
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(content);
 
-        // ¹öÆ° ³×ºñ°ÔÀÌ¼Ç ¼³Á¤
+        // ë²„íŠ¼ ë„¤ë¹„ê²Œì´ì…˜ ì„¤ì •
         naviGroup.SetupChildsNavigation();
 
-        // ÄÁÆ®·Ñ·¯ ¼³Á¤
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì„¤ì •
         controller.ControlConnect();
 
-        // ¸Ş´º¿¡ Æ÷Ä¿½Ì µÈ »óÅÂ¶ó¸é, ÀÌÀü¿¡ ¼±ÅÃÇÑ Ä³¸¯ÅÍ, È¤Àº ÇÃ·¹ÀÌ¾î ¸ÕÀú ¼±ÅÃ
+        // ë©”ë‰´ì— í¬ì»¤ì‹± ëœ ìƒíƒœë¼ë©´, ì´ì „ì— ì„ íƒí•œ ìºë¦­í„°, í˜¹ì€ í”Œë ˆì´ì–´ ë¨¼ì € ì„ íƒ
         if (app.State == ContactState.Party)
             EventSystem.current.SetSelectedGameObject(lastSelected.gameObject);
     }
@@ -182,25 +182,25 @@ public class TeamContactWindow : ContactWindow
 
     private void OnClickContact()
     {
-        // ÆÄÆ¼ ¸ñ·Ï »óÅÂ¿¡¼­ Å¬¸¯ÇÑ °æ¿ì´Â ¹«½Ã
+        // íŒŒí‹° ëª©ë¡ ìƒíƒœì—ì„œ í´ë¦­í•œ ê²½ìš°ëŠ” ë¬´ì‹œ
         if (app.State == ContactState.Party) return;
 
-        // ¸Ş´º¿¡ ÃÊÁ¡ µÎ±â
+        // ë©”ë‰´ì— ì´ˆì  ë‘ê¸°
         app.FocusContactMenu();
     }
 
     private void ModifyCharacter(CharacterData character)
     {
-        // ÇØ´ç Ä³¸¯ÅÍ°¡ »ç¸ÁÇß´Ù¸é ¸ñ·Ï ºÒ·¯¿À±â X
+        // í•´ë‹¹ ìºë¦­í„°ê°€ ì‚¬ë§í–ˆë‹¤ë©´ ëª©ë¡ ë¶ˆëŸ¬ì˜¤ê¸° X
         if (character.IsSlain) return;
 
-        // ´ÙÀÌ¾î¸®·Î ³Ñ¾î°¡±â
+        // ë‹¤ì´ì–´ë¦¬ë¡œ ë„˜ì–´ê°€ê¸°
         app.FocusDiary();
     }
 
     protected override IEnumerator OpenAnimation()
     {
-        // ÆäÀÌµå ¾Æ¿ôµÈ ¸ñ·ÏµéÀÇ ¾ËÆÄ°ª ÃÊ±âÈ­
+        // í˜ì´ë“œ ì•„ì›ƒëœ ëª©ë¡ë“¤ì˜ ì•ŒíŒŒê°’ ì´ˆê¸°í™”
         foreach (GameObject obj in fadeOutObjects)
         {
             CanvasGroup cg = obj.GetComponent<CanvasGroup>();
@@ -210,7 +210,7 @@ public class TeamContactWindow : ContactWindow
             cg.alpha = 1.0f;
         }
 
-        // ±âÁ¸ ¾Ö´Ï¸ŞÀÌ¼Ç ÁøÇà
+        // ê¸°ì¡´ ì• ë‹ˆë©”ì´ì…˜ ì§„í–‰
         return base.OpenAnimation();
     }
 
@@ -222,17 +222,17 @@ public class TeamContactWindow : ContactWindow
 
         yield return null;
 
-        // ÄÁÆ®·Ñ·¯ ¼³Á¤
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì„¤ì •
         controller.ControlDisconnect();
 
-        // ·¹ÀÌ¾Æ¿ô ±×·ì Àá½Ã ²ô±â
+        // ë ˆì´ì•„ì›ƒ ê·¸ë£¹ ì ì‹œ ë„ê¸°
         layoutGroup.enabled = false;
 
-        // È­¸é¿¡ Ç¥½ÃµÇ´Â y °æ°è°ª Ã£±â
+        // í™”ë©´ì— í‘œì‹œë˜ëŠ” y ê²½ê³„ê°’ ì°¾ê¸°
         float minY = -content.localPosition.y;
         float maxY = -content.localPosition.y - viewportRect.rect.height;
 
-        int count = 0; // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÇÇàµÇ´Â ¿ÀºêÁ§Æ® °³¼ö
+        int count = 0; // ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ë˜ëŠ” ì˜¤ë¸Œì íŠ¸ ê°œìˆ˜
         for (int i = 0; i < content.childCount; i++)
         {
             if (content.GetChild(i) is not RectTransform item) continue;
@@ -240,17 +240,17 @@ public class TeamContactWindow : ContactWindow
             float contactMinY = item.localPosition.y;
             float contactMaxY = item.localPosition.y - item.rect.height;
 
-            // °æ°è°ª ¹ÛÀÇ ¿ÀºêÁ§Æ®´Â ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë X
+            // ê²½ê³„ê°’ ë°–ì˜ ì˜¤ë¸Œì íŠ¸ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì ìš© X
             if (minY <= contactMaxY || maxY >= contactMinY) continue;
 
             GameObject obj = item.gameObject;
 
-            // ÆäÀÌµå ¾Æ¿ô ¸ñ·ÏµéÀº µû·Î ÆäÀÌµå ¾Æ¿ôÀ¸·Î »ç¶óÁü
+            // í˜ì´ë“œ ì•„ì›ƒ ëª©ë¡ë“¤ì€ ë”°ë¡œ í˜ì´ë“œ ì•„ì›ƒìœ¼ë¡œ ì‚¬ë¼ì§
             if (fadeOutObjects.Contains(obj))
             {
                 CanvasGroup cg = obj.GetComponent<CanvasGroup>();
 
-                // Äµ¹ö½º ±×·ì ÄÄÆ÷³ÍÆ®°¡ ¾ø´Ù¸é º»·¡ ¾Ö´Ï¸ŞÀÌ¼ÇÀ¸·Î Ã³¸®
+                // ìº”ë²„ìŠ¤ ê·¸ë£¹ ì»´í¬ë„ŒíŠ¸ê°€ ì—†ë‹¤ë©´ ë³¸ë˜ ì• ë‹ˆë©”ì´ì…˜ìœ¼ë¡œ ì²˜ë¦¬
                 if (cg != null)
                 {
                     Tween tween = cg.DOFade(0.0f, duration)
@@ -264,7 +264,7 @@ public class TeamContactWindow : ContactWindow
             {
                 Vector2 targetPos = item.anchoredPosition - new Vector2(offsetX, 0);
 
-                // ³ª¸ÓÁö ¿ÀºêÁ§Æ®´Â ¿ŞÂÊÀ¸·Î ºüÁö¸ç ÆäÀÌµå ¾Æ¿ôµÇ´Â ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+                // ë‚˜ë¨¸ì§€ ì˜¤ë¸Œì íŠ¸ëŠ” ì™¼ìª½ìœ¼ë¡œ ë¹ ì§€ë©° í˜ì´ë“œ ì•„ì›ƒë˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
                 Tween tween = item.DOAnchorPos(targetPos, duration)
                     .SetDelay(count++ * interval)
                     .SetEase(Ease.OutCubic);
@@ -274,16 +274,16 @@ public class TeamContactWindow : ContactWindow
             }
         }
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á±îÁö ´ë±â
+        // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitForSeconds(count * interval + duration);
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ÈÄ ·¹ÀÌ¾Æ¿ô ±×·ì ´Ù½Ã ÀÛµ¿
+        // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ í›„ ë ˆì´ì•„ì›ƒ ê·¸ë£¹ ë‹¤ì‹œ ì‘ë™
         layoutGroup.enabled = true;
 
-        // ÄÚ·çÆ¾ ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ¼±¾ğ
+        // ì½”ë£¨í‹´ ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ ì„ ì–¸
         _isTweening = false;
 
-        // ÇØ´ç ¿ÀºêÁ§Æ® ºñÈ°¼ºÈ­
+        // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ë¹„í™œì„±í™”
         gameObject.SetActive(false);
     }
 }

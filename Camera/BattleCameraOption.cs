@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BattleCameraOption : MonoBehaviour
 {
-    [Header("Ä«¸Þ¶ó ¼³Á¤")]
+    [Header("ì¹´ë©”ë¼ ì„¤ì •")]
     [SerializeField]
     private Transform _bodyPivot;
     public Transform BodyPivot => _bodyPivot;

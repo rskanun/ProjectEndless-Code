@@ -7,7 +7,7 @@ using UnityEditor;
 
 public class DamagePopup : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/DamagePopup.asset";
 
@@ -23,7 +23,7 @@ public class DamagePopup : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -39,7 +39,7 @@ public class DamagePopup : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<DamagePopup>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -62,10 +62,10 @@ public class DamagePopup : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // ÆùÆ® »çÀÌÁî 1ÀÌ»ó °íÁ¤
+        // í°íŠ¸ ì‚¬ì´ì¦ˆ 1ì´ìƒ ê³ ì •
         InitFontSize();
 
-        // ¿É¼Ç º¯°æ»çÇ× ¹İ¿µ
+        // ì˜µì…˜ ë³€ê²½ì‚¬í•­ ë°˜ì˜
         SetFontOption(fontAsset, fontSize);
     }
 

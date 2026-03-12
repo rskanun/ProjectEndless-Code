@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InventoryData : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Items";
     private const string FILE_PATH = "Assets/Resources/Items/Inventory.asset";
 
@@ -21,7 +21,7 @@ public class InventoryData : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -38,7 +38,7 @@ public class InventoryData : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<InventoryData>(FILE_PATH);
 
                 if (_instance == null)
@@ -52,17 +52,17 @@ public class InventoryData : ScriptableObject
         }
     }
 
-    // ÀÎº¥Åä¸® µ¥ÀÌÅÍ
+    // ì¸ë²¤í† ë¦¬ ë°ì´í„°
     [ShowInInspector]
     private Dictionary<Item, int> inventory = new Dictionary<Item, int>();
 
-    // Å×½ºÆ® ¾ÆÀÌÅÛ
+    // í…ŒìŠ¤íŠ¸ ì•„ì´í…œ
     public List<Item> testItems = new List<Item>();
 
 
     public void InitInventory()
     {
-        // ÀÓ½Ã·Î ¾ÆÀÌÅÛ Ã¤¿ö³Ö±â
+        // ì„ì‹œë¡œ ì•„ì´í…œ ì±„ì›Œë„£ê¸°
         foreach (Item item in testItems)
         {
             if (inventory.ContainsKey(item) == false)
@@ -93,7 +93,7 @@ public class InventoryData : ScriptableObject
             inventory[item]--;
         }
 
-        // ¸¸¾à ¾ÆÀÌÅÛ °³¼ö°¡ 0°³·Î ¶³¾îÁø °æ¿ì µ¥ÀÌÅÍ »èÁ¦
+        // ë§Œì•½ ì•„ì´í…œ ê°œìˆ˜ê°€ 0ê°œë¡œ ë–¨ì–´ì§„ ê²½ìš° ë°ì´í„° ì‚­ì œ
         if (inventory[item] <= 0 && inventory.ContainsKey(item))
         {
             inventory.Remove(item);
@@ -104,7 +104,7 @@ public class InventoryData : ScriptableObject
     {
         Dictionary<Item, int> result = new Dictionary<Item, int>();
 
-        // ÀÎº¥Åä¸® ³» µ¿ÀÏÇÑ Å¸ÀÔÀÇ ¾ÆÀÌÅÛ ´ã±â
+        // ì¸ë²¤í† ë¦¬ ë‚´ ë™ì¼í•œ íƒ€ì…ì˜ ì•„ì´í…œ ë‹´ê¸°
         foreach (Item item in inventory.Keys)
         {
             if (item.Type == type)

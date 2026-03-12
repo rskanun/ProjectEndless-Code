@@ -5,14 +5,14 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(AttackManager))]
 public class FieldMonster : MonoBehaviour
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private OrganManager organManager;
 
-    [Header("±¸¼º ¿ä¼Ò")]
+    [Header("êµ¬ì„± ìš”ì†Œ")]
     [ReadOnly, SerializeField] private Animator anim;
 
-    [Header("¸ó½ºÅÍ Çàµ¿ Á¤º¸")]
-    // ÀÌµ¿ Á¤º¸
+    [Header("ëª¬ìŠ¤í„° í–‰ë™ ì •ë³´")]
+    // ì´ë™ ì •ë³´
     [SerializeField] private float moveSpeed;
     [SerializeField] private float chasingSpeed;
     [SerializeField] private Color moveLineColor;
@@ -31,7 +31,7 @@ public class FieldMonster : MonoBehaviour
     }
     private Vector3 prevPos;
 
-    // °ø°İ Á¤º¸
+    // ê³µê²© ì •ë³´
     [SerializeField]
     private float _attackDistance;
     public float AttackDistance
@@ -46,7 +46,7 @@ public class FieldMonster : MonoBehaviour
         get { return _isAttacked; }
     }
 
-    // ¸ó½ºÅÍ »óÅÂ Á¤º¸
+    // ëª¬ìŠ¤í„° ìƒíƒœ ì •ë³´
     private FSM fsm = new FSM();
 
 #if UNITY_EDITOR
@@ -60,7 +60,7 @@ public class FieldMonster : MonoBehaviour
 
     private void Start()
     {
-        // idle »óÅÂ ÃÊ±âÈ­
+        // idle ìƒíƒœ ì´ˆê¸°í™”
         fsm.SetState(new IdleState(this));
     }
 
@@ -74,17 +74,17 @@ public class FieldMonster : MonoBehaviour
     {
         if (IsMove && prevPos == transform.position)
         {
-            // ÇöÀç ¸ó½ºÅÍ°¡ ¿òÁ÷ÀÌÁö ¾Ê´Â »óÅÂÀÎÁö È®ÀÎ
+            // í˜„ì¬ ëª¬ìŠ¤í„°ê°€ ì›€ì§ì´ì§€ ì•ŠëŠ” ìƒíƒœì¸ì§€ í™•ì¸
             IsMove = false;
         }
 
-        // ÀÌÀü ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ì´ì „ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         prevPos = transform.position;
     }
 
     private void OnDrawGizmos()
     {
-        // ÀÌµ¿ ·çÆ®
+        // ì´ë™ ë£¨íŠ¸
         if (movePoints.Count > 0)
         {
             Gizmos.color = moveLineColor;
@@ -100,9 +100,9 @@ public class FieldMonster : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ÇÃ·¹ÀÌ¾î Å½Áö ]
+    * [ í”Œë ˆì´ì–´ íƒì§€ ]
     * 
-    * Å½Áö ±â°üÀ» ÅëÇÑ ÇÃ·¹ÀÌ¾î Å½Áö
+    * íƒì§€ ê¸°ê´€ì„ í†µí•œ í”Œë ˆì´ì–´ íƒì§€
     ***************************************************************/
 
     public Vector3? DetectPlayerPos()
@@ -111,14 +111,14 @@ public class FieldMonster : MonoBehaviour
     }
 
     /***************************************************************
-    * [ °ø°İ ]
+    * [ ê³µê²© ]
     * 
-    * ¸ó½ºÅÍÀÇ °ø°İ Ã³¸®
+    * ëª¬ìŠ¤í„°ì˜ ê³µê²© ì²˜ë¦¬
     ***************************************************************/
 
     public virtual void OnAttack()
     {
-        // °ø°İ ¸ğ¼Ç ½ÇÇà
+        // ê³µê²© ëª¨ì…˜ ì‹¤í–‰
         IsAttacked = true;
         anim.SetTrigger("Attack");
     }
@@ -132,30 +132,30 @@ public class FieldMonster : MonoBehaviour
     {
         if (IsAttacked && collision.CompareTag("Player"))
         {
-            // ÀüÅõ µ¹ÀÔ
-            // #ÀÓ½Ã·Î ·Îµå ½ÃÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç°ú µ¿ÀÏÇÏ°Ô ¼³Á¤
+            // ì „íˆ¬ ëŒì…
+            // #ì„ì‹œë¡œ ë¡œë“œ ì‹œì˜ ì• ë‹ˆë©”ì´ì…˜ê³¼ ë™ì¼í•˜ê²Œ ì„¤ì •
             SceneLoadManager.LoadBattleScene(null, UnloadSceneOptions.None, SceneFadeEffect.BlurFadeOut, SceneFadeEffect.BlurFadeIn, LoadingScreen.Loading);
             Time.timeScale = 0.02f;
         }
     }
 
     /***************************************************************
-    * [ ¸ó½ºÅÍ ÀÌµ¿ ]
+    * [ ëª¬ìŠ¤í„° ì´ë™ ]
     * 
-    * ¸ó½ºÅÍ ÀÌµ¿¿¡ µû¸¥ À§Ä¡ ¹× ¾Ö´Ï¸ŞÀÌ¼Ç º¯È­ Ã³¸®
+    * ëª¬ìŠ¤í„° ì´ë™ì— ë”°ë¥¸ ìœ„ì¹˜ ë° ì• ë‹ˆë©”ì´ì…˜ ë³€í™” ì²˜ë¦¬
     ***************************************************************/
 
     public void MoveTo(Vector2 target)
     {
         float speed = moveSpeed * Time.deltaTime;
 
-        // ÇöÀç À§Ä¡¿¡¼­ ¿òÁ÷ÀÏ À§Ä¡¿Í ¸ñÇ¥±îÁöÀÇ °Å¸® °è»ê
+        // í˜„ì¬ ìœ„ì¹˜ì—ì„œ ì›€ì§ì¼ ìœ„ì¹˜ì™€ ëª©í‘œê¹Œì§€ì˜ ê±°ë¦¬ ê³„ì‚°
         Vector2 movePoint = Vector2.MoveTowards(transform.position, target, speed);
 
-        // ÀÌµ¿ ¹æÇâÀ¸·Î È¸Àü
+        // ì´ë™ ë°©í–¥ìœ¼ë¡œ íšŒì „
         RotateTo(movePoint);
 
-        // ¸ñÇ¥·Î ÀÌµ¿
+        // ëª©í‘œë¡œ ì´ë™
         IsMove = true;
         transform.position = movePoint;
     }
@@ -164,10 +164,10 @@ public class FieldMonster : MonoBehaviour
     {
         Vector2 dir = (target - (Vector2)transform.position).normalized;
 
-        // Å½Áö ±â°ü È¸Àü
+        // íƒì§€ ê¸°ê´€ íšŒì „
         organManager.RotateOrgans(dir);
 
-        // ¹æÇâ¿¡ µû¸¥ ¾Ö´Ï¸ŞÀÌ¼Ç º¯°æ
+        // ë°©í–¥ì— ë”°ë¥¸ ì• ë‹ˆë©”ì´ì…˜ ë³€ê²½
         SetMoveAnim(dir);
     }
 

@@ -4,61 +4,61 @@ using UnityEngine.UI;
 
 public class ActionSelection : MonoBehaviour, ISelection
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private ActionManager actionManager;
     [SerializeField] private ActionSelectionUI actionSelectionUI;
     [SerializeField] private ActionSelectionController controller;
 
-    // ÇöÀç ÅÏÀÎ Ä³¸¯ÅÍ
+    // í˜„ì¬ í„´ì¸ ìºë¦­í„°
     private Character actor;
 
     public void OpenSelection()
     {
         BattleData battleData = BattleData.Instance;
 
-        // ÇöÀç ÅÏÀÎ Ä³¸¯ÅÍ ¼³Á¤
+        // í˜„ì¬ í„´ì¸ ìºë¦­í„° ì„¤ì •
         actor = battleData.SelectionData.actor;
 
-        // Çàµ¿ ¼±ÅÃÃ¢ ¿­±â
+        // í–‰ë™ ì„ íƒì°½ ì—´ê¸°
         OpenActionSelection(actor);
     }
 
     public void CloseSelection()
     {
-        // ¼±ÅÃÃ¢ ´İ±â
+        // ì„ íƒì°½ ë‹«ê¸°
         actionSelectionUI.CloseSelectionWindow();
 
-        // ÄÁÆ®·Ñ·¯ ¾ø¾Ö±â
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì—†ì• ê¸°
         actionManager.SetSubController(null);
     }
 
     public void ReopenSelection()
     {
-        // ¸ğ¼Ç ¾øÀÌ ¼±ÅÃÃ¢¿¡ ¸Â°Ô Ä«¸Ş¶ó ÀÌµ¿
+        // ëª¨ì…˜ ì—†ì´ ì„ íƒì°½ì— ë§ê²Œ ì¹´ë©”ë¼ ì´ë™
         BattleCameraDirector.Instance.FocusSelection(actor.gameObject);
 
-        // ´Ù½Ã ¼±ÅÃÃ¢ ¿­±â
+        // ë‹¤ì‹œ ì„ íƒì°½ ì—´ê¸°
         OpenActionSelection(actor);
     }
 
     public void UndoSelection()
     {
-        // Çàµ¿ ¼±ÅÃÃ¢ÀÌ ¸¶Áö¸·ÀÌ¹Ç·Î µÇµ¹¸®±â X
+        // í–‰ë™ ì„ íƒì°½ì´ ë§ˆì§€ë§‰ì´ë¯€ë¡œ ë˜ëŒë¦¬ê¸° X
     }
 
     private void OpenActionSelection(Character actor)
     {
-        // ¼±ÅÃÃ¢ ¿­±â
+        // ì„ íƒì°½ ì—´ê¸°
         actionSelectionUI.OpenSelectionWindow();
 
-        // ÄÁÆ®·Ñ·¯ ¼³Á¤
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì„¤ì •
         actionManager.SetSubController(controller);
     }
 
     /***************************************************************
-    * [ Çàµ¿ ¼±ÅÃ ]
+    * [ í–‰ë™ ì„ íƒ ]
     * 
-    * ÇöÀç ÅÏÀÎ Ä³¸¯ÅÍ°¡ ¾î¶² Çàµ¿À» ÃëÇÒ Áö ¼±ÅÃÃ¢ »ı¼º ¹× Ã³¸®
+    * í˜„ì¬ í„´ì¸ ìºë¦­í„°ê°€ ì–´ë–¤ í–‰ë™ì„ ì·¨í•  ì§€ ì„ íƒì°½ ìƒì„± ë° ì²˜ë¦¬
     ***************************************************************/
 
     public void OnSelectButton(GameObject buttonObj)
@@ -68,60 +68,60 @@ public class ActionSelection : MonoBehaviour, ISelection
 
     public void OnSelectAttack()
     {
-        // °ø°İ Çàµ¿ »ı¼º
+        // ê³µê²© í–‰ë™ ìƒì„±
         AttackAction action = new AttackAction();
 
         action.actor = actor;
         action.remainTurn = actor.GetLastTurn(1.0f);
 
-        // Å¸°Ù ¼±ÅÃÃ¢À¸·Î ³Ñ¾î°¡±â
+        // íƒ€ê²Ÿ ì„ íƒì°½ìœ¼ë¡œ ë„˜ì–´ê°€ê¸°
         actionManager.SelectAction(action);
     }
 
     public void OnSelectSkill()
     {
-        // ½ºÅ³ Çàµ¿ »ı¼º
+        // ìŠ¤í‚¬ í–‰ë™ ìƒì„±
         SkillAction action = new SkillAction();
 
         action.actor = actor;
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¾Ë¸®±â
+        // ì„ íƒí•œ í–‰ë™ ì•Œë¦¬ê¸°
         actionManager.SelectAction(action);
     }
 
     public void OnSelectItem()
     {
-        // ¾ÆÀÌÅÛ Çàµ¿ »ı¼º
+        // ì•„ì´í…œ í–‰ë™ ìƒì„±
         ItemAction action = new ItemAction();
 
         action.actor = actor;
         action.remainTurn = 0.0f;
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¾Ë¸®±â
+        // ì„ íƒí•œ í–‰ë™ ì•Œë¦¬ê¸°
         actionManager.SelectAction(action);
     }
 
     public void OnSelectWaiting()
     {
-        // ´ë±â Çàµ¿ »ı¼º
+        // ëŒ€ê¸° í–‰ë™ ìƒì„±
         WaitAction action = new WaitAction();
 
         action.actor = actor;
-        action.remainTurn = 1.0f; // ÃÖ¼Ò ÇÑ ÅÏÀº ´ë±âÇØ¾ßÇÔ
+        action.remainTurn = 1.0f; // ìµœì†Œ í•œ í„´ì€ ëŒ€ê¸°í•´ì•¼í•¨
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¾Ë¸®±â
+        // ì„ íƒí•œ í–‰ë™ ì•Œë¦¬ê¸°
         actionManager.SelectAction(action);
     }
 
     public void OnSelectRun()
     {
-        // µµÁÖ Çàµ¿ »ı¼º
+        // ë„ì£¼ í–‰ë™ ìƒì„±
         RunAction action = new RunAction();
 
         action.actor = actor;
         action.remainTurn = 1.0f;
 
-        // ¼±ÅÃÇÑ Çàµ¿ ¾Ë¸®±â
+        // ì„ íƒí•œ í–‰ë™ ì•Œë¦¬ê¸°
         actionManager.SelectAction(action);
     }
 }

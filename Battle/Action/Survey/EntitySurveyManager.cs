@@ -3,15 +3,15 @@ using UnityEngine;
 public class EntitySurveyManager : MonoBehaviour
 {
 
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private SurveyHUD surveyHUD;
     [SerializeField] private SurveyEffectManager effectManager;
     [SerializeField] private ActionIcon actionIcon;
 
     /***************************************************************
-    * [ »óÅÂ °üÂû ]
+    * [ ìƒíƒœ ê´€ì°° ]
     * 
-    * ÇØ´ç ¿ÀºêÁ§Æ®ÀÇ »óÅÂ °üÂû¿¡ µû¸¥ ui º¯È­
+    * í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ì˜ ìƒíƒœ ê´€ì°°ì— ë”°ë¥¸ ui ë³€í™”
     ***************************************************************/
 
     public void ActiveActionIcon(ActionType type)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ContactUI : AppUI
 {
-    [Header("ÂüÁ¶ ¿ÀºêÁ§Æ®")]
+    [Header("ì°¸ì¡° ì˜¤ë¸Œì íŠ¸")]
     [SerializeField] private MenuManager menu;
 
     public override void OpenApp(Action openHandler)

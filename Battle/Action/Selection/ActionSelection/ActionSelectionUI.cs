@@ -13,7 +13,7 @@ public class ActionSelectionUI : MonoBehaviour
     {
         actionWindow.SetActive(true);
 
-        // ¸¶Áö¸·À¸·Î »ç¿ëÇÑ ¹öÆ° È°¼ºÈ­
+        // ë§ˆì§€ë§‰ìœ¼ë¡œ ì‚¬ìš©í•œ ë²„íŠ¼ í™œì„±í™”
         SelectLastSelctedButton();
     }
 
@@ -21,7 +21,7 @@ public class ActionSelectionUI : MonoBehaviour
     {
         actionWindow.SetActive(false);
 
-        // ¹öÆ° ºñÈ°¼ºÈ­
+        // ë²„íŠ¼ ë¹„í™œì„±í™”
         EventSystem.current.SetSelectedGameObject(null);
     }
 

@@ -4,99 +4,99 @@ using UnityEngine.EventSystems;
 
 public class SkillSelection : MonoBehaviour, ISelection
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private ActionManager actionManager;
     [SerializeField] private SkillSelectionUI ui;
 
-    // ÇöÀç ½ºÅ³Ã¢ ³» ½ºÅ³ Á¤º¸ ¿ÀºêÁ§Æ®
+    // í˜„ì¬ ìŠ¤í‚¬ì°½ ë‚´ ìŠ¤í‚¬ ì •ë³´ ì˜¤ë¸Œì íŠ¸
     private List<GameObject> skillInfoList = new List<GameObject>();
 
-    // ¸¶Áö¸· ¼±ÅÃ ¹öÆ°
+    // ë§ˆì§€ë§‰ ì„ íƒ ë²„íŠ¼
     private GameObject lastSelected;
 
     public void OpenSelection()
     {
         lastSelected = null;
 
-        // ½ºÅ³Ã¢ ¿­±â
+        // ìŠ¤í‚¬ì°½ ì—´ê¸°
         ui.SetActiveWindow(true);
 
-        // ½ºÅ³ Á¤º¸ ¹èÄ¡
+        // ìŠ¤í‚¬ ì •ë³´ ë°°ì¹˜
         Character actor = BattleData.Instance.SelectionData.actor;
         InitSkillsInfo(actor.Skills, actor, actor.FinalStats.SP);
 
-        // ÃÊ±â ½ºÅ³ ¼±ÅÃ
+        // ì´ˆê¸° ìŠ¤í‚¬ ì„ íƒ
         SelectLastButton();
     }
 
     public void CloseSelection()
     {
-        // ½ºÅ³Ã¢ ´İ±â
+        // ìŠ¤í‚¬ì°½ ë‹«ê¸°
         ui.SetActiveWindow(false);
     }
 
     public void ReopenSelection()
     {
-        // ÇöÀç ÅÏÀÎ Ä³¸¯ÅÍ
+        // í˜„ì¬ í„´ì¸ ìºë¦­í„°
         Character actor = BattleData.Instance.SelectionData.actor;
 
-        // ¸ğ¼Ç ¾øÀÌ ¼±ÅÃÃ¢¿¡ ¸Â°Ô Ä«¸Ş¶ó ÀÌµ¿
+        // ëª¨ì…˜ ì—†ì´ ì„ íƒì°½ì— ë§ê²Œ ì¹´ë©”ë¼ ì´ë™
         BattleCameraDirector.Instance.FocusSelection(actor.gameObject);
 
-        // ÀÌÀü À¯ÁöµÈ µ¥ÀÌÅÍ¸¦ ±â¹İÀ¸·Î ½ºÅ³Ã¢ ¿­±â
+        // ì´ì „ ìœ ì§€ëœ ë°ì´í„°ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ìŠ¤í‚¬ì°½ ì—´ê¸°
         ui.SetActiveWindow(true);
 
-        // ÃÊ±â ½ºÅ³ ¼±ÅÃ
+        // ì´ˆê¸° ìŠ¤í‚¬ ì„ íƒ
         SelectLastButton();
     }
 
     public void UndoSelection()
     {
-        // ½ºÅ³Ã¢ ´İ±â
+        // ìŠ¤í‚¬ì°½ ë‹«ê¸°
         CloseSelection();
     }
 
     /***************************************************************
-    * [ UI ¼³Á¤ ]
+    * [ UI ì„¤ì • ]
     * 
-    * ½ºÅ³ ¼±ÅÃÃ¢ÀÇ ±¸¼º UI ¼³Á¤
+    * ìŠ¤í‚¬ ì„ íƒì°½ì˜ êµ¬ì„± UI ì„¤ì •
     ***************************************************************/
 
     private void InitSkillsInfo(List<Skill> skills, Character actor, int remainSP)
     {
-        // ±âÁ¸ ½ºÅ³ Á¤º¸ »èÁ¦
+        // ê¸°ì¡´ ìŠ¤í‚¬ ì •ë³´ ì‚­ì œ
         ClearSkillList();
 
-        // »õ ½ºÅ³ Á¤º¸ µî·Ï
+        // ìƒˆ ìŠ¤í‚¬ ì •ë³´ ë“±ë¡
         foreach (Skill skill in skills)
         {
-            // ½ºÅ³ Á¤º¸ ¿ÀºêÁ§Æ® »ı¼º
+            // ìŠ¤í‚¬ ì •ë³´ ì˜¤ë¸Œì íŠ¸ ìƒì„±
             GameObject skillInfoObj = CreateSkillInfoObject(skill, actor, remainSP);
 
-            // ¿ÀºêÁ§Æ® ¸®½ºÆ®¿¡ Ãß°¡
+            // ì˜¤ë¸Œì íŠ¸ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
             skillInfoList.Add(skillInfoObj);
         }
     }
 
     private GameObject CreateSkillInfoObject(Skill skill, Character actor, int remainSP)
     {
-        // ½ºÅ³ Á¤º¸¸¦ ´ãÀº ¿ÀºêÁ§Æ® »ı¼º
+        // ìŠ¤í‚¬ ì •ë³´ë¥¼ ë‹´ì€ ì˜¤ë¸Œì íŠ¸ ìƒì„±
         GameObject skillInfoObj = ui.CreateSkillInfo(skill);
 
-        // ½ºÅ³ Á¤º¸ ¼³Á¤
+        // ìŠ¤í‚¬ ì •ë³´ ì„¤ì •
         SkillButton skillInfo = skillInfoObj.GetComponent<SkillButton>();
         skillInfo.SetSkill(skill, actor);
 
-        // hover ¼³Á¤
+        // hover ì„¤ì •
         skillInfo.SetHoverHandler(() => ui.SetDescription(skill.Description));
 
-        // ¹öÆ° Å¬¸¯ ¼³Á¤
+        // ë²„íŠ¼ í´ë¦­ ì„¤ì •
         skillInfo.SetClickHandler(() =>
         {
             OnSkillClicked(skill, skillInfoObj);
         });
 
-        // ½ºÅ³ »ç¿ë ¿©ºÎ ¼³Á¤
+        // ìŠ¤í‚¬ ì‚¬ìš© ì—¬ë¶€ ì„¤ì •
         skillInfo.SetUsable(skill.CostSP <= remainSP);
 
         return skillInfoObj;
@@ -112,11 +112,11 @@ public class SkillSelection : MonoBehaviour, ISelection
     {
         foreach (GameObject skillInfoObj in skillInfoList)
         {
-            // ½ºÅ³ Á¤º¸ ¿ÀºêÁ§Æ® »èÁ¦
+            // ìŠ¤í‚¬ ì •ë³´ ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
             Destroy(skillInfoObj);
         }
 
-        // ¸®½ºÆ® ÃÊ±âÈ­
+        // ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
         skillInfoList.Clear();
     }
 
@@ -124,28 +124,28 @@ public class SkillSelection : MonoBehaviour, ISelection
     {
         if (lastSelected == null)
         {
-            // ÀÌÀü¿¡ ¼±ÅÃÇÑ ¹öÆ°ÀÌ ¾ø´Â °æ¿ì ¼±ÅÃ °¡´ÉÇÑ Ã¹¹øÂ° ¿ä¼Ò¸¦ ¼±ÅÃ
+            // ì´ì „ì— ì„ íƒí•œ ë²„íŠ¼ì´ ì—†ëŠ” ê²½ìš° ì„ íƒ ê°€ëŠ¥í•œ ì²«ë²ˆì§¸ ìš”ì†Œë¥¼ ì„ íƒ
             lastSelected = GetFirstUsableItem();
         }
 
-        // ¹öÆ° ¼±ÅÃ
+        // ë²„íŠ¼ ì„ íƒ
         EventSystem.current.SetSelectedGameObject(lastSelected);
 
-        // ½ºÅ³ ¼³¸í ¼³Á¤
+        // ìŠ¤í‚¬ ì„¤ëª… ì„¤ì •
         UpdateDescription(lastSelected);
     }
 
     private GameObject GetFirstUsableItem()
     {
-        // Ã¹¹øÂ° ¼±ÅÃ ¿ä¼Ò Ã£±â
+        // ì²«ë²ˆì§¸ ì„ íƒ ìš”ì†Œ ì°¾ê¸°
         foreach (GameObject skillInfoObj in skillInfoList)
         {
             SkillButton skillInfo = skillInfoObj.GetComponent<SkillButton>();
 
-            // ÇØ´ç ½ºÅ³À» »ç¿ë°¡´ÉÇÑ °æ¿ì
+            // í•´ë‹¹ ìŠ¤í‚¬ì„ ì‚¬ìš©ê°€ëŠ¥í•œ ê²½ìš°
             if (skillInfo.IsUsable())
             {
-                // ÇØ´ç ½ºÅ³À» Ã¹¹øÂ° ¼±ÅÃ ¿ä¼Ò·Î ¹İÈ¯
+                // í•´ë‹¹ ìŠ¤í‚¬ì„ ì²«ë²ˆì§¸ ì„ íƒ ìš”ì†Œë¡œ ë°˜í™˜
                 return skillInfoObj;
             }
         }
@@ -157,7 +157,7 @@ public class SkillSelection : MonoBehaviour, ISelection
     {
         if (selectedItem == null)
         {
-            // ¼±ÅÃÇÑ ½ºÅ³ÀÌ ¾øÀ» °æ¿ì ¼³¸íÃ¢ ºñ¿ì±â
+            // ì„ íƒí•œ ìŠ¤í‚¬ì´ ì—†ì„ ê²½ìš° ì„¤ëª…ì°½ ë¹„ìš°ê¸°
             ui.SetDescription("");
         }
         else

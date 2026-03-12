@@ -14,21 +14,21 @@ public class SetRatio : MonoBehaviour
         int width = 1920;
         int height = 1080;
 
-        int deviceWidth = Screen.width; // ±â±âÀÇ ³Êºñ
-        int deviceHeight = Screen.height; // ±â±âÀÇ ³ôÀÌ
+        int deviceWidth = Screen.width; // ê¸°ê¸°ì˜ ë„ˆë¹„
+        int deviceHeight = Screen.height; // ê¸°ê¸°ì˜ ë†’ì´
 
-        float ratio = width / height; // °ÔÀÓ ÇØ»óµµ
-        float deviceRatio = deviceWidth / deviceHeight; // ±â±â ÇØ»óµµ
+        float ratio = width / height; // ê²Œì„ í•´ìƒë„
+        float deviceRatio = deviceWidth / deviceHeight; // ê¸°ê¸° í•´ìƒë„
 
         Screen.SetResolution(width, (int)(width / deviceRatio), true);
 
-        if (ratio < deviceRatio) // ±â±âÀÇ ÇØ»óµµ°¡ ´õ Å« °æ¿ì
+        if (ratio < deviceRatio) // ê¸°ê¸°ì˜ í•´ìƒë„ê°€ ë” í° ê²½ìš°
         {
             float newWidth = ratio / deviceRatio;
             Camera.main.rect = new Rect((1f - newWidth) / 2f, 0f, newWidth, 1f);
         }
 
-        else // °ÔÀÓÀÇ ÇØ»óµµ°¡ ´õ Å« °æ¿ì
+        else // ê²Œì„ì˜ í•´ìƒë„ê°€ ë” í° ê²½ìš°
         {
             float newHeight = deviceRatio / ratio;
             Camera.main.rect = new Rect(0f, (1f - newHeight) / 2f, 1f, newHeight);

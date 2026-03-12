@@ -2,12 +2,12 @@ public class MainWeaponInfo : EquipInfo
 {
     protected override string GetTagName()
     {
-        return "<ÁÖ ¹«±â Ä­>";
+        return "<ì£¼ ë¬´ê¸° ì¹¸>";
     }
 
     protected override void ShowEquips()
     {
-        // ÁÖ¹«±â ¼±ÅÃ È­¸é ¶ç¿ì±â
+        // ì£¼ë¬´ê¸° ì„ íƒ í™”ë©´ ë„ìš°ê¸°
         app.ShowWeapons();
     }
 }

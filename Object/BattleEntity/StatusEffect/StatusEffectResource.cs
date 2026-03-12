@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class StatusEffectResource : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/StatusEffectResource.asset";
 
@@ -22,7 +22,7 @@ public class StatusEffectResource : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -38,7 +38,7 @@ public class StatusEffectResource : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<StatusEffectResource>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -51,7 +51,7 @@ public class StatusEffectResource : ScriptableObject
         }
     }
 
-    [Header("¹öÇÁ & µğ¹öÇÁ ¾ÆÀÌÄÜ")]
+    [Header("ë²„í”„ & ë””ë²„í”„ ì•„ì´ì½˜")]
     public GameObject buffIcon;
     public GameObject debuffIcon;
 }

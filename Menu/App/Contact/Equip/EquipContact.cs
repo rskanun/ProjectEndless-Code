@@ -21,7 +21,7 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
     private Action submitHandler;
     private bool isHover;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤
+    // ì• ë‹ˆë©”ì´ì…˜ ì„¤ì •
     private float expandSize = 6.3f;
     private float expandDuration = 0.35f;
     private float fadeDuration = 0.12f;
@@ -41,7 +41,7 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
 
     public override void OnSelect(BaseEventData eventData)
     {
-        // hover¿¡ ÀÇÇÑ ¼±ÅÃÀÌ¸é ±âÁ¸ ¼±ÅÃ Èå¸§ X
+        // hoverì— ì˜í•œ ì„ íƒì´ë©´ ê¸°ì¡´ ì„ íƒ íë¦„ X
         if (isHover) return;
 
         ShowDetails();
@@ -59,13 +59,13 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
     {
         if (isHover) return;
 
-        // OnSelect ½ÇÇà ¹æÁö¿ë
+        // OnSelect ì‹¤í–‰ ë°©ì§€ìš©
         isHover = true;
 
-        // ÇØ´ç ¿ÀºêÁ§Æ® ¼±ÅÃ
+        // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ì„ íƒ
         EventSystem.current.SetSelectedGameObject(gameObject);
 
-        // ÀÚ¼¼ÇÑ Á¤º¸ Ç¥½Ã
+        // ìì„¸í•œ ì •ë³´ í‘œì‹œ
         ShowDetails();
     }
 
@@ -82,7 +82,7 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
         countField.text = count.ToString();
         equipMark.SetActive(isEquipped);
 
-        // µğÅ×ÀÏ Á¤º¸ ¹Ì¸® ±âÀÔ
+        // ë””í…Œì¼ ì •ë³´ ë¯¸ë¦¬ ê¸°ì…
         categoryField.text = GetCategoryDisplay(equip);
         descriptionField.text = GetDescription(equip);
     }
@@ -103,8 +103,8 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
         if (equip.DEX != 0)
             stats.Add($"DEX {(equip.DEX > 0 ? "+" : "-")}{Mathf.Abs(equip.DEX)}");
 
-        // ¿Ï¼ºµÈ ¹®ÀåÀÇ ³Êºñ ÃÊ°úºĞ ÀÚ¸£±â
-        return string.Join(" ¡¤ ", stats);
+        // ì™„ì„±ëœ ë¬¸ì¥ì˜ ë„ˆë¹„ ì´ˆê³¼ë¶„ ìë¥´ê¸°
+        return string.Join(" Â· ", stats);
     }
 
     private string GetEllipsisText(string text)
@@ -112,19 +112,19 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
         float fieldWidth = statField.GetComponent<RectTransform>().rect.width;
         float textWidth = statField.GetPreferredValues(text).x;
 
-        // ¹®ÀåÀÌ ÇÊµå ³Êºñ¿¡¼­ ¹ş¾î³ªÁö ¾Ê´Â´Ù¸é ±×´ë·Î »ç¿ë
+        // ë¬¸ì¥ì´ í•„ë“œ ë„ˆë¹„ì—ì„œ ë²—ì–´ë‚˜ì§€ ì•ŠëŠ”ë‹¤ë©´ ê·¸ëŒ€ë¡œ ì‚¬ìš©
         if (textWidth <= fieldWidth) return text;
 
-        // ¹üÀ§¸¦ ¹ş¾î³­´Ù¸é ¹®Àå ÀÚ¸£±â
+        // ë²”ìœ„ë¥¼ ë²—ì–´ë‚œë‹¤ë©´ ë¬¸ì¥ ìë¥´ê¸°
         float ellipsisWidth = statField.GetPreferredValues("...").x;
 
-        // ÇÑ ±ÛÀÚ¾¿ ÀÚ¸£¸ç ³Êºñ Ã¼Å©
+        // í•œ ê¸€ìì”© ìë¥´ë©° ë„ˆë¹„ ì²´í¬
         for (int i = 0; i < text.Length; i++)
         {
             string str = text.Substring(0, i + 1);
             float strWidth = statField.GetPreferredValues(str).x;
 
-            // Àß·ÁÁø ¹®ÀåÀÌ ¹üÀ§¸¦ ÃÊ°úÇÑ´Ù¸é, ÀÌÀü ±ÛÀÚ±îÁö ÀÚ¸£±â
+            // ì˜ë ¤ì§„ ë¬¸ì¥ì´ ë²”ìœ„ë¥¼ ì´ˆê³¼í•œë‹¤ë©´, ì´ì „ ê¸€ìê¹Œì§€ ìë¥´ê¸°
             if (strWidth + ellipsisWidth > fieldWidth)
             {
                 return text.Substring(0, i) + "...";
@@ -136,22 +136,22 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
 
     private string GetCategoryDisplay(Equip equip)
     {
-        // ÀÓ½Ã
-        if (equip is Weapon) return "¹«±â";
-        else if (equip is Accessory) return "¾Ç¼¼¼­¸®";
+        // ì„ì‹œ
+        if (equip is Weapon) return "ë¬´ê¸°";
+        else if (equip is Accessory) return "ì•…ì„¸ì„œë¦¬";
 
-        return "±âÅ¸";
+        return "ê¸°íƒ€";
     }
 
     private string GetDescription(Equip equip)
     {
         string description = equip.Description + "\n";
 
-        // ½ºÅİ ¼³¸í Ãß°¡
+        // ìŠ¤í…Ÿ ì„¤ëª… ì¶”ê°€
         description += "\n" + GetStatDisplay(equip);
 
-        // ½ºÅ³ ¼³¸í Ãß°¡
-        if (equip.Skill != null) description += "\n°íÀ¯½ºÅ³: " + equip.Skill.Name;
+        // ìŠ¤í‚¬ ì„¤ëª… ì¶”ê°€
+        if (equip.Skill != null) description += "\nê³ ìœ ìŠ¤í‚¬: " + equip.Skill.Name;
 
         return description;
     }
@@ -172,21 +172,21 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
     }
 
     /// <summary>
-    /// ÇØ´ç ¾ÆÀÌÅÛÀÇ ÀÚ¼¼ÇÑ ¼³¸í ¶ç¿ì±â
+    /// í•´ë‹¹ ì•„ì´í…œì˜ ìì„¸í•œ ì„¤ëª… ë„ìš°ê¸°
     /// </summary>
     public void ShowDetails()
     {
-        // ±âÁ¸ Á¤º¸ ºñÈ°¼ºÈ­
+        // ê¸°ì¡´ ì •ë³´ ë¹„í™œì„±í™”
         statField.alpha = 0.0f;
 
-        // µğÅ×ÀÏ Á¤º¸ ºñÈ°¼ºÈ­ »óÅÂ·Î ½ÃÀÛ
+        // ë””í…Œì¼ ì •ë³´ ë¹„í™œì„±í™” ìƒíƒœë¡œ ì‹œì‘
         categoryField.alpha = 0.0f;
         descriptionField.alpha = 0.0f;
 
-        // ÇöÀç ÁøÇà ÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÖÀ» ¼ö ÀÖÀ¸´Ï Á¦°Å
+        // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ì´ ìˆì„ ìˆ˜ ìˆìœ¼ë‹ˆ ì œê±°
         selectSeq.Kill();
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         selectSeq = DOTween.Sequence()
             .Append(FadeOutSummaryAnimation())
             .Append(ExpandObjectTween(DetailSize))
@@ -213,14 +213,14 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
     }
 
     /// <summary>
-    /// ÇØ´ç ¾ÆÀÌÅÛÀÇ °£´ÜÇÑ ¼³¸í ¶ç¿ì±â
+    /// í•´ë‹¹ ì•„ì´í…œì˜ ê°„ë‹¨í•œ ì„¤ëª… ë„ìš°ê¸°
     /// </summary>
     public void HideDetails()
     {
-        // ÇöÀç ÁøÇà ÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÖÀ» ¼ö ÀÖÀ¸´Ï Á¦°Å
+        // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ì´ ìˆì„ ìˆ˜ ìˆìœ¼ë‹ˆ ì œê±°
         selectSeq.Kill();
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         DOTween.Sequence()
             .AppendCallback(() =>
             {
@@ -236,11 +236,11 @@ public class EquipContact : Contact, ISubmitHandler, IPointerEnterHandler
         return DOTween.Sequence()
             .AppendCallback(() =>
             {
-                // µğÅ×ÀÏ Á¤º¸ ºñÈ°¼ºÈ­
+                // ë””í…Œì¼ ì •ë³´ ë¹„í™œì„±í™”
                 categoryField.alpha = 0.0f;
                 descriptionField.alpha = 0.0f;
 
-                // ±âº» Á¤º¸ ºñÈ°¼ºÈ­ »óÅÂ·Î ½ÃÀÛ
+                // ê¸°ë³¸ ì •ë³´ ë¹„í™œì„±í™” ìƒíƒœë¡œ ì‹œì‘
                 statField.alpha = 0.0f;
             })
             .Append(statField.DOFade(1.0f, fadeDuration));

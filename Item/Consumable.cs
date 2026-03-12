@@ -9,7 +9,7 @@ public class Consumable : Item
         get { return ItemType.Consumable; }
     }
 
-    [Header("소비 아이템 정보")]
+    [Header("?鍮 ??댄 ?蹂?)]
     [SerializeField]
     private TargetType _targetType;
     public TargetType TargetType

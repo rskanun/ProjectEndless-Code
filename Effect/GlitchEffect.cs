@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class GlitchEffect : Effect
 {
-    [Header("±Û¸®Ä¡ ¿¡¼Â ½ºÅ©¸³Æ®")]
+    [Header("ê¸€ë¦¬ì¹˜ ì—ì…‹ ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private AnalogGlitch analogGlitch;
     [SerializeField] private DigitalGlitch digitalGlitch;
 

@@ -3,17 +3,17 @@ using UnityEngine.InputSystem;
 
 public class BattleController : MonoBehaviour, IController
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private ActionManager actionManager;
 
-    // ÂüÁ¶ µ¥ÀÌÅÍ
+    // ì°¸ì¡° ë°ì´í„°
     private BattleData battleData
         => BattleData.Instance;
 
-    // ÇöÀç ÀüÈ² Ã¼Å© »óÅÂÀÎÁö
+    // í˜„ì¬ ì „í™© ì²´í¬ ìƒíƒœì¸ì§€
     private bool isSurvey;
 
-    // °¢°¢ÀÇ ¼±ÅÃÃ¢¿¡ µû¸¥ Ãß°¡ÀûÀÎ Å°Á¶ÀÛ
+    // ê°ê°ì˜ ì„ íƒì°½ì— ë”°ë¥¸ ì¶”ê°€ì ì¸ í‚¤ì¡°ì‘
     private IController subController;
 
     private void OnEnable()
@@ -33,10 +33,10 @@ public class BattleController : MonoBehaviour, IController
 
     public void SetSubController(IController subController)
     {
-        // ÀÌÀü ÄÁÆ®·Ñ·¯ ºñÈ°¼ºÈ­
+        // ì´ì „ ì»¨íŠ¸ë¡¤ëŸ¬ ë¹„í™œì„±í™”
         this.subController?.ControlDisconnect();
 
-        // ´ÙÀ½ ÄÁÆ®·Ñ·¯ È°¼ºÈ­
+        // ë‹¤ìŒ ì»¨íŠ¸ë¡¤ëŸ¬ í™œì„±í™”
         this.subController = subController;
         this.subController?.ControlConnect();
     }
@@ -69,25 +69,25 @@ public class BattleController : MonoBehaviour, IController
 
     private void OnCancelKeyPressed(InputAction.CallbackContext context)
     {
-        // ÀüÈ² Ã¼Å© »óÅÂÀÏ °æ¿ì Çàµ¿ ¼±ÅÃÃ¢À¸·Î µ¹¾Æ°¡±â
+        // ì „í™© ì²´í¬ ìƒíƒœì¼ ê²½ìš° í–‰ë™ ì„ íƒì°½ìœ¼ë¡œ ëŒì•„ê°€ê¸°
         if (isSurvey)
         {
             actionManager.ReturnToActionSelect();
             isSurvey = false;
         }
-        // ±× ¿Ü¿£ ¼±ÅÃÃ¢ µÇµ¹¸®±â
+        // ê·¸ ì™¸ì—” ì„ íƒì°½ ë˜ëŒë¦¬ê¸°
         else actionManager.UndoSelection();
     }
 
     private void OnSurveyKeyPressed(InputAction.CallbackContext context)
     {
-        // Çàµ¿ ¼±ÅÃÃ¢¿¡¼­¸¸ ÀüÈ² È®ÀÎÀÌ °¡´É
+        // í–‰ë™ ì„ íƒì°½ì—ì„œë§Œ ì „í™© í™•ì¸ì´ ê°€ëŠ¥
         if ((subController is ActionSelectionController or SurveyController) == false)
         {
             return;
         }
 
-        // Åõ±Û ¹æ½ÄÀ¸·Î ÀüÈ² Ã¼Å© Å°°í ²ô±â
+        // íˆ¬ê¸€ ë°©ì‹ìœ¼ë¡œ ì „í™© ì²´í¬ í‚¤ê³  ë„ê¸°
         if (!isSurvey) actionManager.SurveyingBattle();
         else actionManager.ReturnToActionSelect();
 
@@ -96,16 +96,16 @@ public class BattleController : MonoBehaviour, IController
 
     private void OnParryKeyPressed(InputAction.CallbackContext context)
     {
-        // ÆĞ¸µÀ» »ç¿ëÇÒ ¼ö ÀÖ´Â °æ¿ì¿¡¸¸ »ç¿ë
+        // íŒ¨ë§ì„ ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” ê²½ìš°ì—ë§Œ ì‚¬ìš©
         if (battleData.IsUsedParry)
         {
-            // °ø°İ ¹æ¾î ±â´ÉÀ» ÇÑ ¹ø »ç¿ëÇÏ¸é ´Ù¸¥ ±â´É »ç¿ë X
+            // ê³µê²© ë°©ì–´ ê¸°ëŠ¥ì„ í•œ ë²ˆ ì‚¬ìš©í•˜ë©´ ë‹¤ë¥¸ ê¸°ëŠ¥ ì‚¬ìš© X
             DisableDefensive();
 
             if (battleData.IsParryFrame)
             {
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
-                Entity defender = curAction.GetTargets()[0]; // Å¸°Ù Áß ÇÑ ¸íÀÌ ´ëÇ¥·Î ÆĞ¸µ
+                Entity defender = curAction.GetTargets()[0]; // íƒ€ê²Ÿ ì¤‘ í•œ ëª…ì´ ëŒ€í‘œë¡œ íŒ¨ë§
 
                 curAction.actor.OnParried();
                 defender.OnParrying(curAction.actor);
@@ -118,20 +118,20 @@ public class BattleController : MonoBehaviour, IController
         if (battleData.IsUsedDodge)
         {
             Debug.Log("Dodge Action");
-            // °ø°İ ¹æ¾î ±â´ÉÀ» ÇÑ ¹ø »ç¿ëÇÏ¸é ´Ù¸¥ ±â´É »ç¿ë X
+            // ê³µê²© ë°©ì–´ ê¸°ëŠ¥ì„ í•œ ë²ˆ ì‚¬ìš©í•˜ë©´ ë‹¤ë¥¸ ê¸°ëŠ¥ ì‚¬ìš© X
             DisableDefensive();
 
-            // È¸ÇÇ Å¸ÀÌ¹Ö¿¡ ´©¸¥ °æ¿ì
+            // íšŒí”¼ íƒ€ì´ë°ì— ëˆ„ë¥¸ ê²½ìš°
             if (battleData.IsDodgeFrame)
             {
-                // ´ÙÀ½ È¸ÇÇ ±âÈ¸ ÁÖ±â
+                // ë‹¤ìŒ íšŒí”¼ ê¸°íšŒ ì£¼ê¸°
                 battleData.ExtraDodgeCount = true;
 
-                // ÇöÀç °ø°İ¿¡ ´ëÇÑ È¸ÇÇ Ã³¸®
+                // í˜„ì¬ ê³µê²©ì— ëŒ€í•œ íšŒí”¼ ì²˜ë¦¬
                 BattleAction curAction = battleData.Sequence.GetTurnAction(0);
                 foreach (Entity target in curAction.GetTargets())
                 {
-                    // ÇöÀç Å¸°ÙÀÌ µÈ ¸ğµç Ä³¸¯ÅÍµéÀÌ °ø°İ È¸ÇÇ
+                    // í˜„ì¬ íƒ€ê²Ÿì´ ëœ ëª¨ë“  ìºë¦­í„°ë“¤ì´ ê³µê²© íšŒí”¼
                     target.OnDodge();
                 }
             }

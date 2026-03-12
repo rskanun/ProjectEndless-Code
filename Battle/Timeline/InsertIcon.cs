@@ -12,7 +12,7 @@ public class InsertIcon : TimelineIcon
 
     private void Start()
     {
-        // ÇÏÀÌ¶óÀÌÆ® ±ôºıÀÓ ¹«ÇÑ¹İº¹
+        // í•˜ì´ë¼ì´íŠ¸ ê¹œë¹¡ì„ ë¬´í•œë°˜ë³µ
         DOTween.Sequence()
             .Append(highlight.DOFade(0f, blinkDelay))
             .Append(highlight.DOFade(1f, blinkDelay))
@@ -23,13 +23,13 @@ public class InsertIcon : TimelineIcon
     {
         SpriteRenderer actorImg = actor.GetComponent<SpriteRenderer>();
 
-        // »ğÀÔ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö ÁöÁ¤
+        // ì‚½ì… ì•„ì´ì½˜ ì´ë¯¸ì§€ ì§€ì •
         InitImage(actorImg);
     }
 
     private void InitImage(SpriteRenderer sprite)
     {
-        // ÀÓ½Ã »öÀ¸·Î ÁöÁ¤
+        // ì„ì‹œ ìƒ‰ìœ¼ë¡œ ì§€ì •
         iconImage.color = sprite.color;
     }
 }

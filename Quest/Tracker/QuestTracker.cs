@@ -23,7 +23,7 @@ public class QuestTracker : MonoBehaviour
 
     private void OnQuestUpdate(QuestData quest)
     {
-        // Äù½ºÆ®°¡ ÀÖÀ¸¸é ¾Ë¸² Å°°í ¾÷µ¥ÀÌÆ®, ¾øÀ¸¸é ¼û±â±â
+        // í€˜ìŠ¤íŠ¸ê°€ ìˆìœ¼ë©´ ì•Œë¦¼ í‚¤ê³  ì—…ë°ì´íŠ¸, ì—†ìœ¼ë©´ ìˆ¨ê¸°ê¸°
         if (quest != null) ShowTracker(quest);
         else HideTracker();
     }

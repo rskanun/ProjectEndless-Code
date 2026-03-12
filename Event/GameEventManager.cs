@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class GameEventManager : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/GameEvent";
     private const string FILE_PATH = "Assets/Resources/GameEvent/GameEventManager.asset";
 
@@ -22,7 +22,7 @@ public class GameEventManager : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -38,7 +38,7 @@ public class GameEventManager : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<GameEventManager>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -50,17 +50,17 @@ public class GameEventManager : ScriptableObject
             return _instance;
         }
     }
-    [Header("°øÅë ÀÌº¥Æ®")]
+    [Header("ê³µí†µ ì´ë²¤íŠ¸")]
     [SerializeField] private GameEvent _gameStateEvent;
 
-    [Header("ÇÊµå ÀÌº¥Æ®")]
+    [Header("í•„ë“œ ì´ë²¤íŠ¸")]
     [SerializeField] private GameEvent _areaMoveEvent;
     [SerializeField] private GameEvent _dataLoadEvent;
     [SerializeField] private GameEvent _fieldReturnEvent;
     [SerializeField] private GameEvent _equipUpdateEvent;
     [SerializeField] private GameEvent _statsUpdateEvent;
 
-    [Header("ÀüÅõ ÀÌº¥Æ®")]
+    [Header("ì „íˆ¬ ì´ë²¤íŠ¸")]
     [SerializeField] private GameEvent _sequenceUpdateEvent;
     [SerializeField] private GameEvent _endTurnEvent;
     [SerializeField] private GameEvent _startTurnEvent;
@@ -70,7 +70,7 @@ public class GameEventManager : ScriptableObject
     [SerializeField] private GameEvent _parryingEvent;
 
     /// <summary>
-    /// °ÔÀÓ »óÅÂ(Å¸ÀÌÆ², ÇÊµå, ÀüÅõ) º¯°æ ¾Ë¸²
+    /// ê²Œì„ ìƒíƒœ(íƒ€ì´í‹€, í•„ë“œ, ì „íˆ¬) ë³€ê²½ ì•Œë¦¼
     /// </summary>
     public void NotifyGameStateChanged()
     {
@@ -78,13 +78,13 @@ public class GameEventManager : ScriptableObject
     }
 
     /************************************************************
-     * [ ÇÊµå ÀÌº¥Æ® ]
+     * [ í•„ë“œ ì´ë²¤íŠ¸ ]
      * 
-     * ÇÊµå ³»¿¡¼­ ÀÏ¾î³ª´Â ÀÌº¥Æ® ¾Ë¸²
+     * í•„ë“œ ë‚´ì—ì„œ ì¼ì–´ë‚˜ëŠ” ì´ë²¤íŠ¸ ì•Œë¦¼
      ************************************************************/
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ ¸ÊÀÇ ±¸¿ªÀ» ÀÌµ¿ÇÏ¸é º¸³»´Â ¾Ë¸²
+    /// í”Œë ˆì´ì–´ê°€ ë§µì˜ êµ¬ì—­ì„ ì´ë™í•˜ë©´ ë³´ë‚´ëŠ” ì•Œë¦¼
     /// </summary>
     public void NotifyAreaChanged()
     {
@@ -92,7 +92,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ¼¼ÀÌºê ÆÄÀÏ ·Îµå ½Ã º¸³»´Â ¾Ë¸²
+    /// ì„¸ì´ë¸Œ íŒŒì¼ ë¡œë“œ ì‹œ ë³´ë‚´ëŠ” ì•Œë¦¼
     /// </summary>
     public void NotifyDataLoaded()
     {
@@ -100,7 +100,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÀüÅõ°¡ ³¡³ª ´Ù½Ã ÇÊµå·Î µ¹¾Æ¿ÔÀ½À» ¾Ë¸²
+    /// ì „íˆ¬ê°€ ëë‚˜ ë‹¤ì‹œ í•„ë“œë¡œ ëŒì•„ì™”ìŒì„ ì•Œë¦¼
     /// </summary>
     public void NotifyFieldReturned()
     {
@@ -108,7 +108,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// Ä³¸¯ÅÍÀÇ Àåºñ º¯°æ ¾Ë¸²
+    /// ìºë¦­í„°ì˜ ì¥ë¹„ ë³€ê²½ ì•Œë¦¼
     /// </summary>
     public void NotifyEquipUpdate()
     {
@@ -116,7 +116,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÆÄÆ¼ ³» Ä³¸¯ÅÍµéÀÇ HP¹× AP ½ºÅÈ º¯°æ ¾Ë¸²
+    /// íŒŒí‹° ë‚´ ìºë¦­í„°ë“¤ì˜ HPë° AP ìŠ¤íƒ¯ ë³€ê²½ ì•Œë¦¼
     /// </summary>
     public void NotifyPartyStatsUpdate()
     {
@@ -124,13 +124,13 @@ public class GameEventManager : ScriptableObject
     }
 
     /************************************************************
-     * [ ÀüÅõ ÀÌº¥Æ® ]
+     * [ ì „íˆ¬ ì´ë²¤íŠ¸ ]
      * 
-     * ÀüÅõ ³»¿¡¼­ ÀÏ¾î³ª´Â ÀÌº¥Æ® ¾Ë¸²
+     * ì „íˆ¬ ë‚´ì—ì„œ ì¼ì–´ë‚˜ëŠ” ì´ë²¤íŠ¸ ì•Œë¦¼
      ************************************************************/
 
     /// <summary>
-    /// ÀüÅõ ¼ø¼­ º¯°æ¿¡ µû¸¥ ¾Ë¸²
+    /// ì „íˆ¬ ìˆœì„œ ë³€ê²½ì— ë”°ë¥¸ ì•Œë¦¼
     /// </summary>
     public void NotifySequenceUpdate()
     {
@@ -138,7 +138,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÇöÀç Â÷·ÊÀÎ ¿£Æ¼Æ¼ÀÇ ÅÏ Á¾·á¸¦ ¾Ë¸²
+    /// í˜„ì¬ ì°¨ë¡€ì¸ ì—”í‹°í‹°ì˜ í„´ ì¢…ë£Œë¥¼ ì•Œë¦¼
     /// </summary>
     public void NotifyTurnEnded()
     {
@@ -146,7 +146,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ´ÙÀ½ Â÷·ÊÀÎ ¿£Æ¼Æ¼ÀÇ ÅÏ ½ÃÀÛÀ» ¾Ë¸²
+    /// ë‹¤ìŒ ì°¨ë¡€ì¸ ì—”í‹°í‹°ì˜ í„´ ì‹œì‘ì„ ì•Œë¦¼
     /// </summary>
     public void NotifyTurnStarted()
     {
@@ -154,7 +154,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÀüÅõ ½ÃÀÛÀ» ¾Ë¸²
+    /// ì „íˆ¬ ì‹œì‘ì„ ì•Œë¦¼
     /// </summary>
     public void NotifyBattleStarted()
     {
@@ -162,7 +162,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÀüÅõ°¡ ³¡³µÀ½À» ¾Ë¸²
+    /// ì „íˆ¬ê°€ ëë‚¬ìŒì„ ì•Œë¦¼
     /// </summary>
     public void NotifyBattleEnded()
     {
@@ -170,7 +170,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÀüÅõ Áß ÀûÀ» Ã³Ä¡ÇßÀ½À» ¾Ë¸²
+    /// ì „íˆ¬ ì¤‘ ì ì„ ì²˜ì¹˜í–ˆìŒì„ ì•Œë¦¼
     /// </summary>
     public void NotifyEnemyDefeated()
     {
@@ -178,7 +178,7 @@ public class GameEventManager : ScriptableObject
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î ÁøÇü ÂÊ Ä³¸¯ÅÍ°¡ ÀûÀÇ °ø°İ¿¡ ´ëÇØ ÆĞ¸µ¿¡ ¼º°øÇßÀ½À» ¾Ë¸²
+    /// í”Œë ˆì´ì–´ ì§„í˜• ìª½ ìºë¦­í„°ê°€ ì ì˜ ê³µê²©ì— ëŒ€í•´ íŒ¨ë§ì— ì„±ê³µí–ˆìŒì„ ì•Œë¦¼
     /// </summary>
     public void NotifyParrySuccess()
     {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SkillButton : MonoBehaviour, ISelectHandler
 {
-    [Header("½ºÅ³ Á¤º¸ ±¸¼º¿ä¼Ò")]
+    [Header("ìŠ¤í‚¬ ì •ë³´ êµ¬ì„±ìš”ì†Œ")]
     public Image icon;
     public Button button;
     public GameObject unusablePanel;
@@ -14,10 +14,10 @@ public class SkillButton : MonoBehaviour, ISelectHandler
     public TextMeshProUGUI costTurn;
     public TextMeshProUGUI costSP;
 
-    // ½ºÅ³ Á¤º¸
+    // ìŠ¤í‚¬ ì •ë³´
     private Skill skill;
 
-    // ÀÌº¥Æ®
+    // ì´ë²¤íŠ¸
     private Action hoverHandler;
     private Action clickHandler;
 
@@ -25,7 +25,7 @@ public class SkillButton : MonoBehaviour, ISelectHandler
     {
         this.skill = skill;
 
-        // Á¤º¸ Àû¿ë
+        // ì •ë³´ ì ìš©
         icon.sprite = skill.IconSprite;
         skillName.text = skill.Name;
         costTurn.text = caster.GetLastTurn(skill.CostTurn).ToString("0.0");
@@ -43,7 +43,7 @@ public class SkillButton : MonoBehaviour, ISelectHandler
         {
             hoverHandler?.Invoke();
 
-            // ÇØ´ç ¿ÀºêÁ§Æ® ¼±ÅÃ
+            // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ì„ íƒ
             EventSystem.current.SetSelectedGameObject(gameObject);
         }
     }

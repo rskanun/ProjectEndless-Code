@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Equip : Item
 {
-    [Header("¾ÆÀÌÅÛ ´É·ÂÄ¡")]
+    [Header("ì•„ì´í…œ ëŠ¥ë ¥ì¹˜")]
     [SerializeField]
     private int _strength;
     public int STR => _strength;

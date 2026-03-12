@@ -1,4 +1,4 @@
-﻿public interface IController
+public interface IController
 {
     public void ControlConnect();
     public void ControlDisconnect();

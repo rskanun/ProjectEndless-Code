@@ -10,10 +10,10 @@ public abstract class Contact : MonoBehaviour, ISelectHandler, IDeselectHandler,
 
     private void OnEnable()
     {
-        // ÇØ´ç ¿ÀºêÁ§Æ®°¡ ¼±ÅÃµÈ °æ¿ì
+        // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ê°€ ì„ íƒëœ ê²½ìš°
         if (EventSystem.current.currentSelectedGameObject == gameObject)
         {
-            // ÇÚµé·¯ ÀÛµ¿
+            // í•¸ë“¤ëŸ¬ ì‘ë™
             SelectHandler();
         }
     }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SurveyHUD : MonoBehaviour
 {
-    [Header("¿¹»ó HP")]
+    [Header("ì˜ˆìƒ HP")]
     [SerializeField] private RectTransform hpBarFrame;
     [SerializeField] private RectTransform forecastHP;
 
@@ -20,12 +20,12 @@ public class SurveyHUD : MonoBehaviour
     {
         if (IsHpBarActive() == false)
         {
-            // ¿¹»ó HP ¹Ù°¡ ºñÈ°¼ºÈ­ »óÅÂÀÏ °æ¿ì È°¼ºÈ­ »óÅÂ·Î ¹Ù²Ù±â
+            // ì˜ˆìƒ HP ë°”ê°€ ë¹„í™œì„±í™” ìƒíƒœì¼ ê²½ìš° í™œì„±í™” ìƒíƒœë¡œ ë°”ê¾¸ê¸°
             SetHpBarActive(true);
         }
 
-        if (change < 0) SetReducedBar(hp, maxHP, change); // HP°¡ Áõ°¡µÉ °æ¿ì
-        else if (change > 0) SetIncreasedBar(hp, maxHP, change); // HP°¡ °¨¼ÒµÉ °æ¿ì
+        if (change < 0) SetReducedBar(hp, maxHP, change); // HPê°€ ì¦ê°€ë  ê²½ìš°
+        else if (change > 0) SetIncreasedBar(hp, maxHP, change); // HPê°€ ê°ì†Œë  ê²½ìš°
     }
 
     private void SetReducedBar(int hp, int maxHP, int change)
@@ -33,7 +33,7 @@ public class SurveyHUD : MonoBehaviour
         float left = hpBarFrame.rect.width * ((float)(hp + change) / maxHP);
         float right = hpBarFrame.rect.width * ((float)(maxHP - hp) / maxHP);
 
-        // ¿¹»ó HP ¹Ù ¼³Á¤
+        // ì˜ˆìƒ HP ë°” ì„¤ì •
         SetForecastHpBar(left, right);
     }
 
@@ -42,7 +42,7 @@ public class SurveyHUD : MonoBehaviour
         float left = hpBarFrame.rect.width * ((float)hp / maxHP);
         float right = hpBarFrame.rect.width * ((float)(maxHP - (hp + change)) / maxHP);
 
-        // ¿¹»ó HP ¹Ù ¼³Á¤
+        // ì˜ˆìƒ HP ë°” ì„¤ì •
         SetForecastHpBar(left, right);
     }
 

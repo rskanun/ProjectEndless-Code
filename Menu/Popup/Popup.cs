@@ -1,4 +1,4 @@
-﻿public abstract class Popup
+public abstract class Popup
 {
     public Popup()
     {

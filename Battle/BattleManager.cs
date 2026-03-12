@@ -13,22 +13,22 @@ public class BattleManager : MonoBehaviour
         public List<Vector2> back;
     }
 
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private Timeline timeline;
     [SerializeField] private ResultWindow resultUI;
     [SerializeField] private TargetSelection selectionManager;
 
-    [Header("¿£Æ¼Æ¼ ¹èÄ¡")]
+    [Header("ì—”í‹°í‹° ë°°ì¹˜")]
     [SerializeField]
     private PositionData battlePos;
     private Dictionary<(BattlePosition, int), Vector2> position;
 
-    [Header("Ä³¸¯ÅÍ ¿ÀºêÁ§Æ®")]
+    [Header("ìºë¦­í„° ì˜¤ë¸Œì íŠ¸")]
     [SerializeField]
     private List<GameObject> allMemberObjs;
     private Dictionary<string, Character> memberLookup;
 
-    // ÀüÅõ ÁøÇà »óÅÂ
+    // ì „íˆ¬ ì§„í–‰ ìƒíƒœ
     private bool isTurnEnded = false;
     public BattleData battleData;
 
@@ -44,7 +44,7 @@ public class BattleManager : MonoBehaviour
     {
         position = new Dictionary<(BattlePosition, int), Vector2>();
 
-        // Àü¿­, ÈÄ¿­ À§Ä¡ ¼³Á¤
+        // ì „ì—´, í›„ì—´ ìœ„ì¹˜ ì„¤ì •
         SetPositions(BattlePosition.Front, battlePos.front);
         SetPositions(BattlePosition.Back, battlePos.back);
     }
@@ -61,64 +61,64 @@ public class BattleManager : MonoBehaviour
     {
         battleData = BattleData.Instance;
 
-        // ÀÓ½Ã·Î ÀÏ¹İ ÀüÅõ ½ÇÇà
+        // ì„ì‹œë¡œ ì¼ë°˜ ì „íˆ¬ ì‹¤í–‰
         OnEncounter(BattleCache.Current.FieldData);
     }
 
     /***************************************************************
-    * [ ÀüÅõ ¼ø¼­ ]
+    * [ ì „íˆ¬ ìˆœì„œ ]
     * 
-    * ÇöÀç »óÈ²¿¡ µû¸¥ ÀüÅõ ÁøÇà ¼ø¼­ Ã³¸®
+    * í˜„ì¬ ìƒí™©ì— ë”°ë¥¸ ì „íˆ¬ ì§„í–‰ ìˆœì„œ ì²˜ë¦¬
     ***************************************************************/
 
     public void OnEncounter(BattleFieldData fieldData)
     {
-        // ÀÏ¹İ ÀüÅõ ½ÃÀÛ
+        // ì¼ë°˜ ì „íˆ¬ ì‹œì‘
         StartBattle(fieldData);
     }
 
     public void OnAmbushEnemy(BattleFieldData fieldData)
     {
-        // ÀûÀ» ±â½ÀÇßÀ» ¶§ÀÇ ÀüÅõ ½ÃÀÛ
+        // ì ì„ ê¸°ìŠµí–ˆì„ ë•Œì˜ ì „íˆ¬ ì‹œì‘
     }
 
     public void OnAmushPlayer(BattleFieldData fieldData)
     {
-        // Àû¿¡°Ô ±â½À´çÇßÀ» ¶§ÀÇ ÀüÅõ ½ÃÀÛ
+        // ì ì—ê²Œ ê¸°ìŠµë‹¹í–ˆì„ ë•Œì˜ ì „íˆ¬ ì‹œì‘
     }
 
     private void StartBattle(BattleFieldData fieldData)
     {
         var battleSeq = BattleData.Instance.Sequence;
 
-        // ÇÃ·¹ÀÌ¾î ÁøÇü ÆÄÆ¼ ¼³Á¤
+        // í”Œë ˆì´ì–´ ì§„í˜• íŒŒí‹° ì„¤ì •
         List<Character> playerParty = GetPlayerParty();
         InitPlayerParty(playerParty);
 
-        // Àû ÁøÇü ÆÄÆ¼ ¼³Á¤
+        // ì  ì§„í˜• íŒŒí‹° ì„¤ì •
         List<Monster> enemyParty = SummonEnemyParty(fieldData.EncountMonsters);
         InitEnemyParty(enemyParty);
 
-        // ÀüÅõ¿¡ Âü¿©ÇÏ´Â ¿£Æ¼Æ¼ ¸ñ·Ï ¼³Á¤
+        // ì „íˆ¬ì— ì°¸ì—¬í•˜ëŠ” ì—”í‹°í‹° ëª©ë¡ ì„¤ì •
         BattleData.Instance.SetEnemyList(enemyParty);
 
-        // ½ÃÄö½º »ı¼º
+        // ì‹œí€€ìŠ¤ ìƒì„±
         List<Entity> entityList = playerParty.Concat<Entity>(enemyParty).ToList();
         battleSeq.SetSequence(entityList);
 
-        // Å¸ÀÓ¶óÀÎ »ı¼º
+        // íƒ€ì„ë¼ì¸ ìƒì„±
         timeline.SetupTimeline(battleSeq);
 
-        // °³Àü ½ÃÀÛ ¾Ë¸²
+        // ê°œì „ ì‹œì‘ ì•Œë¦¼
         GameEventManager.Instance.NotifyBattleStarted();
 
-        // Ã³À½ ÅÏ ÁøÇà
+        // ì²˜ìŒ í„´ ì§„í–‰
         RunningBattle().Forget();
     }
 
     private List<Character> GetPlayerParty()
     {
-        // ÆÄÆ¼ ¸â¹ö µ¥ÀÌÅÍ¸¦ °¡Á®¿Í¼­ °Ë»ö
+        // íŒŒí‹° ë©¤ë²„ ë°ì´í„°ë¥¼ ê°€ì ¸ì™€ì„œ ê²€ìƒ‰
         return PartyData.Instance.GetPartyMembers()
             .Where(memberData => memberLookup.TryGetValue(memberData.Name, out _))
             .Select(memberData => memberLookup[memberData.Name])
@@ -129,10 +129,10 @@ public class BattleManager : MonoBehaviour
     {
         return mobList.Select(prefabObj =>
             {
-                // Àû ¼ÒÈ¯
+                // ì  ì†Œí™˜
                 GameObject enemyObj = Instantiate(prefabObj);
 
-                // ÇØ´ç ÀûÀÇ ¸ó½ºÅÍ °´Ã¼ ¸®ÅÏ
+                // í•´ë‹¹ ì ì˜ ëª¬ìŠ¤í„° ê°ì²´ ë¦¬í„´
                 return enemyObj.GetComponent<Monster>();
             }).ToList();
     }
@@ -141,23 +141,23 @@ public class BattleManager : MonoBehaviour
     {
         foreach (Character chr in party)
         {
-            // ÀüÅõ µ¹ÀÔ ¼ÂÆÃ
+            // ì „íˆ¬ ëŒì… ì…‹íŒ…
             chr.OnJoinBattle();
 
-            // Ä«¸Ş¶ó ¼ÂÆÃ
+            // ì¹´ë©”ë¼ ì…‹íŒ…
             int instanceID = chr.gameObject.GetInstanceID();
             Transform bodyPivot = chr.cameraOption.BodyPivot;
 
             BattleCameraDirector.Instance.RegisterPlayerChrPivot(instanceID, bodyPivot);
         }
 
-        // ÀüÅõ¿¡ Âü¿©ÇÏ´Â ¿£Æ¼Æ¼ ¸ñ·Ï ¼³Á¤
+        // ì „íˆ¬ì— ì°¸ì—¬í•˜ëŠ” ì—”í‹°í‹° ëª©ë¡ ì„¤ì •
         BattleData.Instance.SetPartyList(party);
     }
 
     private void InitEnemyParty(List<Monster> party)
     {
-        // Ä«¸Ş¶ó ¼ÂÆÃ
+        // ì¹´ë©”ë¼ ì…‹íŒ…
         foreach (Entity chr in party)
         {
             int instanceID = chr.gameObject.GetInstanceID();
@@ -166,33 +166,33 @@ public class BattleManager : MonoBehaviour
             BattleCameraDirector.Instance.RegisterEnemyChrPivot(instanceID, bodyPivot);
         }
 
-        // ÀüÅõ¿¡ Âü¿©ÇÏ´Â ¿£Æ¼Æ¼ ¸ñ·Ï ¼³Á¤
+        // ì „íˆ¬ì— ì°¸ì—¬í•˜ëŠ” ì—”í‹°í‹° ëª©ë¡ ì„¤ì •
         BattleData.Instance.SetEnemyList(party);
     }
 
     /***************************************************************
-    * [ ÀüÅõ ÁøÇà ]
+    * [ ì „íˆ¬ ì§„í–‰ ]
     * 
-    * ÀüÅõ ¼ø¼­¿¡ µû¸¥ ÇöÀç ÅÏ ÁøÇà
+    * ì „íˆ¬ ìˆœì„œì— ë”°ë¥¸ í˜„ì¬ í„´ ì§„í–‰
     ***************************************************************/
 
     private async UniTask RunningBattle()
     {
         await BattleCameraDirector.Instance.DirectBattleStart();
 
-        // ÀüÅõ°¡ ÁøÇàµÇ´Â µ¿¾È °¢ÀÚÀÇ ÅÏ ÁøÇà
+        // ì „íˆ¬ê°€ ì§„í–‰ë˜ëŠ” ë™ì•ˆ ê°ìì˜ í„´ ì§„í–‰
         while (BattleData.Instance.IsInBattle)
         {
             isTurnEnded = false;
 
-            // ÅÏ ÁøÇà
+            // í„´ ì§„í–‰
             await TakeTurn();
 
-            // ÅÏÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+            // í„´ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
             await UniTask.WaitUntil(() => isTurnEnded);
         }
 
-        // ÀüÅõ ³¡³»±â
+        // ì „íˆ¬ ëë‚´ê¸°
         EndBattle();
     }
 
@@ -203,31 +203,31 @@ public class BattleManager : MonoBehaviour
         BattleAction curAction = battleSeq.GetTurnAction(0);
         Entity actor = curAction.actor;
 
-        // ÅÏ ½ÃÀÛ ¾Ë¸²
+        // í„´ ì‹œì‘ ì•Œë¦¼
         GameEventManager.Instance.NotifyTurnStarted();
 
-        // ÀÌÀü¿¡ ÀÔ·ÂÇÑ Çàµ¿ ½ÇÇà
+        // ì´ì „ì— ì…ë ¥í•œ í–‰ë™ ì‹¤í–‰
         curAction.OnAction();
 
-        // ÀÌÀü Çàµ¿ ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // ì´ì „ í–‰ë™ ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => actor.IsAttackEnd);
 
-        // »ç¸Á È®ÀÎ
+        // ì‚¬ë§ í™•ì¸
         foreach (var target in curAction.GetTargets())
         {
             if (target.FinalStats.HP > 0) continue;
 
-            // Ã¼·ÂÀÌ 0ÀÌÇÏ·Î ¶³¾îÁø °æ¿ì »ç¸Á ÆÇÁ¤
+            // ì²´ë ¥ì´ 0ì´í•˜ë¡œ ë–¨ì–´ì§„ ê²½ìš° ì‚¬ë§ íŒì •
             target.OnDead();
         }
 
-        // ÇØ´ç Çàµ¿À¸·Î ÀüÅõ°¡ ³¡³µ°Å³ª, ÇØ´ç ¿£Æ¼Æ¼°¡ »ç¸ÁÇÑ °æ¿ì ÅÏ ³¡³»±â
+        // í•´ë‹¹ í–‰ë™ìœ¼ë¡œ ì „íˆ¬ê°€ ëë‚¬ê±°ë‚˜, í•´ë‹¹ ì—”í‹°í‹°ê°€ ì‚¬ë§í•œ ê²½ìš° í„´ ëë‚´ê¸°
         if (BattleData.Instance.IsInBattle == false || actor.IsDead)
         {
-            // ¸¸¾à »ç¸ÁÀ¸·Î ÅÏÀ» ³¡³»´Â °æ¿ì
+            // ë§Œì•½ ì‚¬ë§ìœ¼ë¡œ í„´ì„ ëë‚´ëŠ” ê²½ìš°
             if (actor.IsDead)
             {
-                // ´ÙÀ½ ÅÏ(=ÀÌ¹ø ÅÏ) ÅÏ¼ö¸¸Å­ »óÅÂÀÌ»ó Áö¼Ó ½Ã°£ µ¹¸®±â
+                // ë‹¤ìŒ í„´(=ì´ë²ˆ í„´) í„´ìˆ˜ë§Œí¼ ìƒíƒœì´ìƒ ì§€ì† ì‹œê°„ ëŒë¦¬ê¸°
                 BattleAction nextAction = battleSeq.GetTurnAction(0);
                 UpdateEffectTimers(nextAction.remainTurn);
             }
@@ -236,26 +236,26 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // ´ÙÀ½ ÅÏ¿¡ ÁøÇàÇÒ Çàµ¿ ¼±ÅÃ
+        // ë‹¤ìŒ í„´ì— ì§„í–‰í•  í–‰ë™ ì„ íƒ
         actor.TakeTurn();
     }
 
     public void EndTurn()
     {
-        // ÀûÀÌ ³²¾ÆÀÖ´Ù¸é ´ÙÀ½ ÅÏ ÁøÇà
+        // ì ì´ ë‚¨ì•„ìˆë‹¤ë©´ ë‹¤ìŒ í„´ ì§„í–‰
         if (BattleData.Instance.IsInBattle)
         {
             var battleSeq = BattleData.Instance.Sequence;
 
-            // ´ÙÀ½ ÅÏ ÅÏ¼ö¸¸Å­ »óÅÂÀÌ»ó Áö¼Ó ½Ã°£ µ¹¸®±â
+            // ë‹¤ìŒ í„´ í„´ìˆ˜ë§Œí¼ ìƒíƒœì´ìƒ ì§€ì† ì‹œê°„ ëŒë¦¬ê¸°
             BattleAction nextAction = battleSeq.GetTurnAction(1);
             UpdateEffectTimers(nextAction.remainTurn);
 
-            // ´ÙÀ½ ÅÏ ÁøÇà
+            // ë‹¤ìŒ í„´ ì§„í–‰
             battleSeq.NextTurn();
         }
 
-        // ÅÏ ³¡³»±â
+        // í„´ ëë‚´ê¸°
         isTurnEnded = true;
     }
 
@@ -263,24 +263,24 @@ public class BattleManager : MonoBehaviour
     {
         if (!BattleData.Instance.IsLivingCharacter)
         {
-            // ÇÃ·¹ÀÌ¾î ÆÄÆ¼°¡ Á×°Å³ª µµ¸Á°£ °æ¿ì
-            // Ã³Ä¡ º¸»ó X
+            // í”Œë ˆì´ì–´ íŒŒí‹°ê°€ ì£½ê±°ë‚˜ ë„ë§ê°„ ê²½ìš°
+            // ì²˜ì¹˜ ë³´ìƒ X
             BattleData.Instance.ClearReward();
         }
 
-        // ÀüÅõ Á¾·á ½Ã »óÅÂ¸¦ ÇöÀç »óÅÂ·Î °»½Å
+        // ì „íˆ¬ ì¢…ë£Œ ì‹œ ìƒíƒœë¥¼ í˜„ì¬ ìƒíƒœë¡œ ê°±ì‹ 
         UpdateCharacterStats();
 
-        // ÀüÅõ Á¾·á ¾Ë¸²
+        // ì „íˆ¬ ì¢…ë£Œ ì•Œë¦¼
         GameEventManager.Instance.NotifyBattleEnded();
 
-        // ÀüÃ¼ È­¸éÀ¸·Î Ä«¸Ş¶ó Æ÷Ä¿½Ì
+        // ì „ì²´ í™”ë©´ìœ¼ë¡œ ì¹´ë©”ë¼ í¬ì»¤ì‹±
         BattleCameraDirector.Instance.FocusFullScreen();
 
-        // ÀüÅõ °á°ú Ä³½Ã ÀúÀå
+        // ì „íˆ¬ ê²°ê³¼ ìºì‹œ ì €ì¥
         BattleCache.Current.Result = GetBattleResult();
 
-        // ÀüÅõ°¡ ³¡³µ´Ù¸é °á°úÃ¢ Ãâ·Â
+        // ì „íˆ¬ê°€ ëë‚¬ë‹¤ë©´ ê²°ê³¼ì°½ ì¶œë ¥
         resultUI.OpenResult();
     }
 
@@ -288,12 +288,12 @@ public class BattleManager : MonoBehaviour
     {
         var partyData = PartyData.Instance;
 
-        // ÀüÅõ¿¡ Âü¿©ÇÑ Ä³¸¯ÅÍ¸¸ ½ºÅÈ ¾÷µ¥ÀÌÆ®
+        // ì „íˆ¬ì— ì°¸ì—¬í•œ ìºë¦­í„°ë§Œ ìŠ¤íƒ¯ ì—…ë°ì´íŠ¸
         foreach (var character in BattleData.Instance.CharacterList)
         {
             var originData = partyData.GetCharacter(character.Name);
 
-            // HP, SP Àû¿ë
+            // HP, SP ì ìš©
             originData.Stats.HP = character.FinalStats.HP;
             originData.Stats.SP = character.FinalStats.SP;
         }
@@ -301,23 +301,23 @@ public class BattleManager : MonoBehaviour
 
     private BattleResult GetBattleResult()
     {
-        if (BattleData.Instance.IsLivingCharacter) // ÇÃ·¹ÀÌ¾î ÆÄÆ¼°¡ »ì¾ÆÀÖ´Ù¸é ½Â¸®
+        if (BattleData.Instance.IsLivingCharacter) // í”Œë ˆì´ì–´ íŒŒí‹°ê°€ ì‚´ì•„ìˆë‹¤ë©´ ìŠ¹ë¦¬
             return BattleResult.Victory;
-        else if (BattleData.Instance.CharacterList.Count > 0) // ÀüºÎ »ç¸Á ÆÇÁ¤¿¡ ÇÊµå¿¡ ³²¾ÆÀÖ´Ù¸é ÆĞ¹è
+        else if (BattleData.Instance.CharacterList.Count > 0) // ì „ë¶€ ì‚¬ë§ íŒì •ì— í•„ë“œì— ë‚¨ì•„ìˆë‹¤ë©´ íŒ¨ë°°
             return BattleResult.Defeat;
-        else // ÇÊµå¿¡ ÇÑ ¸íµµ ³²¾ÆÀÖÁö ¾Ê´Ù¸é µµ¸Á
+        else // í•„ë“œì— í•œ ëª…ë„ ë‚¨ì•„ìˆì§€ ì•Šë‹¤ë©´ ë„ë§
             return BattleResult.Escape;
     }
 
     private void UpdateEffectTimers(float turn)
     {
-        // Ä³¸¯ÅÍ ¹öÇÁ ½Ã°£ µ¹¸®±â
+        // ìºë¦­í„° ë²„í”„ ì‹œê°„ ëŒë¦¬ê¸°
         foreach (Entity entity in BattleData.Instance.CharacterList)
         {
             entity.UpdateEffectTimer(turn);
         }
 
-        // Àû ¹öÇÁ ½Ã°£ µ¹¸®±â
+        // ì  ë²„í”„ ì‹œê°„ ëŒë¦¬ê¸°
         foreach (Entity entity in BattleData.Instance.EnemyList)
         {
             entity.UpdateEffectTimer(turn);

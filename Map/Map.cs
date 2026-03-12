@@ -9,76 +9,76 @@ public class Map : MonoBehaviour
     [SerializeField]
     private MapData mapInfo;
 
-    // ÇØ´ç ¸ÊÀÇ ±¸¿ª Á¤º¸
+    // í•´ë‹¹ ë§µì˜ êµ¬ì—­ ì •ë³´
     private Dictionary<int, FieldArea> areaDict = new();
 
     private void Awake()
     {
-        // ÇöÀç ¸ÊÀ¸·Î ¼³Á¤
+        // í˜„ì¬ ë§µìœ¼ë¡œ ì„¤ì •
         GameData.Instance.MapScene = gameObject.scene.name;
         GameData.Instance.MapName = mapInfo.Name;
 
-        // ÇØ´ç ¸ÊÀÌ °ÅÁ¡ ¸ÊÀÎ °æ¿ì
+        // í•´ë‹¹ ë§µì´ ê±°ì  ë§µì¸ ê²½ìš°
         if (this is BaseMap)
         {
-            // ÀüÅõ ÆĞ¹è½Ã µ¹¾Æ¿Ã Àå¼Ò·Î ÁöÁ¤
+            // ì „íˆ¬ íŒ¨ë°°ì‹œ ëŒì•„ì˜¬ ì¥ì†Œë¡œ ì§€ì •
             GameData.Instance.RespawnMapScene = gameObject.scene.name;
         }
     }
 
     public void RegisterArea(FieldArea area)
     {
-        // °ü¸® ±¸¿ª ¸®½ºÆ®¿¡ Ãß°¡
+        // ê´€ë¦¬ êµ¬ì—­ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
         areaDict.Add(area.ID, area);
 
-        // °ÔÀÓ µ¥ÀÌÅÍ¿¡µµ ÇØ´ç Á¤º¸ Ãß°¡
+        // ê²Œì„ ë°ì´í„°ì—ë„ í•´ë‹¹ ì •ë³´ ì¶”ê°€
         GameData.Instance.AreaDatas.Add(new AreaData(area.ID, area.IsClearArea));
     }
 
     public void RemoveArea(FieldArea area)
     {
-        // °ü¸® ±¸¿ª ¸®½ºÆ®¿¡ »èÁ¦
+        // ê´€ë¦¬ êµ¬ì—­ ë¦¬ìŠ¤íŠ¸ì— ì‚­ì œ
         areaDict.Remove(area.ID);
 
-        // °ÔÀÓ µ¥ÀÌÅÍ¿¡¼­µµ ÇØ´ç Á¤º¸ »èÁ¦
+        // ê²Œì„ ë°ì´í„°ì—ì„œë„ í•´ë‹¹ ì •ë³´ ì‚­ì œ
         GameData.Instance.AreaDatas.RemoveWhere(data => data.id == area.ID);
     }
 
     /************************************************************
-     * [±¸¿ª °ü¸®]
+     * [êµ¬ì—­ ê´€ë¦¬]
      * 
-     * °ÔÀÓ ÆÄÀÏ ·Îµå ¹× ÀüÅõ °á°ú¿¡ µû¸¥ ±¸¿ª Á¤º¸ ¼³Á¤
+     * ê²Œì„ íŒŒì¼ ë¡œë“œ ë° ì „íˆ¬ ê²°ê³¼ì— ë”°ë¥¸ êµ¬ì—­ ì •ë³´ ì„¤ì •
      ************************************************************/
 
     /// <summary>
-    /// °ÔÀÓ ÆÄÀÏ ·Îµå ½Ã, °ÔÀÓ µ¥ÀÌÅÍ¸¦ Åä´ë·Î ÇöÀç °¢ ±¸¿ªµéÀÇ Å¬¸®¾î »óÈ²¸¸À» ¾÷µ¥ÀÌÆ®
+    /// ê²Œì„ íŒŒì¼ ë¡œë“œ ì‹œ, ê²Œì„ ë°ì´í„°ë¥¼ í† ëŒ€ë¡œ í˜„ì¬ ê° êµ¬ì—­ë“¤ì˜ í´ë¦¬ì–´ ìƒí™©ë§Œì„ ì—…ë°ì´íŠ¸
     /// </summary>
     public void UpdateData()
     {
-        // °¢ ±¸¿ªÀÇ Å¬¸®¾î ¿©ºÎ¸¸ °»½Å
+        // ê° êµ¬ì—­ì˜ í´ë¦¬ì–´ ì—¬ë¶€ë§Œ ê°±ì‹ 
         foreach (AreaData data in GameData.Instance.AreaDatas)
         {
-            // ÇØ´ç ID¸¦ °¡Áø Area Ã£±â
+            // í•´ë‹¹ IDë¥¼ ê°€ì§„ Area ì°¾ê¸°
             FieldArea area = areaDict.GetValueOrDefault(data.id);
 
-            // Ã£Àº Area°¡ Á¸ÀçÇÏ¸é Å¬¸®¾î ¿©ºÎ ¾÷µ¥ÀÌÆ®
+            // ì°¾ì€ Areaê°€ ì¡´ì¬í•˜ë©´ í´ë¦¬ì–´ ì—¬ë¶€ ì—…ë°ì´íŠ¸
             if (area != null)
             {
                 area.IsClearArea = data.isClearArea;
-                area.SetActiveMonsters(!data.isClearArea); // Å¬¸®¾îÇß´Ù¸é ºñÈ°¼ºÈ­
+                area.SetActiveMonsters(!data.isClearArea); // í´ë¦¬ì–´í–ˆë‹¤ë©´ ë¹„í™œì„±í™”
             }
         }
     }
 
     /// <summary>
-    /// ÀüÅõ¿¡¼­ ½Â¸®ÇßÀ» °æ¿ì ÇØ´ç ±¸¿ªÀ» Å¬¸®¾î Çß´Ù°í ¼³Á¤
+    /// ì „íˆ¬ì—ì„œ ìŠ¹ë¦¬í–ˆì„ ê²½ìš° í•´ë‹¹ êµ¬ì—­ì„ í´ë¦¬ì–´ í–ˆë‹¤ê³  ì„¤ì •
     /// </summary>
     public void OnEndBattle()
     {
-        // ÇÊµå·Î º¹±ÍÇÑ °Ô ¾Æ´Ï¶ó¸é ¹«½Ã
+        // í•„ë“œë¡œ ë³µê·€í•œ ê²Œ ì•„ë‹ˆë¼ë©´ ë¬´ì‹œ
         if (GameData.Instance.State != GameState.Field) return;
 
-        // ÀüÅõ¿¡¼­ ½Â¸®ÇÑ °æ¿ì¿¡¸¸ ÇöÀç ±¸¿ªÀ» Åä¹úÇß´Ù°í ÀÎÁ¤
+        // ì „íˆ¬ì—ì„œ ìŠ¹ë¦¬í•œ ê²½ìš°ì—ë§Œ í˜„ì¬ êµ¬ì—­ì„ í† ë²Œí–ˆë‹¤ê³  ì¸ì •
         if (BattleCache.Current.Result == BattleResult.Victory)
         {
             areaDict[curAreaID].IsClearArea = true;
@@ -87,21 +87,21 @@ public class Map : MonoBehaviour
     }
 
     /************************************************************
-     * [±¸¿ª ÀÌµ¿]
+     * [êµ¬ì—­ ì´ë™]
      * 
-     * Æ¯Á¤ ±¸¿ª¿¡ µé¾î¿À°Å³ª ³ª°¥ ¶§ ½ÇÇàµÉ ÇÔ¼ö °ü¸®
+     * íŠ¹ì • êµ¬ì—­ì— ë“¤ì–´ì˜¤ê±°ë‚˜ ë‚˜ê°ˆ ë•Œ ì‹¤í–‰ë  í•¨ìˆ˜ ê´€ë¦¬
      ************************************************************/
 
     public void OnEntedArea(FieldArea area)
     {
-        // ÀÌÀü ±¸¿ªÀÌ ÇöÀç ¾ø°Å³ª, Ã¹ ¹æ¹® ±¸¿ªÀÎ °æ¿ì È¤Àº ¸ğÁ¾ÀÇ ÀÌÀ¯·Î Àç¹æ¹®ÇÑ °æ¿ì
+        // ì´ì „ êµ¬ì—­ì´ í˜„ì¬ ì—†ê±°ë‚˜, ì²« ë°©ë¬¸ êµ¬ì—­ì¸ ê²½ìš° í˜¹ì€ ëª¨ì¢…ì˜ ì´ìœ ë¡œ ì¬ë°©ë¬¸í•œ ê²½ìš°
         if (!areaDict.ContainsKey(lastEntedAreaID) || curAreaID == area.ID)
         {
-            // ÇØ´ç ±¸¿ª È°¼ºÈ­
+            // í•´ë‹¹ êµ¬ì—­ í™œì„±í™”
             EnableArea(area);
         }
 
-        // ¸¶Áö¸· ¹æ¹® ±¸¿ªÀ¸·Î µî·Ï
+        // ë§ˆì§€ë§‰ ë°©ë¬¸ êµ¬ì—­ìœ¼ë¡œ ë“±ë¡
         lastEntedAreaID = area.ID;
     }
 
@@ -109,11 +109,11 @@ public class Map : MonoBehaviour
     {
         if (curAreaID != area.ID)
         {
-            // ³ª°£ ¿µ¿ªÀÌ ÇöÀç ±¸¿ªÀÌ ¾Æ´Ò °æ¿ì ¹«½Ã
+            // ë‚˜ê°„ ì˜ì—­ì´ í˜„ì¬ êµ¬ì—­ì´ ì•„ë‹ ê²½ìš° ë¬´ì‹œ
             return;
         }
 
-        // ¸¶Áö¸·À¸·Î ¹æ¹®ÇÑ ±¸¿ªÀ» Ä«¸Ş¶ó ¿µ¿ªÀ¸·Î º¯°æ
+        // ë§ˆì§€ë§‰ìœ¼ë¡œ ë°©ë¬¸í•œ êµ¬ì—­ì„ ì¹´ë©”ë¼ ì˜ì—­ìœ¼ë¡œ ë³€ê²½
         EnableArea(areaDict[lastEntedAreaID]);
     }
 
@@ -122,20 +122,20 @@ public class Map : MonoBehaviour
         FieldArea prevArea = areaDict.GetValueOrDefault(curAreaID);
         curAreaID = area.ID;
 
-        // ÇØ´ç ±¸¿ªÀ» Ä«¸Ş¶ó ¿µ¿ªÀ¸·Î ÁöÁ¤
+        // í•´ë‹¹ êµ¬ì—­ì„ ì¹´ë©”ë¼ ì˜ì—­ìœ¼ë¡œ ì§€ì •
         SetCurrentArea(area);
 
-        // ÇØ´ç ±¸¿ªÀÇ ¸ó½ºÅÍ Á¤º¸¸¦ Ä³½Ã µ¥ÀÌÅÍ¿¡ ÀúÀå
+        // í•´ë‹¹ êµ¬ì—­ì˜ ëª¬ìŠ¤í„° ì •ë³´ë¥¼ ìºì‹œ ë°ì´í„°ì— ì €ì¥
         BattleCache.Current.FieldData = area.FieldData;
 
-        // ±¸¿ª ¸ó½ºÅÍ È°¼ºÈ­
+        // êµ¬ì—­ ëª¬ìŠ¤í„° í™œì„±í™”
         if (area.IsClearArea == false)
         {
-            // Å¬¸®¾îµÈ ±¸¿ªÀÌ ¾Æ´Ò °æ¿ì¿¡¸¸ È°¼ºÈ­
+            // í´ë¦¬ì–´ëœ êµ¬ì—­ì´ ì•„ë‹ ê²½ìš°ì—ë§Œ í™œì„±í™”
             area.SetActiveMonsters(true);
         }
 
-        // ÀÌÀü ±¸¿ª ºñÈ°¼ºÈ­
+        // ì´ì „ êµ¬ì—­ ë¹„í™œì„±í™”
         if (prevArea != null && prevArea != area)
         {
             DisableArea(prevArea);
@@ -144,16 +144,16 @@ public class Map : MonoBehaviour
 
     private void SetCurrentArea(FieldArea area)
     {
-        // Ä«¸Ş¶ó ¿µ¿ª ÁöÁ¤
+        // ì¹´ë©”ë¼ ì˜ì—­ ì§€ì •
         PlayerTrackerCamera.cameraArea = area.AreaCollider;
 
-        // ±¸¿ª º¯°æ ¾Ë¸²
+        // êµ¬ì—­ ë³€ê²½ ì•Œë¦¼
         GameEventManager.Instance.NotifyAreaChanged();
     }
 
     private void DisableArea(FieldArea area)
     {
-        // ±¸¿ª ¸ó½ºÅÍ ºñÈ°¼ºÈ­
+        // êµ¬ì—­ ëª¬ìŠ¤í„° ë¹„í™œì„±í™”
         area.SetActiveMonsters(false);
     }
 }

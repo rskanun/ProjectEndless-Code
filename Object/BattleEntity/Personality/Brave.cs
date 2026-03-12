@@ -10,44 +10,44 @@ public class Brave : Personality
         BattleSequence seq = BattleData.Instance.Sequence;
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // °ø°İ·Â¿¡ µû¸¥ °¡ÁßÄ¡ °ª
+        // ê³µê²©ë ¥ì— ë”°ë¥¸ ê°€ì¤‘ì¹˜ ê°’
         float atkWeight = 2.0f;
 
-        // Èû°ú ¸¶·ÂÀÇ ÇÕÀÌ ³ôÀº ¼ø¼­ºÎÅÍ ¼øÈ¸
+        // í˜ê³¼ ë§ˆë ¥ì˜ í•©ì´ ë†’ì€ ìˆœì„œë¶€í„° ìˆœíšŒ
         foreach (Entity target in targetList.OrderBy(entity => entity.FinalStats.STR + entity.FinalStats.MaxMP))
         {
-            // °¡ÁßÄ¡ ÃÊ±â°ª ¼³Á¤
+            // ê°€ì¤‘ì¹˜ ì´ˆê¸°ê°’ ì„¤ì •
             weightData[target] = 0.0f;
 
-            // °ø°İ·ÂÀÌ ³ôÀº Àû¿¡°Ô ³ôÀº °¡ÁßÄ¡ ºÎ¿©
+            // ê³µê²©ë ¥ì´ ë†’ì€ ì ì—ê²Œ ë†’ì€ ê°€ì¤‘ì¹˜ ë¶€ì—¬
             weightData[target] += atkWeight;
 
-            // Àü¹æ¿¡ À§Ä¡ÇÑ ÀûÀÎ °æ¿ì
+            // ì „ë°©ì— ìœ„ì¹˜í•œ ì ì¸ ê²½ìš°
             if (target.Position == BattlePosition.Front)
             {
-                // °¡ÁßÄ¡ ºÎ¿©
+                // ê°€ì¤‘ì¹˜ ë¶€ì—¬
                 weightData[target] += 2.0f;
             }
 
-            // °ø°İ·Â °¡ÁßÄ¡ ³·Ãß±â
+            // ê³µê²©ë ¥ ê°€ì¤‘ì¹˜ ë‚®ì¶”ê¸°
             atkWeight -= 0.1f;
         }
 
-        // Çàµ¿¿¡ µû¸¥ °¡ÁßÄ¡ °ª
+        // í–‰ë™ì— ë”°ë¥¸ ê°€ì¤‘ì¹˜ ê°’
         float actionWeight = 0.5f;
 
-        // °¡Àå »¡¸® Çàµ¿ÇÏ´Â Å¸°ÙºÎÅÍ ¼øÈ¸
+        // ê°€ì¥ ë¹¨ë¦¬ í–‰ë™í•˜ëŠ” íƒ€ê²Ÿë¶€í„° ìˆœíšŒ
         foreach (Entity target in targetList.OrderBy(entity => seq.GetEntityAction(entity)))
         {
-            // ÇØ´ç ¿£Æ¼Æ¼ÀÇ ¿¹Á¤µÈ Çàµ¿ °¡Á®¿À±â
+            // í•´ë‹¹ ì—”í‹°í‹°ì˜ ì˜ˆì •ëœ í–‰ë™ ê°€ì ¸ì˜¤ê¸°
             BattleAction action = seq.GetEntityAction(target);
 
-            // ÀÏ¹İ °ø°İÀÌ³ª ½ºÅ³À» ¾µ ¿¹Á¤ÀÌ¶ó¸é °¡ÁßÄ¡ Áõ°¡
+            // ì¼ë°˜ ê³µê²©ì´ë‚˜ ìŠ¤í‚¬ì„ ì“¸ ì˜ˆì •ì´ë¼ë©´ ê°€ì¤‘ì¹˜ ì¦ê°€
             if (action is AttackAction || action is SkillAction)
             {
                 weightData[target] += actionWeight;
 
-                // ´ÙÀ½ Çàµ¿ÀÚ´Â °¡ÁßÄ¡ Áõ°¡·® °¨¼Ò
+                // ë‹¤ìŒ í–‰ë™ìëŠ” ê°€ì¤‘ì¹˜ ì¦ê°€ëŸ‰ ê°ì†Œ
                 actionWeight -= 0.1f;
             }
         }

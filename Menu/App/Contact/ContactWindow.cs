@@ -14,12 +14,12 @@ public abstract class ContactWindow : MonoBehaviour
     protected bool _isTweening;
     public bool IsTweening => _isTweening;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤
+    // ì• ë‹ˆë©”ì´ì…˜ ì„¤ì •
     protected HashSet<Tween> playAnimations = new();
-    protected float offsetY = 200f;  // ¿ÀÇÂ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÃÀÛµÇ´Â Y À§Ä¡
-    protected float offsetX = 300f;   // Å¬·ÎÁî ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³ª´Â X À§Ä¡
-    protected float interval = 0.05f; // °¢ Ç×¸ñ µîÀå °£°İ
-    protected float duration = 0.3f; // ¿Ã¶ó¿À´Âµ¥ °É¸®´Â ½Ã°£
+    protected float offsetY = 200f;  // ì˜¤í”ˆ ì• ë‹ˆë©”ì´ì…˜ì´ ì‹œì‘ë˜ëŠ” Y ìœ„ì¹˜
+    protected float offsetX = 300f;   // í´ë¡œì¦ˆ ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚˜ëŠ” X ìœ„ì¹˜
+    protected float interval = 0.05f; // ê° í•­ëª© ë“±ì¥ ê°„ê²©
+    protected float duration = 0.3f; // ì˜¬ë¼ì˜¤ëŠ”ë° ê±¸ë¦¬ëŠ” ì‹œê°„
 
     public void KillAnimations()
     {
@@ -38,34 +38,34 @@ public abstract class ContactWindow : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼±ÅÃµÈ ¿¬¶ôÃ³ ¿ÀºêÁ§Æ® À§Ä¡¿¡ ¸ÂÃç ÀüÃ¼ÀûÀÎ ½ºÅ©·Ñºä ÀÌµ¿
+    /// ì„ íƒëœ ì—°ë½ì²˜ ì˜¤ë¸Œì íŠ¸ ìœ„ì¹˜ì— ë§ì¶° ì „ì²´ì ì¸ ìŠ¤í¬ë¡¤ë·° ì´ë™
     /// </summary>
-    /// <param name="focusContact">¼±ÅÃµÈ ¿¬¶ôÃ³</param>
+    /// <param name="focusContact">ì„ íƒëœ ì—°ë½ì²˜</param>
     protected virtual void UpdateScrollPosition(GameObject focusContact)
     {
-        // È­¸é¿¡ º¸¿©Áö´Â ÃÖ¼Ò ÃÖ´ë y°ª
+        // í™”ë©´ì— ë³´ì—¬ì§€ëŠ” ìµœì†Œ ìµœëŒ€ yê°’
         float minY = -content.localPosition.y - viewportRect.rect.height + layoutGroup.padding.bottom;
         float maxY = -content.localPosition.y - layoutGroup.padding.top;
 
-        // ÇØ´ç ¿¬¶ôÃ³ ¿ÀºêÁ§Æ®ÀÇ ÃÖÇÏ´Ü ¹× ÃÖ»ó´Ü y°ª
+        // í•´ë‹¹ ì—°ë½ì²˜ ì˜¤ë¸Œì íŠ¸ì˜ ìµœí•˜ë‹¨ ë° ìµœìƒë‹¨ yê°’
         RectTransform rectTransform = focusContact.GetComponent<RectTransform>();
         float contactMinY = focusContact.transform.localPosition.y - rectTransform.rect.height;
         float contactMaxY = focusContact.transform.localPosition.y;
 
-        // È­¸é¿¡ ¿ÀºêÁ§Æ®°¡ ÀÏºÎ¶óµµ Àß¸®´Â Áö ÆÇ´Ü
+        // í™”ë©´ì— ì˜¤ë¸Œì íŠ¸ê°€ ì¼ë¶€ë¼ë„ ì˜ë¦¬ëŠ” ì§€ íŒë‹¨
         float endValue = content.localPosition.y;
         if (contactMinY < minY)
         {
-            // ÇÏ´ÜÀÌ Àß·È´Ù¸é Àß·Á³ª°¡´Â ºÎºĞ¸¸Å­ ½ºÅ©·ÑÀ» À§·Î ¿Ã¸®±â
+            // í•˜ë‹¨ì´ ì˜ë ¸ë‹¤ë©´ ì˜ë ¤ë‚˜ê°€ëŠ” ë¶€ë¶„ë§Œí¼ ìŠ¤í¬ë¡¤ì„ ìœ„ë¡œ ì˜¬ë¦¬ê¸°
             endValue = content.localPosition.y + minY - contactMinY;
         }
         else if (contactMaxY > maxY)
         {
-            // »ó´ÜÀÌ Àß·È´Ù¸é Àß·Á³ª°¡´Â ºÎºĞ¸¸Å­ ½ºÅ©·ÑÀ» ¾Æ·¡·Î ³»¸®±â
+            // ìƒë‹¨ì´ ì˜ë ¸ë‹¤ë©´ ì˜ë ¤ë‚˜ê°€ëŠ” ë¶€ë¶„ë§Œí¼ ìŠ¤í¬ë¡¤ì„ ì•„ë˜ë¡œ ë‚´ë¦¬ê¸°
             endValue = content.localPosition.y - contactMaxY + maxY;
         }
 
-        // Àß·Á³ª°£ ºÎºĞÀÌ ³ª¿Àµµ·Ï ½ºÅ©·Ñ Á¶Á¤
+        // ì˜ë ¤ë‚˜ê°„ ë¶€ë¶„ì´ ë‚˜ì˜¤ë„ë¡ ìŠ¤í¬ë¡¤ ì¡°ì •
         if (endValue != content.localPosition.y)
         {
             Tween tween = content.DOLocalMoveY(endValue, 0.2f);
@@ -81,27 +81,27 @@ public abstract class ContactWindow : MonoBehaviour
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(content);
 
-        // ·¹ÀÌ¾Æ¿ô ±×·ì Àá½Ã ²ô±â
+        // ë ˆì´ì•„ì›ƒ ê·¸ë£¹ ì ì‹œ ë„ê¸°
         layoutGroup.enabled = false;
 
-        // È­¸é¿¡ º¸ÀÌ´Â °æ°è y°ª
+        // í™”ë©´ì— ë³´ì´ëŠ” ê²½ê³„ yê°’
         float maxY = -viewportRect.rect.height;
 
-        int count = 0; // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÇÇàµÇ´Â ¿ÀºêÁ§Æ® °³¼ö
+        int count = 0; // ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ë˜ëŠ” ì˜¤ë¸Œì íŠ¸ ê°œìˆ˜
         for (int i = 0; i < content.childCount; i++)
         {
             if (content.GetChild(i) is not RectTransform item) continue;
 
-            // °æ°è ÀÌÇÏÀÇ ¿ÀºêÁ§Æ®´Â ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë X
+            // ê²½ê³„ ì´í•˜ì˜ ì˜¤ë¸Œì íŠ¸ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì ìš© X
             if (item.localPosition.y <= maxY) continue;
 
-            // ÇöÀç À§Ä¡ ÀúÀå
+            // í˜„ì¬ ìœ„ì¹˜ ì €ì¥
             Vector2 targetPos = item.anchoredPosition;
 
-            // ÇØ´ç ¿ÀºêÁ§Æ®¸¦ ¾Æ·¡·Î ³»¸®±â
+            // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ë¥¼ ì•„ë˜ë¡œ ë‚´ë¦¬ê¸°
             item.anchoredPosition = targetPos - new Vector2(0, offsetY);
 
-            // À§·Î ¿Ã¶ó¿À´Â ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            // ìœ„ë¡œ ì˜¬ë¼ì˜¤ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
             Tween tween = item.DOAnchorPos(targetPos, duration)
                 .SetDelay(interval * count++)
                 .SetEase(Ease.OutCubic);
@@ -110,13 +110,13 @@ public abstract class ContactWindow : MonoBehaviour
             playAnimations.Add(tween);
         }
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á±îÁö ´ë±â
+        // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitForSeconds(count * interval + duration);
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ÈÄ ·¹ÀÌ¾Æ¿ô ±×·ì ´Ù½Ã ÀÛµ¿
+        // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ í›„ ë ˆì´ì•„ì›ƒ ê·¸ë£¹ ë‹¤ì‹œ ì‘ë™
         layoutGroup.enabled = true;
 
-        // ÄÚ·çÆ¾ ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ¼±¾ğ
+        // ì½”ë£¨í‹´ ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ ì„ ì–¸
         _isTweening = false;
     }
 
@@ -133,14 +133,14 @@ public abstract class ContactWindow : MonoBehaviour
 
         yield return null;
 
-        // ·¹ÀÌ¾Æ¿ô ±×·ì Àá½Ã ²ô±â
+        // ë ˆì´ì•„ì›ƒ ê·¸ë£¹ ì ì‹œ ë„ê¸°
         layoutGroup.enabled = false;
 
-        // È­¸é¿¡ Ç¥½ÃµÇ´Â y °æ°è°ª Ã£±â
+        // í™”ë©´ì— í‘œì‹œë˜ëŠ” y ê²½ê³„ê°’ ì°¾ê¸°
         float minY = -content.localPosition.y;
         float maxY = -content.localPosition.y - viewportRect.rect.height;
 
-        int count = 0; // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ½ÇÇàµÇ´Â ¿ÀºêÁ§Æ® °³¼ö
+        int count = 0; // ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ë˜ëŠ” ì˜¤ë¸Œì íŠ¸ ê°œìˆ˜
         for (int i = 0; i < content.childCount; i++)
         {
             if (content.GetChild(i) is not RectTransform item) continue;
@@ -148,12 +148,12 @@ public abstract class ContactWindow : MonoBehaviour
             float contactMinY = item.localPosition.y;
             float contactMaxY = item.localPosition.y - item.rect.height;
 
-            // °æ°è°ª ¹ÛÀÇ ¿ÀºêÁ§Æ®´Â ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë X
+            // ê²½ê³„ê°’ ë°–ì˜ ì˜¤ë¸Œì íŠ¸ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì ìš© X
             if (minY <= contactMaxY || maxY >= contactMinY) continue;
 
             Vector2 targetPos = item.anchoredPosition - new Vector2(offsetX, 0);
 
-            // ¿ŞÂÊÀ¸·Î ºüÁö¸ç ÆäÀÌµå ¾Æ¿ôµÇ´Â ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            // ì™¼ìª½ìœ¼ë¡œ ë¹ ì§€ë©° í˜ì´ë“œ ì•„ì›ƒë˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
             Tween tween = item.DOAnchorPos(targetPos, duration)
                 .SetDelay(count++ * interval)
                 .SetEase(Ease.OutCubic);
@@ -162,16 +162,16 @@ public abstract class ContactWindow : MonoBehaviour
             playAnimations.Add(tween);
         }
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á±îÁö ´ë±â
+        // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitForSeconds(count * interval + duration);
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ÈÄ ·¹ÀÌ¾Æ¿ô ±×·ì ´Ù½Ã ÀÛµ¿
+        // ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ í›„ ë ˆì´ì•„ì›ƒ ê·¸ë£¹ ë‹¤ì‹œ ì‘ë™
         layoutGroup.enabled = true;
 
-        // ÄÚ·çÆ¾ ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ¼±¾ğ
+        // ì½”ë£¨í‹´ ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ ì„ ì–¸
         _isTweening = false;
 
-        // ÇØ´ç ¿ÀºêÁ§Æ® ºñÈ°¼ºÈ­
+        // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ë¹„í™œì„±í™”
         gameObject.SetActive(false);
     }
 

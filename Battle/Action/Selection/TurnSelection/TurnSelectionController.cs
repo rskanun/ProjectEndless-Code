@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class TurnSelectionController : MonoBehaviour, IController
 {
-    [Header("¬¸¡∂ Ω∫≈©∏≥∆Æ")]
+    [Header("Ï∞∏Ï°∞ Ïä§ÌÅ¨Î¶ΩÌä∏")]
     [SerializeField] private TurnSelection selection;
 
     private bool isMoveKeyPressed;
@@ -29,14 +29,14 @@ public class TurnSelectionController : MonoBehaviour, IController
     {
         Vector2 moveInput = context.ReadValue<Vector2>();
 
-        // ≈∞∫∏µÂ ¡¬øÏ≈∞∑Œ ª¿‘«“ ≈∏¿”∂Û¿Œ º±≈√
+        // ÌÇ§Î≥¥Îìú Ï¢åÏö∞ÌÇ§Î°ú ÏÇΩÏûÖÌï† ÌÉÄÏûÑÎùºÏù∏ ÏÑ†ÌÉù
         if (moveInput.x > 0) selection.MoveNext();
         else if (moveInput.x < 0) selection.MovePrev();
     }
 
     private void OnSelectKeyPressed(InputAction.CallbackContext context)
     {
-        // «ˆ¿Á ƒ≠ø° ≈∏¿”∂Û¿Œ ª¿‘
+        // ÌòÑÏû¨ Ïπ∏Ïóê ÌÉÄÏûÑÎùºÏù∏ ÏÇΩÏûÖ
         selection.InsertAction();
     }
 }

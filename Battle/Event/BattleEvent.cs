@@ -4,10 +4,10 @@ using UnityEngine;
 [SerializeField]
 public class BattleEvent
 {
-    [Header("ÀÌº¥Æ® Æ®¸®°Å")]
+    [Header("ì´ë²¤íŠ¸ íŠ¸ë¦¬ê±°")]
     [SerializeField] private EventTrigger mainTrigger;
     [SerializeField] private List<AddEventTrigger> addTriggers;
 
-    [Header("ÀÌº¥Æ®")]
+    [Header("ì´ë²¤íŠ¸")]
     [SerializeField] private List<EventAction> actions;
 }

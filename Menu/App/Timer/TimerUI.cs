@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class TimerUI : AppUI
 {
-    [Title("Å¸ÀÌ¸Ó")]
+    [Title("íƒ€ì´ë¨¸")]
     [SerializeField] private RotaryTimer hourTimer;
     [SerializeField] private RotaryTimer minTimer;
     [SerializeField] private TextMeshProUGUI secTimer;
@@ -23,7 +23,7 @@ public class TimerUI : AppUI
 
     private bool isShowDetail;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤
+    // ì• ë‹ˆë©”ì´ì…˜ ì„¤ì •
     private Sequence infoAnimation;
     private float infoDuration = 0.25f;
 
@@ -49,7 +49,7 @@ public class TimerUI : AppUI
         hourTimer.SetTime(time.Hour);
         minTimer.SetTime(time.Min);
 
-        // ÃÊ´Â »ç¿ë X
+        // ì´ˆëŠ” ì‚¬ìš© X
         secTimer.text = $"{time.Sec:d2}";
     }
 
@@ -65,7 +65,7 @@ public class TimerUI : AppUI
     {
         Endless.GameData.Time maxTime = GameData.Instance.MaxTime;
 
-        string text = $"<b>{time}</b> <size=12>³²À½</size>";
+        string text = $"<b>{time}</b> <size=12>ë‚¨ìŒ</size>";
 
         simpleRemainTimer.text = text;
         detailRemainTimer.text = text;
@@ -74,23 +74,23 @@ public class TimerUI : AppUI
 
     public void SetTimeRange(Endless.GameData.Time time)
     {
-        hourTimer.SetMaxTime(time.Hour + 1); // ÇØ´ç ½Ã°£µµ Æ÷ÇÔÇØ¾ß ÇÔ
+        hourTimer.SetMaxTime(time.Hour + 1); // í•´ë‹¹ ì‹œê°„ë„ í¬í•¨í•´ì•¼ í•¨
         minTimer.SetMaxTime((hourTimer.currentTime == time.Hour) ? time.Min : 60);
     }
 
     public void ShowRegenAmount()
     {
-        // ÀÌ¹Ì µğÅ×ÀÏ Ã¢ÀÌ ¶ç¿öÁ® ÀÖ´Ù¸é ¹«½Ã
+        // ì´ë¯¸ ë””í…Œì¼ ì°½ì´ ë„ì›Œì ¸ ìˆë‹¤ë©´ ë¬´ì‹œ
         if (isShowDetail) return;
 
         isShowDetail = true;
         detailInfo.alpha = 0.0f;
         detailInfo.gameObject.SetActive(true);
 
-        // ÇöÀç ÁøÇà ÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼Ç ÀÖ´Ù¸é Á¾·á
+        // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ ìˆë‹¤ë©´ ì¢…ë£Œ
         infoAnimation?.Kill();
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         infoAnimation = DOTween.Sequence()
             .Join(simpleInfo.DOFade(0.0f, infoDuration))
             .Join(detailInfo.DOFade(1.0f, infoDuration))
@@ -107,10 +107,10 @@ public class TimerUI : AppUI
         simpleInfo.alpha = 0.0f;
         simpleInfo.gameObject.SetActive(true);
 
-        // ÇöÀç ÁøÇà ÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼Ç ÀÖ´Ù¸é Á¾·á
+        // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ ìˆë‹¤ë©´ ì¢…ë£Œ
         infoAnimation?.Kill();
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         infoAnimation = DOTween.Sequence()
             .Join(simpleInfo.DOFade(1.0f, infoDuration))
             .Join(detailInfo.DOFade(0.0f, infoDuration))
@@ -129,11 +129,11 @@ public class TimerUI : AppUI
 
     public void ResetUI()
     {
-        // µğÅ×ÀÏ Ã¢ »èÁ¦
+        // ë””í…Œì¼ ì°½ ì‚­ì œ
         simpleInfo.gameObject.SetActive(true);
         detailInfo.gameObject.SetActive(false);
 
-        // ¸ğµç Å¸ÀÌ¸ÓÀÇ Á¦¾î UI ºñÈ°¼ºÈ­
+        // ëª¨ë“  íƒ€ì´ë¨¸ì˜ ì œì–´ UI ë¹„í™œì„±í™”
         hourTimer.OnDeselect(null);
         minTimer.OnDeselect(null);
     }

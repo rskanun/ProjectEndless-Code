@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class SurveyManager : MonoBehaviour
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private SurveyUI ui;
     [SerializeField] private Timeline timeline;
     [SerializeField] private SurveyController thisController;
@@ -26,58 +26,58 @@ public class SurveyManager : MonoBehaviour
 
     public void OnStartSurvey()
     {
-        // ÄÁÆ®·Ñ·¯ ¼ÂÆÃ
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì…‹íŒ…
         mainController.SetSubController(thisController);
 
-        // Ä«¸Ş¶ó Á¶Á¤
+        // ì¹´ë©”ë¼ ì¡°ì •
         BattleCameraDirector.Instance.FocusFullScreen();
 
-        // ÀüÈ¯À» ±â´Ù¸®°í¼­ Ã¹ Å¸ÀÓ¶óÀÎºÎÅÍ »ìÇÇ±â
+        // ì „í™˜ì„ ê¸°ë‹¤ë¦¬ê³ ì„œ ì²« íƒ€ì„ë¼ì¸ë¶€í„° ì‚´í”¼ê¸°
         StartCoroutine(WaitForCameraBlendEnd(() => SurveyingAction(0)));
     }
 
     private IEnumerator WaitForCameraBlendEnd(Action onComplete)
     {
-        // Ä«¸Ş¶ó ÀüÈ¯ ½ÃÀÛ ´ë±â
+        // ì¹´ë©”ë¼ ì „í™˜ ì‹œì‘ ëŒ€ê¸°
         yield return new WaitUntil(() => BattleCameraDirector.Instance.IsBlending);
 
-        // Ä«¸Ş¶ó ÀüÈ¯ ¿Ï·á ´ë±â
+        // ì¹´ë©”ë¼ ì „í™˜ ì™„ë£Œ ëŒ€ê¸°
         yield return new WaitWhile(() => BattleCameraDirector.Instance.IsBlending);
 
-        // ÀüÈ¯ Á¾·á ÈÄ ´ÙÀ½ Çàµ¿ ½ÇÇà
+        // ì „í™˜ ì¢…ë£Œ í›„ ë‹¤ìŒ í–‰ë™ ì‹¤í–‰
         onComplete?.Invoke();
     }
 
     public void OnEndSurvey()
     {
-        // Á¶È¸ Á¤º¸ »èÁ¦
+        // ì¡°íšŒ ì •ë³´ ì‚­ì œ
         RemovePrevInfo();
 
-        // ÀÌÀü ÀÎµ¦½º °ª ÃÊ±âÈ­
+        // ì´ì „ ì¸ë±ìŠ¤ ê°’ ì´ˆê¸°í™”
         prevIndex = -1;
 
-        // Å¸ÀÓ¶óÀÎ Á¤»óÈ­
+        // íƒ€ì„ë¼ì¸ ì •ìƒí™”
         timeline.MoveIndex(0);
 
-        // ÄÁÆ®·Ñ·¯ ÇØÁ¦
+        // ì»¨íŠ¸ë¡¤ëŸ¬ í•´ì œ
         mainController.SetSubController(null);
     }
 
     public void SurveyNext()
     {
-        // Å¸ÀÓ¶óÀÎ ¿Å±â±â
+        // íƒ€ì„ë¼ì¸ ì˜®ê¸°ê¸°
         timeline.MoveNext();
 
-        // ÇöÀç »÷ÅÍ¿¡ À§Ä¡ÇÑ Å¸ÀÓ¶óÀÎ Çàµ¿ º¸ÀÌ±â
+        // í˜„ì¬ ìƒŒí„°ì— ìœ„ì¹˜í•œ íƒ€ì„ë¼ì¸ í–‰ë™ ë³´ì´ê¸°
         SurveyingAction(timeline.CenterIndex);
     }
 
     public void SurveyPrev()
     {
-        // Å¸ÀÓ¶óÀÎ ¿Å±â±â
+        // íƒ€ì„ë¼ì¸ ì˜®ê¸°ê¸°
         timeline.MovePrev();
 
-        // ÇöÀç »÷ÅÍ¿¡ À§Ä¡ÇÑ Å¸ÀÓ¶óÀÎ Çàµ¿ º¸ÀÌ±â
+        // í˜„ì¬ ìƒŒí„°ì— ìœ„ì¹˜í•œ íƒ€ì„ë¼ì¸ í–‰ë™ ë³´ì´ê¸°
         SurveyingAction(timeline.CenterIndex);
     }
 
@@ -85,34 +85,34 @@ public class SurveyManager : MonoBehaviour
     {
         if (prevIndex == index)
         {
-            // ÀÌÀü °ª°ú µ¿ÀÏÇÑ °æ¿ì »ìÇÇ±â °íÁ¤
+            // ì´ì „ ê°’ê³¼ ë™ì¼í•œ ê²½ìš° ì‚´í”¼ê¸° ê³ ì •
             return;
         }
 
-        // ÀÌÀü ³»¿ª »èÁ¦
+        // ì´ì „ ë‚´ì—­ ì‚­ì œ
         RemovePrevInfo();
 
-        // ÀÌÀü ÀÎµ¦½º °ª¿¡ ÇöÀç ÀÎµ¦½º ÇÒ´ç
+        // ì´ì „ ì¸ë±ìŠ¤ ê°’ì— í˜„ì¬ ì¸ë±ìŠ¤ í• ë‹¹
         prevIndex = index;
 
-        // ÇØ´ç Çàµ¿ È­¸é»ó¿¡ ¶ç¿ì±â
+        // í•´ë‹¹ í–‰ë™ í™”ë©´ìƒì— ë„ìš°ê¸°
         BattleAction action = seq.GetTurnAction(index);
 
-        ActiveActionIcon(action.actor, action.ActionType);  // ÇöÀç Çàµ¿ Ç¥½Ã
-        CreateTargetingArrow(action);   // Å¸°Ù ¶Ç´Â Å¸°ÙÀ¸·Î °¡´ÉÇÑ ¿£Æ¼Æ¼ Ç¥½Ã
-        ActiveForecastHP(action);   // ¿¹»ó Ã¼·Â Ç¥½Ã
-        ViewForecastEffect(action);     // ¿¹»ó »óÅÂÈ¿°ú Ç¥½Ã
+        ActiveActionIcon(action.actor, action.ActionType);  // í˜„ì¬ í–‰ë™ í‘œì‹œ
+        CreateTargetingArrow(action);   // íƒ€ê²Ÿ ë˜ëŠ” íƒ€ê²Ÿìœ¼ë¡œ ê°€ëŠ¥í•œ ì—”í‹°í‹° í‘œì‹œ
+        ActiveForecastHP(action);   // ì˜ˆìƒ ì²´ë ¥ í‘œì‹œ
+        ViewForecastEffect(action);     // ì˜ˆìƒ ìƒíƒœíš¨ê³¼ í‘œì‹œ
     }
 
     private void RemovePrevInfo()
     {
         if (prevIndex < 0)
         {
-            // ÀÌÀü °ªÀÌ ¾ø´Ù¸é »èÁ¦ X
+            // ì´ì „ ê°’ì´ ì—†ë‹¤ë©´ ì‚­ì œ X
             return;
         }
 
-        // ÀÌÀü Á¤º¸ »èÁ¦
+        // ì´ì „ ì •ë³´ ì‚­ì œ
         BattleAction action = seq.GetTurnAction(prevIndex);
 
         DeactiveActionIcon(action.actor);
@@ -122,9 +122,9 @@ public class SurveyManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ Çàµ¿ Ç¥½Ã ]
+    * [ í–‰ë™ í‘œì‹œ ]
     * 
-    * ÇöÀç »ìÇÇ´Â Çàµ¿ÀÌ ¾î¶² Çàµ¿ÀÎÁö ¾ÆÀÌÄÜÀ¸·Î ¶ç¿ì±â
+    * í˜„ì¬ ì‚´í”¼ëŠ” í–‰ë™ì´ ì–´ë–¤ í–‰ë™ì¸ì§€ ì•„ì´ì½˜ìœ¼ë¡œ ë„ìš°ê¸°
     ***************************************************************/
 
     private void ActiveActionIcon(Entity actor, ActionType type)
@@ -138,10 +138,10 @@ public class SurveyManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ Å¸°Ù Ç¥½Ã ]
+    * [ íƒ€ê²Ÿ í‘œì‹œ ]
     * 
-    * ÇöÀç »ìÇÇ´Â Çàµ¿ÀÇ Å¸°ÙÀÌ ´©±¸ÀÎÁö ¶Ç´Â ´©°¡ µÉ ¼ö ÀÖ´Â Áö
-    * Æ÷¹°¼± ¸ğ¾çÀÇ Á¡¼± È­»ìÇ¥·Î ¶ç¿ì±â
+    * í˜„ì¬ ì‚´í”¼ëŠ” í–‰ë™ì˜ íƒ€ê²Ÿì´ ëˆ„êµ¬ì¸ì§€ ë˜ëŠ” ëˆ„ê°€ ë  ìˆ˜ ìˆëŠ” ì§€
+    * í¬ë¬¼ì„  ëª¨ì–‘ì˜ ì ì„  í™”ì‚´í‘œë¡œ ë„ìš°ê¸°
     ***************************************************************/
 
     private void CreateTargetingArrow(BattleAction action)
@@ -149,11 +149,11 @@ public class SurveyManager : MonoBehaviour
         List<Entity> targets = GetTargets(action);
         if (targets == null)
         {
-            // Å¸°ÙÀ» ¼±ÅÃÇÏÁö ¾Ê´Â Çàµ¿ÀÏ °æ¿ì È­»ìÇ¥ »ı¼º X
+            // íƒ€ê²Ÿì„ ì„ íƒí•˜ì§€ ì•ŠëŠ” í–‰ë™ì¼ ê²½ìš° í™”ì‚´í‘œ ìƒì„± X
             return;
         }
 
-        // Çàµ¿ÀÚ ¹× Å¸°Ù À§Ä¡ °¡Á®¿À±â
+        // í–‰ë™ì ë° íƒ€ê²Ÿ ìœ„ì¹˜ ê°€ì ¸ì˜¤ê¸°
         Vector2 actorPos = action.actor.cameraOption.BodyPivot.position;
         List<Vector2> targetsPos = targets.Select(t => (Vector2)t.cameraOption.BodyPivot.position).ToList();
 
@@ -162,11 +162,11 @@ public class SurveyManager : MonoBehaviour
 
     private List<Entity> GetTargets(BattleAction action)
     {
-        // Çàµ¿ÀÚ°¡ Àû ÁøÇüÀÌ¶ó¸é Å¸°ÙÆÃÀÌ °¡´ÉÇÑ ÀÎ¹°¸¸ º¸ÀÌ±â
+        // í–‰ë™ìê°€ ì  ì§„í˜•ì´ë¼ë©´ íƒ€ê²ŸíŒ…ì´ ê°€ëŠ¥í•œ ì¸ë¬¼ë§Œ ë³´ì´ê¸°
         if (action.actor is Monster)
             return GetTargetableEntities(action.GetTargetType());
 
-        // Çàµ¿ÀÚ°¡ ÇÃ·¹ÀÌ¾î ÁøÇüÀÌ¶ó¸é Å¸°Ù º¸¿©ÁÖ±â
+        // í–‰ë™ìê°€ í”Œë ˆì´ì–´ ì§„í˜•ì´ë¼ë©´ íƒ€ê²Ÿ ë³´ì—¬ì£¼ê¸°
         return action.GetTargets();
     }
 
@@ -174,19 +174,19 @@ public class SurveyManager : MonoBehaviour
     {
         List<Entity> targetableEntities = type switch
         {
-            // ÀüÀ§°¡ »ì¾ÆÀÖ´Ù¸é ÀüÀ§¸¸À» ¸®ÅÏ
+            // ì „ìœ„ê°€ ì‚´ì•„ìˆë‹¤ë©´ ì „ìœ„ë§Œì„ ë¦¬í„´
             TargetType.FrontMember when battleData.IsLivingCharacterFront =>
                 battleData.CharacterFrontList.Select(chr => (Entity)chr).ToList(),
 
-            // ÀüÀ§°¡ Á×¾ú´Ù¸é Ä³¸¯ÅÍ¸¦ ¼±ÅÃÇÏ´Â ¸ğµç Å¸ÀÔÀº Ä³¸¯ÅÍ ¸®ÅÏ
+            // ì „ìœ„ê°€ ì£½ì—ˆë‹¤ë©´ ìºë¦­í„°ë¥¼ ì„ íƒí•˜ëŠ” ëª¨ë“  íƒ€ì…ì€ ìºë¦­í„° ë¦¬í„´
             TargetType.FrontMember or TargetType.Member or TargetType.PlayerParty =>
                 battleData.CharacterList.Select(chr => (Entity)chr).ToList(),
 
-            // ÀûÀ» ¼±ÅÃÇÏ´Â ¸ğµç Å¸ÀÔÀº ÀûÀ» ¸®ÅÏ
+            // ì ì„ ì„ íƒí•˜ëŠ” ëª¨ë“  íƒ€ì…ì€ ì ì„ ë¦¬í„´
             TargetType.Enemy or TargetType.EnemyParty =>
                 battleData.EnemyList.Select(enemy => (Entity)enemy).ToList(),
 
-            // ³ª¸ÓÁö Å¸ÀÔÀº ¼±ÅÃÇÒ ¼ö ÀÖ´Â ÀûÀÌ ¾øÀ½
+            // ë‚˜ë¨¸ì§€ íƒ€ì…ì€ ì„ íƒí•  ìˆ˜ ìˆëŠ” ì ì´ ì—†ìŒ
             _ => null
         };
 
@@ -197,14 +197,14 @@ public class SurveyManager : MonoBehaviour
     {
         if (targets == null || targets.Count <= 0)
         {
-            // ¼±ÅÃµÈ Å¸°ÙÀÌ ¾øÀ¸¸é »ı¼º X
+            // ì„ íƒëœ íƒ€ê²Ÿì´ ì—†ìœ¼ë©´ ìƒì„± X
             return;
         }
 
-        // »õ È­»ìÇ¥ »ı¼º
+        // ìƒˆ í™”ì‚´í‘œ ìƒì„±
         foreach (Vector2 target in targets)
         {
-            // º»ÀÎÀ¸·ÎºÎÅÍ º»ÀÎ¿¡°Ô ÇâÇÏ´Â È­»ìÇ¥ Á¦¿Ü
+            // ë³¸ì¸ìœ¼ë¡œë¶€í„° ë³¸ì¸ì—ê²Œ í–¥í•˜ëŠ” í™”ì‚´í‘œ ì œì™¸
             if (target != actor)
             {
                 GameObject arrow = ui.CreateArrow(actor, target);
@@ -225,19 +225,19 @@ public class SurveyManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ¿¹»ó Ã¼·Â Ç¥½Ã ]
+    * [ ì˜ˆìƒ ì²´ë ¥ í‘œì‹œ ]
     * 
-    * ÇöÀç »ìÇÇ´Â Çàµ¿À¸·Î ÀÎÇØ ±ğÀÌ°Å³ª ±ğÀÎ Ã¼·Â Ç¥½Ã
+    * í˜„ì¬ ì‚´í”¼ëŠ” í–‰ë™ìœ¼ë¡œ ì¸í•´ ê¹ì´ê±°ë‚˜ ê¹ì¸ ì²´ë ¥ í‘œì‹œ
     ***************************************************************/
 
     private void ActiveForecastHP(BattleAction action)
     {
-        // ¿¹»ó Ã¼·Â °è»ê
+        // ì˜ˆìƒ ì²´ë ¥ ê³„ì‚°
         List<Entity> targets = action.GetTargets();
 
         if (action.actor is Monster || targets == null)
         {
-            // Çàµ¿ÇÏ´Â ´ë»óÀÌ ÀûÀÌ°Å³ª Å¸°ÙÀÌ ¾ø´Â °æ¿ì Ã¼·Â Ç¥½Ã X
+            // í–‰ë™í•˜ëŠ” ëŒ€ìƒì´ ì ì´ê±°ë‚˜ íƒ€ê²Ÿì´ ì—†ëŠ” ê²½ìš° ì²´ë ¥ í‘œì‹œ X
             return;
         }
 
@@ -246,7 +246,7 @@ public class SurveyManager : MonoBehaviour
         {
             int lastDmg = target.GetLastDmg(attackDmg, false);
 
-            // ÇöÀç ÅÏÀÎ °æ¿ì ÀÌ¹ø Çàµ¿¿¡ ´ëÇÑ °á°ú ÀÌÀü °ªÀ» Ãâ·Â
+            // í˜„ì¬ í„´ì¸ ê²½ìš° ì´ë²ˆ í–‰ë™ì— ëŒ€í•œ ê²°ê³¼ ì´ì „ ê°’ì„ ì¶œë ¥
             if (seq.GetTurnAction(0) != action) target.SetForecastHP(-lastDmg);
             else target.SetForecastHP(lastDmg);
         }
@@ -256,13 +256,13 @@ public class SurveyManager : MonoBehaviour
     {
         if (targets == null)
         {
-            // ÇØ´ç Çàµ¿¿¡ ¼±ÅÃ °¡´ÉÇÑ Å¸°ÙÀÌ ¾ø´Ù¸é ¸®ÅÏ
+            // í•´ë‹¹ í–‰ë™ì— ì„ íƒ ê°€ëŠ¥í•œ íƒ€ê²Ÿì´ ì—†ë‹¤ë©´ ë¦¬í„´
             return;
         }
 
         foreach (Entity target in targets)
         {
-            // Å¸°Ù ÇÏ³ªÇÏ³ªÀÇ ¿¹»ó Ã¼·Â ºñÈ°¼ºÈ­
+            // íƒ€ê²Ÿ í•˜ë‚˜í•˜ë‚˜ì˜ ì˜ˆìƒ ì²´ë ¥ ë¹„í™œì„±í™”
             target.SetActiveForecastHP(false);
         }
     }
@@ -271,7 +271,7 @@ public class SurveyManager : MonoBehaviour
     {
         if (action is AttackAction)
         {
-            // ÀÏ¹İ °ø°İÀº ÇØ´ç Ä³¸¯ÅÍÀÇ ÀÚÃ¼ µ¥¹ÌÁö °¡Á®¿À±â
+            // ì¼ë°˜ ê³µê²©ì€ í•´ë‹¹ ìºë¦­í„°ì˜ ìì²´ ë°ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸°
             return action.actor.AttackDmg;
         }
         else if (action is SkillAction)
@@ -281,19 +281,19 @@ public class SurveyManager : MonoBehaviour
 
             if (skill != null)
             {
-                // °ø°İ ½ºÅ³¸¸ µ¥¹ÌÁö °è»ê
+                // ê³µê²© ìŠ¤í‚¬ë§Œ ë°ë¯¸ì§€ ê³„ì‚°
                 return skill.GetSkillDmg(action.actor);
             }
         }
 
-        // ³ª¸ÓÁö Çàµ¿Àº µ¥¹ÌÁö X
+        // ë‚˜ë¨¸ì§€ í–‰ë™ì€ ë°ë¯¸ì§€ X
         return 0.0f;
     }
 
     /***************************************************************
-    * [ ¿¹»ó »óÅÂÈ¿°ú Ç¥½Ã ]
+    * [ ì˜ˆìƒ ìƒíƒœíš¨ê³¼ í‘œì‹œ ]
     * 
-    * ÇöÀç »ìÇÇ´Â Çàµ¿À¸·Î ÀÎÇØ »ı±â°Å³ª »ı±ä »óÅÂÈ¿°ú Ç¥½Ã
+    * í˜„ì¬ ì‚´í”¼ëŠ” í–‰ë™ìœ¼ë¡œ ì¸í•´ ìƒê¸°ê±°ë‚˜ ìƒê¸´ ìƒíƒœíš¨ê³¼ í‘œì‹œ
     ***************************************************************/
 
     public void ViewForecastEffect(BattleAction action)
@@ -303,7 +303,7 @@ public class SurveyManager : MonoBehaviour
 
         if (effect == null)
         {
-            // ¹öÇÁ ½ºÅ³ È¤Àº ¼Ò¸ğ ¾ÆÀÌÅÛ¸¸ Àû¿ë
+            // ë²„í”„ ìŠ¤í‚¬ í˜¹ì€ ì†Œëª¨ ì•„ì´í…œë§Œ ì ìš©
             return;
         }
 
@@ -337,7 +337,7 @@ public class SurveyManager : MonoBehaviour
     {
         if (targets == null)
         {
-            // Å¸°ÙÀÌ ¾ø´Ù¸é ½ºÅµ
+            // íƒ€ê²Ÿì´ ì—†ë‹¤ë©´ ìŠ¤í‚µ
             return;
         }
 

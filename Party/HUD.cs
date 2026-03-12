@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    [Header("±∏º∫ ø¿∫Í¡ß∆Æ")]
+    [Header("Íµ¨ÏÑ± Ïò§Î∏åÏ†ùÌä∏")]
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI spText;

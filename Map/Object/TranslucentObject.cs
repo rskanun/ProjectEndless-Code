@@ -8,7 +8,7 @@ public class TranslucentObject : MonoBehaviour
     private Tilemap tilemap;
     private Coroutine colorChange;
 
-    // ¾ËÆÄ°ª º¯È­
+    // ì•ŒíŒŒê°’ ë³€í™”
     private float targetAlpha;
     private float delay = 0.05f;
 

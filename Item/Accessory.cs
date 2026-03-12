@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "Accessory", menuName = "Item/Accessory")]
 public class Accessory : Equip

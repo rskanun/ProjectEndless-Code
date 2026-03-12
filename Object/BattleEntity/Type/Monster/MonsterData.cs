@@ -14,7 +14,7 @@ public class DropItem
 [CreateAssetMenu(menuName = "Entity Data/Monster", fileName = "Monster Data")]
 public class MonsterData : EntityData
 {
-    [Title("È¹µæ º¸»ó")]
+    [Title("íšë“ ë³´ìƒ")]
     [SerializeField, PropertyOrder(50)]
     private int _minAmount;
     public int MinAmount => _minAmount;

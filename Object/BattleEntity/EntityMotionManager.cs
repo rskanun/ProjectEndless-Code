@@ -12,7 +12,7 @@ using UnityEditor;
 
 public static class AnimParams
 {
-    // ¼º´É ÃÖÀûÈ­¸¦ À§ÇÑ ¹®ÀÚ¿­À» Á¤¼ö·Î ÇØ½Ì
+    // ì„±ëŠ¥ ìµœì í™”ë¥¼ ìœ„í•œ ë¬¸ìì—´ì„ ì •ìˆ˜ë¡œ í•´ì‹±
     // Triggerr
     public static readonly int AttackTrigger = Animator.StringToHash("attack");
     public static readonly int CounterTrigger = Animator.StringToHash("counter");
@@ -58,9 +58,9 @@ public class EntityMotionManager : MonoBehaviour
     [SerializeField] private bool lookAtRight;
     [SerializeField][Range(-1.0f, 1.0f)] private float range;
 
-    [Title("±ÙÁ¢ °ø°İ ¹× ½ºÅ³")]
+    [Title("ê·¼ì ‘ ê³µê²© ë° ìŠ¤í‚¬")]
     [SerializeField] private List<Motion> meleeMotions;
-    [SerializeField] private List<MeleeRangeEntry> meleeRanges; // dict ÀúÀå¿ë
+    [SerializeField] private List<MeleeRangeEntry> meleeRanges; // dict ì €ì¥ìš©
     private Dictionary<int, float> meleeRangeLookup;
     #endregion
 
@@ -90,7 +90,7 @@ public class EntityMotionManager : MonoBehaviour
 
     private void Awake()
     {
-        // ÀúÀå¿ë ¸®½ºÆ®¸¦ Dictionary·Î ¿Å±â±â
+        // ì €ì¥ìš© ë¦¬ìŠ¤íŠ¸ë¥¼ Dictionaryë¡œ ì˜®ê¸°ê¸°
         meleeRangeLookup = meleeRanges.ToDictionary(e => Animator.StringToHash(e.name), e => e.range);
     }
 
@@ -106,9 +106,9 @@ public class EntityMotionManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ¸ğ¼Ç ]
+    * [ ëª¨ì…˜ ]
     * 
-    * ¿ÀºêÁ§Æ®ÀÇ ÇÑ µ¿ÀÛ ½ÇÇà °ü¸®
+    * ì˜¤ë¸Œì íŠ¸ì˜ í•œ ë™ì‘ ì‹¤í–‰ ê´€ë¦¬
     ***************************************************************/
 
     public void ActMotion(int id)
@@ -129,214 +129,214 @@ public class EntityMotionManager : MonoBehaviour
 
     public void OnEndMotion()
     {
-        // Á¾·á ½ÃÅ³ ¸ğ¼ÇÀÌ ¾øÀ¸¸é ±×´ë·Î Á¾·á
+        // ì¢…ë£Œ ì‹œí‚¬ ëª¨ì…˜ì´ ì—†ìœ¼ë©´ ê·¸ëŒ€ë¡œ ì¢…ë£Œ
         if (motionQueue.Count <= 0) return;
 
         IsActing = false;
         var (motionType, id) = motionQueue.Dequeue();
 
-        // bool Å¸ÀÔÀÇ ¸ğ¼ÇÀÎ °æ¿ì
+        // bool íƒ€ì…ì˜ ëª¨ì…˜ì¸ ê²½ìš°
         if (motionType == MotionType.Bool)
         {
-            // false·Î ¹Ù²ã ¸ØÃß±â
+            // falseë¡œ ë°”ê¿” ë©ˆì¶”ê¸°
             animator.SetBool(id, false);
         }
 
-        // ¾ÆÁ÷ ³²Àº ¸ğ¼ÇÀÌ ½ÇÇà ÁßÀÌ¶ó¸é
+        // ì•„ì§ ë‚¨ì€ ëª¨ì…˜ì´ ì‹¤í–‰ ì¤‘ì´ë¼ë©´
         if (motionQueue.Count > 0)
         {
-            // ´Ù½Ã ¸ğ¼Ç ½ÇÇà ÁßÀ¸·Î º¯°æ
+            // ë‹¤ì‹œ ëª¨ì…˜ ì‹¤í–‰ ì¤‘ìœ¼ë¡œ ë³€ê²½
             IsActing = true;
         }
     }
 
     public void OnHit()
     {
-        // Å¸°İ ÀÌº¥Æ® ½ÇÇà
+        // íƒ€ê²© ì´ë²¤íŠ¸ ì‹¤í–‰
         onHitAction?.Invoke();
     }
 
     /***************************************************************
-    * [ °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ]
+    * [ ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ]
     * 
-    * ´ë»óÀ» °ø°İÇÏ´Â ¸ğ¼ÇÀ» ±Ù°Å¸®¿Í ¿ø°Å¸®·Î ³ª´² ¾Ö´Ï¸ŞÀÌ¼Ç ÁøÇà
+    * ëŒ€ìƒì„ ê³µê²©í•˜ëŠ” ëª¨ì…˜ì„ ê·¼ê±°ë¦¬ì™€ ì›ê±°ë¦¬ë¡œ ë‚˜ëˆ  ì• ë‹ˆë©”ì´ì…˜ ì§„í–‰
     ***************************************************************/
     public async void ActMeleeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, int animMotionHash, int animTriggerHash, Action onHit)
     {
-        // º»·¡ À§Ä¡ ±â¾ï
+        // ë³¸ë˜ ìœ„ì¹˜ ê¸°ì–µ
         Vector2 originPos = transform.position;
 
-        // °ø°İÇÏ´Â ¿£Æ¼Æ¼¸¦ ÇâÇØ Ä«¸Ş¶ó Æ÷Ä¿½Ì
+        // ê³µê²©í•˜ëŠ” ì—”í‹°í‹°ë¥¼ í–¥í•´ ì¹´ë©”ë¼ í¬ì»¤ì‹±
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
-        // ¸ğ¼Ç ½ÇÇà
+        // ëª¨ì…˜ ì‹¤í–‰
         ActMotion(animTriggerHash);
 
-        // Å¸°İ Å¸ÀÌ¹Ö¿¡ ¸ÂÃç µ¥¹ÌÁö ³Ö±â
+        // íƒ€ê²© íƒ€ì´ë°ì— ë§ì¶° ë°ë¯¸ì§€ ë„£ê¸°
         onHitAction += onHit;
 
-        // Å¸°İ ¸ğ¼Ç±îÁö ´ë±â
+        // íƒ€ê²© ëª¨ì…˜ê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => IsPlayAnimation(animMotionHash));
 
-        // ´ë»ó¿¡°Ô Å¸°Ù¿¡ ¼±ÅÃµÇ¾úÀ½À» ¾Ë¸²
+        // ëŒ€ìƒì—ê²Œ íƒ€ê²Ÿì— ì„ íƒë˜ì—ˆìŒì„ ì•Œë¦¼
         target.OnTargetedAttack(entity, isParryable, isDodgeable);
 
-        // Å¸°ÙÀ» ÇâÇØ Ä«¸Ş¶ó Æ÷Ä¿½Ì
+        // íƒ€ê²Ÿì„ í–¥í•´ ì¹´ë©”ë¼ í¬ì»¤ì‹±
         BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject).Forget();
 
-        // Å¸°Ù ¾ÕÀ¸·Î ÀÌµ¿
+        // íƒ€ê²Ÿ ì•ìœ¼ë¡œ ì´ë™
         var range = meleeRangeLookup[animTriggerHash];
         transform.position = GetMovePoint(target.transform.position, range);
 
-        // ¸ğ¼Ç Ã¼Å©
+        // ëª¨ì…˜ ì²´í¬
         while (IsActing)
         {
-            // °ø°İ ¸ğ¼Ç Áß°£ ÆĞ¸µÀ» ´çÇßÀ» °æ¿ì
+            // ê³µê²© ëª¨ì…˜ ì¤‘ê°„ íŒ¨ë§ì„ ë‹¹í–ˆì„ ê²½ìš°
             if (entity.HasState(EntityState.Stagger))
             {
-                // ±âÁ¸ Å¸°İ ÀÌº¥Æ® »èÁ¦
+                // ê¸°ì¡´ íƒ€ê²© ì´ë²¤íŠ¸ ì‚­ì œ
                 onHitAction = null;
 
-                // ÆĞ¸µ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà ¹× °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á
+                // íŒ¨ë§ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰ ë° ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
                 await ParriedAnimation(target, originPos);
                 return;
             }
 
-            // 1ÇÁ·¹ÀÓ¾¿ È®ÀÎ
+            // 1í”„ë ˆì„ì”© í™•ì¸
             await UniTask.Yield();
         }
 
-        // ¿ø·¡ ÀÚ¸®·Î µ¹¾Æ¿À±â
+        // ì›ë˜ ìë¦¬ë¡œ ëŒì•„ì˜¤ê¸°
         await ReturnAnimation(originPos);
 
-        // È÷Æ® & »ç¸Á ¸ğ¼Ç ´ë±â
+        // íˆíŠ¸ & ì‚¬ë§ ëª¨ì…˜ ëŒ€ê¸°
         await UniTask.WaitWhile(() => target.IsActing);
 
-        // Å¸°İ ÀÌº¥Æ® »èÁ¦
+        // íƒ€ê²© ì´ë²¤íŠ¸ ì‚­ì œ
         onHitAction = null;
     }
 
     private async UniTask ParriedAnimation(Entity target, Vector2 originPos)
     {
-        // ÀÌÀü °ø°İ ¸ğ¼Ç Á¾·á
+        // ì´ì „ ê³µê²© ëª¨ì…˜ ì¢…ë£Œ
         OnEndMotion();
 
-        // ÇöÀç Çàµ¿ÀÇ ÁÖÃ¼µéÀ» ÇâÇØ Ä«¸Ş¶ó Æ÷Ä¿½Ì
+        // í˜„ì¬ í–‰ë™ì˜ ì£¼ì²´ë“¤ì„ í–¥í•´ ì¹´ë©”ë¼ í¬ì»¤ì‹±
         var group = new List<GameObject> { gameObject, target.gameObject };
         BattleCameraDirector.Instance.FocusGroup(group);
 
-        // ¹İ°İ(ÆĞ¸µ) ´çÇÏ´Â ¸ğ¼Ç ½ÇÇà
+        // ë°˜ê²©(íŒ¨ë§) ë‹¹í•˜ëŠ” ëª¨ì…˜ ì‹¤í–‰
         ActMotion(AnimParams.CounterTrigger);
 
-        // È÷Æ® ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // íˆíŠ¸ ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => IsPlayAnimation(AnimParams.HitMotion));
         await UniTask.WaitWhile(() => IsActing);
 
-        // ¹İ°İÀ¸·Î ¿£Æ¼Æ¼°¡ »ç¸ÁÇß´Ù¸é
+        // ë°˜ê²©ìœ¼ë¡œ ì—”í‹°í‹°ê°€ ì‚¬ë§í–ˆë‹¤ë©´
         if (entity.IsDead)
         {
-            // »ç¸Á ¸ğ¼Ç ±â´Ù¸®°í Á¾·á
+            // ì‚¬ë§ ëª¨ì…˜ ê¸°ë‹¤ë¦¬ê³  ì¢…ë£Œ
             await UniTask.WaitWhile(() => IsActing);
             return;
         }
 
-        // ¿ø·¡ ÀÚ¸®·Î º¹±ÍÇÏ´Â ¸ğ¼Ç ½ÇÇà
+        // ì›ë˜ ìë¦¬ë¡œ ë³µê·€í•˜ëŠ” ëª¨ì…˜ ì‹¤í–‰
         ActMotion(AnimParams.ReturnTrigger);
 
-        // ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ±â´Ù¸®±â
+        // ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¬ê¸°
         await UniTask.WaitWhile(() => IsActing);
 
-        // ¸ğ¼ÇÀÌ ³¡³ª¸é ¿ø·¡ ÀÚ¸®·Î º¹±Í
+        // ëª¨ì…˜ì´ ëë‚˜ë©´ ì›ë˜ ìë¦¬ë¡œ ë³µê·€
         transform.position = originPos;
     }
 
     public async void ActRangeAttackAnimation(Entity target, bool isParryable, bool isDodgeable, Action onHit)
     {
-        // °ø°İÇÏ´Â ¿£Æ¼Æ¼¸¦ ÇâÇØ Ä«¸Ş¶ó Æ÷Ä¿½Ì
+        // ê³µê²©í•˜ëŠ” ì—”í‹°í‹°ë¥¼ í–¥í•´ ì¹´ë©”ë¼ í¬ì»¤ì‹±
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
-        // ¸ğ¼Ç ½ÇÇà
+        // ëª¨ì…˜ ì‹¤í–‰
         ActMotion(AnimParams.AttackTrigger);
 
-        // ½ÃÀü ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // ì‹œì „ ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => IsPlayAnimation(AnimParams.AttackMotion));
         await UniTask.WaitWhile(() => IsPlayAnimation(AnimParams.AttackMotion));
 
-        // Å¸°ÙÀ» ÇâÇØ Ä«¸Ş¶ó Æ÷Ä¿½Ì
+        // íƒ€ê²Ÿì„ í–¥í•´ ì¹´ë©”ë¼ í¬ì»¤ì‹±
         BattleCameraDirector.Instance.DirectSmoothFocusing(target.gameObject).Forget();
 
-        // ¿ø°Å¸® ¿ÀºêÁ§Æ® »ı¼º
+        // ì›ê±°ë¦¬ ì˜¤ë¸Œì íŠ¸ ìƒì„±
     }
 
     /***************************************************************
-    * [ ¹İ°İ ¾Ö´Ï¸ŞÀÌ¼Ç ]
+    * [ ë°˜ê²© ì• ë‹ˆë©”ì´ì…˜ ]
     * 
-    * ÆĞ¸µ ¼º°ø ½Ã, ÀÏ¹İ ¹İ°İ °ø°İ ¸ğ¼Ç ½ÇÇà
+    * íŒ¨ë§ ì„±ê³µ ì‹œ, ì¼ë°˜ ë°˜ê²© ê³µê²© ëª¨ì…˜ ì‹¤í–‰
     ***************************************************************/
 
     public async void ActCounterattackAnimation(Action onHit)
     {
-        // ¹İ°İ ´ë»ó Æ÷Ä¿½Ì
+        // ë°˜ê²© ëŒ€ìƒ í¬ì»¤ì‹±
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
-        // ¹İ°İ ¸ğ¼Ç ½ÇÇà
+        // ë°˜ê²© ëª¨ì…˜ ì‹¤í–‰
         ActMotion(AnimParams.CounterattackTrigger);
 
-        // Å¸°İ Å¸ÀÌ¹Ö¿¡ ¸ÂÃç µ¥¹ÌÁö ³Ö±â
+        // íƒ€ê²© íƒ€ì´ë°ì— ë§ì¶° ë°ë¯¸ì§€ ë„£ê¸°
         onHitAction += onHit;
 
-        // ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => IsPlayAnimation(AnimParams.CounterattackMotion));
         await UniTask.WaitWhile(() => IsActing);
 
-        // Å¸°İ ÀÌº¥Æ® »èÁ¦
+        // íƒ€ê²© ì´ë²¤íŠ¸ ì‚­ì œ
         onHitAction = null;
     }
 
     /***************************************************************
-    * [ Å¸°İ ¾Ö´Ï¸ŞÀÌ¼Ç ]
+    * [ íƒ€ê²© ì• ë‹ˆë©”ì´ì…˜ ]
     * 
-    * Å¸°İ ¸ğ¼Ç ½ÇÇà, ÀÌÈÄ »ç¸ÁÇß´Ù¸é »ç¸Á ¸ğ¼Ç±îÁö ½ÇÇà
+    * íƒ€ê²© ëª¨ì…˜ ì‹¤í–‰, ì´í›„ ì‚¬ë§í–ˆë‹¤ë©´ ì‚¬ë§ ëª¨ì…˜ê¹Œì§€ ì‹¤í–‰
     ***************************************************************/
 
     public void ActHitAnimation()
     {
-        // Å¸°İ ¸ğ¼Ç ½ÇÇà
+        // íƒ€ê²© ëª¨ì…˜ ì‹¤í–‰
         SetMotion(AnimParams.HitBool);
     }
 
     public virtual async void ActDeadAnimation()
     {
-        // È÷Æ® ¸ğ¼Ç Á¾·á
+        // íˆíŠ¸ ëª¨ì…˜ ì¢…ë£Œ
         OnEndMotion();
 
-        // »ç¸Á ¸ğ¼Ç ½ÇÇà
+        // ì‚¬ë§ ëª¨ì…˜ ì‹¤í–‰
         ActMotion(AnimParams.DeathTrigger);
 
-        // »ç¸Á ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // ì‚¬ë§ ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitUntil(() => IsPlayAnimation(AnimParams.DeathMotion));
         await UniTask.WaitWhile(() => IsActing);
 
-        // ÆäÀÌµå ¾Æ¿ô
+        // í˜ì´ë“œ ì•„ì›ƒ
         await spriteRenderer.DOFade(0.0f, 1.5f).ToUniTask();
         gameObject.SetActive(false);
     }
 
     /***************************************************************
-    * [ º¹±Í ¾Ö´Ï¸ŞÀÌ¼Ç ]
+    * [ ë³µê·€ ì• ë‹ˆë©”ì´ì…˜ ]
     * 
-    * ±ÙÁ¢ °ø°İ ½ÇÇà ÈÄ, º»·¡ ÀÚ¸®·Î µ¹¾Æ¿À´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+    * ê·¼ì ‘ ê³µê²© ì‹¤í–‰ í›„, ë³¸ë˜ ìë¦¬ë¡œ ëŒì•„ì˜¤ëŠ” ì• ë‹ˆë©”ì´ì…˜
     ***************************************************************/
 
     private async UniTask ReturnAnimation(Vector2 originPos)
     {
-        // º¹±Í ¸ğ¼Ç ½ÇÇà
+        // ë³µê·€ ëª¨ì…˜ ì‹¤í–‰
         ActMotion(AnimParams.ReturnTrigger);
 
-        // ¸ğ¼ÇÀÌ ³¡³¯ ¶§±îÁö ´ë±â
+        // ëª¨ì…˜ì´ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
         await UniTask.WaitWhile(() => IsActing);
 
-        // ¸ğ¼ÇÀÌ ³¡³ª¸é ¿ø·¡ ÀÚ¸®·Î º¹±Í
+        // ëª¨ì…˜ì´ ëë‚˜ë©´ ì›ë˜ ìë¦¬ë¡œ ë³µê·€
         transform.position = originPos;
     }
 
@@ -344,10 +344,10 @@ public class EntityMotionManager : MonoBehaviour
     [ContextMenu("Reload")]
     private void OnValidate()
     {
-        // ¿£Æ¼Æ¼ µî·Ï
+        // ì—”í‹°í‹° ë“±ë¡
         entity = GetComponent<Entity>();
 
-        // ±ÙÁ¢ °ø°İ ¹× ½ºÅ³ ¹üÀ§ ¼³Á¤
+        // ê·¼ì ‘ ê³µê²© ë° ìŠ¤í‚¬ ë²”ìœ„ ì„¤ì •
         SetMeleeRanges();
     }
 
@@ -373,7 +373,7 @@ public class EntityMotionManager : MonoBehaviour
         {
             if (binding.type != typeof(SpriteRenderer) || binding.propertyName != "m_Sprite")
             {
-                // Sprite Å¸ÀÔÀÌ ¾Æ´Ñ °æ¿ì ³Ñ±â±â
+                // Sprite íƒ€ì…ì´ ì•„ë‹Œ ê²½ìš° ë„˜ê¸°ê¸°
                 continue;
             }
 
@@ -382,12 +382,12 @@ public class EntityMotionManager : MonoBehaviour
             {
                 if (keyframe.value is not Sprite sprite || sprite == null)
                 {
-                    // Sprite¸¦ °¡Áö°í ÀÖÁö ¾ÊÀº ±¸°£ÀÎ °æ¿ì ³Ñ±â±â
+                    // Spriteë¥¼ ê°€ì§€ê³  ìˆì§€ ì•Šì€ êµ¬ê°„ì¸ ê²½ìš° ë„˜ê¸°ê¸°
                     continue;
                 }
 
-                // °¡Àå ¹üÀ§°¡ ±ä sprite Ã£±â
-                // sprite °¡·Î ±æÀÌ + ÇØ´ç ½ºÇÁ¶óÀÌÆ®ÀÇ pivot¿¡¼­ Áß½É(0.5, 0.5)±îÁöÀÇ °Å¸®
+                // ê°€ì¥ ë²”ìœ„ê°€ ê¸´ sprite ì°¾ê¸°
+                // sprite ê°€ë¡œ ê¸¸ì´ + í•´ë‹¹ ìŠ¤í”„ë¼ì´íŠ¸ì˜ pivotì—ì„œ ì¤‘ì‹¬(0.5, 0.5)ê¹Œì§€ì˜ ê±°ë¦¬
                 Vector3 spritePivot = sprite.pivot / 100.0f;
                 float scale = gameObject.transform.localScale.x;
                 float range = (sprite.rect.width / sprite.pixelsPerUnit * scale + spritePivot.x) / 2.0f;

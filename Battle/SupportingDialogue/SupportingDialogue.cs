@@ -7,7 +7,7 @@ public class SupportingDialogue : MonoBehaviour
     [SerializeField] private CanvasGroup dialogue;
     [SerializeField] private TextMeshProUGUI dialogueText;
 
-    [Header("´ë»çÃ¢ ¼³Á¤")]
+    [Header("ëŒ€ì‚¬ì°½ ì„¤ì •")]
     [SerializeField] private float duration;
     [SerializeField] private SupportingAnnouncer announcer;
 
@@ -17,16 +17,16 @@ public class SupportingDialogue : MonoBehaviour
         DOTween.Sequence()
             .OnStart(() =>
             {
-                dialogue.alpha = 1.0f; // ´ëÈ­Ã¢ È°¼ºÈ­
-                dialogueText.text = replaceText; // ´ëÈ­Ã¢ ´ë»ç »ğÀÔ
+                dialogue.alpha = 1.0f; // ëŒ€í™”ì°½ í™œì„±í™”
+                dialogueText.text = replaceText; // ëŒ€í™”ì°½ ëŒ€ì‚¬ ì‚½ì…
             })
             .Insert(duration, dialogue.DOFade(0.0f, 0.5f));
     }
 
     /***************************************************************
-    * [ °³Àü ´ë»ç ]
+    * [ ê°œì „ ëŒ€ì‚¬ ]
     * 
-    * ÀüÅõ ½ÃÀÛ ½Ã, ÇöÀç »óÈ²¿¡ µû¶ó¼­ Ãâ·ÂµÇ´Â ´ë»ç
+    * ì „íˆ¬ ì‹œì‘ ì‹œ, í˜„ì¬ ìƒí™©ì— ë”°ë¼ì„œ ì¶œë ¥ë˜ëŠ” ëŒ€ì‚¬
     ***************************************************************/
 
     public void PrintBattleStart()
@@ -35,9 +35,9 @@ public class SupportingDialogue : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ¹İ°İ ´ë»ç ]
+    * [ ë°˜ê²© ëŒ€ì‚¬ ]
     * 
-    * ÆĞ¸µ¿¡ ¼º°øÇÏ¿© ÀûÀÌ ÈåÆ®·¯Áø »óÅÂ°¡ µÇ¾úÀ» ¶§ Ãâ·ÂµÇ´Â ´ë»ç
+    * íŒ¨ë§ì— ì„±ê³µí•˜ì—¬ ì ì´ ííŠ¸ëŸ¬ì§„ ìƒíƒœê°€ ë˜ì—ˆì„ ë•Œ ì¶œë ¥ë˜ëŠ” ëŒ€ì‚¬
     ***************************************************************/
 
     public void PrintParryingSuccess()
@@ -46,9 +46,9 @@ public class SupportingDialogue : MonoBehaviour
     }
 
     /***************************************************************
-    * [ Ã³¸® ´ë»ç ]
+    * [ ì²˜ë¦¬ ëŒ€ì‚¬ ]
     * 
-    * ÀûÀ» Ã³¸®ÇßÀ» ¶§ Ãâ·ÂµÇ´Â ´ë»ç
+    * ì ì„ ì²˜ë¦¬í–ˆì„ ë•Œ ì¶œë ¥ë˜ëŠ” ëŒ€ì‚¬
     ***************************************************************/
 
     public void PrintKillEnemy()
@@ -57,9 +57,9 @@ public class SupportingDialogue : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ±âÀı ´ë»ç ]
+    * [ ê¸°ì ˆ ëŒ€ì‚¬ ]
     * 
-    * ÇÃ·¹ÀÌ¾îÀÇ ÆÄÆ¼ Áß ´©±º°¡ ¾²·¯Áø °æ¿ì Ãâ·ÂµÇ´Â ´ë»ç
+    * í”Œë ˆì´ì–´ì˜ íŒŒí‹° ì¤‘ ëˆ„êµ°ê°€ ì“°ëŸ¬ì§„ ê²½ìš° ì¶œë ¥ë˜ëŠ” ëŒ€ì‚¬
     ***************************************************************/
 
     public void PrintKnockdownPlayer()
@@ -68,9 +68,9 @@ public class SupportingDialogue : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ½Â¸® ´ë»ç ]
+    * [ ìŠ¹ë¦¬ ëŒ€ì‚¬ ]
     * 
-    * ÀüÅõ¿¡¼­ ½Â¸® ½Ã Ãâ·ÂµÇ´Â ´ë»ç
+    * ì „íˆ¬ì—ì„œ ìŠ¹ë¦¬ ì‹œ ì¶œë ¥ë˜ëŠ” ëŒ€ì‚¬
     ***************************************************************/
 
     public void PrintVictory()

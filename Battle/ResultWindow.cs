@@ -5,19 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class ResultWindow : MonoBehaviour
 {
-    [Header("¾ÆÀÌÅÛ Á¤º¸ ÇÁ¸®ÆÕ")]
+    [Header("ì•„ì´í…œ ì •ë³´ í”„ë¦¬íŒ¹")]
     public GameObject itemPrefab;
-    [Header("°á°úÃ¢ ±¸¼º ¿ÀºêÁ§Æ®")]
+    [Header("ê²°ê³¼ì°½ êµ¬ì„± ì˜¤ë¸Œì íŠ¸")]
     public GameObject resultWindow;
     public TextMeshProUGUI goldAmount;
     public Transform itemContainer;
 
     public void OpenResult()
     {
-        // UI ¿­±â
+        // UI ì—´ê¸°
         resultWindow.SetActive(true);
 
-        // UI Á¤º¸ ¼³Á¤
+        // UI ì •ë³´ ì„¤ì •
         BattleData battleData = BattleData.Instance;
 
         SetGold(battleData.TotalAmount);
@@ -26,10 +26,10 @@ public class ResultWindow : MonoBehaviour
 
     public void OnConfirm()
     {
-        // UI ´İ°í ±âÁ¸ ¾ÀÀ¸·Î ÀÌµ¿
+        // UI ë‹«ê³  ê¸°ì¡´ ì”¬ìœ¼ë¡œ ì´ë™
         resultWindow.SetActive(false);
 
-        // ½Â¸® ¿©ºÎ¿¡ µû¶ó µ¹¾Æ°¥ ¸ÊÀÌ ´Ş¶óÁü
+        // ìŠ¹ë¦¬ ì—¬ë¶€ì— ë”°ë¼ ëŒì•„ê°ˆ ë§µì´ ë‹¬ë¼ì§
         var isVictory = BattleCache.Current.Result == BattleResult.Victory;
         var map = (isVictory) ? GameData.Instance.MapScene
                         : GameData.Instance.RespawnMapScene;

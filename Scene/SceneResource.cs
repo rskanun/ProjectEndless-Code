@@ -20,7 +20,7 @@ public class SceneConfiguration
 
 public class SceneResource : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/SceneResource.asset";
 
@@ -36,7 +36,7 @@ public class SceneResource : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -52,7 +52,7 @@ public class SceneResource : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<SceneResource>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -65,19 +65,19 @@ public class SceneResource : ScriptableObject
         }
     }
 
-    [Header("¸ŞÀÎ ¾À")]
+    [Header("ë©”ì¸ ì”¬")]
     [SerializeField]
     private SceneAsset _mainSceneAsset;
     private string _mainScene;
     public string MainScene => _mainScene;
 
-    [Header("·Îµù ¾À")]
+    [Header("ë¡œë”© ì”¬")]
     [SerializeField]
     private SceneAsset _loadingSceneAsset;
     private string _loadingScene;
     public string LoadingScene => _loadingScene;
 
-    [Header("»óÅÂº° ¾À ¼³Á¤")]
+    [Header("ìƒíƒœë³„ ì”¬ ì„¤ì •")]
     [SerializeField]
     private SceneConfiguration _fieldSceneConfig;
     private string _fieldMainScene;
@@ -102,19 +102,19 @@ public class SceneResource : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // ¸ŞÀÎ ¾À
+        // ë©”ì¸ ì”¬
         if (_mainSceneAsset != null)
         {
             _mainScene = _mainSceneAsset.name;
         }
 
-        // ·Îµù ¾À
+        // ë¡œë”© ì”¬
         if (_loadingSceneAsset != null)
         {
             _loadingScene = _loadingSceneAsset.name;
         }
 
-        // ¾À ¼³Á¤
+        // ì”¬ ì„¤ì •
         if (_fieldSceneConfig.MainScene != null)
         {
             _fieldMainScene = _fieldSceneConfig.MainScene.name;
@@ -136,7 +136,7 @@ public class SceneResource : ScriptableObject
 
     private List<string> SceneAssetsToString(List<SceneAsset> sceneAssets)
     {
-        // Scene Asset ¸®½ºÆ®¿¡¼­ ÀÌ¸§¸¸ ÃßÃâÇÏ¿© ³»º¸³»±â
+        // Scene Asset ë¦¬ìŠ¤íŠ¸ì—ì„œ ì´ë¦„ë§Œ ì¶”ì¶œí•˜ì—¬ ë‚´ë³´ë‚´ê¸°
         return sceneAssets
             .Where(scene => scene != null)
             .Select(scene => scene.name)

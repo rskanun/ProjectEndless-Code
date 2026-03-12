@@ -9,23 +9,23 @@ public class SelectionData
 
 public class ActionManager : MonoBehaviour
 {
-    [Header("ÄÁÆ®·Ñ·¯")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private BattleController controller;
 
-    [Header("¼±ÅÃÃ¢")]
+    [Header("ì„ íƒì°½")]
     [SerializeField] private ActionSelection actionSelection;
     [SerializeField] private SkillSelection skillSelection;
     [SerializeField] private ItemSelection itemSelection;
     [SerializeField] private TargetSelection targetSelection;
     [SerializeField] private TurnSelection turnSelection;
 
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private SurveyManager checkingManager;
 
-    // ÇöÀç ¿­¸° Ã¢
+    // í˜„ì¬ ì—´ë¦° ì°½
     private Stack<ISelection> selectionLog = new Stack<ISelection>();
 
-    // ÇöÀç ÅÏ Á¤º¸
+    // í˜„ì¬ í„´ ì •ë³´
     private SelectionData selectionData;
 
     private void Awake()
@@ -35,23 +35,23 @@ public class ActionManager : MonoBehaviour
 
     public void OpenSelection(ISelection selection)
     {
-        // ÀÌÀü ¼±ÅÃÃ¢ÀÌ ÀÖÀ¸¸é ´İ±â
+        // ì´ì „ ì„ íƒì°½ì´ ìˆìœ¼ë©´ ë‹«ê¸°
         if (selectionLog.Count > 0)
         {
             ISelection prevSelection = selectionLog.Peek();
             prevSelection.CloseSelection();
         }
 
-        // ´ÙÀ½ ¿­ ¼±ÅÃÃ¢ ·Î±×¿¡ Ãß°¡
+        // ë‹¤ìŒ ì—´ ì„ íƒì°½ ë¡œê·¸ì— ì¶”ê°€
         selectionLog.Push(selection);
 
-        // ´ÙÀ½ ¼±ÅÃÃ¢ ¿­±â
+        // ë‹¤ìŒ ì„ íƒì°½ ì—´ê¸°
         selection.OpenSelection();
     }
 
     public void UndoSelection()
     {
-        // µÇµ¹¸± ·Î±×°¡ ÀÖ´Â °æ¿ì
+        // ë˜ëŒë¦´ ë¡œê·¸ê°€ ìˆëŠ” ê²½ìš°
         if (selectionLog != null && selectionLog.Count > 1)
         {
             ISelection curSelection = selectionLog.Pop();
@@ -71,48 +71,48 @@ public class ActionManager : MonoBehaviour
     {
         selectionData.actor = actor;
 
-        // ¼Òºñ °¡´ÉÇÑ ¾ÆÀÌÅÛ ¸ñ·Ï ÃÊ±âÈ­
+        // ì†Œë¹„ ê°€ëŠ¥í•œ ì•„ì´í…œ ëª©ë¡ ì´ˆê¸°í™”
         itemSelection.UpdateItemInfo();
 
-        // Çàµ¿ ¼±ÅÃÃ¢ ¿­±â
+        // í–‰ë™ ì„ íƒì°½ ì—´ê¸°
         OpenSelection(actionSelection);
     }
 
     /***************************************************************
-    * [ Çàµ¿ ¼±ÅÃ ]
+    * [ í–‰ë™ ì„ íƒ ]
     * 
-    * ´ÙÀ½¿¡ ÃëÇÒ Çàµ¿ ¼±ÅÃ
+    * ë‹¤ìŒì— ì·¨í•  í–‰ë™ ì„ íƒ
     ***************************************************************/
 
     public void SelectAction(BattleAction action)
     {
         selectionData.action = action;
 
-        // ´ÙÀ½ ¼±ÅÃÃ¢ ¿­±â
+        // ë‹¤ìŒ ì„ íƒì°½ ì—´ê¸°
         ISelection nextSelection = GetNextSelection(action.ActionType);
         OpenSelection(nextSelection);
     }
 
     public void SelectSkill(Skill skill)
     {
-        // ¼±ÅÃÇÑ ½ºÅ³ µî·Ï
+        // ì„ íƒí•œ ìŠ¤í‚¬ ë“±ë¡
         SkillAction action = (SkillAction)selectionData.action;
 
         action.castSkill = skill;
         action.remainTurn = action.actor.GetLastTurn(skill.CostTurn);
 
-        // ´ÙÀ½ ¼±ÅÃÃ¢ ¿­±â
+        // ë‹¤ìŒ ì„ íƒì°½ ì—´ê¸°
         OpenSelection(targetSelection);
     }
 
     public void SelectItem(Consumable item)
     {
-        // ¼±ÅÃÇÑ ¾ÆÀÌÅÛ µî·Ï
+        // ì„ íƒí•œ ì•„ì´í…œ ë“±ë¡
         ItemAction action = (ItemAction)selectionData.action;
 
         action.usingItem = item;
 
-        // ´ÙÀ½ ¼±ÅÃÃ¢ ¿­±â
+        // ë‹¤ìŒ ì„ íƒì°½ ì—´ê¸°
         OpenSelection(targetSelection);
     }
 
@@ -120,16 +120,16 @@ public class ActionManager : MonoBehaviour
     {
         ISelection nextSelection = type switch
         {
-            // µµ¸Á°ú ´ë±â´Â Å¸°Ù ¼±ÅÃ ¾øÀÌ ¹Ù·Î ÅÏ ¼±ÅÃ
+            // ë„ë§ê³¼ ëŒ€ê¸°ëŠ” íƒ€ê²Ÿ ì„ íƒ ì—†ì´ ë°”ë¡œ í„´ ì„ íƒ
             ActionType.Run or ActionType.Wait => turnSelection,
 
-            // ½ºÅ³ÀÏ °æ¿ì ½ºÅ³ ¼±ÅÃ
+            // ìŠ¤í‚¬ì¼ ê²½ìš° ìŠ¤í‚¬ ì„ íƒ
             ActionType.Skill => skillSelection,
 
-            // ¾ÆÀÌÅÛÀÏ °æ¿ì ¾ÆÀÌÅÛ ¼±ÅÃ
+            // ì•„ì´í…œì¼ ê²½ìš° ì•„ì´í…œ ì„ íƒ
             ActionType.Item => itemSelection,
 
-            // ³ª¸ÓÁö´Â ÀüºÎ Å¸°Ù ¼±ÅÃ
+            // ë‚˜ë¨¸ì§€ëŠ” ì „ë¶€ íƒ€ê²Ÿ ì„ íƒ
             _ => targetSelection
         };
 
@@ -137,23 +137,23 @@ public class ActionManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ Å¸°Ù ¼±ÅÃ ]
+    * [ íƒ€ê²Ÿ ì„ íƒ ]
     * 
-    * ÇöÀç Çàµ¿ÀÇ Å¸°ÙÀÌ µÉ ´ë»ó ¼±ÅÃ
+    * í˜„ì¬ í–‰ë™ì˜ íƒ€ê²Ÿì´ ë  ëŒ€ìƒ ì„ íƒ
     ***************************************************************/
 
     public void SelectTargets(List<Entity> targets)
     {
         selectionData.action.SetTarget(targets);
 
-        // ÅÏ ¼±ÅÃÃ¢ ¿­±â
+        // í„´ ì„ íƒì°½ ì—´ê¸°
         OpenSelection(turnSelection);
     }
 
     /***************************************************************
-    * [ ÅÏ ¼±ÅÃ ]
+    * [ í„´ ì„ íƒ ]
     * 
-    * ÇöÀç Çàµ¿ÀÌ ¹èÄ¡µÉ ÅÏ ¼³Á¤
+    * í˜„ì¬ í–‰ë™ì´ ë°°ì¹˜ë  í„´ ì„¤ì •
     ***************************************************************/
 
     public void SelectTurn(float turn, int index)
@@ -161,40 +161,40 @@ public class ActionManager : MonoBehaviour
         Character actor = selectionData.actor;
         BattleAction action = selectionData.action;
 
-        // ·Î±× ÃÊ±âÈ­
+        // ë¡œê·¸ ì´ˆê¸°í™”
         selectionLog.Clear();
 
-        // ÅÏ ¼±ÅÃÃ¢ ´İ±â
+        // í„´ ì„ íƒì°½ ë‹«ê¸°
         turnSelection.CloseSelection();
 
-        // ÅÏ Àû¿ë
+        // í„´ ì ìš©
         action.remainTurn = turn;
 
-        // ¼±ÅÃÇÑ µ¥ÀÌÅÍ¸¦ Á¾ÇÕÇÑ Çàµ¿ ¿¹¾à
+        // ì„ íƒí•œ ë°ì´í„°ë¥¼ ì¢…í•©í•œ í–‰ë™ ì˜ˆì•½
         BattleData.Instance.Sequence.AddTurn(action, index);
 
-        // ÅÏ Á¾·á
+        // í„´ ì¢…ë£Œ
         actor.EndTurn();
     }
 
     /***************************************************************
-    * [ ÀüÈ² »ìÇÇ±â ]
+    * [ ì „í™© ì‚´í”¼ê¸° ]
     * 
-    * ÇöÀç Å¸ÀÓ¶óÀÎ¿¡ µî·ÏµÈ Çàµ¿µéÀÌ ¾î¶² Çàµ¿µéÀÎÁö È®ÀÎ
+    * í˜„ì¬ íƒ€ì„ë¼ì¸ì— ë“±ë¡ëœ í–‰ë™ë“¤ì´ ì–´ë–¤ í–‰ë™ë“¤ì¸ì§€ í™•ì¸
     ***************************************************************/
 
     public void SurveyingBattle()
     {
-        // Çàµ¿ ¼±ÅÃÃ¢ ´İ±â ¼û±â±â
+        // í–‰ë™ ì„ íƒì°½ ë‹«ê¸° ìˆ¨ê¸°ê¸°
         actionSelection.CloseSelection();
 
-        // ÀüÈ² »ìÇÇ±â
+        // ì „í™© ì‚´í”¼ê¸°
         checkingManager.OnStartSurvey();
     }
 
     public void ReturnToActionSelect()
     {
-        // ´Ù½Ã Çàµ¿ ¼±ÅÃÃ¢À¸·Î µ¹¾Æ¿À±â
+        // ë‹¤ì‹œ í–‰ë™ ì„ íƒì°½ìœ¼ë¡œ ëŒì•„ì˜¤ê¸°
         checkingManager.OnEndSurvey();
         actionSelection.ReopenSelection();
     }

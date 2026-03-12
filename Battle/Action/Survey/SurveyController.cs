@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class SurveyController : MonoBehaviour, IController
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private SurveyManager manager;
 
     public void ControlConnect()

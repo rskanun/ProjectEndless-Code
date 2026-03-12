@@ -23,7 +23,7 @@ public class WaitAction : BattleAction
 
     public override void SetTarget(List<Entity> targets)
     {
-        // Å¸°Ù ¼³Á¤ X
+        // íƒ€ê²Ÿ ì„¤ì • X
         throw new NotSupportedException();
     }
 

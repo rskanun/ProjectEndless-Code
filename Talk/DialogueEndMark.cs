@@ -5,7 +5,7 @@ using UnityEngine;
 public class DialogueEndMark : MonoBehaviour
 {
     [Space]
-    [Title("¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤")]
+    [Title("ì• ë‹ˆë©”ì´ì…˜ ì„¤ì •")]
     [SerializeField] private float moveRange;
     [SerializeField] private float duration;
 
@@ -13,23 +13,23 @@ public class DialogueEndMark : MonoBehaviour
 
     private void OnValidate()
     {
-        // º»·¡ À§Ä¡ ±â¾ïÇÏ±â
+        // ë³¸ë˜ ìœ„ì¹˜ ê¸°ì–µí•˜ê¸°
         originPos = transform.localPosition;
     }
 
     private void OnEnable()
     {
-        // ÃÊ±â À§Ä¡ ¼³Á¤
+        // ì´ˆê¸° ìœ„ì¹˜ ì„¤ì •
         transform.localPosition = originPos;
 
-        // È°¼ºÈ­ ½Ã ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // í™œì„±í™” ì‹œ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         transform.DOLocalMoveY(transform.localPosition.y + moveRange, duration)
             .SetLoops(-1, LoopType.Yoyo);
     }
 
     private void OnDisable()
     {
-        // ½ÇÇà ÁßÀÌ´ø ¾Ö´Ï¸ŞÀÌ¼Ç Á¦°Å
+        // ì‹¤í–‰ ì¤‘ì´ë˜ ì• ë‹ˆë©”ì´ì…˜ ì œê±°
         transform.DOKill();
     }
 }

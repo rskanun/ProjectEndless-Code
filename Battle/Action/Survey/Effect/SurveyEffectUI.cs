@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class SurveyEffectUI : MonoBehaviour
 {
-    [Header("¾ÆÀÌÄÜ »ı¼º À§Ä¡")]
+    [Header("ì•„ì´ì½˜ ìƒì„± ìœ„ì¹˜")]
     public Transform container;
 
-    // ¹öÇÁ ¾ÆÀÌÄÜ ¸ñ·Ï
+    // ë²„í”„ ì•„ì´ì½˜ ëª©ë¡
     private List<GameObject> tempIconList;
 
     private void Awake()
@@ -28,11 +28,11 @@ public class SurveyEffectUI : MonoBehaviour
     {
         GameObject tempIcon = CreateIcon(prefab, effect);
 
-        // ÀÓ½Ã ¾ÆÀÌÄÜÀº ¹İÅõ¸íÇÑ ÀÌ¹ÌÁö¸¦ °¡Áü
+        // ì„ì‹œ ì•„ì´ì½˜ì€ ë°˜íˆ¬ëª…í•œ ì´ë¯¸ì§€ë¥¼ ê°€ì§
         StatusEffectIcon icon = tempIcon.GetComponent<StatusEffectIcon>();
         icon.SetAlpha(0.5f);
 
-        // ÀÓ½Ã ¾ÆÀÌÄÜ ¸ñ·Ï¿¡ Ãß°¡
+        // ì„ì‹œ ì•„ì´ì½˜ ëª©ë¡ì— ì¶”ê°€
         tempIconList.Add(tempIcon);
     }
 
@@ -40,14 +40,14 @@ public class SurveyEffectUI : MonoBehaviour
     {
         GameObject iconObj = Instantiate(prefab, container);
 
-        // »ı¼ºµÈ ¾ÆÀÌÄÜÀ» °¡Àå Ã³À½À¸·Î ÀÌµ¿
+        // ìƒì„±ëœ ì•„ì´ì½˜ì„ ê°€ì¥ ì²˜ìŒìœ¼ë¡œ ì´ë™
         iconObj.transform.SetAsFirstSibling();
 
-        // ¾ÆÀÌÄÜ ÀÌ¹ÌÁö µî·Ï
+        // ì•„ì´ì½˜ ì´ë¯¸ì§€ ë“±ë¡
         StatusEffectIcon icon = iconObj.GetComponent<StatusEffectIcon>();
         icon.SetIcon(effect.Icon);
 
-        // »ı¼ºµÈ ¾ÆÀÌÄÜ ¸®ÅÏ
+        // ìƒì„±ëœ ì•„ì´ì½˜ ë¦¬í„´
         return iconObj;
     }
 

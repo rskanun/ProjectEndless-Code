@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SkillSelectionUI : MonoBehaviour
 {
-    [Header("½ºÅ³Ã¢ ±¸¼º¿ä¼Ò")]
+    [Header("ìŠ¤í‚¬ì°½ êµ¬ì„±ìš”ì†Œ")]
     public GameObject selectionWindow;
     public GameObject skillInfoPrefab;
     public Transform container;
@@ -23,7 +23,7 @@ public class SkillSelectionUI : MonoBehaviour
     {
         GameObject skillInfoObj = Instantiate(skillInfoPrefab, container);
 
-        // »ı¼ºµÈ ¿ÀºêÁ§Æ® ¸®ÅÏ
+        // ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ ë¦¬í„´
         return skillInfoObj;
     }
 }

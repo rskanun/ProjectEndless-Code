@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ActionSelectionController : MonoBehaviour, IController
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private ActionSelection selection;
     [SerializeField] private ActionManager actionManager;
 
@@ -18,7 +18,7 @@ public class ActionSelectionController : MonoBehaviour, IController
 
     public void OnActionSelectKeyPressed()
     {
-        // ´©¸¥ Å°¿¡ µû¸¥ Çàµ¿ ¼±ÅÃ
-        // ex) aÅ° -> °ø°Ý, sÅ° -> ½ºÅ³
+        // ëˆ„ë¥¸ í‚¤ì— ë”°ë¥¸ í–‰ë™ ì„ íƒ
+        // ex) aí‚¤ -> ê³µê²©, sí‚¤ -> ìŠ¤í‚¬
     }
 }

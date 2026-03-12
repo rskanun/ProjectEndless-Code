@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 public enum EntityState
 {
-    // Çàµ¿¿¡ ¿µÇâÀ» ³¢Ä¡´Â »óÅÂ ¸ñ·Ï
+    // í–‰ë™ì— ì˜í–¥ì„ ë¼ì¹˜ëŠ” ìƒíƒœ ëª©ë¡
 
-    Stun,   // Çàµ¿ ºÒ°¡ »óÅÂ
-    Stagger,    // Çàµ¿ÀÌ ÈåÆ®·¯Áø »óÅÂ -> ¹«Á¶°Ç Ä¡¸íÅ¸ + °ø°İ ¹æ¾î X
-    Dodge,  // °ø°İ È¸ÇÇ »óÅÂ
+    Stun,   // í–‰ë™ ë¶ˆê°€ ìƒíƒœ
+    Stagger,    // í–‰ë™ì´ ííŠ¸ëŸ¬ì§„ ìƒíƒœ -> ë¬´ì¡°ê±´ ì¹˜ëª…íƒ€ + ê³µê²© ë°©ì–´ X
+    Dodge,  // ê³µê²© íšŒí”¼ ìƒíƒœ
 }
 
 public class EntityStateManager
@@ -20,7 +20,7 @@ public class EntityStateManager
 
     public void Add(EntityState state)
     {
-        // »óÅÂ ÁßÃ¸ ¹æÁö
+        // ìƒíƒœ ì¤‘ì²© ë°©ì§€
         if (HasState(state)) return;
 
         entityStates.Add(state);

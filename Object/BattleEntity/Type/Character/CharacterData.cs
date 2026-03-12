@@ -22,7 +22,7 @@ public class CharacterData : EntityData
     }
 
     [SerializeField, PropertyOrder(0)]
-    private bool _isSlain; // Ä³¸¯ÅÍÀÇ ¿µ±¸ÀûÀÎ »ç¸Á(ÁÖÀÎ°ø¿¡°Ô Åä¹ú ´çÇß´Â°¡)
+    private bool _isSlain; // ìºë¦­í„°ì˜ ì˜êµ¬ì ì¸ ì‚¬ë§(ì£¼ì¸ê³µì—ê²Œ í† ë²Œ ë‹¹í–ˆëŠ”ê°€)
     public bool IsSlain
     {
         get => _isSlain;
@@ -34,10 +34,10 @@ public class CharacterData : EntityData
     public CharacterProfile Profile => _profile;
 
     [SerializeField, PropertyOrder(10)]
-    private List<Skill> _hasSkills; // ÇØ´ç Ä³¸¯ÅÍ°¡ Áö´Ñ ½ºÅ³ ¸ñ·Ï
+    private List<Skill> _hasSkills; // í•´ë‹¹ ìºë¦­í„°ê°€ ì§€ë‹Œ ìŠ¤í‚¬ ëª©ë¡
     public List<Skill> HasSkills => _hasSkills;
 
-    [Title("Àåºñ Á¤º¸")]
+    [Title("ì¥ë¹„ ì •ë³´")]
     [SerializeField, PropertyOrder(10)]
     private WeaponType _usableWeaponType;
     public WeaponType UsableWeaponType => _usableWeaponType;

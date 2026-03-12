@@ -22,7 +22,7 @@ public class StatusEffectManager : MonoBehaviour
     [SerializeField]
     private StatusEffectUI ui;
 
-    // Áö´Ï°í ÀÖ´Â »óÅÂÈ¿°ú ¸ñ·Ï
+    // ì§€ë‹ˆê³  ìˆëŠ” ìƒíƒœíš¨ê³¼ ëª©ë¡
     private Dictionary<StatusEffect, ActiveEffect> activeEffectList;
 
     private void Awake()
@@ -32,23 +32,23 @@ public class StatusEffectManager : MonoBehaviour
 
     public void AddEffect(StatusEffect effect, Action startAction, Action endAction)
     {
-        // ÀÌ¹Ì ÇØ´ç »óÅÂÈ¿°úÀÌ °É·ÁÀÖ´Â °æ¿ì
+        // ì´ë¯¸ í•´ë‹¹ ìƒíƒœíš¨ê³¼ì´ ê±¸ë ¤ìˆëŠ” ê²½ìš°
         if (HasEffect(effect))
         {
-            // ÇØ´ç »óÅÂÈ¿°ú Áö¼Ó½Ã°£ °»½Å
+            // í•´ë‹¹ ìƒíƒœíš¨ê³¼ ì§€ì†ì‹œê°„ ê°±ì‹ 
             activeEffectList[effect].remainDuration = effect.Duration;
         }
         else
         {
             ActiveEffect activeEffect = new ActiveEffect(effect, endAction);
 
-            // »óÅÂÈ¿°ú Ãß°¡
+            // ìƒíƒœíš¨ê³¼ ì¶”ê°€
             activeEffectList.Add(effect, activeEffect);
 
-            // ¾ÆÀÌÄÜ Ãß°¡
+            // ì•„ì´ì½˜ ì¶”ê°€
             AddEffectIcon(effect);
 
-            // È¿°ú ÁÖ±â
+            // íš¨ê³¼ ì£¼ê¸°
             startAction?.Invoke();
         }
     }
@@ -66,7 +66,7 @@ public class StatusEffectManager : MonoBehaviour
 
     public float GetDuration(StatusEffect effect)
     {
-        // ÇØ´ç ¹öÇÁ¸¦ °¡Áö°í ÀÖÁö ¾Ê´Ù¸é ³²Àº Áö¼ÓÅÏÀº 0
+        // í•´ë‹¹ ë²„í”„ë¥¼ ê°€ì§€ê³  ìˆì§€ ì•Šë‹¤ë©´ ë‚¨ì€ ì§€ì†í„´ì€ 0
         if (HasEffect(effect) != false) return 0;
 
         return activeEffectList[effect].remainDuration;
@@ -74,30 +74,30 @@ public class StatusEffectManager : MonoBehaviour
 
     public void UpdateEffectTimer(float turn)
     {
-        // Áö¼ÓÅÏÀÌ Áö³­ »óÅÂÈ¿°ú Á¦°Å ¸ñ·Ï
+        // ì§€ì†í„´ì´ ì§€ë‚œ ìƒíƒœíš¨ê³¼ ì œê±° ëª©ë¡
         List<ActiveEffect> removeList = new List<ActiveEffect>();
 
-        // Áö¼ÓÅÏ ¾÷µ¥ÀÌÆ® ¹× Áö¼ÓÅÏÀÌ Áö³­ »óÅÂÈ¿°ú Ã£±â
+        // ì§€ì†í„´ ì—…ë°ì´íŠ¸ ë° ì§€ì†í„´ì´ ì§€ë‚œ ìƒíƒœíš¨ê³¼ ì°¾ê¸°
         foreach (ActiveEffect activeEffect in activeEffectList.Values)
         {
-            // Áö¼ÓÅÏ °¨¼Ò
+            // ì§€ì†í„´ ê°ì†Œ
             activeEffect.remainDuration -= turn;
 
-            // Áö¼ÓÅÏÀÌ Áö³µÀ» °æ¿ì »èÁ¦
+            // ì§€ì†í„´ì´ ì§€ë‚¬ì„ ê²½ìš° ì‚­ì œ
             if (activeEffect.remainDuration <= 0)
             {
-                // ÀÓ½Ã¸ñ·Ï¿¡ Ãß°¡
+                // ì„ì‹œëª©ë¡ì— ì¶”ê°€
                 removeList.Add(activeEffect);
             }
         }
 
-        // »óÅÂÈ¿°ú ¸ñ·Ï¿¡¼­ Áö¿ì±â
+        // ìƒíƒœíš¨ê³¼ ëª©ë¡ì—ì„œ ì§€ìš°ê¸°
         foreach (ActiveEffect removeEffect in removeList)
         {
-            // È¿°ú Áö¿ì±â
+            // íš¨ê³¼ ì§€ìš°ê¸°
             removeEffect.endAction?.Invoke();
 
-            // ¸ñ·Ï¿¡¼­ »èÁ¦
+            // ëª©ë¡ì—ì„œ ì‚­ì œ
             activeEffectList.Remove(removeEffect.effect);
         }
     }

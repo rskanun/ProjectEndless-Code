@@ -27,7 +27,7 @@ public class TargetSelectButtonManager
     {
         if (buttonClickHandler != null)
         {
-            // Å¬¸¯ ÀÌº¥Æ®°¡ µî·ÏµÇ¾î ÀÖ´Ù¸é, »õ·Î¿î ¹öÆ°ÀÌ µî·ÏµÇ¸é ÀÌº¥Æ®µµ °°ÀÌ µî·Ï
+            // í´ë¦­ ì´ë²¤íŠ¸ê°€ ë“±ë¡ë˜ì–´ ìˆë‹¤ë©´, ìƒˆë¡œìš´ ë²„íŠ¼ì´ ë“±ë¡ë˜ë©´ ì´ë²¤íŠ¸ë„ ê°™ì´ ë“±ë¡
             button.AddListener(buttonClickHandler);
         }
 
@@ -44,7 +44,7 @@ public class TargetSelectButtonManager
     {
         if (head == null && tail == null)
         {
-            // ¿¬°áÀÌ ÇÏ³ªµµ ¾ø´Â °æ¿ì »õ ¿¬°á »ı¼º
+            // ì—°ê²°ì´ í•˜ë‚˜ë„ ì—†ëŠ” ê²½ìš° ìƒˆ ì—°ê²° ìƒì„±
             head = button;
             tail = button;
 
@@ -53,7 +53,7 @@ public class TargetSelectButtonManager
         }
         else
         {
-            // »õ ¹öÆ°Àº Ç×»ó ¸Ç µÚ¿¡ ºÙÀ½
+            // ìƒˆ ë²„íŠ¼ì€ í•­ìƒ ë§¨ ë’¤ì— ë¶™ìŒ
             button.PrevButton = tail;
             button.NextButton = head;
 
@@ -78,26 +78,26 @@ public class TargetSelectButtonManager
     {
         TargetSelectButton firstSelectButton = null;
 
-        // Æ¯Á¤ ¹öÆ°¸¸ È°¼ºÈ­
+        // íŠ¹ì • ë²„íŠ¼ë§Œ í™œì„±í™”
         foreach (TargetSelectButton button in buttons)
         {
             Entity target = button.target;
 
-            // Á¶°Ç¿¡ ¸Â´Â ¿£Æ¼Æ¼ÀÇ ¹öÆ°¸¸ È°¼ºÈ­
+            // ì¡°ê±´ì— ë§ëŠ” ì—”í‹°í‹°ì˜ ë²„íŠ¼ë§Œ í™œì„±í™”
             button.interactable = activeCondition(target);
 
-            // È°¼ºÈ­µÈ ¹öÆ°ÀÌ ¾øÀ» °æ¿ì
+            // í™œì„±í™”ëœ ë²„íŠ¼ì´ ì—†ì„ ê²½ìš°
             if (firstSelectButton == null && button.interactable)
             {
-                // ÀÓ½Ã·Î Ã¹¹øÂ° ¹öÆ° ÀúÀå
+                // ì„ì‹œë¡œ ì²«ë²ˆì§¸ ë²„íŠ¼ ì €ì¥
                 firstSelectButton = button;
             }
         }
 
-        // ÀÌÀü ¹öÆ° ¼±ÅÃ
+        // ì´ì „ ë²„íŠ¼ ì„ íƒ
         if (TargetSelectButton.lastSelected == null || TargetSelectButton.lastSelected.interactable == false)
         {
-            // ÀÌÀü¿¡ ¼±ÅÃÇÑ ¹öÆ°À» ¼±ÅÃÇÒ ¼ö ¾ø´Â °æ¿ì ¼±ÅÃ°¡´ÉÇÑ Ã¹ ¹öÆ° ¼±ÅÃ
+            // ì´ì „ì— ì„ íƒí•œ ë²„íŠ¼ì„ ì„ íƒí•  ìˆ˜ ì—†ëŠ” ê²½ìš° ì„ íƒê°€ëŠ¥í•œ ì²« ë²„íŠ¼ ì„ íƒ
             TargetSelectButton.lastSelected = firstSelectButton;
         }
 
@@ -106,18 +106,18 @@ public class TargetSelectButtonManager
 
     public void DeactiveAllButtons()
     {
-        // ¸ğµç ¹öÆ° ºñÈ°¼ºÈ­
+        // ëª¨ë“  ë²„íŠ¼ ë¹„í™œì„±í™”
         foreach (TargetSelectButton button in buttons)
         {
             if (button != null)
 
                 button.interactable = false;
 
-            // ¸ÖÆ¼ ¼±ÅÃµÈ ¹öÆ°µµ ÀüºÎ ÃÊ±âÈ­
+            // ë©€í‹° ì„ íƒëœ ë²„íŠ¼ë„ ì „ë¶€ ì´ˆê¸°í™”
             button.DeselectedMultiButton();
         }
 
-        // ¼±ÅÃ ¹öÆ° ÃÊ±âÈ­
+        // ì„ íƒ ë²„íŠ¼ ì´ˆê¸°í™”
         EventSystem.current.SetSelectedGameObject(null);
     }
 
@@ -125,12 +125,12 @@ public class TargetSelectButtonManager
     {
         TargetSelectButton firstSelectButton = null;
 
-        // Æ¯Á¤ ¹öÆ°¸¸ È°¼ºÈ­
+        // íŠ¹ì • ë²„íŠ¼ë§Œ í™œì„±í™”
         foreach (TargetSelectButton button in buttons)
         {
             Entity target = button.target;
 
-            // »ì¾ÆÀÖ´Â ¿£Æ¼Æ¼ Áß Á¶°Ç¿¡ ¸Â´Â ¿£Æ¼Æ¼ÀÇ ¹öÆ°¸¸ È°¼ºÈ­ ¹× ¼±ÅÃ
+            // ì‚´ì•„ìˆëŠ” ì—”í‹°í‹° ì¤‘ ì¡°ê±´ì— ë§ëŠ” ì—”í‹°í‹°ì˜ ë²„íŠ¼ë§Œ í™œì„±í™” ë° ì„ íƒ
             button.interactable = selectCondition(target);
 
             if (button.interactable)
@@ -144,7 +144,7 @@ public class TargetSelectButtonManager
             }
         }
 
-        // È°¼ºÈ­ µÈ ¹öÆ° Áß ¾Æ¹«(Ã¹¹øÂ°) ¹öÆ° ¼±ÅÃ
+        // í™œì„±í™” ëœ ë²„íŠ¼ ì¤‘ ì•„ë¬´(ì²«ë²ˆì§¸) ë²„íŠ¼ ì„ íƒ
         EventSystem.current.SetSelectedGameObject(firstSelectButton.gameObject);
     }
 

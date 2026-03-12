@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterHUD : BattleHUD
 {
-    [Header("»ç¿ë HUD")]
+    [Header("ì‚¬ìš© HUD")]
     [SerializeField] private AmountHUD hpBar;
     [SerializeField] private AmountHUD spBar;
 
@@ -18,6 +18,6 @@ public class CharacterHUD : BattleHUD
 
     public override void UpdateMP(int mp, int maxMP)
     {
-        // Àá½Ã ºó Ä­
+        // ìž ì‹œ ë¹ˆ ì¹¸
     }
 }

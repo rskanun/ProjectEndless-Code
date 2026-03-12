@@ -5,7 +5,7 @@ public class OffWeaponInfo : EquipInfo
     [SerializeField] private GameObject unavailableMark;
 
     /// <summary>
-    /// ¸ŞÀÎ ¹«±â¿¡ µû¶ó ÇØ´ç Ä­¿¡ Àåºñ¸¦ ¼³Á¤ÇÒ ¼ö ÀÖ´Â Áö ¿©ºÎ¸¦ ¾÷µ¥ÀÌÆ®
+    /// ë©”ì¸ ë¬´ê¸°ì— ë”°ë¼ í•´ë‹¹ ì¹¸ì— ì¥ë¹„ë¥¼ ì„¤ì •í•  ìˆ˜ ìˆëŠ” ì§€ ì—¬ë¶€ë¥¼ ì—…ë°ì´íŠ¸
     /// </summary>
     public void UpdateAvailable()
     {
@@ -14,10 +14,10 @@ public class OffWeaponInfo : EquipInfo
         bool hasMainWeapon = mainWeapon != null;
         bool isOneHandWeapon = hasMainWeapon && !mainWeapon.WeaponType.IsTwoHand();
 
-        // ÇÑ¼Õ ¹«±â¸¦ µç »óÅÂ¿¡¼­¸¸ º¸Á¶ ¹«±â¸¦ Âø¿ëÇÒ ¼ö ÀÖÀ½
+        // í•œì† ë¬´ê¸°ë¥¼ ë“  ìƒíƒœì—ì„œë§Œ ë³´ì¡° ë¬´ê¸°ë¥¼ ì°©ìš©í•  ìˆ˜ ìˆìŒ
         isAvailable = isOneHandWeapon;
 
-        // º¸Á¶ ¹«±â Âø¿ë ¿©ºÎ¿¡ µû¸¥ UI Ç¥½Ã °»½Å
+        // ë³´ì¡° ë¬´ê¸° ì°©ìš© ì—¬ë¶€ì— ë”°ë¥¸ UI í‘œì‹œ ê°±ì‹ 
         unavailableMark.SetActive(!isAvailable);
         nameField.alpha = isAvailable ? 1.0f : 0.75f;
         nameField.text = isAvailable ? nameField.text : (mainWeapon?.Name ?? GetTagName());
@@ -27,13 +27,13 @@ public class OffWeaponInfo : EquipInfo
     {
         base.UpdateInfo(equip);
 
-        // ÇØ´ç Ä­¿¡ Àåºñ¸¦ Âø¿ëÇÒ ¼ö ÀÖ´Â Áö ¿©ºÎ ¼³Á¤
+        // í•´ë‹¹ ì¹¸ì— ì¥ë¹„ë¥¼ ì°©ìš©í•  ìˆ˜ ìˆëŠ” ì§€ ì—¬ë¶€ ì„¤ì •
         UpdateAvailable();
     }
 
     protected override string GetTagName()
     {
-        return "<º¸Á¶ ¹«±â Ä­>";
+        return "<ë³´ì¡° ë¬´ê¸° ì¹¸>";
     }
     protected override void ShowEquips()
     {

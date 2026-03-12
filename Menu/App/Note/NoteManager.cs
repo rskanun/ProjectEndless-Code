@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using Endless.GameData;
 using System;
 using System.Collections.Generic;

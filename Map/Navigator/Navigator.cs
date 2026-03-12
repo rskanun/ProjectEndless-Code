@@ -5,24 +5,24 @@ using UnityEngine;
 public static class Navigator
 {
     /// <summary>
-    /// A* ¾Ë°í¸®ÁòÀ» ÀÌ¿ëÇØ °¡Àå ºü¸¥ ³ëµå °æ·Î Å½»ö
+    /// A* ì•Œê³ ë¦¬ì¦˜ì„ ì´ìš©í•´ ê°€ì¥ ë¹ ë¥¸ ë…¸ë“œ ê²½ë¡œ íƒìƒ‰
     /// </summary>
     public static List<Vector2> FindPath(MapGrid grid, Vector2 start, Vector2 end)
     {
-        // ½ÃÀÛÁöÁ¡°ú ³¡ÁöÁ¡ °¢°¢ °¡±î¿î ³ëµå Å½»ö
+        // ì‹œì‘ì§€ì ê³¼ ëì§€ì  ê°ê° ê°€ê¹Œìš´ ë…¸ë“œ íƒìƒ‰
         var startNode = GetNearNode(grid, start);
         var endNode = GetNearNode(grid, end);
 
-        // ÇØ´ç ³ëµå ±âÁØÀ¸·Î ±æÃ£±â
+        // í•´ë‹¹ ë…¸ë“œ ê¸°ì¤€ìœ¼ë¡œ ê¸¸ì°¾ê¸°
         return FindPath(grid, startNode, endNode);
     }
 
     private static GridNode GetNearNode(MapGrid grid, Vector2 pos)
     {
-        // ÇöÀç ¸ÊÀÇ °¡Àå Ã³À½ ³ëµå ÁÂÇ¥¸¦ ±âÁØÀ¸·Î Å½»ö
+        // í˜„ì¬ ë§µì˜ ê°€ì¥ ì²˜ìŒ ë…¸ë“œ ì¢Œí‘œë¥¼ ê¸°ì¤€ìœ¼ë¡œ íƒìƒ‰
         var pivot = grid.GetNode(0, 0).pos;
 
-        // °¡Àå °¡±î¿î ³ëµå À§Ä¡ Ã£±â
+        // ê°€ì¥ ê°€ê¹Œìš´ ë…¸ë“œ ìœ„ì¹˜ ì°¾ê¸°
         int x = Mathf.FloorToInt((pos.x - pivot.x) / grid.NodeSize + 0.5f);
         int y = Mathf.FloorToInt((pos.y - pivot.y) / grid.NodeSize + 0.5f);
 
@@ -30,7 +30,7 @@ public static class Navigator
     }
 
     /// <summary>
-    /// A* ¾Ë°í¸®ÁòÀ» ÀÌ¿ëÇØ °¡Àå ºü¸¥ ³ëµå °æ·Î Å½»ö
+    /// A* ì•Œê³ ë¦¬ì¦˜ì„ ì´ìš©í•´ ê°€ì¥ ë¹ ë¥¸ ë…¸ë“œ ê²½ë¡œ íƒìƒ‰
     /// </summary>
     public static List<Vector2> FindPath(MapGrid grid, GridNode start, GridNode end)
     {
@@ -52,37 +52,37 @@ public static class Navigator
 
             if (closeList.Contains(node)) continue;
 
-            // µµÂø È®ÀÎ
+            // ë„ì°© í™•ì¸
             if (node == end)
             {
-                // °æ·Î¸¦ ¿ªÃßÀûÇÏ¿© ¸®ÅÏ
+                // ê²½ë¡œë¥¼ ì—­ì¶”ì í•˜ì—¬ ë¦¬í„´
                 return RestracePath(grid, start, end);
             }
 
             openList.Remove(node);
             closeList.Add(node);
 
-            // ÇöÀç ³ëµåÀÇ ÁøÇà ¹æÇâ
+            // í˜„ì¬ ë…¸ë“œì˜ ì§„í–‰ ë°©í–¥
             var dir = node.gridPos - node.prevPos;
 
-            // ÁÖº¯ Å½»ö
+            // ì£¼ë³€ íƒìƒ‰
             foreach (var nearNode in GetNearNodes(grid, node))
             {
-                // °¥ ¼ö ¾ø´Â ±¸¿ªÀÌ°Å³ª ÀÌ¹Ì °¬´ø °æ¿ì ³Ñ¾î°¡±â
+                // ê°ˆ ìˆ˜ ì—†ëŠ” êµ¬ì—­ì´ê±°ë‚˜ ì´ë¯¸ ê°”ë˜ ê²½ìš° ë„˜ì–´ê°€ê¸°
                 if (!nearNode.isWalkable || closeList.Contains(nearNode))
                 {
                     continue;
                 }
 
-                // ÁøÇà ¹æÇâÀÌ µ¿ÀÏÇÑÁö ÆÇ´Ü
+                // ì§„í–‰ ë°©í–¥ì´ ë™ì¼í•œì§€ íŒë‹¨
                 var nearDir = nearNode.gridPos - node.gridPos;
                 bool isTurned = (dir - nearDir) != Vector2.zero;
 
-                // gCost = ÀÌÀü ³ëµå gCost + µÑ »çÀÌ °Å¸®
+                // gCost = ì´ì „ ë…¸ë“œ gCost + ë‘˜ ì‚¬ì´ ê±°ë¦¬
                 int dirCost = isTurned ? 5 : 0;
                 int newCost = node.gCost + GetDistance(node, nearNode) + dirCost;
 
-                // ¹ÌÅ½»ö ³ëµå°Å³ª ´õ ÀûÀº ÄÚ½ºÆ®ÀÎ °æ¿ì
+                // ë¯¸íƒìƒ‰ ë…¸ë“œê±°ë‚˜ ë” ì ì€ ì½”ìŠ¤íŠ¸ì¸ ê²½ìš°
                 if (!openList.Contains(nearNode) || newCost < nearNode.gCost)
                 {
                     nearNode.gCost = newCost;
@@ -95,7 +95,7 @@ public static class Navigator
             }
         }
 
-        // °æ·Î¸¦ Ã£À» ¼ö ¾ø´Â °æ¿ì 
+        // ê²½ë¡œë¥¼ ì°¾ì„ ìˆ˜ ì—†ëŠ” ê²½ìš° 
         return null;
     }
 
@@ -103,7 +103,7 @@ public static class Navigator
     {
         var path = new List<Vector2>() { end.pos };
 
-        // µµÂø±îÁö °æ·Î ¿ªÅ½»ö
+        // ë„ì°©ê¹Œì§€ ê²½ë¡œ ì—­íƒìƒ‰
         var node = end;
         while (node != start)
         {
@@ -111,10 +111,10 @@ public static class Navigator
             path.Add(node.pos);
         }
 
-        // ³¡ -> ½ÃÀÛ¿¡¼­ ½ÃÀÛ -> ³¡À¸·Î µÚÁı±â
+        // ë -> ì‹œì‘ì—ì„œ ì‹œì‘ -> ëìœ¼ë¡œ ë’¤ì§‘ê¸°
         path.Reverse();
 
-        // °á°ú ¸®ÅÏ
+        // ê²°ê³¼ ë¦¬í„´
         return path;
     }
 
@@ -125,7 +125,7 @@ public static class Navigator
 
         var nodes = new List<GridNode>();
 
-        // ÁÖº¯ 8Ä­ ³ëµå °¡Á®¿À±â
+        // ì£¼ë³€ 8ì¹¸ ë…¸ë“œ ê°€ì ¸ì˜¤ê¸°
         for (int i = 0; i < 8; i++)
         {
             int mx = node.gridPos.x + sx[i];
@@ -146,7 +146,7 @@ public static class Navigator
         int y = Math.Abs(a.gridPos.y - b.gridPos.y);
         int shortest = (x > y) ? y : x;
 
-        // ºü¸¥ °è»êÀ» À§ÇØ ´ë°¢¼±Àº 14, ³ª¸ÓÁö Áø¼± °Å¸®¸¦ 10À¸·Î °è»ê
+        // ë¹ ë¥¸ ê³„ì‚°ì„ ìœ„í•´ ëŒ€ê°ì„ ì€ 14, ë‚˜ë¨¸ì§€ ì§„ì„  ê±°ë¦¬ë¥¼ 10ìœ¼ë¡œ ê³„ì‚°
         return 14 * shortest + 10 * Math.Abs(x - y);
     }
 }

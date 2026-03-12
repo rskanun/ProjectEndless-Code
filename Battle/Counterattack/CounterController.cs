@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class CounterController : MonoBehaviour, IController
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private CounterattackSelection manager;
 
     public void ControlConnect()
@@ -26,7 +26,7 @@ public class CounterController : MonoBehaviour, IController
 
     private void OnExtraAttackKeyPressed(InputAction.CallbackContext context)
     {
-        // °ø°İÀ» ¸·¾Æ³½ Ä³¸¯ÅÍÀÇ Áö¿ø °ø°İ
+        // ê³µê²©ì„ ë§‰ì•„ë‚¸ ìºë¦­í„°ì˜ ì§€ì› ê³µê²©
         manager.SelectAttacker(0);
     }
 

@@ -19,7 +19,7 @@ public class DottedArrowLine : MonoBehaviour
 
         for (int i = 0; i < segmentCount; i++)
         {
-            // º¸°£
+            // ë³´ê°„
             float t = (float)i / (count - 1);
             Vector2 point = GetParabolaPoint(start, end, height, t);
 
@@ -31,16 +31,16 @@ public class DottedArrowLine : MonoBehaviour
             lineRenderer.SetPosition(i, lineRenderer.GetPosition(segmentCount - 1));
         }
 
-        // È­»ìÇ¥ ¹èÄ¡
+        // í™”ì‚´í‘œ ë°°ì¹˜
         SetEndArrow(end);
     }
 
     private Vector2 GetParabolaPoint(Vector2 start, Vector2 end, float h, float t)
     {
-        // ¼öÆò ¹æÇâÀ¸·Î º¸°£
+        // ìˆ˜í‰ ë°©í–¥ìœ¼ë¡œ ë³´ê°„
         Vector2 midPoint = Vector2.Lerp(start, end, t);
 
-        // Æ÷¹°¼± ÇüÅÂ·Î ³ôÀÌ ¼³Á¤
+        // í¬ë¬¼ì„  í˜•íƒœë¡œ ë†’ì´ ì„¤ì •
         float parabolaH = 4 * h * t * (1 - t);
 
         return new Vector2(midPoint.x, midPoint.y + parabolaH);
@@ -50,7 +50,7 @@ public class DottedArrowLine : MonoBehaviour
     {
         endArrow.transform.position = endPoint;
 
-        // È­»ìÇ¥ È¸Àü
+        // í™”ì‚´í‘œ íšŒì „
         Vector2 direction = endPoint - (Vector2)lineRenderer.GetPosition(lineRenderer.positionCount - 2);
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
 

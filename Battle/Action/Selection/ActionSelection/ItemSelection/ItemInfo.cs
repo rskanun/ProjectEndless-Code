@@ -6,18 +6,18 @@ using UnityEngine.UI;
 
 public class ItemInfo : MonoBehaviour, ISelectHandler
 {
-    [Header("¾ÆÀÌÅÛ Á¤º¸ ±¸¼º¿ä¼Ò")]
+    [Header("ì•„ì´í…œ ì •ë³´ êµ¬ì„±ìš”ì†Œ")]
     public Image icon;
     public Button button;
     public GameObject unusablePanel;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemCount;
 
-    // ¾ÆÀÌÅÛ Á¤º¸
+    // ì•„ì´í…œ ì •ë³´
     private Consumable item;
     private int count;
 
-    // ÀÌº¥Æ®
+    // ì´ë²¤íŠ¸
     private Action hoverHandler;
     private Action clickHandler;
 
@@ -26,7 +26,7 @@ public class ItemInfo : MonoBehaviour, ISelectHandler
         this.item = item;
         this.count = count;
 
-        // Á¤º¸ ÀûÀÀ
+        // ì •ë³´ ì ì‘
         icon.sprite = item.IconSprite;
         itemName.text = item.Name;
         itemCount.text = $"x{count}";
@@ -54,7 +54,7 @@ public class ItemInfo : MonoBehaviour, ISelectHandler
         {
             hoverHandler?.Invoke();
 
-            // ÇØ´ç ¿ÀºêÁ§Æ® ¼±ÅÃ
+            // í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ì„ íƒ
             EventSystem.current.SetSelectedGameObject(gameObject);
         }
     }

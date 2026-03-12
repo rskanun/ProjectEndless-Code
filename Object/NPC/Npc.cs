@@ -14,10 +14,10 @@ public class Npc : MonoBehaviour
 
     public ScenarioScene GetDialogueScene()
     {
-        // ´ë»ç¸¦ °¡Áö°í ÀÖÁö ¾Ê´Â °æ¿ì
+        // ëŒ€ì‚¬ë¥¼ ê°€ì§€ê³  ìˆì§€ ì•ŠëŠ” ê²½ìš°
         if (dialogueScene == null)
         {
-            // ÇØ´ç npcÀÇ id¿¡ ÇØ´çÇÏ´Â ´ë»ç Ã£¾Æ ´ã±â
+            // í•´ë‹¹ npcì˜ idì— í•´ë‹¹í•˜ëŠ” ëŒ€ì‚¬ ì°¾ì•„ ë‹´ê¸°
             dialogueScene = ScenarioManager.Instance.GetNpcDialogueScene(npc.ID);
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DG.Tweening;
 
 public class NoteAppUI : AppUI

@@ -17,7 +17,7 @@ public class BattleData
         }
     }
 
-    [Header("Àû Á¤º¸")]
+    [Header("ì  ì •ë³´")]
     [ReadOnly]
     [SerializeField]
     private List<Monster> _enemyList = new List<Monster>();
@@ -36,7 +36,7 @@ public class BattleData
         private set { _enemyFrontList = value; }
     }
 
-    [Header("¾Æ±º Á¤º¸")]
+    [Header("ì•„êµ° ì •ë³´")]
     [ReadOnly]
     [SerializeField]
     private Player _player;
@@ -64,7 +64,7 @@ public class BattleData
         private set { _characterFrontList = value; }
     }
 
-    [Header("ÀüÅõ Á¤º¸")]
+    [Header("ì „íˆ¬ ì •ë³´")]
     [SerializeField]
     private BattleSequence _sequence;
     public BattleSequence Sequence
@@ -123,7 +123,7 @@ public class BattleData
         {
             _isParryFrame = value;
 
-            // ÆĞ¸µ °¡´É ¿©ºÎ°¡ ºñÈ°¼ºÈ­ µÇ¸é ÆĞ¸µ »ç¿ëµµ ºñÈ°¼ºÈ­
+            // íŒ¨ë§ ê°€ëŠ¥ ì—¬ë¶€ê°€ ë¹„í™œì„±í™” ë˜ë©´ íŒ¨ë§ ì‚¬ìš©ë„ ë¹„í™œì„±í™”
             if (_isParryFrame == false)
             {
                 IsUsedParry = false;
@@ -145,7 +145,7 @@ public class BattleData
         {
             _isDodgeFrame = value;
 
-            // È¸ÇÇ °¡´É ¿©ºÎ°¡ ºñÈ°¼ºÈ­ µÇ¸é È¸ÇÇ »ç¿ëµµ ºñÈ°¼ºÈ­
+            // íšŒí”¼ ê°€ëŠ¥ ì—¬ë¶€ê°€ ë¹„í™œì„±í™” ë˜ë©´ íšŒí”¼ ì‚¬ìš©ë„ ë¹„í™œì„±í™”
             if (_isDodgeFrame == false)
             {
                 IsUsedDodge = false;
@@ -168,7 +168,7 @@ public class BattleData
         set => _extraDodgeCount = value;
     }
 
-    public bool IsInBattle // ÀûÀÌ³ª ÁÖÀÎ°ø ÆÄÆ¼ ¸É¹ö°¡ ³²¾ÆÀÖ´Ù¸é ÀüÅõ¸¦ Áö¼ÓÇÏ´Â °ÍÀ¸·Î ÆÇ´Ü
+    public bool IsInBattle // ì ì´ë‚˜ ì£¼ì¸ê³µ íŒŒí‹° ë§´ë²„ê°€ ë‚¨ì•„ìˆë‹¤ë©´ ì „íˆ¬ë¥¼ ì§€ì†í•˜ëŠ” ê²ƒìœ¼ë¡œ íŒë‹¨
         => IsLivingEnemy && IsLivingCharacter;
 
     public bool IsLivingEnemy
@@ -198,10 +198,10 @@ public class BattleData
 
     public void SetEnemyList(List<Monster> encountEnemys)
     {
-        // »õ·Î¿î Àû¿¡ ´ëÇÑ µ¥ÀÌÅÍ »ğÀÔ
+        // ìƒˆë¡œìš´ ì ì— ëŒ€í•œ ë°ì´í„° ì‚½ì…
         EnemyList = encountEnemys;
 
-        // ÀüÀ§¿¡ ´ëÇÑ µ¥ÀÌÅÍ »ğÀÔ
+        // ì „ìœ„ì— ëŒ€í•œ ë°ì´í„° ì‚½ì…
         foreach (Monster enemy in encountEnemys)
         {
             if (enemy.Position == BattlePosition.Front)
@@ -213,19 +213,19 @@ public class BattleData
 
     public void SetPartyList(List<Character> party)
     {
-        // ÆÄÆ¼¿¡ ´ëÇÑ µ¥ÀÌÅÍ »ğÀÔ
+        // íŒŒí‹°ì— ëŒ€í•œ ë°ì´í„° ì‚½ì…
         CharacterList = party;
 
-        // ÀüÀ§ ¹× ÇÃ·¹ÀÌ¾î¿¡ ´ëÇÑ µ¥ÀÌÅÍ »ğÀÔ
+        // ì „ìœ„ ë° í”Œë ˆì´ì–´ì— ëŒ€í•œ ë°ì´í„° ì‚½ì…
         foreach (Character character in party)
         {
-            // ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ »ğÀÔ
+            // í”Œë ˆì´ì–´ ë°ì´í„° ì‚½ì…
             if (character is Player playerChr)
             {
                 Player = playerChr;
             }
 
-            // ÀüÀ§ µ¥ÀÌÅÍ »ğÀÔ
+            // ì „ìœ„ ë°ì´í„° ì‚½ì…
             if (character.Position == BattlePosition.Front)
             {
                 CharacterFrontList.Add(character);
@@ -237,7 +237,7 @@ public class BattleData
     {
         Dictionary<Item, int> items = enemy.GetDropItems();
 
-        // ÇØ´ç ¸ó½ºÅÍÀÇ Ã³Áö º¸»ó ÀúÀå
+        // í•´ë‹¹ ëª¬ìŠ¤í„°ì˜ ì²˜ì§€ ë³´ìƒ ì €ì¥
         TotalAmount += enemy.GetDropGold();
         foreach (Item item in items.Keys)
         {
@@ -260,13 +260,13 @@ public class BattleData
 
     private void RemoveEnemyData(Monster enemy)
     {
-        // ÀüÀ§¿¡ Æ÷ÇÔµÇ¾î ÀÖÀ» °æ¿ì »èÁ¦
+        // ì „ìœ„ì— í¬í•¨ë˜ì–´ ìˆì„ ê²½ìš° ì‚­ì œ
         if (EnemyFrontList.Contains(enemy))
         {
             EnemyFrontList.Remove(enemy);
         }
 
-        // ¸ó½ºÅÍ ¸ñ·Ï¿¡¼­ »èÁ¦
+        // ëª¬ìŠ¤í„° ëª©ë¡ì—ì„œ ì‚­ì œ
         if (EnemyList.Contains(enemy))
         {
             EnemyList.Remove(enemy);
@@ -275,13 +275,13 @@ public class BattleData
 
     private void RemoveCharacterData(Character character)
     {
-        // ÀüÀ§¿¡ Æ÷ÇÔµÇ¾î ÀÖÀ» °æ¿ì »èÁ¦
+        // ì „ìœ„ì— í¬í•¨ë˜ì–´ ìˆì„ ê²½ìš° ì‚­ì œ
         if (CharacterFrontList.Contains(character))
         {
             CharacterFrontList.Remove(character);
         }
 
-        // Ä³¸¯ÅÍ ¸ñ·Ï¿¡¼­ »èÁ¦
+        // ìºë¦­í„° ëª©ë¡ì—ì„œ ì‚­ì œ
         if (CharacterList.Contains(character))
         {
             CharacterList.Remove(character);
@@ -292,7 +292,7 @@ public class BattleData
     {
         foreach (Entity entity in entityList)
         {
-            // ÇÑ ¸íÀÌ¶óµµ »ì¾ÆÀÖÀ» °æ¿ì »ì¾ÆÀÖÀ½ ¸®ÅÏ
+            // í•œ ëª…ì´ë¼ë„ ì‚´ì•„ìˆì„ ê²½ìš° ì‚´ì•„ìˆìŒ ë¦¬í„´
             if (entity.IsDead == false) return true;
         }
 

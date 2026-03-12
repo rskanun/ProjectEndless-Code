@@ -17,33 +17,33 @@ public class Cautious : Personality
     {
         Dictionary<Entity, float> weightData = new Dictionary<Entity, float>();
 
-        // Ã¼·Â¿¡ µû¸¥ °¡ÁßÄ¡ °ª
+        // ì²´ë ¥ì— ë”°ë¥¸ ê°€ì¤‘ì¹˜ ê°’
         float hpWeight = 1.0f;
 
-        // Ã¼·ÂÀÌ ³·Àº ¼ø¼­ºÎÅÍ ¼øÈ¸
+        // ì²´ë ¥ì´ ë‚®ì€ ìˆœì„œë¶€í„° ìˆœíšŒ
         foreach (Entity target in targetList.OrderBy(entity => entity.FinalStats.HP))
         {
-            // °¡ÁßÄ¡ ÃÊ±â°ª ¼³Á¤
+            // ê°€ì¤‘ì¹˜ ì´ˆê¸°ê°’ ì„¤ì •
             weightData[target] = 0.0f;
 
-            // ÇØ´ç Å¸°ÙÀÌ »óÅÂ È¿°ú¸¦ °É¾ú´ø ÀûÀÌ ÀÖ´ÂÁö
+            // í•´ë‹¹ íƒ€ê²Ÿì´ ìƒíƒœ íš¨ê³¼ë¥¼ ê±¸ì—ˆë˜ ì ì´ ìˆëŠ”ì§€
             if (statusEffectCasters.Contains(target))
             {
-                // °É¾ú´ø ÀûÀÌ ÀÖ´Ù¸é °¡ÁßÄ¡ ºÎ¿©
+                // ê±¸ì—ˆë˜ ì ì´ ìˆë‹¤ë©´ ê°€ì¤‘ì¹˜ ë¶€ì—¬
                 weightData[target] += 4.0f;
             }
 
-            // ÇØ´ç Å¸°ÙÀÌ ¿ø°Å¸® °ø°İÀ» Çß´ø ÀûÀÌ ÀÖ´ÂÁö
+            // í•´ë‹¹ íƒ€ê²Ÿì´ ì›ê±°ë¦¬ ê³µê²©ì„ í–ˆë˜ ì ì´ ìˆëŠ”ì§€
             if (rangeAttackEntities.Contains(target))
             {
-                // °É¾ú´ø ÀûÀÌ ÀÖ´Ù¸é °¡ÁßÄ¡ ºÎ¿©
+                // ê±¸ì—ˆë˜ ì ì´ ìˆë‹¤ë©´ ê°€ì¤‘ì¹˜ ë¶€ì—¬
                 weightData[target] += 2.0f;
             }
 
-            // Ã¼·ÂÀÌ ³·Àº ÀûºÎÅÍ ³ôÀº °¡ÁßÄ¡ ºÎ¿©
+            // ì²´ë ¥ì´ ë‚®ì€ ì ë¶€í„° ë†’ì€ ê°€ì¤‘ì¹˜ ë¶€ì—¬
             weightData[target] += hpWeight;
 
-            // Ã¼·Â °¡ÁßÄ¡ ³·Ãß±â
+            // ì²´ë ¥ ê°€ì¤‘ì¹˜ ë‚®ì¶”ê¸°
             hpWeight -= 0.1f;
         }
 
@@ -52,21 +52,21 @@ public class Cautious : Personality
 
     protected override void GatherCurTurnAction(BattleAction action)
     {
-        // »óÅÂÀÌ»ó ½ºÅ³ »ç¿ëÀÚÀÎÁö ÆÇº° ÈÄ ¸Ş¸ğ¸®¿¡ Ãß°¡
+        // ìƒíƒœì´ìƒ ìŠ¤í‚¬ ì‚¬ìš©ìì¸ì§€ íŒë³„ í›„ ë©”ëª¨ë¦¬ì— ì¶”ê°€
         AddStatusEffectCaster(action);
 
-        // ¿ø°Å¸® °ø°İÀ» ÇÒ ¼ö ÀÖ´ÂÁö ÆÇº° ÈÄ ¸Ş¸ğ¸®¿¡ Ãß°¡
+        // ì›ê±°ë¦¬ ê³µê²©ì„ í•  ìˆ˜ ìˆëŠ”ì§€ íŒë³„ í›„ ë©”ëª¨ë¦¬ì— ì¶”ê°€
         AddRangeAttacker(action);
     }
 
     private void AddStatusEffectCaster(BattleAction action)
     {
-        // ÇØ´ç Çàµ¿¿¡¼­ ½ºÅ³À» »ç¿ëÇÏ°í »óÅÂ ÀÌ»ó ½ºÅ³ÀÎ °æ¿ì
+        // í•´ë‹¹ í–‰ë™ì—ì„œ ìŠ¤í‚¬ì„ ì‚¬ìš©í•˜ê³  ìƒíƒœ ì´ìƒ ìŠ¤í‚¬ì¸ ê²½ìš°
         if (action is SkillAction skillAction && skillAction.castSkill is EffectSkill)
         {
             Entity caster = action.actor;
 
-            // ±â¾ï»ó¿¡ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì Ãß°¡
+            // ê¸°ì–µìƒì— ì¡´ì¬í•˜ì§€ ì•Šì„ ê²½ìš° ì¶”ê°€
             if (!statusEffectCasters.Contains(caster))
             {
                 statusEffectCasters.Add(caster);
@@ -77,7 +77,7 @@ public class Cautious : Personality
 
     private void AddRangeAttacker(BattleAction action)
     {
-        // Çàµ¿ÀÌ ¿ø°Å¸® ÀÏ¹İ °ø°İÀÌ°Å³ª, ¿ø°Å¸® °ø°İ ½ºÅ³À» »ç¿ëÇÏ´Â °æ¿ì
+        // í–‰ë™ì´ ì›ê±°ë¦¬ ì¼ë°˜ ê³µê²©ì´ê±°ë‚˜, ì›ê±°ë¦¬ ê³µê²© ìŠ¤í‚¬ì„ ì‚¬ìš©í•˜ëŠ” ê²½ìš°
         bool isRangedAttackAction = action is AttackAction && action.actor.AttackType == AttackType.Ranged;
         bool isRangedSkillAction = action is SkillAction skillAction && skillAction.castSkill is AttackSkill && IsRangeAttackSkill(skillAction.castSkill);
 
@@ -85,7 +85,7 @@ public class Cautious : Personality
         {
             Entity attacker = action.actor;
 
-            // ±â¾ï»ó¿¡ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì Ãß°¡
+            // ê¸°ì–µìƒì— ì¡´ì¬í•˜ì§€ ì•Šì„ ê²½ìš° ì¶”ê°€
             if (!statusEffectCasters.Contains(attacker))
             {
                 statusEffectCasters.Add(attacker);

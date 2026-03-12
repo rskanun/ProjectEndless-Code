@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PhaseEvent : EventAction
 {
-    // ¸ó½ºÅÍÀÇ AI º¯°æ
+    // ëª¬ìŠ¤í„°ì˜ AI ë³€ê²½
 
-    // ÆäÀÌÁî º¯°æ ½Ã Ã¼·Â À¯Áö ¿©ºÎ
+    // í˜ì´ì¦ˆ ë³€ê²½ ì‹œ ì²´ë ¥ ìœ ì§€ ì—¬ë¶€
     public bool retainHP;
 }

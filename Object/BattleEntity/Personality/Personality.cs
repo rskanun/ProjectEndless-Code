@@ -4,11 +4,11 @@ using UnityEngine;
 
 public enum PersonalityType
 {
-    Belligerent, // È£ÀüÀûÀÎ
-    Cautious, // ½ÅÁßÇÑ
-    Crusty, // ½Å°æÁúÀûÀÎ
-    Brave, // ¿ë°¨ÇÑ
-    Analytical, // ºĞ¼®ÀûÀÎ
+    Belligerent, // í˜¸ì „ì ì¸
+    Cautious, // ì‹ ì¤‘í•œ
+    Crusty, // ì‹ ê²½ì§ˆì ì¸
+    Brave, // ìš©ê°í•œ
+    Analytical, // ë¶„ì„ì ì¸
 }
 
 public abstract class Personality
@@ -38,7 +38,7 @@ public abstract class Personality
     {
         Dictionary<Entity, float> weightData = GetWeightData(targetList);
 
-        // °¡ÁßÄ¡°¡ ³ôÀº ¼ø¼­´ë·Î Entity °³Ã¼¸¸ µû·Î »©³»¾î ¸®½ºÆ®·Î ¸¸µé¾î ¹İÈ¯
+        // ê°€ì¤‘ì¹˜ê°€ ë†’ì€ ìˆœì„œëŒ€ë¡œ Entity ê°œì²´ë§Œ ë”°ë¡œ ë¹¼ë‚´ì–´ ë¦¬ìŠ¤íŠ¸ë¡œ ë§Œë“¤ì–´ ë°˜í™˜
         return weightData
             .OrderByDescending(tw => tw.Value)
             .Select(tw => tw.Key)
@@ -47,10 +47,10 @@ public abstract class Personality
 
     public void OnTurnStart()
     {
-        // ´ÙÀ½ ÅÏÀÌ ½ÃÀÛµÉ ¶§, ÇØ´ç ÅÏ Á¤º¸ °¡Á®¿À±â
+        // ë‹¤ìŒ í„´ì´ ì‹œì‘ë  ë•Œ, í•´ë‹¹ í„´ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
         BattleAction curAction = BattleData.Instance.Sequence.GetTurnAction(0);
 
-        // ÇØ´ç ÅÏ ¾ÈÀÇ ÇÊ¿äÇÑ Á¤º¸ ÀúÀå
+        // í•´ë‹¹ í„´ ì•ˆì˜ í•„ìš”í•œ ì •ë³´ ì €ì¥
         GatherCurTurnAction(curAction);
     }
 
@@ -58,6 +58,6 @@ public abstract class Personality
 
     protected virtual void GatherCurTurnAction(BattleAction action)
     {
-        // ´ÙÀ½ ÅÏÀÌ ÁøÇàµÉ °æ¿ì ÇØ´ç ÅÏÀÇ Á¤º¸¸¦ ¼öÁıÇÏ´Â ÇÔ¼ö
+        // ë‹¤ìŒ í„´ì´ ì§„í–‰ë  ê²½ìš° í•´ë‹¹ í„´ì˜ ì •ë³´ë¥¼ ìˆ˜ì§‘í•˜ëŠ” í•¨ìˆ˜
     }
 }

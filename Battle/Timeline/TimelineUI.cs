@@ -8,7 +8,7 @@ public class TimelineUI : MonoBehaviour
     public GameObject timelineIcon;
     public GameObject insertIcon;
 
-    // Å¸ÀÓ¶óÀÎ À§Ä¡ µ¥ÀÌÅÍ
+    // íƒ€ì„ë¼ì¸ ìœ„ì¹˜ ë°ì´í„°
     private float iconWidth;
     private float spacing;
 
@@ -20,7 +20,7 @@ public class TimelineUI : MonoBehaviour
 
     public void CenterIconAtIndex(int index)
     {
-        // n¹øÂ° ¾ÆÀÌÄÜÀÌ °¡¿îµ¥¿¡ À§Ä¡ÇÏµµ·Ï À§Ä¡ Á¶Á¤
+        // në²ˆì§¸ ì•„ì´ì½˜ì´ ê°€ìš´ë°ì— ìœ„ì¹˜í•˜ë„ë¡ ìœ„ì¹˜ ì¡°ì •
         Vector2 startPos = new Vector2(-(iconWidth + 10f) / 2, container.localPosition.y);
         float moveDistance = (iconWidth + spacing) * index;
 
@@ -28,9 +28,9 @@ public class TimelineUI : MonoBehaviour
     }
 
     /***************************************************************
-    * [ Å¸ÀÓ¶óÀÎ °ü¸® ]
+    * [ íƒ€ì„ë¼ì¸ ê´€ë¦¬ ]
     * 
-    * Å¸ÀÓ¶óÀÎ ¾ÆÀÌÄÜ »ı¼º ¹× °ü¸®
+    * íƒ€ì„ë¼ì¸ ì•„ì´ì½˜ ìƒì„± ë° ê´€ë¦¬
     ***************************************************************/
 
     public TimelineIcon CreateTimelineIcon(BattleAction action, int? index = null)
@@ -38,13 +38,13 @@ public class TimelineUI : MonoBehaviour
         GameObject iconObj = Instantiate(timelineIcon, container);
         SequenceIcon icon = iconObj.GetComponent<SequenceIcon>();
 
-        // Å¸ÀÓ¶óÀÎ ÁöÁ¤
+        // íƒ€ì„ë¼ì¸ ì§€ì •
         icon.SetTimeline(action);
 
-        // À§Ä¡ ÁöÁ¤
+        // ìœ„ì¹˜ ì§€ì •
         if (index.HasValue)
         {
-            // »ğÀÔ ¾ÆÀÌÄÜ °³¼ö ¸¸Å­ µÚ·Î º¸³»±â
+            // ì‚½ì… ì•„ì´ì½˜ ê°œìˆ˜ ë§Œí¼ ë’¤ë¡œ ë³´ë‚´ê¸°
             iconObj.transform.SetSiblingIndex(index.Value + 1);
         }
 

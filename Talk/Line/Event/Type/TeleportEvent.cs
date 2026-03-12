@@ -10,10 +10,10 @@ public class TeleportEvent : IDialogueEvent
     {
         PlayerManager.CurrentPlayer.Teleport(teleportPos);
 
-        // ¸¸¾à ¾ÀÀÌ ÇöÀç¿Í ´Ù¸¥ ¾ÀÀÎ °æ¿ì
+        // ë§Œì•½ ì”¬ì´ í˜„ì¬ì™€ ë‹¤ë¥¸ ì”¬ì¸ ê²½ìš°
         if (GameData.Instance.MapScene != teleportSceneName)
         {
-            // ÇØ´ç ¾À ·Îµå
+            // í•´ë‹¹ ì”¬ ë¡œë“œ
             SceneLoadManager.LoadFieldScene(
                 teleportSceneName,
                 UnloadSceneOptions.None,

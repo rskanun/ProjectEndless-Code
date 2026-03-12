@@ -43,20 +43,20 @@ public class SkillInfo : DiaryInfo, ISubmitHandler
     {
         if (!diary.IsFocusToSkill) return;
 
-        // ½ºÅ³¿¡ ÃÊÁ¡ÀÌ µÖÁø »óÅÂ¶ó¸é Á¤º¸ º¸ÀÌ±â
+        // ìŠ¤í‚¬ì— ì´ˆì ì´ ë‘¬ì§„ ìƒíƒœë¼ë©´ ì •ë³´ ë³´ì´ê¸°
         SubmitHandler();
     }
 
     private void SubmitHandler()
     {
-        // ÇØ´ç ½ºÅ³ÀÇ Á¤º¸¸¦ º¸ÀÌ°í ÀÖ´Â °æ¿ì ¹«½Ã
+        // í•´ë‹¹ ìŠ¤í‚¬ì˜ ì •ë³´ë¥¼ ë³´ì´ê³  ìžˆëŠ” ê²½ìš° ë¬´ì‹œ
         if (isShowInfo) return;
 
         // true -> down / false -> up
         bool direction = (prevSkillInfo == null) ? false
             : prevSkillInfo.transform.position.y < transform.position.y;
 
-        // Á¤º¸ ¶ç¿ì±â
+        // ì •ë³´ ë„ìš°ê¸°
         if (diary.IsFocusToSkill) app.SwapSkillInformation(skill, direction);
         else app.ShowSkillInformation(skill);
 

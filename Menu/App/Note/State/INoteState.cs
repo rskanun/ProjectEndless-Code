@@ -1,4 +1,4 @@
-﻿public interface INoteState
+public interface INoteState
 {
     public void InitObj();
 

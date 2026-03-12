@@ -22,7 +22,7 @@ public class TransformLine : Line
 
     public TransformLine(Vector2 pos, Color color) : base(LineType.Transform)
     {
-        // Å¸°ÙÀº »ı¼ºµÈ µÚ Ãß°¡
+        // íƒ€ê²Ÿì€ ìƒì„±ëœ ë’¤ ì¶”ê°€
         _pos = pos;
         _color = color;
     }

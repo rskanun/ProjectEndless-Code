@@ -19,7 +19,7 @@ public class TeamContact : Contact, ISubmitHandler
 
     private void OnDisable()
     {
-        // ¼±ÅÃÀÌ ÇØÁ¦µÇÁö ¾Ê°í ºñÈ°¼ºÈ­ µÉ °æ¿ì ´ëºñ
+        // ì„ íƒì´ í•´ì œë˜ì§€ ì•Šê³  ë¹„í™œì„±í™” ë  ê²½ìš° ëŒ€ë¹„
         DeselectHandler();
     }
 
@@ -52,7 +52,7 @@ public class TeamContact : Contact, ISubmitHandler
     {
         base.SelectHandler();
 
-        // ¼±ÅÃ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ì„ íƒ ì• ë‹ˆë©”ì´ì…˜
         selectMark.gameObject.SetActive(true);
         selectMark.DOFade(0.25f, 0.5f)
             .SetLoops(-1, LoopType.Yoyo);
@@ -65,7 +65,7 @@ public class TeamContact : Contact, ISubmitHandler
 
     private void DeselectHandler()
     {
-        // ºñÈ°¼ºÈ­ Àü ¾Ö´Ï¸ŞÀÌ¼Ç »èÁ¦
+        // ë¹„í™œì„±í™” ì „ ì• ë‹ˆë©”ì´ì…˜ ì‚­ì œ
         selectMark.DOKill();
 
         selectMark.color = new Color(selectMark.color.r, selectMark.color.g, selectMark.color.b, 0f);

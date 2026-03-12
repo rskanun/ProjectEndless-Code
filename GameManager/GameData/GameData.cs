@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Endless.GameData;
 using System.Collections.Generic;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Skill/AttackSkill", fileName = "Attack_Skill")]
 public class AttackSkill : Skill
 {
-    [Header("°ø°İ Á¤º¸")]
+    [Header("ê³µê²© ì •ë³´")]
     [SerializeField]
     private bool _isAssistable;
     public bool IsAssistable => _isAssistable;
@@ -44,7 +44,7 @@ public class AttackSkill : Skill
 
             if (!Debuff.IsEmpty())
             {
-                // Àû¿ëÇÒ µğ¹öÇÁ°¡ ÀÖÀ¸¸é µğ¹öÇÁ Àû¿ë
+                // ì ìš©í•  ë””ë²„í”„ê°€ ìˆìœ¼ë©´ ë””ë²„í”„ ì ìš©
                 target.AddEffect(Debuff);
             }
         }
@@ -52,12 +52,12 @@ public class AttackSkill : Skill
 
     public float GetSkillDmg(Entity caster)
     {
-        // µ¥¹ÌÁö °ø½Ä = ±âº» µ¥¹ÌÁö + ½ÃÀüÀÚ MP °è¼ö + ½ÃÀüÀÚ STR °è¼ö
+        // ë°ë¯¸ì§€ ê³µì‹ = ê¸°ë³¸ ë°ë¯¸ì§€ + ì‹œì „ì MP ê³„ìˆ˜ + ì‹œì „ì STR ê³„ìˆ˜
         return Damage + caster.FinalStats.MP * MpDegree + caster.FinalStats.STR * StrDegree;
     }
 
     public override string GetTypeName()
     {
-        return "¾×Æ¼ºê ½ºÅ³";
+        return "ì•¡í‹°ë¸Œ ìŠ¤í‚¬";
     }
 }

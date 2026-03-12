@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public enum ActionType
 {
-    // ÀüÅõ¿¡¼­ ÃëÇÒ ¼ö ÀÖ´Â Çàµ¿ ¸ñ·Ï
-    Wait,   // Ã¹ ÅÏ ÁøÇà
-    Attack, // ÀÏ¹İ °ø°İ
-    Skill,  // ½ºÅ³
-    Item,   // ¾ÆÀÌÅÛ »ç¿ë
-    Run     // µµÁÖ
+    // ì „íˆ¬ì—ì„œ ì·¨í•  ìˆ˜ ìˆëŠ” í–‰ë™ ëª©ë¡
+    Wait,   // ì²« í„´ ì§„í–‰
+    Attack, // ì¼ë°˜ ê³µê²©
+    Skill,  // ìŠ¤í‚¬
+    Item,   // ì•„ì´í…œ ì‚¬ìš©
+    Run     // ë„ì£¼
 }
 
 [Serializable]

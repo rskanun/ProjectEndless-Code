@@ -26,7 +26,7 @@ public class PartyHUD : MonoBehaviour
 
     public void UpdateStat()
     {
-        // µ¥ÀÌÅÍ ·Îµå·Î ÀüÃ¼ÀûÀÎ µ¥ÀÌÅÍ°¡ º¯ÇÑ °æ¿ì
+        // ë°ì´í„° ë¡œë“œë¡œ ì „ì²´ì ì¸ ë°ì´í„°ê°€ ë³€í•œ ê²½ìš°
         List<CharacterData> party = PartyData.Instance.GetPartyMembers();
         foreach (CharacterData entity in party)
         {

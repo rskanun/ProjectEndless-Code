@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private MenuUI ui;
 
     private ControlContext control;
 
-    // ¾Û »óÅÂ
+    // ì•± ìƒíƒœ
     private App currentApp;
     public bool IsOpenedApp => currentApp != null;
     public bool IsOpenedDiary { get; private set; }
@@ -19,72 +19,72 @@ public class MenuManager : MonoBehaviour
     }
 
     /************************************************************
-    * [¸Ş´º Á¦¾î]
+    * [ë©”ë‰´ ì œì–´]
     * 
-    * ¸Ş´ºÀÇ ¿­°í ´İ±â¸¦ Á¦¾î
+    * ë©”ë‰´ì˜ ì—´ê³  ë‹«ê¸°ë¥¼ ì œì–´
     ************************************************************/
 
     public void OpenMenu()
     {
-        // ÇÃ·¹ÀÌ¾î ÄÁÆ®·Ñ·¯ ºñÈ°¼ºÈ­
+        // í”Œë ˆì´ì–´ ì»¨íŠ¸ë¡¤ëŸ¬ ë¹„í™œì„±í™”
         control.DisableController(typeof(PlayerController));
 
-        // ¸Ş´º°¡ ¿­¸®´Â µ¿¾È Å° ÀÔ·Â ¹«½Ã
+        // ë©”ë‰´ê°€ ì—´ë¦¬ëŠ” ë™ì•ˆ í‚¤ ì…ë ¥ ë¬´ì‹œ
         control.KeyLock();
 
-        // ¸Ş´º ¿­±â ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ë©”ë‰´ ì—´ê¸° ì• ë‹ˆë©”ì´ì…˜
         ui.OpenMenu()
             .AppendCallback(() => control.KeyUnlock());
     }
 
     public void CloseMenu()
     {
-        // ¸Ş´º°¡ ´İÈ÷´Â µ¿¾È Å° ÀÔ·Â ¹«½Ã
+        // ë©”ë‰´ê°€ ë‹«íˆëŠ” ë™ì•ˆ í‚¤ ì…ë ¥ ë¬´ì‹œ
         control.KeyLock();
 
-        // ´ÙÀÌ¾î¸®°¡ ¿­·ÁÀÖÀ¸¸é ´İ±â
+        // ë‹¤ì´ì–´ë¦¬ê°€ ì—´ë ¤ìˆìœ¼ë©´ ë‹«ê¸°
         if (IsOpenedDiary) CloseDiary();
 
-        // ¸Ş´º ´İ±â ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ë©”ë‰´ ë‹«ê¸° ì• ë‹ˆë©”ì´ì…˜
         ui.CloseMenu()
             .AppendCallback(() =>
             {
-                // ¿­·ÁÀÖ´Â ¾Û ¿ÏÀü Á¾·á½ÃÅ°±â
+                // ì—´ë ¤ìˆëŠ” ì•± ì™„ì „ ì¢…ë£Œì‹œí‚¤ê¸°
                 ShutdownApp();
 
-                // Å° ÀÔ·Â È°¼ºÈ­
+                // í‚¤ ì…ë ¥ í™œì„±í™”
                 control.KeyUnlock();
 
-                // ÇÃ·¹ÀÌ¾î ÄÁÆ®·Ñ·¯ È°¼ºÈ­
+                // í”Œë ˆì´ì–´ ì»¨íŠ¸ë¡¤ëŸ¬ í™œì„±í™”
                 control.EnableController(typeof(PlayerController));
             });
     }
 
     /************************************************************
-    * [¾Û Á¦¾î]
+    * [ì•± ì œì–´]
     * 
-    * ¸Ş´º¿¡ Á¸ÀçÇÏ´Â ¾ÛµéÀ» Á¦¾î
+    * ë©”ë‰´ì— ì¡´ì¬í•˜ëŠ” ì•±ë“¤ì„ ì œì–´
     ************************************************************/
 
     public void OpenApp(App app)
     {
         currentApp = app;
 
-        // È¨ È­¸é ¼û±â±â
+        // í™ˆ í™”ë©´ ìˆ¨ê¸°ê¸°
         ui.DisabledHomeScreen();
 
-        // ¾Û ¿­±â
+        // ì•± ì—´ê¸°
         app.Open();
     }
 
     public void CloseApp()
     {
-        // ÇöÀç ¿­¸° ¾ÛÀÌ ÀÖ´Ù¸é ¾Û Á¾·á
+        // í˜„ì¬ ì—´ë¦° ì•±ì´ ìˆë‹¤ë©´ ì•± ì¢…ë£Œ
         if (currentApp != null)
         {
             currentApp.Close();
 
-            // ¾ÛÀÌ Á¾·áµÇ¾úÀ» °æ¿ì È¨ È­¸é ºÒ·¯¿À±â
+            // ì•±ì´ ì¢…ë£Œë˜ì—ˆì„ ê²½ìš° í™ˆ í™”ë©´ ë¶ˆëŸ¬ì˜¤ê¸°
             if (!currentApp.IsActive)
             {
                 currentApp = null;
@@ -95,15 +95,15 @@ public class MenuManager : MonoBehaviour
 
     public void ShutdownApp()
     {
-        // ¾Û ¿ÏÀü Á¾·á ½ÃÅ°±â
+        // ì•± ì™„ì „ ì¢…ë£Œ ì‹œí‚¤ê¸°
         currentApp?.Shutdown();
         currentApp = null;
     }
 
     /************************************************************
-    * [´ÙÀÌ¾î¸® Á¦¾î]
+    * [ë‹¤ì´ì–´ë¦¬ ì œì–´]
     * 
-    * ¸Ş´ºÀÇ ºÎ°¡ÀûÀÎ Ã¢ÀÎ ´ÙÀÌ¾î¸® ¿­°í ´İ±â¸¦ Á¦¾î
+    * ë©”ë‰´ì˜ ë¶€ê°€ì ì¸ ì°½ì¸ ë‹¤ì´ì–´ë¦¬ ì—´ê³  ë‹«ê¸°ë¥¼ ì œì–´
     ************************************************************/
 
     public void OpenDiary()

@@ -3,33 +3,33 @@ using UnityEngine;
 
 public class BaseMap : Map
 {
-    [Title("È¸º¹ Àå¼Ò ¹× ÀÌº¥Æ®")]
+    [Title("íšŒë³µ ì¥ì†Œ ë° ì´ë²¤íŠ¸")]
     [SerializeField]
     private Vector2 respawnPos;
 
     /// <summary>
-    /// ÀüÅõ¿¡¼­ ÆĞ¹èÇØ °ÅÁ¡À¸·Î µ¹¾Æ¿Â °æ¿ì
+    /// ì „íˆ¬ì—ì„œ íŒ¨ë°°í•´ ê±°ì ìœ¼ë¡œ ëŒì•„ì˜¨ ê²½ìš°
     /// </summary>
     public new void OnEndBattle()
     {
-        // ÇÊµå·Î º¹±ÍÇÑ °Ô ¾Æ´Ï¶ó¸é ¹«½Ã
+        // í•„ë“œë¡œ ë³µê·€í•œ ê²Œ ì•„ë‹ˆë¼ë©´ ë¬´ì‹œ
         if (GameData.Instance.State != GameState.Field) return;
 
-        // ÀüÅõ¿¡¼­ ÆĞ¹èÇÑ °æ¿ì ÀÌº¥Æ® ÁøÇà
+        // ì „íˆ¬ì—ì„œ íŒ¨ë°°í•œ ê²½ìš° ì´ë²¤íŠ¸ ì§„í–‰
         if (BattleCache.Current.Result == BattleResult.Defeat)
         {
-            // ÀÌ°ÍÀú°Í µûÁ®¼­ ·çÇÁÇÏ°í ¹¹ÇÏ°í ÇØ¾ßÇÏÁö¸¸
-            // ÀÏ´ÜÀº È¸º¹ Àå¼Ò·Î ÀÌµ¿°ú È¸º¹ºÎÅÍ
+            // ì´ê²ƒì €ê²ƒ ë”°ì ¸ì„œ ë£¨í”„í•˜ê³  ë­í•˜ê³  í•´ì•¼í•˜ì§€ë§Œ
+            // ì¼ë‹¨ì€ íšŒë³µ ì¥ì†Œë¡œ ì´ë™ê³¼ íšŒë³µë¶€í„°
             foreach (var character in PartyData.Instance.Characters)
             {
                 character.Stats.HP = character.Stats.MaxHP;
                 character.Stats.SP = character.Stats.MaxSP;
             }
 
-            // HUD ¾÷µ¥ÀÌÆ®
+            // HUD ì—…ë°ì´íŠ¸
             GameEventManager.Instance.NotifyPartyStatsUpdate();
 
-            // ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍ È¸º¹ Àå¼Ò·Î ÀÌµ¿
+            // í”Œë ˆì´ì–´ ìºë¦­í„° íšŒë³µ ì¥ì†Œë¡œ ì´ë™
             PlayerManager.CurrentPlayer.Teleport(respawnPos);
         }
     }

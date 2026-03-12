@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class BattleHUD : MonoBehaviour
 {
-    [Header("¿¹»ó HP")]
+    [Header("ì˜ˆìƒ HP")]
     [SerializeField] private RectTransform hpBarFrame;
     [SerializeField] private RectTransform forecastHP;
 

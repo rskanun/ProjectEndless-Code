@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class TimelineIcon : MonoBehaviour
 {
-    // ÇØ´ç Å¸ÀÓ¶óÀÎ¿¡ ÁöÁ¤µÈ ¾×¼Ç
+    // í•´ë‹¹ íƒ€ì„ë¼ì¸ì— ì§€ì •ëœ ì•¡ì…˜
     private BattleAction _action;
     public BattleAction Action
     {

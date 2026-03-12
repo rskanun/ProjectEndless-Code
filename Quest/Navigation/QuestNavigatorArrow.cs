@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class QuestNavigatorArrow : MonoBehaviour
 {
-    [Title("³×ºñ°ÔÀÌ¼Ç ¼³Á¤")]
+    [Title("ë„¤ë¹„ê²Œì´ì…˜ ì„¤ì •")]
     public float moveSpeed;
 
     private Coroutine moveCoroutine;
@@ -24,7 +24,7 @@ public class QuestNavigatorArrow : MonoBehaviour
     {
         foreach (Vector2 target in path)
         {
-            // ¸ñÇ¥±îÁö ÀÌµ¿
+            // ëª©í‘œê¹Œì§€ ì´ë™
             while ((Vector2)transform.position != target)
             {
                 MoveTo(target);
@@ -39,7 +39,7 @@ public class QuestNavigatorArrow : MonoBehaviour
     {
         float speed = moveSpeed * Time.deltaTime;
 
-        // ÇöÀç À§Ä¡¿¡¼­ ¿òÁ÷ÀÏ À§Ä¡¿Í ¸ñÇ¥±îÁöÀÇ °Å¸® °è»ê
+        // í˜„ì¬ ìœ„ì¹˜ì—ì„œ ì›€ì§ì¼ ìœ„ì¹˜ì™€ ëª©í‘œê¹Œì§€ì˜ ê±°ë¦¬ ê³„ì‚°
         transform.position = Vector2.MoveTowards(transform.position, target, speed);
     }
 

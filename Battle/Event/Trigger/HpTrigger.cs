@@ -12,7 +12,7 @@ public class HpTrigger : EventTrigger
     {
         if (target == null)
         {
-            // Á¤ÇØÁø Å¸°ÙÀÌ ¾ø´Ù¸é true ¹İÈ¯
+            // ì •í•´ì§„ íƒ€ê²Ÿì´ ì—†ë‹¤ë©´ true ë°˜í™˜
             return true;
         }
 

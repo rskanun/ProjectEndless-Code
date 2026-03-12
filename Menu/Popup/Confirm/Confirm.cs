@@ -17,7 +17,7 @@ public class Confirm : Popup
         SetYesHandler(null);
     }
 
-    public static Confirm CreateMsg(string msg, string yesText = "³×", string noText = "¾Æ´Ï¿ä")
+    public static Confirm CreateMsg(string msg, string yesText = "ë„¤", string noText = "ì•„ë‹ˆìš”")
     {
         return new Confirm(msg, yesText, noText);
     }

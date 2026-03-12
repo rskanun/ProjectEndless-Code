@@ -7,9 +7,9 @@ public class WeaponContactWindow : EquipContactWindow
     {
         if (equip is not Weapon weapon) return false;
 
-        // ¾Æ·¡ÀÇ Á¶°ÇÀ» ¸¸Á·ÇÏ´Â ¹«±â Å¸ÀÔÀÎÁö ¸®ÅÏ
-        // 1. ÇØ´ç Ã¢¿¡¼­ ¶ç¿ï Å¸ÀÔ È¤Àº µÑ ´Ù ³¥ ¼ö ÀÖ´Â ¹«±â Å¸ÀÔÀÎÁö
-        // 2. ÇÃ·¹ÀÌ¾î°¡ Âø¿ëÇÒ ¼ö ÀÖ´Â Å¸ÀÔÀÎÁö
+        // ì•„ë˜ì˜ ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ë¬´ê¸° íƒ€ì…ì¸ì§€ ë¦¬í„´
+        // 1. í•´ë‹¹ ì°½ì—ì„œ ë„ìš¸ íƒ€ì… í˜¹ì€ ë‘˜ ë‹¤ ë‚„ ìˆ˜ ìˆëŠ” ë¬´ê¸° íƒ€ì…ì¸ì§€
+        // 2. í”Œë ˆì´ì–´ê°€ ì°©ìš©í•  ìˆ˜ ìˆëŠ” íƒ€ì…ì¸ì§€
         return ((ShowWeaponType | WeaponType.Both) & character.UsableWeaponType & weapon.WeaponType) != 0;
     }
 

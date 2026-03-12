@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class BattleSequence
 {
-    // ÀüÅõ ¼ø¼­
+    // ì „íˆ¬ ìˆœì„œ
     [SerializeReference]
     private List<BattleAction> _sequence;
     public List<BattleAction> Sequence
@@ -17,11 +17,11 @@ public class BattleSequence
     {
         Sequence = new List<BattleAction>();
 
-        // ¿£Æ¼Æ¼ÀÇ ¹ÎÃ¸ ¼öÄ¡·Î ³»¸²Â÷¼ø Á¤·Ä
+        // ì—”í‹°í‹°ì˜ ë¯¼ì²© ìˆ˜ì¹˜ë¡œ ë‚´ë¦¼ì°¨ìˆœ ì •ë ¬
         List<Entity> sortedList = new List<Entity>(entityList);
         sortedList.Sort((x, y) => y.FinalStats.AGI.CompareTo(x.FinalStats.AGI));
 
-        // ¸ğµç ¿£Æ¼Æ¼µéÀº 0ÅÏ ´ë±â Çàµ¿ ½ÃÀü
+        // ëª¨ë“  ì—”í‹°í‹°ë“¤ì€ 0í„´ ëŒ€ê¸° í–‰ë™ ì‹œì „
         foreach (Entity entity in sortedList)
         {
             WaitAction turnData = new WaitAction();
@@ -37,10 +37,10 @@ public class BattleSequence
     {
         Sequence.RemoveAt(0);
 
-        // ´ÙÀ½ ÅÏ¸¸Å­ ¼öÄ¡ ¾Õ´ç±â±â
+        // ë‹¤ìŒ í„´ë§Œí¼ ìˆ˜ì¹˜ ì•ë‹¹ê¸°ê¸°
         PassedTurn(Sequence[0].remainTurn);
 
-        // ½ÃÄö½º ¾÷µ¥ÀÌÆ® ¾Ë¸²
+        // ì‹œí€€ìŠ¤ ì—…ë°ì´íŠ¸ ì•Œë¦¼
         GameEventManager.Instance.NotifySequenceUpdate();
     }
 
@@ -51,7 +51,7 @@ public class BattleSequence
             turnData.remainTurn -= turn;
         }
 
-        // ÀüÅõ µ¥ÀÌÅÍ¿¡ °æ°úÇÑ ¸¸Å­ÀÇ ÅÏ Ãß°¡
+        // ì „íˆ¬ ë°ì´í„°ì— ê²½ê³¼í•œ ë§Œí¼ì˜ í„´ ì¶”ê°€
         BattleData.Instance.OnPassedTurn(turn);
     }
 
@@ -85,7 +85,7 @@ public class BattleSequence
         if (index >= Sequence.Count) Sequence.Add(action);
         else Sequence.Insert(index, action);
 
-        // ½ÃÄö½º ¾÷µ¥ÀÌÆ® ¾Ë¸²
+        // ì‹œí€€ìŠ¤ ì—…ë°ì´íŠ¸ ì•Œë¦¼
         GameEventManager.Instance.NotifySequenceUpdate();
     }
 
@@ -97,7 +97,7 @@ public class BattleSequence
             {
                 Sequence.Remove(action);
 
-                // ½ÃÄö½º ¾÷µ¥ÀÌÆ® ¾Ë¸²
+                // ì‹œí€€ìŠ¤ ì—…ë°ì´íŠ¸ ì•Œë¦¼
                 GameEventManager.Instance.NotifySequenceUpdate();
                 return;
             }
@@ -121,7 +121,7 @@ public class BattleSequence
 
     public int GetActionMinSeq(Entity actor, float costTurn)
     {
-        // ÀÓ½Ã·Î Çàµ¿À» ¸¸µé¾î ¹èÄ¡µÉ ¼ö ÀÖ´Â ÃÖ¼Ò À§Ä¡ ¸®ÅÏ
+        // ì„ì‹œë¡œ í–‰ë™ì„ ë§Œë“¤ì–´ ë°°ì¹˜ë  ìˆ˜ ìˆëŠ” ìµœì†Œ ìœ„ì¹˜ ë¦¬í„´
         WaitAction action = new WaitAction();
 
         action.actor = actor;

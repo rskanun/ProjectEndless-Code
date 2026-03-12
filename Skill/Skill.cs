@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Skill : ScriptableObject
 {
-    [Header("½ºÅ³ Á¤º¸")]
+    [Header("ìŠ¤í‚¬ ì •ë³´")]
     [SerializeField]
     private string _name;
     public string Name => _name;
@@ -34,7 +34,7 @@ public abstract class Skill : ScriptableObject
     private string _description;
     public string Description => _description;
 
-    [Title("¾Ö´Ï¸ŞÀÌ¼Ç Á¤º¸")]
+    [Title("ì• ë‹ˆë©”ì´ì…˜ ì •ë³´")]
     [SerializeField]
     private string _skillMotionName;
     private int _skillMotion;

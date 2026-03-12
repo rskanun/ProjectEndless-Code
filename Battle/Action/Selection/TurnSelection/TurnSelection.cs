@@ -3,20 +3,20 @@ using UnityEngine.EventSystems;
 
 public class TurnSelection : MonoBehaviour, ISelection
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private Timeline timeline;
     [SerializeField] private TurnSelectionUI ui;
     [SerializeField] private ActionManager actionManager;
     [SerializeField] private TurnSelectionController controller;
 
-    // ÂüÁ¶ µ¥ÀÌÅÍ
+    // ì°¸ì¡° ë°ì´í„°
     private BattleData battleData;
     private BattleSequence sequence;
 
-    // ÇöÀç ¼±ÅÃµÈ Çàµ¿
+    // í˜„ì¬ ì„ íƒëœ í–‰ë™
     private BattleAction action;
 
-    // ÃÖ¼Ò ¹èÄ¡ °¡´É Index
+    // ìµœì†Œ ë°°ì¹˜ ê°€ëŠ¥ Index
     private int minIndex;
     private int index;
 
@@ -30,16 +30,16 @@ public class TurnSelection : MonoBehaviour, ISelection
     {
         action = battleData.SelectionData.action;
 
-        // È­¸é ÀüÃ¼¸¦ Ä«¸Ş¶ó ¿µ¿ªÀ¸·Î Àâ±â
+        // í™”ë©´ ì „ì²´ë¥¼ ì¹´ë©”ë¼ ì˜ì—­ìœ¼ë¡œ ì¡ê¸°
         BattleCameraDirector.Instance.FocusFullScreen();
 
-        // Å¸ÀÓ¶óÀÎ »ğÀÔ ¾ÆÀÌÄÜ È°¼ºÈ­
+        // íƒ€ì„ë¼ì¸ ì‚½ì… ì•„ì´ì½˜ í™œì„±í™”
         ActiveInsertIcon();
 
-        // ¹èÄ¡ °¡´ÉÇÑ ÃÖ¼Ò À§Ä¡ ¼³Á¤
+        // ë°°ì¹˜ ê°€ëŠ¥í•œ ìµœì†Œ ìœ„ì¹˜ ì„¤ì •
         SetMinSibling(action);
 
-        // ÄÁÆ®·Ñ·¯ ¼³Á¤(¹Ù·Î ÀüÈ¯ ½Ã ¿À·ù ¹ß»ı)
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì„¤ì •(ë°”ë¡œ ì „í™˜ ì‹œ ì˜¤ë¥˜ ë°œìƒ)
         Invoke(nameof(UpdateController), 0.01f);
     }
 
@@ -50,10 +50,10 @@ public class TurnSelection : MonoBehaviour, ISelection
 
     public void CloseSelection()
     {
-        // Å¸ÀÓ¶óÀÎ »ğÀÔ ¾ÆÀÌÄÜ ºñÈ°¼ºÈ­
+        // íƒ€ì„ë¼ì¸ ì‚½ì… ì•„ì´ì½˜ ë¹„í™œì„±í™”
         DeactiveInsertIcon();
 
-        // ÄÁÆ®·Ñ·¯ ¾ø¾Ö±â
+        // ì»¨íŠ¸ë¡¤ëŸ¬ ì—†ì• ê¸°
         actionManager.SetSubController(null);
     }
 
@@ -61,45 +61,45 @@ public class TurnSelection : MonoBehaviour, ISelection
     {
         CloseSelection();
 
-        // Å¸ÀÓ¶óÀÎ ¿øÀ§Ä¡
+        // íƒ€ì„ë¼ì¸ ì›ìœ„ì¹˜
         timeline.MoveStart();
     }
 
     public void ReopenSelection()
     {
-        // ¸¶Áö¸· ¼±ÅÃÃ¢ÀÌ¹Ç·Î Àç¿ÀÇÂ X
+        // ë§ˆì§€ë§‰ ì„ íƒì°½ì´ë¯€ë¡œ ì¬ì˜¤í”ˆ X
     }
 
     /***************************************************************
-    * [ Å¸ÀÓ¶óÀÎ ¼±ÅÃ ]
+    * [ íƒ€ì„ë¼ì¸ ì„ íƒ ]
     * 
-    * ÇØ´ç ¾×¼ÇÀ» ¾î´À Å¸ÀÓ¶óÀÎ¿¡ ³ÖÀ» Áö ¼±ÅÃ Ã³¸®
+    * í•´ë‹¹ ì•¡ì…˜ì„ ì–´ëŠ íƒ€ì„ë¼ì¸ì— ë„£ì„ ì§€ ì„ íƒ ì²˜ë¦¬
     ***************************************************************/
 
     private void ActiveInsertIcon()
     {
         Entity actor = action.actor;
 
-        // ÅÏ ¼±ÅÃ À§Ä¡¸¦ °¡½ÃÈ­ÇÑ ¼±ÅÃ ¾ÆÀÌÄÜ È°¼ºÈ­
+        // í„´ ì„ íƒ ìœ„ì¹˜ë¥¼ ê°€ì‹œí™”í•œ ì„ íƒ ì•„ì´ì½˜ í™œì„±í™”
         ui.SetActiveInsertIcon(true);
 
-        // ¼¾ÅÍ ¾ÆÀÌÄÜ ¸¶Å· ºñÈ°¼ºÈ­
+        // ì„¼í„° ì•„ì´ì½˜ ë§ˆí‚¹ ë¹„í™œì„±í™”
         timeline.CenterIcon.ClearMarking();
 
-        // »ğÀÔ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö¸¦ ÇöÀç ÅÏÀÎ Ä³¸¯ÅÍÀÇ ÃÊ»óÈ­·Î º¯°æ
+        // ì‚½ì… ì•„ì´ì½˜ ì´ë¯¸ì§€ë¥¼ í˜„ì¬ í„´ì¸ ìºë¦­í„°ì˜ ì´ˆìƒí™”ë¡œ ë³€ê²½
         ui.SetInsertIconImage(actor.gameObject);
     }
 
     private void SetMinSibling(BattleAction action)
     {
-        // À§Ä¡µÉ ¼ö ÀÖ´Â ÃÖ¼Ò °ª
+        // ìœ„ì¹˜ë  ìˆ˜ ìˆëŠ” ìµœì†Œ ê°’
         minIndex = GetMinIndex(action);
         index = minIndex;
 
-        // ¾ÆÀÌÄÜ À§Ä¡ ¼³Á¤
+        // ì•„ì´ì½˜ ìœ„ì¹˜ ì„¤ì •
         ui.SetSiblingIcon(minIndex);
 
-        // »ğÀÔ ¾ÆÀÌÄÜÀ» Áß¾Ó¿¡ À§Ä¡
+        // ì‚½ì… ì•„ì´ì½˜ì„ ì¤‘ì•™ì— ìœ„ì¹˜
         MoveIndex(minIndex);
     }
 
@@ -107,16 +107,16 @@ public class TurnSelection : MonoBehaviour, ISelection
     {
         int min = sequence.GetActionMinSeq(action);
 
-        // ÅÏÀ» ¼³Á¤ÇÒ ¼ö ÀÖ´Â ÃÖ¼Ò °ªÀº ¹«Á¶°Ç ÇöÀç ÅÏ ´ÙÀ½
+        // í„´ì„ ì„¤ì •í•  ìˆ˜ ìˆëŠ” ìµœì†Œ ê°’ì€ ë¬´ì¡°ê±´ í˜„ì¬ í„´ ë‹¤ìŒ
         return (min > 0) ? min : 1;
     }
 
     private void DeactiveInsertIcon()
     {
-        // ¾ÆÀÌÄÜ ºñÈ°¼ºÈ­
+        // ì•„ì´ì½˜ ë¹„í™œì„±í™”
         ui.SetActiveInsertIcon(false);
 
-        // ¼¾ÅÍ ¾ÆÀÌÄÜ ¸¶Å· È°¼ºÈ­
+        // ì„¼í„° ì•„ì´ì½˜ ë§ˆí‚¹ í™œì„±í™”
         timeline.CenterIcon.SetMarking();
     }
 
@@ -138,17 +138,17 @@ public class TurnSelection : MonoBehaviour, ISelection
 
     private void MoveIndex(int index)
     {
-        // Å¸ÀÓ¶óÀÎ ÀÌµ¿
+        // íƒ€ì„ë¼ì¸ ì´ë™
         timeline.MoveTimelineAtIndex(index);
 
-        // ÇØ´ç ÀÚ¸®¿¡ »ğÀÔ ¾ÆÀÌÄÜ À§Ä¡
+        // í•´ë‹¹ ìë¦¬ì— ì‚½ì… ì•„ì´ì½˜ ìœ„ì¹˜
         ui.SetSiblingIcon(index);
     }
 
     public void InsertAction()
     {
-        // ¹èÄ¡µÉ ÅÏÀÇ ÀÌÀü Çàµ¿ÀÇ ÅÏ ¼ö °¡Á®¿À±â
-        // (ÇØ´ç ÅÏ = ¹èÄ¡µÉ Çàµ¿ÀÇ ÅÏ)
+        // ë°°ì¹˜ë  í„´ì˜ ì´ì „ í–‰ë™ì˜ í„´ ìˆ˜ ê°€ì ¸ì˜¤ê¸°
+        // (í•´ë‹¹ í„´ = ë°°ì¹˜ë  í–‰ë™ì˜ í„´)
         BattleAction prevAction = sequence.GetTurnAction(index - 1);
 
         float selectTrun = (prevAction.remainTurn < action.remainTurn) ? action.remainTurn : prevAction.remainTurn;

@@ -7,19 +7,19 @@ using UnityEngine.Localization.Settings;
 
 public class TalkManager : MonoBehaviour
 {
-    [Header("ÂüÁ¶ ½ºÅ©¸³Æ®")]
+    [Header("ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸")]
     [SerializeField] private DialogueManager dialogueManager;
     [SerializeField] private SelectManager selectManager;
     [SerializeField] private ImageRenderer imageRenderer;
     [SerializeField] private EventManager eventManager;
 
     [Space]
-    // ÇöÀç ¶óÀÎ ÁøÇà »óÈ²
+    // í˜„ì¬ ë¼ì¸ ì§„í–‰ ìƒí™©
     [SerializeField] private bool isPrinting;
     [SerializeField] private bool isTalking;
     private ScenarioScene currentScript;
 
-    // Line Ã³¸® ÇÚµé·¯
+    // Line ì²˜ë¦¬ í•¸ë“¤ëŸ¬
     private Dictionary<LineType, Action<Line>> lineHandler;
 
     private void Awake()
@@ -51,13 +51,13 @@ public class TalkManager : MonoBehaviour
 
     private async void OnLocaleChanged(Locale newLocale)
     {
-        // ¾ğ¾î º¯°æÀÌ ÀÏ¾î³µ´Ù¸é Å×ÀÌºí ´Ù½Ã ºÒ·¯¿À±â
+        // ì–¸ì–´ ë³€ê²½ì´ ì¼ì–´ë‚¬ë‹¤ë©´ í…Œì´ë¸” ë‹¤ì‹œ ë¶ˆëŸ¬ì˜¤ê¸°
         await ScenarioManager.Instance.ReloadLocalizationTables();
 
-        // ÇöÀç ÁøÇà ÁßÀÎ ¶óÀÎ Áß´Ü
+        // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ë¼ì¸ ì¤‘ë‹¨
         //StopCoroutine(readLineCoroutine);
 
-        // ¸¶Áö¸· ÁøÇà ÁßÀÌ´ø ¶óÀÎ Àç½ÃÀÛ
+        // ë§ˆì§€ë§‰ ì§„í–‰ ì¤‘ì´ë˜ ë¼ì¸ ì¬ì‹œì‘
         //readLineCoroutine = StartCoroutine(ReadLines(talkedNPC, readLine));
     }
 
@@ -65,27 +65,27 @@ public class TalkManager : MonoBehaviour
     {
         if (isTalking)
         {
-            // ´ëÈ­ ÁßÀÌ¸é ÇØ´ç ´ëÈ­¸¦ ½ºÅµ
+            // ëŒ€í™” ì¤‘ì´ë©´ í•´ë‹¹ ëŒ€í™”ë¥¼ ìŠ¤í‚µ
             SkipToTalk();
         }
     }
 
     private void SkipToTalk()
     {
-        // ¼±ÅÃÃ¢ÀÌ ¶ç¿öÁø °æ¿ì ÆĞ½º
+        // ì„ íƒì°½ì´ ë„ì›Œì§„ ê²½ìš° íŒ¨ìŠ¤
         if (selectManager.IsSelectOpen) return;
 
         if (dialogueManager.IsPrinting)
         {
-            // ÅØ½ºÆ®°¡ Ãâ·Â ÁßÀÎ °æ¿ì ÇÑ ¹ø¿¡ Ãâ·Â
+            // í…ìŠ¤íŠ¸ê°€ ì¶œë ¥ ì¤‘ì¸ ê²½ìš° í•œ ë²ˆì— ì¶œë ¥
             dialogueManager.TextSkip();
         }
         else
         {
-            // ÅØ½ºÆ® Ãâ·ÂÀÌ ³¡³­ °æ¿ì ´ëÈ­Ã¢ Á¾·á
+            // í…ìŠ¤íŠ¸ ì¶œë ¥ì´ ëë‚œ ê²½ìš° ëŒ€í™”ì°½ ì¢…ë£Œ
             dialogueManager.CloseDialogue();
 
-            // ´ÙÀ½ ´ëÈ­ Ãâ·Â
+            // ë‹¤ìŒ ëŒ€í™” ì¶œë ¥
             NextTalk();
         }
     }
@@ -97,34 +97,34 @@ public class TalkManager : MonoBehaviour
 
     public void StartTalk(Npc npc)
     {
-        // ÇÃ·¹ÀÌ¾î Á¶ÀÛ ÄÁÆ®·Ñ·¯ ºñÈ°¼ºÈ­
+        // í”Œë ˆì´ì–´ ì¡°ì‘ ì»¨íŠ¸ë¡¤ëŸ¬ ë¹„í™œì„±í™”
         ControlContext.Instance.DisableController(typeof(PlayerController));
 
-        // ´ëÈ­ Á¶ÀÛ ÄÁÆ®·Ñ·¯ È°¼ºÈ­
+        // ëŒ€í™” ì¡°ì‘ ì»¨íŠ¸ë¡¤ëŸ¬ í™œì„±í™”
         ControlContext.Instance.EnableController(typeof(TalkController));
 
-        // ´ëÈ­ Ã³À½ ½ÃÀÛ ½Ã ´ëº» °¡Á®¿À±â
+        // ëŒ€í™” ì²˜ìŒ ì‹œì‘ ì‹œ ëŒ€ë³¸ ê°€ì ¸ì˜¤ê¸°
         currentScript = GetScenarioScene(npc);
 
-        // ´ë»ç ÀĞ±â ½ÃÀÛ
+        // ëŒ€ì‚¬ ì½ê¸° ì‹œì‘
         StartCoroutine(ReadLines(npc, currentScript));
     }
 
     private ScenarioScene GetScenarioScene(Npc npc)
     {
-        // ¼öÁÖ °¡´ÉÇÑ Äù½ºÆ®°¡ ÀÖ´Â °æ¿ì
+        // ìˆ˜ì£¼ ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ” ê²½ìš°
         var quest = npc.GetAcceptableQuest();
         if (quest != null) return GetQuestScenarioScene(quest, QuestState.Inactive);
 
-        // ¿Ï·á °¡´ÉÇÑ Äù½ºÆ®°¡ ÀÖ´Â °æ¿ì
+        // ì™„ë£Œ ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ” ê²½ìš°
         quest = npc.GetCompletableQuest();
         if (quest != null) return GetQuestScenarioScene(quest, QuestState.Completed);
 
-        // ÁøÇà ÁßÀÎ Äù½ºÆ®°¡ ÀÖ´Â °æ¿ì
+        // ì§„í–‰ ì¤‘ì¸ í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ” ê²½ìš°
         quest = npc.GetAcceptedQuest();
         if (quest != null) return GetQuestScenarioScene(quest, QuestState.OnGoing);
 
-        // ¸ğµç Á¶°Ç¿¡ ÃæÁ·ÇÏÁö ¾ÊÀ¸¸é ÀÏ¹İ ´ë»ç
+        // ëª¨ë“  ì¡°ê±´ì— ì¶©ì¡±í•˜ì§€ ì•Šìœ¼ë©´ ì¼ë°˜ ëŒ€ì‚¬
         return npc.GetDialogueScene();
     }
 
@@ -138,36 +138,36 @@ public class TalkManager : MonoBehaviour
 
     private IEnumerator ReadLines(Npc npc, ScenarioScene scene)
     {
-        // ½ºÅµ ¹öÆ° ¿À·ù ¹æÁö¿ë
+        // ìŠ¤í‚µ ë²„íŠ¼ ì˜¤ë¥˜ ë°©ì§€ìš©
         yield return null;
 
         isTalking = true;
 
         while (scene != null)
         {
-            // Äù½ºÆ® »óÅÂ °»½Å
+            // í€˜ìŠ¤íŠ¸ ìƒíƒœ ê°±ì‹ 
             UpdateQuestState(npc);
 
-            // ´ë»ç ÇÏ³ªÇÏ³ª Ãâ·Â
+            // ëŒ€ì‚¬ í•˜ë‚˜í•˜ë‚˜ ì¶œë ¥
             foreach (var readLine in scene)
             {
                 lineHandler[readLine.code]?.Invoke(readLine);
 
-                // ´ë»ç¸¦ Ãâ·ÂÇÏ´Â µ¿¾È ´ë±â
+                // ëŒ€ì‚¬ë¥¼ ì¶œë ¥í•˜ëŠ” ë™ì•ˆ ëŒ€ê¸°
                 yield return new WaitWhile(() => isPrinting);
             }
 
-            // ´ÙÀ½ ÀÌ¾îÁú ´ëº»ÀÌ ÀÖ´Â Áö È®ÀÎ
+            // ë‹¤ìŒ ì´ì–´ì§ˆ ëŒ€ë³¸ì´ ìˆëŠ” ì§€ í™•ì¸
             scene = GetNextScene(npc);
         }
 
-        // ´ë»ç¸¦ ¸ğµÎ ÀĞ¾ú´Ù¸é ´ë»ç Ãâ·Â ¸ØÃß±â
+        // ëŒ€ì‚¬ë¥¼ ëª¨ë‘ ì½ì—ˆë‹¤ë©´ ëŒ€ì‚¬ ì¶œë ¥ ë©ˆì¶”ê¸°
         EndTalk();
     }
 
     private void UpdateQuestState(Npc npc)
     {
-        // ¿Ï·á °¡´ÉÇÑ Äù½ºÆ®°¡ ÀÖ´Â °æ¿ì ¿Ï·áÇÏ±â
+        // ì™„ë£Œ ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ” ê²½ìš° ì™„ë£Œí•˜ê¸°
         var quest = npc.GetCompletableQuest();
         if (quest != null)
         {
@@ -175,7 +175,7 @@ public class TalkManager : MonoBehaviour
             return;
         }
 
-        // ¼öÁÖ °¡´ÉÇÑ Äù½ºÆ®°¡ ÀÖ´Â °æ¿ì ¼öÁÖÇÏ±â
+        // ìˆ˜ì£¼ ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ” ê²½ìš° ìˆ˜ì£¼í•˜ê¸°
         quest = npc.GetAcceptableQuest();
         if (quest != null)
         {
@@ -186,21 +186,21 @@ public class TalkManager : MonoBehaviour
 
     private ScenarioScene GetNextScene(Npc npc)
     {
-        // ¼öÁÖ °¡´ÉÇÑ Äù½ºÆ® È®ÀÎ
+        // ìˆ˜ì£¼ ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ í™•ì¸
         var quest = npc.GetAcceptableQuest();
         if (quest != null)
         {
             return GetQuestScenarioScene(quest, QuestState.Inactive);
         }
 
-        // ¿Ï·á °¡´ÉÇÑ Äù½ºÆ® È®ÀÎ
+        // ì™„ë£Œ ê°€ëŠ¥í•œ í€˜ìŠ¤íŠ¸ í™•ì¸
         quest = npc.GetCompletableQuest();
         if (quest != null)
         {
             return GetQuestScenarioScene(quest, QuestState.Completed);
         }
 
-        // ÀÌ¾îÁú Äù½ºÆ® ´ëÈ­°¡ ¾øÀ¸¸é nullÀ» ¹İÈ¯
+        // ì´ì–´ì§ˆ í€˜ìŠ¤íŠ¸ ëŒ€í™”ê°€ ì—†ìœ¼ë©´ nullì„ ë°˜í™˜
         return null;
     }
 
@@ -208,24 +208,24 @@ public class TalkManager : MonoBehaviour
     {
         isTalking = false;
 
-        // È°¼ºÈ­µÈ ÀÌ¹ÌÁö ¸ğµÎ ÆÄ±«
+        // í™œì„±í™”ëœ ì´ë¯¸ì§€ ëª¨ë‘ íŒŒê´´
         imageRenderer.AllDestoryImages();
 
-        // ÇÃ·¹ÀÌ¾î Á¶ÀÛ ÄÁÆ®·Ñ·¯ È°¼ºÈ­
+        // í”Œë ˆì´ì–´ ì¡°ì‘ ì»¨íŠ¸ë¡¤ëŸ¬ í™œì„±í™”
         ControlContext.Instance.EnableController(typeof(PlayerController));
 
-        // ´ëÈ­ Á¶ÀÛ ÄÁÆ®·Ñ·¯ ºñÈ°¼ºÈ­
+        // ëŒ€í™” ì¡°ì‘ ì»¨íŠ¸ë¡¤ëŸ¬ ë¹„í™œì„±í™”
         ControlContext.Instance.DisableController(typeof(TalkController));
     }
 
     /************************************************************
-    * [¶óÀÎ Ãâ·Â °ü¸®]
+    * [ë¼ì¸ ì¶œë ¥ ê´€ë¦¬]
     * 
-    * ¶óÀÎÀ» ÀĞ°í¼­ °Å±â¿¡ µû¸¥ ÀÎ°ÔÀÓ ÀÌº¥Æ® Á¦¾î
+    * ë¼ì¸ì„ ì½ê³ ì„œ ê±°ê¸°ì— ë”°ë¥¸ ì¸ê²Œì„ ì´ë²¤íŠ¸ ì œì–´
     ************************************************************/
 
     /// <summary>
-    /// TextLine¿¡ µû¸¥ ´ë»ç Ãâ·Â ÇÔ¼ö
+    /// TextLineì— ë”°ë¥¸ ëŒ€ì‚¬ ì¶œë ¥ í•¨ìˆ˜
     /// </summary>
     private void PrintTextLine(TextLine line)
     {
@@ -235,7 +235,7 @@ public class TalkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// SelectLine¿¡ µû¸¥ ¼±ÅÃÁö¸¦ ¶ç¿ì´Â ÇÔ¼ö
+    /// SelectLineì— ë”°ë¥¸ ì„ íƒì§€ë¥¼ ë„ìš°ëŠ” í•¨ìˆ˜
     /// </summary>
     private void ActiveSelection(SelectLine line)
     {
@@ -252,11 +252,11 @@ public class TalkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ImageLine¿¡ µû¸¥ ÀÌ¹ÌÁö »ı¼º ÇÔ¼ö
+    /// ImageLineì— ë”°ë¥¸ ì´ë¯¸ì§€ ìƒì„± í•¨ìˆ˜
     /// </summary>
     private void RenderImage(ImageLine line)
     {
-        // ÀÌ¹ÌÁö »ı¼º
+        // ì´ë¯¸ì§€ ìƒì„±
         int x = (int)line.pos.x;
         int y = (int)line.pos.y;
 
@@ -264,7 +264,7 @@ public class TalkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// DestroyLine¿¡ µû¸¥ ÀÌ¹ÌÁö ÆÄ±« ÇÔ¼ö
+    /// DestroyLineì— ë”°ë¥¸ ì´ë¯¸ì§€ íŒŒê´´ í•¨ìˆ˜
     /// </summary>
     private void DestroyImage(DestroyLine line)
     {
@@ -272,7 +272,7 @@ public class TalkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// TransformLine¿¡ µû¸¥ ÀÌ¹ÌÁö º¯Çü ÇÔ¼ö
+    /// TransformLineì— ë”°ë¥¸ ì´ë¯¸ì§€ ë³€í˜• í•¨ìˆ˜
     /// </summary>
     private void TransformImage(TransformLine line)
     {
@@ -285,7 +285,7 @@ public class TalkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// EventLine¿¡ µû¸¥ ÀÌº¥Æ® ½ÇÇà ÇÔ¼ö
+    /// EventLineì— ë”°ë¥¸ ì´ë²¤íŠ¸ ì‹¤í–‰ í•¨ìˆ˜
     /// </summary>
     private void ExcuteEvent(EventLine line)
     {

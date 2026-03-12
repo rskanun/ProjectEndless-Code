@@ -9,10 +9,10 @@ public class ImageRenderer : MonoBehaviour
 
     public void AllDestoryImages()
     {
-        // ÇöÀç È°¼ºÈ­µÈ ¸ğµç ÀÌ¹ÌÁö ÆÄ±«
+        // í˜„ì¬ í™œì„±í™”ëœ ëª¨ë“  ì´ë¯¸ì§€ íŒŒê´´
         activeImages.Values.ForEach(obj => Destroy(obj));
 
-        // °ü¸® ¸ñ·Ï ÃÊ±âÈ­
+        // ê´€ë¦¬ ëª©ë¡ ì´ˆê¸°í™”
         activeImages.Clear();
     }
 
@@ -20,78 +20,78 @@ public class ImageRenderer : MonoBehaviour
     {
         var imgObj = CreateImageObject(sprite, x, y);
 
-        // Sprite ÀÌ¹ÌÁö¸¦ Åä´ë·Î »ı¼ºµÈ ÀÌ¹ÌÁö ¿ÀºêÁ§Æ® Dictionary¿¡ Ãß°¡
+        // Sprite ì´ë¯¸ì§€ë¥¼ í† ëŒ€ë¡œ ìƒì„±ëœ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸ Dictionaryì— ì¶”ê°€
         if (imgObj != null) activeImages.Add(guid, imgObj);
     }
 
     public void DestroyImage(string guid)
     {
-        // È°¼ºÈ­µÈ ÀÌ¹ÌÁö ¿ÀºêÁ§Æ® ¸ñ·Ï¿¡¼­ Å½»ö
+        // í™œì„±í™”ëœ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸ ëª©ë¡ì—ì„œ íƒìƒ‰
         if (!activeImages.TryGetValue(guid, out var destroyObj))
         {
-            // ¿ÀºêÁ§Æ®°¡ Á¸ÀçÇÏÁö ¾Ê´Â´Ù¸é ¿À·ù¸¦ Ãâ·ÂÇÏ°í¼­ µ¹¾Æ°¡±â
-            Debug.LogWarning($"È°¼ºÈ­µÈ ÀÌ¹ÌÁö Áß¿¡ {guid}Àº(´Â) Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+            // ì˜¤ë¸Œì íŠ¸ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ ì˜¤ë¥˜ë¥¼ ì¶œë ¥í•˜ê³ ì„œ ëŒì•„ê°€ê¸°
+            Debug.LogWarning($"í™œì„±í™”ëœ ì´ë¯¸ì§€ ì¤‘ì— {guid}ì€(ëŠ”) ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // ¸ñ·Ï¿¡¼­ Á¦°Å
+        // ëª©ë¡ì—ì„œ ì œê±°
         activeImages.Remove(guid);
 
-        // Å½»öµÈ ¿ÀºêÁ§Æ® Á¦°Å
+        // íƒìƒ‰ëœ ì˜¤ë¸Œì íŠ¸ ì œê±°
         Destroy(destroyObj);
     }
 
     public void TransformImage(string guid, Vector2 transPos, Color transColor)
     {
-        // È°¼ºÈ­µÈ ÀÌ¹ÌÁö ¿ÀºêÁ§Æ® ¸ñ·Ï¿¡¼­ Å½»ö
+        // í™œì„±í™”ëœ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸ ëª©ë¡ì—ì„œ íƒìƒ‰
         if (!activeImages.TryGetValue(guid, out var transObj))
         {
-            // ¿ÀºêÁ§Æ®°¡ Á¸ÀçÇÏÁö ¾Ê´Â´Ù¸é ¿À·ù¸¦ Ãâ·ÂÇÏ°í¼­ µ¹¾Æ°¡±â
-            Debug.LogWarning($"È°¼ºÈ­µÈ ÀÌ¹ÌÁö Áß¿¡ {guid}Àº(´Â) Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+            // ì˜¤ë¸Œì íŠ¸ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ ì˜¤ë¥˜ë¥¼ ì¶œë ¥í•˜ê³ ì„œ ëŒì•„ê°€ê¸°
+            Debug.LogWarning($"í™œì„±í™”ëœ ì´ë¯¸ì§€ ì¤‘ì— {guid}ì€(ëŠ”) ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // À§Ä¡°ª ¼öÁ¤
+        // ìœ„ì¹˜ê°’ ìˆ˜ì •
         transObj.transform.localPosition = transPos;
 
-        // »ö»ó ¼öÁ¤
+        // ìƒ‰ìƒ ìˆ˜ì •
         var component = transObj.GetComponent<Image>();
         component.color = transColor;
 
-        // ¼öÁ¤µÈ ÀÌ¹ÌÁö°¡ °¡Àå ¾Õ¿¡ ¿Àµµ·Ï ¼ø¼­ º¯°æ
+        // ìˆ˜ì •ëœ ì´ë¯¸ì§€ê°€ ê°€ì¥ ì•ì— ì˜¤ë„ë¡ ìˆœì„œ ë³€ê²½
         transObj.transform.SetAsFirstSibling();
     }
 
     /// <summary>
-    /// Sprite »çÀÌÁî¿¡ ¸Â°Ô ÀÌ¹ÌÁö ¿ÀºêÁ§Æ® »ı¼º ¹× À§Ä¡
+    /// Sprite ì‚¬ì´ì¦ˆì— ë§ê²Œ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸ ìƒì„± ë° ìœ„ì¹˜
     /// </summary>
     private GameObject CreateImageObject(Sprite sprite, int x, int y)
     {
         if (sprite == null)
         {
-            Debug.LogWarning("È­¸é¿¡ Ãâ·ÂÇÒ sprite °ªÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+            Debug.LogWarning("í™”ë©´ì— ì¶œë ¥í•  sprite ê°’ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
             return null;
         }
 
-        // ÀÌ¹ÌÁö¸¦ ¶ç¿ï ¿ÀºêÁ§Æ® »ı¼º
+        // ì´ë¯¸ì§€ë¥¼ ë„ìš¸ ì˜¤ë¸Œì íŠ¸ ìƒì„±
         GameObject imgObj = new GameObject("Image Object");
 
-        // ÇØ´ç ÄÄÆ÷³ÍÆ®°¡ ÀåÂøµÈ ¿ÀºêÁ§Æ®¸¦ ºÎ¸ğ·Î ¼³Á¤
+        // í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ê°€ ì¥ì°©ëœ ì˜¤ë¸Œì íŠ¸ë¥¼ ë¶€ëª¨ë¡œ ì„¤ì •
         imgObj.transform.SetParent(gameObject.transform, false);
 
-        // ÀÌ¹ÌÁö ÄÄÆ÷³ÍÆ® Ãß°¡ ¹× ½ºÇÁ¶óÀÌÆ® ¼³Á¤
+        // ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸ ì¶”ê°€ ë° ìŠ¤í”„ë¼ì´íŠ¸ ì„¤ì •
         Image img = imgObj.AddComponent<Image>();
         img.sprite = sprite;
 
-        // ÀÌ¹ÌÁöÀÇ »çÀÌÁî¿¡ ¸Â°Ô Á¶Á¤
+        // ì´ë¯¸ì§€ì˜ ì‚¬ì´ì¦ˆì— ë§ê²Œ ì¡°ì •
         float w = sprite.rect.width;
         float h = sprite.rect.height;
         imgObj.GetComponent<RectTransform>().sizeDelta = new Vector2(w, h);
 
-        // ÀÌ¹ÌÁö À§Ä¡ ¼³Á¤
+        // ì´ë¯¸ì§€ ìœ„ì¹˜ ì„¤ì •
         imgObj.transform.localPosition = new Vector3(x, y);
 
-        // ¸¸µé¾îÁø ÀÌ¹ÌÁö ¿ÀºêÁ§Æ® ¹İÈ¯
+        // ë§Œë“¤ì–´ì§„ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸ ë°˜í™˜
         return imgObj;
     }
 }

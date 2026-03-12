@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MonsterHUD : BattleHUD
 {
-    [Header("»ç¿ë HUD")]
+    [Header("ì‚¬ìš© HUD")]
     [SerializeField] private AmountHUD hpBar;
     [SerializeField] private AmountHUD mpBar;
 
@@ -18,6 +18,6 @@ public class MonsterHUD : BattleHUD
 
     public override void UpdateSP(int sp, int maxSP)
     {
-        // SP ¾÷µ¥ÀÌÆ® X
+        // SP ì—…ë°ì´íŠ¸ X
     }
 }

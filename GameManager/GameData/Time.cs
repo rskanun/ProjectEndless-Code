@@ -53,10 +53,10 @@ namespace Endless.GameData
 
             total -= seconds;
 
-            // ÇÏ·ç ´ÜÀ§·Î ½Ã°£ ·¡ÇÎ
+            // í•˜ë£¨ ë‹¨ìœ„ë¡œ ì‹œê°„ ëž˜í•‘
             total = ((total % secondsInDay) + secondsInDay) % secondsInDay;
 
-            // ´Ù½Ã ½Ã, ºÐ, ÃÊ·Î È¯»ê
+            // ë‹¤ì‹œ ì‹œ, ë¶„, ì´ˆë¡œ í™˜ì‚°
             Hour = total / 3600;
             Min = total / 60 % 60;
             Sec = total % 60;

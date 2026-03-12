@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Character : Entity
 {
-    // ÂüÁ¶ ½ºÅ©¸³Æ®
+    // ì°¸ì¡° ìŠ¤í¬ë¦½íŠ¸
     [SerializeField] private ActionManager actionSelection;
     [SerializeField] private CounterattackSelection counterSelection;
 
@@ -16,30 +16,30 @@ public class Character : Entity
 
     public void OnJoinBattle()
     {
-        // ÃÖÁ¾½ºÅİ ¼³Á¤
+        // ìµœì¢…ìŠ¤í…Ÿ ì„¤ì •
         _finalStats.CopyTo(entityData.Stats);
 
-        // HUD ¼³Á¤
+        // HUD ì„¤ì •
         InitHUD();
 
-        // ¿ÀºêÁ§Æ® È°¼ºÈ­
+        // ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
         gameObject.SetActive(true);
     }
 
     private void InitHUD()
     {
-        // ÇØ´ç Ä³¸¯ÅÍÀÇ HUD È°¼ºÈ­
+        // í•´ë‹¹ ìºë¦­í„°ì˜ HUD í™œì„±í™”
         hud.gameObject.SetActive(true);
 
-        // HUD Á¤º¸ ¾÷µ¥ÀÌÆ®
+        // HUD ì •ë³´ ì—…ë°ì´íŠ¸
         hud.UpdateHP(FinalStats.HP, FinalStats.MaxHP);
         hud.UpdateSP(FinalStats.SP, FinalStats.MaxSP);
     }
 
     /***************************************************************
-    * [ ÅÏ ÁøÇà ]
+    * [ í„´ ì§„í–‰ ]
     * 
-    * ÇØ´ç ¿ÀºêÁ§Æ®ÀÇ ÅÏ ÁøÇà
+    * í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ì˜ í„´ ì§„í–‰
     ***************************************************************/
 
     protected override void SelectAction()
@@ -49,13 +49,13 @@ public class Character : Entity
 
     private async UniTask SelectMotion()
     {
-        // ÇØ´ç ÅÏÀÎ Ä³¸¯ÅÍ¸¦ ½Ì±Û¼¦
+        // í•´ë‹¹ í„´ì¸ ìºë¦­í„°ë¥¼ ì‹±ê¸€ìƒ·
         BattleCameraDirector.Instance.FocusSingle(gameObject);
 
-        // Çàµ¿ ¼±ÅÃÃ¢À» ¿­±â À§ÇÑ Ä«¸Ş¶ó ÀÌµ¿
+        // í–‰ë™ ì„ íƒì°½ì„ ì—´ê¸° ìœ„í•œ ì¹´ë©”ë¼ ì´ë™
         await BattleCameraDirector.Instance.DirectSelectMotion();
 
-        // Çàµ¿ ¼±ÅÃÃ¢ ¿­±â
+        // í–‰ë™ ì„ íƒì°½ ì—´ê¸°
         actionSelection.OnSelect(this);
     }
 
@@ -63,10 +63,10 @@ public class Character : Entity
     {
         List<Character> partyList = BattleData.Instance.CharacterList;
 
-        // ÇÃ·¹ÀÌ¾îÀÇ ÆÄÆ¼ ¸ğµÎ °°ÀÌ µµÁÖ
+        // í”Œë ˆì´ì–´ì˜ íŒŒí‹° ëª¨ë‘ ê°™ì´ ë„ì£¼
         for (int i = partyList.Count - 1; i >= 0; i--)
         {
-            // ¸®½ºÆ®¿¡ ¿À·ù°¡ »ı±âÁö ¾Êµµ·Ï ¿ª¼øÀ¸·Î ÆÄ±«(µµÁÖ)
+            // ë¦¬ìŠ¤íŠ¸ì— ì˜¤ë¥˜ê°€ ìƒê¸°ì§€ ì•Šë„ë¡ ì—­ìˆœìœ¼ë¡œ íŒŒê´´(ë„ì£¼)
             partyList[i].RunBattle();
         }
     }
@@ -78,25 +78,25 @@ public class Character : Entity
 
     public override void UseItem(Consumable item, List<Entity> targets)
     {
-        // ¾ÆÀÌÅÛ »ç¿ë
+        // ì•„ì´í…œ ì‚¬ìš©
         base.UseItem(item, targets);
 
-        // ÇÃ·¹ÀÌ¾îºí Ä³¸¯ÅÍÀÎ °æ¿ì ÀÎº¥Åä¸®¿¡ ÀÖ´Â ¾ÆÀÌÅÛÀÇ °³¼ö Â÷°¨
+        // í”Œë ˆì´ì–´ë¸” ìºë¦­í„°ì¸ ê²½ìš° ì¸ë²¤í† ë¦¬ì— ìˆëŠ” ì•„ì´í…œì˜ ê°œìˆ˜ ì°¨ê°
         InventoryData.Instance.RemoveItem(item);
     }
 
     /***************************************************************
-    * [ »óÅÂ Ã³¸® ]
+    * [ ìƒíƒœ ì²˜ë¦¬ ]
     * 
-    * ¿ÀºêÁ§Æ®ÀÇ ÀÌº¥Æ®¿¡ ÀÇÇÑ »óÅÂ Ã³¸®
+    * ì˜¤ë¸Œì íŠ¸ì˜ ì´ë²¤íŠ¸ì— ì˜í•œ ìƒíƒœ ì²˜ë¦¬
     ***************************************************************/
 
     public override void OnDead()
     {
-        // ±âÁ¸ »ç¸Á Ã³¸® ½ÇÇà
+        // ê¸°ì¡´ ì‚¬ë§ ì²˜ë¦¬ ì‹¤í–‰
         base.OnDead();
 
-        // »ç¸Á ¸ğ¼Ç
+        // ì‚¬ë§ ëª¨ì…˜
     }
 
     protected override void OnParryAction()
@@ -111,13 +111,13 @@ public class Character : Entity
 
     public override void OnParrying(Entity attacker)
     {
-        // ÆĞ¸µ ¼º°ø ¾Ë¸²
+        // íŒ¨ë§ ì„±ê³µ ì•Œë¦¼
         GameEventManager.Instance.NotifyParrySuccess();
 
-        // ÆĞ¸µ ¸ğ¼Ç ½ÇÇà
+        // íŒ¨ë§ ëª¨ì…˜ ì‹¤í–‰
         motionManager.ActMotion(AnimParams.ParryTrigger);
 
-        // ÇÃ·¹ÀÌ¾î°¡ ÆĞ¸µ¿¡ ¼º°øÇßÀ» °æ¿ì Ãß°¡Å¸¸¦ ³ÖÀ» ´ë»ó ¼±ÅÃ
+        // í”Œë ˆì´ì–´ê°€ íŒ¨ë§ì— ì„±ê³µí–ˆì„ ê²½ìš° ì¶”ê°€íƒ€ë¥¼ ë„£ì„ ëŒ€ìƒ ì„ íƒ
         counterSelection.ShowAttackerSelection(attacker, this);
     }
 }

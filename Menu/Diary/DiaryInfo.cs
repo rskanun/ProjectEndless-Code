@@ -19,10 +19,10 @@ public abstract class DiaryInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
 
     public void OnSelect(BaseEventData eventData)
     {
-        // ÇöÀç ¼±ÅÃµÈ »óÅÂ¶ó¸é Àç¼±ÅÃ X
+        // í˜„ì¬ ì„ íƒëœ ìƒíƒœë¼ë©´ ì¬ì„ íƒ X
         if (isSelect) return;
 
-        // ¼±ÅÃ ¸¶Å© È°¼ºÈ­
+        // ì„ íƒ ë§ˆí¬ í™œì„±í™”
         ActiveSelectMark();
 
         SelectHandler();
@@ -34,10 +34,10 @@ public abstract class DiaryInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
 
         if (app.State != ContactState.Party || !isSelect) return;
 
-        // ÆÄÆ¼ ¸Ş´º·Î µ¹¾Æ¿ÔÀ¸¸é ¼±ÅÃ Á¦°Å
+        // íŒŒí‹° ë©”ë‰´ë¡œ ëŒì•„ì™”ìœ¼ë©´ ì„ íƒ ì œê±°
         DeactiveSelectMark();
 
-        // ¸¶Áö¸· ¼±ÅÃ Á¤º¸ Á¦°Å
+        // ë§ˆì§€ë§‰ ì„ íƒ ì •ë³´ ì œê±°
         diary.SetLastSelectedButton(null);
     }
 
@@ -45,13 +45,13 @@ public abstract class DiaryInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
     {
         isSelect = true;
 
-        // ÀÌÀü ¹öÆ° ¼±ÅÃ¸¶Å© ºñÈ°¼ºÈ­
+        // ì´ì „ ë²„íŠ¼ ì„ íƒë§ˆí¬ ë¹„í™œì„±í™”
         diary.LastSelectedInfo?.DeactiveSelectMark();
 
-        // ÇØ´ç Á¤º¸Ä­À» ¸¶Áö¸· ¼±ÅÃ Á¤º¸·Î ¼³Á¤
+        // í•´ë‹¹ ì •ë³´ì¹¸ì„ ë§ˆì§€ë§‰ ì„ íƒ ì •ë³´ë¡œ ì„¤ì •
         diary.SetLastSelectedButton(this);
 
-        // ¼±ÅÃ ÀÌÆåÆ® È°¼ºÈ­
+        // ì„ íƒ ì´í™íŠ¸ í™œì„±í™”
         selectMark.gameObject.SetActive(true);
         selectMark.DOFade(0.25f, 0.5f).SetLoops(-1, LoopType.Yoyo);
     }
@@ -61,7 +61,7 @@ public abstract class DiaryInfo : MonoBehaviour, ISelectHandler, IDeselectHandle
         isSelect = false;
         selectMark.DOKill();
 
-        // ¿ø·¡ ¾ËÆÄ°ªÀ¸·Î µÇµ¹¸®±â
+        // ì›ë˜ ì•ŒíŒŒê°’ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
         Color color = selectMark.color;
         color.a = 0.0f;
         selectMark.color = color;

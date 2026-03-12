@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemSelectionUI : MonoBehaviour
 {
-    [Header("¾ÆÀÌÅÛÃ¢ ±¸¼º¿ä¼Ò")]
+    [Header("ì•„ì´í…œì°½ êµ¬ì„±ìš”ì†Œ")]
     public GameObject selectionWindow;
     public GameObject itemInfoPrefab;
     public Transform container;
@@ -23,7 +23,7 @@ public class ItemSelectionUI : MonoBehaviour
     {
         GameObject itemInfoObj = Instantiate(itemInfoPrefab, container);
 
-        // »ı¼ºµÈ ¿ÀºêÁ§Æ® ¸®ÅÏ
+        // ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ ë¦¬í„´
         return itemInfoObj;
     }
 }

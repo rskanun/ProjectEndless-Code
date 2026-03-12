@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PartyData : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Object/Character";
     private const string FILE_PATH = "Assets/Resources/Object/Character/PartyData.asset";
 
@@ -22,7 +22,7 @@ public class PartyData : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -39,7 +39,7 @@ public class PartyData : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<PartyData>(FILE_PATH);
 
                 if (_instance == null)
@@ -56,7 +56,7 @@ public class PartyData : ScriptableObject
     private int _maxPartySize;
     public int MaxPartySize => _maxPartySize;
 
-    [Header("°ÔÀÓ ³» Ä³¸¯ÅÍ Á¤º¸")]
+    [Header("ê²Œì„ ë‚´ ìºë¦­í„° ì •ë³´")]
     [SerializeField]
     private CharacterData _player;
     public CharacterData Player
@@ -64,9 +64,9 @@ public class PartyData : ScriptableObject
         get { return _player; }
     }
     [SerializeField]
-    private List<CharacterData> _members; // ÁÖÀÎ°ø Á¦¿Ü
+    private List<CharacterData> _members; // ì£¼ì¸ê³µ ì œì™¸
     private Dictionary<string, CharacterData> charactersDict;
-    private List<CharacterData> _characters; // ÁÖÀÎ°ø Æ÷ÇÔ
+    private List<CharacterData> _characters; // ì£¼ì¸ê³µ í¬í•¨
     public List<CharacterData> Characters => _characters;
 
 #if UNITY_EDITOR
@@ -89,7 +89,7 @@ public class PartyData : ScriptableObject
     {
         charactersDict = new Dictionary<string, CharacterData>();
 
-        // ÀÎ½ºÆåÅÍÃ¢À» ÅëÇØ ¹ŞÀº ¸É¹ö ¸®½ºÆ®¸¦ Ã£±â ½¬¿î µñ¼Å³Ê¸®·Î º¯°æ
+        // ì¸ìŠ¤í™í„°ì°½ì„ í†µí•´ ë°›ì€ ë§´ë²„ ë¦¬ìŠ¤íŠ¸ë¥¼ ì°¾ê¸° ì‰¬ìš´ ë”•ì…”ë„ˆë¦¬ë¡œ ë³€ê²½
         foreach (CharacterData member in _characters)
         {
             charactersDict[member.Name] = member;
@@ -114,7 +114,7 @@ public class PartyData : ScriptableObject
 
     public void JoinParty(string name)
     {
-        // Ç® ÆÄÆ¼ÀÎ °æ¿ì °¡ÀÔ ºÒ°¡´É
+        // í’€ íŒŒí‹°ì¸ ê²½ìš° ê°€ì… ë¶ˆê°€ëŠ¥
         if (GetPartyMembers().Count >= _maxPartySize) return;
 
         charactersDict[name].IsParty = true;
@@ -122,7 +122,7 @@ public class PartyData : ScriptableObject
 
     public void KickParty(string name)
     {
-        // ÇÃ·¹ÀÌ¾î´Â ÆÄÆ¼ Å»Åğ°¡ ºÒ°¡´ÉÇÔ
+        // í”Œë ˆì´ì–´ëŠ” íŒŒí‹° íƒˆí‡´ê°€ ë¶ˆê°€ëŠ¥í•¨
         if (name == Player.Name) return;
 
         charactersDict[name].IsParty = false;

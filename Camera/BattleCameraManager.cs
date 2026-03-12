@@ -7,12 +7,12 @@ public class BattleCameraManager : MonoBehaviour
 {
     public CinemachineTargetGroup targetGroup;
 
-    [Header("½Ã³×¸Ó½Å Ä«¸Ş¶ó")]
+    [Header("ì‹œë„¤ë¨¸ì‹  ì¹´ë©”ë¼")]
     public CinemachineVirtualCamera mainCam;
     public CinemachineVirtualCamera groupCam;
     public CinemachineVirtualCamera singleCam;
 
-    // ºê·¹ÀÎ Ä«¸Ş¶ó
+    // ë¸Œë ˆì¸ ì¹´ë©”ë¼
     [HideInInspector]
     public CinemachineBrain brain;
 
@@ -30,42 +30,42 @@ public class BattleCameraManager : MonoBehaviour
     }
 
     /***************************************************************
-    * [ ¶óÀÌºê Ä«¸Ş¶ó ]
+    * [ ë¼ì´ë¸Œ ì¹´ë©”ë¼ ]
     * 
-    * ÇöÀç È­¸éÀ» ºñÃâ Ä«¸Ş¶ó ¼³Á¤
+    * í˜„ì¬ í™”ë©´ì„ ë¹„ì¶œ ì¹´ë©”ë¼ ì„¤ì •
     ***************************************************************/
 
     public void LiveMainCamera()
     {
-        // ÀüÃ¼ È­¸é Ä· ¶óÀÌºê ½ÃÀÛ
+        // ì „ì²´ í™”ë©´ ìº  ë¼ì´ë¸Œ ì‹œì‘
         LiveCamera(mainCam);
     }
 
     public void LiveGroupCamera(List<Transform> transforms)
     {
-        // ±âÁ¸ ±×·ì Áö¿ì±â
+        // ê¸°ì¡´ ê·¸ë£¹ ì§€ìš°ê¸°
         foreach (Transform transform in liveGroup)
         {
             targetGroup.RemoveMember(transform);
         }
 
-        // »õ ±×·ì Ãß°¡
+        // ìƒˆ ê·¸ë£¹ ì¶”ê°€
         foreach (Transform transform in transforms)
         {
             targetGroup.AddMember(transform, 1.0f, 1.0f);
             liveGroup.Add(transform);
         }
 
-        // ±×·ìÄ· ¶óÀÌºê ½ÃÀÛ
+        // ê·¸ë£¹ìº  ë¼ì´ë¸Œ ì‹œì‘
         LiveCamera(groupCam);
     }
 
     public void LiveSingleCamera(Transform transform)
     {
-        // ´ë»ó ¼³Á¤
+        // ëŒ€ìƒ ì„¤ì •
         singleCam.Follow = transform;
 
-        // ´ÜÀÏÄ· ¶óÀÌºê ½ÃÀÛ
+        // ë‹¨ì¼ìº  ë¼ì´ë¸Œ ì‹œì‘
         LiveCamera(singleCam);
     }
 
@@ -73,11 +73,11 @@ public class BattleCameraManager : MonoBehaviour
     {
         if (!liveCamera.isActiveAndEnabled) return;
 
-        // ÇöÀç ¶óÀÌºê ÁßÀÎ Ä«¸Ş¶óÀÇ ¿ì¼±µµ ³·Ãß±â
+        // í˜„ì¬ ë¼ì´ë¸Œ ì¤‘ì¸ ì¹´ë©”ë¼ì˜ ìš°ì„ ë„ ë‚®ì¶”ê¸°
         if (liveCam != null)
             liveCam.Priority = 0;
 
-        // ¶óÀÌºê ÇÒ Ä«¸Ş¶óÀÇ ¿ì¼±µµ ³ôÀÌ±â
+        // ë¼ì´ë¸Œ í•  ì¹´ë©”ë¼ì˜ ìš°ì„ ë„ ë†’ì´ê¸°
         liveCamera.Priority = 1;
         liveCam = liveCamera;
     }

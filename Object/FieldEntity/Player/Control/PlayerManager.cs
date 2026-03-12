@@ -7,15 +7,15 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] private InteractManager interactManager;
 
-    [Header("ÀÌµ¿¼Óµµ")]
+    [Header("ì´ë™ì†ë„")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
 
-    // ÇÃ·¹ÀÌ¾î ±¸¼º ÄÄÆ÷³ÍÆ®
+    // í”Œë ˆì´ì–´ êµ¬ì„± ì»´í¬ë„ŒíŠ¸
     private Rigidbody2D rigid;
     private Animator playerAnimator;
 
-    // ÀÌµ¿ Á¦¾î º¯¼ö
+    // ì´ë™ ì œì–´ ë³€ìˆ˜
     private Vector2 direction;
     private bool isRunKeyPressed;
     private bool isRunning;
@@ -40,20 +40,20 @@ public class PlayerManager : MonoBehaviour
 
     public void HideCharacter()
     {
-        // ¸ó½ºÅÍ ÀÎÄ«¿îÆ® ½Ã, ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® ¼û±â±â
+        // ëª¬ìŠ¤í„° ì¸ì¹´ìš´íŠ¸ ì‹œ, í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ìˆ¨ê¸°ê¸°
         gameObject.SetActive(false);
     }
 
     public void ShowCharacter()
     {
-        // ÇÊµå·Î µ¹¾Æ¿À¸é ´Ù½Ã ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® º¸ÀÌ±â
+        // í•„ë“œë¡œ ëŒì•„ì˜¤ë©´ ë‹¤ì‹œ í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ë³´ì´ê¸°
         gameObject.SetActive(true);
     }
 
     /************************************************************
-     * [»óÈ£ÀÛ¿ë]
+     * [ìƒí˜¸ì‘ìš©]
      * 
-     * ÇÃ·¹ÀÌ¾î°¡ ¹Ù¶óº¸´Â ´ë»ó°ú »óÈ£ÀÛ¿ë Á¦¾î
+     * í”Œë ˆì´ì–´ê°€ ë°”ë¼ë³´ëŠ” ëŒ€ìƒê³¼ ìƒí˜¸ì‘ìš© ì œì–´
      ************************************************************/
 
     public void Interact()
@@ -62,22 +62,22 @@ public class PlayerManager : MonoBehaviour
     }
 
     /************************************************************
-     * [ÀÌµ¿]
+     * [ì´ë™]
      * 
-     * ÇÃ·¹ÀÌ¾îÀÇ ÀÌµ¿À» Á¦¾î
+     * í”Œë ˆì´ì–´ì˜ ì´ë™ì„ ì œì–´
      ************************************************************/
 
     public void Teleport(Vector2 pos)
     {
-        // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡ º¯°æ
+        // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ ë³€ê²½
         transform.position = pos;
 
-        // ÀÎ°ÔÀÓ µ¥ÀÌÅÍ¿¡µµ º¯È­ ÁÖ±â
+        // ì¸ê²Œì„ ë°ì´í„°ì—ë„ ë³€í™” ì£¼ê¸°
         GameData.Instance.Position = transform.position;
     }
 
     /// <summary>
-    /// ÀÎ°ÔÀÓ µ¥ÀÌÅÍ¸¦ ±âÁØÀ¸·Î ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡ ´Ù½Ã ºÒ·¯¿À±â
+    /// ì¸ê²Œì„ ë°ì´í„°ë¥¼ ê¸°ì¤€ìœ¼ë¡œ í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ ë‹¤ì‹œ ë¶ˆëŸ¬ì˜¤ê¸°
     /// </summary>
     public void UpdateLocation()
     {
@@ -88,17 +88,17 @@ public class PlayerManager : MonoBehaviour
     {
         this.direction = direction;
 
-        // ¿òÁ÷ÀÓ¿¡ µû¸¥ ¾Ö´Ï¸ŞÀÌ¼Ç Á¦¾î
+        // ì›€ì§ì„ì— ë”°ë¥¸ ì• ë‹ˆë©”ì´ì…˜ ì œì–´
         SetPlayerMoveAnim(direction);
         SetSightDirection(direction);
     }
 
     public void SetRunning(bool isRunning)
     {
-        // ´Ş¸®±â Å° »óÅÂ º¯°æ
+        // ë‹¬ë¦¬ê¸° í‚¤ ìƒíƒœ ë³€ê²½
         isRunKeyPressed = isRunning;
 
-        // ´Ş¸®±â Å°¸¦ ´­·¶´Ù¸é ´Ş¸®´Â »óÅÂ·Î º¯°æ
+        // ë‹¬ë¦¬ê¸° í‚¤ë¥¼ ëˆŒë €ë‹¤ë©´ ë‹¬ë¦¬ëŠ” ìƒíƒœë¡œ ë³€ê²½
         if (isRunKeyPressed)
         {
             this.isRunning = true;
@@ -119,7 +119,7 @@ public class PlayerManager : MonoBehaviour
 
     private void SetSightDirection(Vector2 direction)
     {
-        // ÁÂ¿ì ¶Ç´Â ¾ÕµÚ¸¸ ÀÔ·Â¹ŞÀº °æ¿ì ½Ã¾ß µ¹¸®±â
+        // ì¢Œìš° ë˜ëŠ” ì•ë’¤ë§Œ ì…ë ¥ë°›ì€ ê²½ìš° ì‹œì•¼ ëŒë¦¬ê¸°
         if (direction.x == 0 ^ direction.y == 0)
         {
             interactManager.RotateEyes(direction);
@@ -128,14 +128,14 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // °È±â Ã¼Å©
+        // ê±·ê¸° ì²´í¬
         isRunning = IsCanRunning(direction);
 
-        // ÇöÀç ÇÃ·¹ÀÌ¾î°¡ ´©¸¥ ¹æÇâÀ¸·Î ÀÌµ¿
+        // í˜„ì¬ í”Œë ˆì´ì–´ê°€ ëˆ„ë¥¸ ë°©í–¥ìœ¼ë¡œ ì´ë™
         float speed = isRunning ? runSpeed : moveSpeed;
         rigid.velocity = direction.normalized * speed * Time.deltaTime;
 
-        // ÇÃ·¹ÀÌ¾î À§Ä¡ µ¥ÀÌÅÍ °»½Å
+        // í”Œë ˆì´ì–´ ìœ„ì¹˜ ë°ì´í„° ê°±ì‹ 
         GameData.Instance.Position = transform.position;
     }
 
@@ -146,7 +146,7 @@ public class PlayerManager : MonoBehaviour
 
         bool isWalkAxis = absX <= 0.5f && absY <= 0.5f;
 
-        // ´Ş¸®±â Å°°¡ ´­·¯Á® ÀÖ°Å³ª Á¶ÀÌ½ºÆ½ ±â¿ï±â°¡ ¶Ù´Â Á¤µµÀÏ °æ¿ì ¶Ù´Â °É·Î ÆÇÁ¤
+        // ë‹¬ë¦¬ê¸° í‚¤ê°€ ëˆŒëŸ¬ì ¸ ìˆê±°ë‚˜ ì¡°ì´ìŠ¤í‹± ê¸°ìš¸ê¸°ê°€ ë›°ëŠ” ì •ë„ì¼ ê²½ìš° ë›°ëŠ” ê±¸ë¡œ íŒì •
         return isRunKeyPressed || !isWalkAxis;
     }
 }

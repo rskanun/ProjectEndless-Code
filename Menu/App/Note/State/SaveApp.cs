@@ -1,4 +1,4 @@
-﻿public class SaveApp : NoteApp, INoteState
+public class SaveApp : NoteApp, INoteState
 {
     protected override void OnOpen()
     {

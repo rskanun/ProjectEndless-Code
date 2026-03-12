@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class BattleFieldData
 {
-    // ÀüÅõ ½Ã µîÀåÇÒ ¸ó½ºÅÍ
+    // ì „íˆ¬ ì‹œ ë“±ì¥í•  ëª¬ìŠ¤í„°
     [SerializeField]
     private List<GameObject> _encountMonsters;
     public List<GameObject> EncountMonsters
@@ -12,7 +12,7 @@ public class BattleFieldData
         get { return _encountMonsters; }
     }
 
-    // ÀüÅõ ½Ã ¹ß»ıÇÒ ¼ö ÀÖ´Â ÀÌº¥Æ® ½ºÅ©¸³Æ®
+    // ì „íˆ¬ ì‹œ ë°œìƒí•  ìˆ˜ ìˆëŠ” ì´ë²¤íŠ¸ ìŠ¤í¬ë¦½íŠ¸
     [SerializeField]
     private BattleEvent _battleEvent;
     public BattleEvent BattleEvent

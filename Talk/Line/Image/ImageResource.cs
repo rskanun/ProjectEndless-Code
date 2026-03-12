@@ -12,7 +12,7 @@ using UnityEditor;
 
 public class ImageResource : ScriptableObject
 {
-    // ÀúÀå ÆÄÀÏ À§Ä¡
+    // ì €ì¥ íŒŒì¼ ìœ„ì¹˜
     private const string FILE_DIRECTORY = "Assets/Resources/Option";
     private const string FILE_PATH = "Assets/Resources/Option/ImageResource.asset";
 
@@ -28,7 +28,7 @@ public class ImageResource : ScriptableObject
 #if UNITY_EDITOR
             if (_instance == null)
             {
-                // ÆÄÀÏ °æ·Î°¡ ¾øÀ» °æ¿ì Æú´õ »ı¼º
+                // íŒŒì¼ ê²½ë¡œê°€ ì—†ì„ ê²½ìš° í´ë” ìƒì„±
                 if (!AssetDatabase.IsValidFolder(FILE_DIRECTORY))
                 {
                     string[] folders = FILE_DIRECTORY.Split('/');
@@ -44,7 +44,7 @@ public class ImageResource : ScriptableObject
                     }
                 }
 
-                // Resource.Load°¡ ½ÇÆĞÇßÀ» °æ¿ì
+                // Resource.Loadê°€ ì‹¤íŒ¨í–ˆì„ ê²½ìš°
                 _instance = AssetDatabase.LoadAssetAtPath<ImageResource>(FILE_PATH);
                 if (_instance == null)
                 {
@@ -65,31 +65,31 @@ public class ImageResource : ScriptableObject
 #if UNITY_EDITOR
     public Sprite FindSpriteFile(string fileName)
     {
-        // ÀÌ¹ÌÁö¸¦ Ã£À» Æú´õ°¡ ÇÒ´çµÇ¾î ÀÖÁö ¾Ê°Å³ª, Ã£À» ¼ö ¾ø´Ù¸é ½ÇÇà Áß´Ü
+        // ì´ë¯¸ì§€ë¥¼ ì°¾ì„ í´ë”ê°€ í• ë‹¹ë˜ì–´ ìˆì§€ ì•Šê±°ë‚˜, ì°¾ì„ ìˆ˜ ì—†ë‹¤ë©´ ì‹¤í–‰ ì¤‘ë‹¨
         if (string.IsNullOrEmpty(folderPath) || !AssetDatabase.IsValidFolder(folderPath))
         {
-            throw new InvalidOperationException("Æú´õ ÁÖ¼Ò°¡ ÇÒ´çµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
+            throw new InvalidOperationException("í´ë” ì£¼ì†Œê°€ í• ë‹¹ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
         }
 
-        // folderPath¸¦ ±âÁØÀ¸·Î ¸ğµç Sprite ¿¡¼ÂÀÇ guid °¡Á®¿À±â
+        // folderPathë¥¼ ê¸°ì¤€ìœ¼ë¡œ ëª¨ë“  Sprite ì—ì…‹ì˜ guid ê°€ì ¸ì˜¤ê¸°
         string[] guids = AssetDatabase.FindAssets($"{fileName} t:Sprite", new[] { folderPath });
 
         foreach (string guid in guids)
         {
-            // ¿¡¼ÂÀÇ guid¸¦ Åä´ë·Î ÁÖ¼Ò °¡Á®¿À±â
+            // ì—ì…‹ì˜ guidë¥¼ í† ëŒ€ë¡œ ì£¼ì†Œ ê°€ì ¸ì˜¤ê¸°
             string path = AssetDatabase.GUIDToAssetPath(guid);
 
-            // ÀÌ¸§°ú È®ÀåÀÚ Ã¼Å©
+            // ì´ë¦„ê³¼ í™•ì¥ì ì²´í¬
             bool checkToName = Path.GetFileNameWithoutExtension(path) == fileName;
             bool checkToExtension = extensions.Contains(Path.GetExtension(path));
             if (checkToName && checkToExtension)
             {
-                // ÀÌ¸§°ú È®ÀåÀÚ¸¦ Ã¼Å©ÇÏ¿© ÀÏÄ¡ÇÏ¸é ¸®ÅÏ
+                // ì´ë¦„ê³¼ í™•ì¥ìë¥¼ ì²´í¬í•˜ì—¬ ì¼ì¹˜í•˜ë©´ ë¦¬í„´
                 return AssetDatabase.LoadAssetAtPath<Sprite>(path);
             }
         }
 
-        Debug.LogWarning($"Çã¿ëµÈ È®ÀåÀÚ¸¦ °¡Áø {fileName} ÆÄÀÏÀ» ÇØ´ç Æú´õ ³»¿¡¼­ Ã£Áö ¸øÇß½À´Ï´Ù.");
+        Debug.LogWarning($"í—ˆìš©ëœ í™•ì¥ìë¥¼ ê°€ì§„ {fileName} íŒŒì¼ì„ í•´ë‹¹ í´ë” ë‚´ì—ì„œ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
         return null;
     }
 #endif
