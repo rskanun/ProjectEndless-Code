@@ -39,14 +39,18 @@ public class TalkManager : MonoBehaviour
 
     private void OnEnable()
     {
-        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
         TalkContext.Instance.RegisterManager(this);
+
+        // 이벤트 등록
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
     }
 
     private void OnDisable()
     {
-        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
         TalkContext.Instance.RemoveManager();
+
+        // 이벤트 등록
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
     }
 
     private async void OnLocaleChanged(Locale newLocale)

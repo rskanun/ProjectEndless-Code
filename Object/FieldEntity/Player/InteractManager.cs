@@ -6,6 +6,23 @@ public class InteractManager : MonoBehaviour
     // 상호작용이 가능한 오브젝트 목록
     private List<Npc> npcs = new List<Npc>();
 
+    private void OnEnable()
+    {
+        SceneLoadManager.onLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneLoadManager.onLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded()
+    {
+        // 씬 이동 시, 상호 가능 오브젝트 목록 남는 버그 있음
+        // 오브젝트 목록 초기화
+        npcs.Clear();
+    }
+
     public void OnInteract()
     {
         if (npcs.Count <= 0)
