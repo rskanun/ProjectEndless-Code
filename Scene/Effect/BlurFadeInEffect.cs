@@ -1,4 +1,4 @@
-using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -8,22 +8,19 @@ public class BlurFadeInEffect : MonoBehaviour, ITransitionEffect
     [SerializeField] private CanvasGroup background;
     [SerializeField] private Material blurMaterial;
 
-    public void OnPlayEffect(Action completeAction)
+    public UniTask PlayEffect()
     {
         float delay = 1f;
         float blurValue = 10.0f;
 
-        DOTween.Sequence()
+        return DOTween.Sequence()
             .OnStart(() =>
             {
                 blurMaterial.SetFloat("_Radius", blurValue);
             })
             .Append(background.DOFade(0, delay))
             .Join(DOTween.To(() => blurMaterial.GetFloat("_Radius"), x => blurMaterial.SetFloat("_Radius", x), 0, delay))
-            .OnComplete(() =>
-            {
-                completeAction?.Invoke();
-            })
-            .SetUpdate(true);
+            .SetUpdate(true)
+            .ToUniTask();
     }
 }

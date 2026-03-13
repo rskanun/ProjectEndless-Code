@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SceneLoadingScreen : MonoBehaviour
 {
@@ -15,74 +12,23 @@ public class SceneLoadingScreen : MonoBehaviour
     [SerializeField] private LoadingAnimation loading;
     [SerializeField] private ClockLoadingAnimation clockLoading;
 
-    private Dictionary<SceneFadeEffect, Action<Action>> sceneEffects;
-    private Dictionary<LoadingScreen, Action<List<string>, List<string>, UnloadSceneOptions, Action, Action>> loadingAnimations;
-    private Coroutine loadingCoroutine;
-    private bool isPlayAnimation;
+    private ILoadAnimation curAnim;
+    private Dictionary<SceneFadeEffect, ITransitionEffect> sceneEffects;
+    private Dictionary<LoadingScreen, ILoadAnimation> loadingAnimations;
 
     private void Awake()
     {
-        sceneEffects = new Dictionary<SceneFadeEffect, Action<Action>>
+        sceneEffects = new Dictionary<SceneFadeEffect, ITransitionEffect>
         {
-            { SceneFadeEffect.BlurFadeOut, blurFadeOut.OnPlayEffect },
-            { SceneFadeEffect.BlurFadeIn, blurFadeIn.OnPlayEffect }
+            { SceneFadeEffect.BlurFadeOut, blurFadeOut },
+            { SceneFadeEffect.BlurFadeIn, blurFadeIn }
         };
 
-        loadingAnimations = new Dictionary<LoadingScreen, Action<List<string>, List<string>, UnloadSceneOptions, Action, Action>>
+        loadingAnimations = new Dictionary<LoadingScreen, ILoadAnimation>
         {
-            { LoadingScreen.Loading, loading.OnPlayAnimation },
-            { LoadingScreen.ClockLoading, clockLoading.OnPlayAnimation }
+            { LoadingScreen.Loading, loading },
+            { LoadingScreen.ClockLoading, clockLoading }
         };
-    }
-
-    /************************************************************
-     * [씬 불러오기]
-     * 
-     * 현재 활성화 된 씬 중에 필요없는 씬을 지우고 필요한 씬 불러오기
-     ************************************************************/
-
-    public void EnableScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
-    {
-        if (loadingCoroutine != null)
-        {
-            // 이미 로딩 중인 경우 무시
-            return;
-        }
-
-        loadingCoroutine = StartCoroutine(SceneLoading(loadScenes, unloadScenes, unloadOptions, startEffect, endEffect, screen));
-    }
-
-    private IEnumerator SceneLoading(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, SceneFadeEffect startEffect, SceneFadeEffect endEffect, LoadingScreen screen)
-    {
-        // 로딩 중엔 어떠한 키 입력도 받지 않기
-        ControlContext.Instance.KeyLock();
-
-        // 로딩 화면을 띄우기 위한 전환 연출 실행
-        PlayTransitionEffect(startEffect);
-        yield return new WaitWhile(() => isPlayAnimation);
-
-        // 현재 진행 중인 모든 DOTween 애니메이션 종료
-        DOTween.KillAll();
-
-        // 씬 로딩 간엔 시간 멈추기
-        Time.timeScale = 0.0f;
-
-        // 씬 로딩 애니메이션 띄우기
-        EnableLoadingScreen(loadScenes, unloadScenes, unloadOptions, screen);
-        yield return new WaitWhile(() => isPlayAnimation);
-
-        // 로딩이 끝나면 본래 시간 되돌리기
-        Time.timeScale = 1.0f;
-
-        // 로딩 이후 전환 연출 실행
-        PlayTransitionEffect(endEffect);
-        yield return new WaitWhile(() => isPlayAnimation);
-
-        // 로딩이 끝났다면 키 입력 받기
-        ControlContext.Instance.KeyUnlock();
-
-        loadingCoroutine = null;
-        SceneManager.UnloadSceneAsync(SceneResource.Instance.LoadingScene);
     }
 
     /************************************************************
@@ -91,10 +37,16 @@ public class SceneLoadingScreen : MonoBehaviour
      * 로딩 씬 전환 간에 띄울 연출 관리
      ************************************************************/
 
-    private void PlayTransitionEffect(SceneFadeEffect type)
+    public UniTask PlayTransitionEffect(SceneFadeEffect type)
     {
-        isPlayAnimation = true;
-        sceneEffects[type]?.Invoke(() => isPlayAnimation = false);
+        // 등록된 연출 UniTask로 비동기 실행
+        if (sceneEffects.TryGetValue(type, out var effect) && effect != null)
+        {
+            return effect.PlayEffect();
+        }
+
+        // 등록된 연출이 없다면 바로 완료
+        return UniTask.CompletedTask;
     }
 
     /************************************************************
@@ -103,9 +55,34 @@ public class SceneLoadingScreen : MonoBehaviour
      * 씬을 불러올 동안의 로딩 간에 띄울 애니메이션 관리
      ************************************************************/
 
-    private void EnableLoadingScreen(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, LoadingScreen screen)
+    public UniTask ShowLoadingScreen(LoadingScreen screen)
     {
-        isPlayAnimation = true;
-        loadingAnimations[screen]?.Invoke(loadScenes, unloadScenes, unloadOptions, () => SceneLoadManager.onLoaded.Invoke(), () => isPlayAnimation = false);
+        // 진행 중인 애니메이션 강제 종료
+        if (curAnim != null)
+        {
+            Debug.LogWarning($"이미 로딩 애니메이션이 실행 중입니다: {nameof(curAnim)}");
+            return UniTask.CompletedTask;
+        }
+
+        // 등록된 애니메이션 UniTask로 비동기 실행
+        if (loadingAnimations.TryGetValue(screen, out var loadAnim) && loadAnim != null)
+        {
+            curAnim = loadAnim;
+            return loadAnim.PlayAnimation();
+        }
+
+        // 등록된 애니메이션이 없다면 바로 완료
+        Debug.LogWarning($"{screen} 타입의 애니메이션이 등록되어 있지 않습니다.");
+        return UniTask.CompletedTask;
+    }
+
+    public void HideLoadingScreen()
+    {
+        // 진행중인 애니메이션이 없다면 무시
+        if (curAnim == null) return;
+
+        // 애니메이션 종료
+        curAnim.StopAnimation();
+        curAnim = null;
     }
 }

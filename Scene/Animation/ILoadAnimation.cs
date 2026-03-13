@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 public interface ILoadAnimation
 {
-    public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction, Action completeAction);
+    public UniTask PlayAnimation();
+    public void StopAnimation();
 }

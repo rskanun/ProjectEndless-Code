@@ -1,6 +1,6 @@
-using System;
+using Cysharp.Threading.Tasks;
 
 public interface ITransitionEffect
 {
-    public void OnPlayEffect(Action completeAction);
+    public UniTask PlayEffect();
 }

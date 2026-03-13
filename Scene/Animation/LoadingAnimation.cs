@@ -1,75 +1,75 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LoadingAnimation : MonoBehaviour, ILoadAnimation
 {
-    [Header("사용 오브젝트")]
     [SerializeField] private GameObject textObj;
     [SerializeField] private TextMeshProUGUI loadingText;
 
-    private bool isLoading;
-    private float minTime = 2.0f;
+    [Title("Settings")]
+    [SerializeField] private float minTime = 2.0f;
+    [SerializeField] private float loadingDelay = 0.5f;
 
-    public void OnPlayAnimation(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction, Action completeAction)
+    private CancellationTokenSource animCt;
+    private readonly string[] loadingStrings =
+    {
+        "Loading...",
+        "Loading",
+        "Loading.",
+        "Loading..",
+    };
+
+    public async UniTask PlayAnimation()
     {
         // 이미 로딩중이면 무시
-        if (isLoading) return;
+        if (animCt != null) return;
 
-        StartCoroutine(SceneLoadCoroutine(loadScenes, unloadScenes, unloadOptions, loadAction));
-        StartCoroutine(LoadingCoroutine(completeAction));
-    }
+        // 애니메이션 멈춤 토큰
+        var ct = this.GetCancellationTokenOnDestroy();
+        animCt = CancellationTokenSource.CreateLinkedTokenSource(ct);
 
-    private IEnumerator LoadingCoroutine(Action completeAction)
-    {
-        int[] dotCounts = { 3, 0, 1, 2 }; // 점 개수 패턴
-        int index = 0;
-        float delay = 0.5f;
-        float timer = 0.0f;
-
-        // 로딩 텍스트 활성화
+        // 로딩 텍스트바 활성화
         textObj.SetActive(true);
 
-        while (isLoading || timer < minTime)
-        {
-            loadingText.text = "Loading" + new string('.', dotCounts[index]);
-            index = ++index % dotCounts.Length;
+        // 로딩간 실행될 애니메이션 백그라운드에서 재생
+        PlayLoadingAnimation(animCt.Token).Forget();
 
-            yield return new WaitForSecondsRealtime(delay);
-
-            // 딜레이 만큼 경과 시간 추가
-            timer += delay;
-        }
-
-        // 로딩이 끝났다면 텍스트 비활성화
-        textObj.SetActive(false);
-
-        completeAction?.Invoke();
+        // 최소 보장 시간 리턴
+        await UniTask.Delay(TimeSpan.FromSeconds(minTime), true, cancellationToken: animCt.Token)
+            .SuppressCancellationThrow();
     }
 
-    private IEnumerator SceneLoadCoroutine(List<string> loadScenes, List<string> unloadScenes, UnloadSceneOptions unloadOptions, Action loadAction)
+    public void StopAnimation()
     {
-        isLoading = true;
+        // 애니메이션 중지
+        animCt?.Cancel();
 
-        // 사용되지 않을 씬 제거
-        foreach (string unloadScene in unloadScenes)
+        // 토근 해제
+        animCt?.Dispose();
+        animCt = null;
+
+        // 로딩 텍스트바 비활성화
+        if (textObj != null)
+            textObj.SetActive(false);
+    }
+
+    private async UniTask PlayLoadingAnimation(CancellationToken ct)
+    {
+        int index = 0;
+        while (!ct.IsCancellationRequested)
         {
-            yield return SceneManager.UnloadSceneAsync(unloadScene, unloadOptions);
+            loadingText.text = loadingStrings[index];
+            index = (index + 1) % loadingStrings.Length;
+
+            // 딜레이를 걸며 그 사이에 오브젝트 파괴 여부 감지
+            var isCalceled = await UniTask.Delay(TimeSpan.FromSeconds(loadingDelay), true, cancellationToken: ct).SuppressCancellationThrow();
+
+            // ct 호출 시 빠져나오기
+            if (isCalceled) break;
         }
-
-        // 사용될 씬 불러오기
-        foreach (string loadScene in loadScenes)
-        {
-            yield return SceneManager.LoadSceneAsync(loadScene, LoadSceneMode.Additive);
-        }
-
-        // 로딩 시 실행해야할 함수 실행
-        loadAction?.Invoke();
-
-        // 로딩 종료
-        isLoading = false;
     }
 }
