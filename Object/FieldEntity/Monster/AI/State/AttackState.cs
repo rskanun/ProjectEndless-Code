@@ -40,6 +40,4 @@ public class AttackState : IMonsterState
 
         return distance <= monster.AttackDistance;
     }
-
-    public void OnTakeDamage(FSM fsm) { }
 }

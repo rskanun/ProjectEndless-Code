@@ -66,7 +66,7 @@ public abstract class Entity : MonoBehaviour
     private bool _isDead;
     public bool IsDead => _isDead;
     public bool IsActing => motionManager.IsActing;
-    public bool IsAttackEnd
+    public bool IsMotionEnd
         => !IsActing || motionManager.IsPlayAnimation(AnimParams.ReturnMotion);
     private EntityStateManager _stateManager;
     protected EntityStateManager State

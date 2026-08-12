@@ -210,7 +210,7 @@ public class BattleManager : MonoBehaviour
         curAction.OnAction();
 
         // 이전 행동 모션이 끝날 때까지 대기
-        await UniTask.WaitUntil(() => actor.IsAttackEnd);
+        await UniTask.WaitUntil(() => actor.IsMotionEnd);
 
         // 사망 확인
         foreach (var target in curAction.GetTargets())

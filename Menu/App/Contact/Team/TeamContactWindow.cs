@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class TeamContactWindow : ContactWindow
 {
-    [SerializeField] private CanvasGroup darkPanel;
     [SerializeField] private NavigationGroup naviGroup;
     [SerializeField] private TeamContactController controller;
 
@@ -21,10 +20,6 @@ public class TeamContactWindow : ContactWindow
     [SerializeField] private TeamContact playerContact;
 
     private TeamContact lastSelected;
-
-    // 애니메이션 정보
-    private float hideShowMoveRange = 80.0f;
-    private float hideShowDuration = 0.15f;
 
     private void Awake()
     {
@@ -43,37 +38,13 @@ public class TeamContactWindow : ContactWindow
     }
 
     /// <summary>
-    /// 스킬 정보를 위해 잠시 숨겨놓았던 화면 불러오기
+    /// 애니메이션 없이 창 띄우기
     /// </summary>
-    public void ShowWindow()
+    public void OpenWindowWithoutAnimation()
     {
-        // 본래 위치 저장
-        float originPosX = content.localPosition.x;
+        layoutGroup.enabled = true;
 
-        // 화면 위치 옮겨놓기
-        content.transform.localPosition -= new Vector3(hideShowMoveRange, 0);
-
-        // 화면 복구 애니메이션
-        DOTween.Sequence()
-            .Join(content.transform.DOLocalMoveX(originPosX, hideShowDuration));
-    }
-
-    /// <summary>
-    /// 스킬 정보를 위해 화면 잠시 숨기기
-    /// </summary>
-    public void HideWindow()
-    {
-        float originPosX = content.localPosition.x;
-
-        // 화면 숨김 애니메이션 실행
-        DOTween.Sequence()
-            .Join(content.transform.DOLocalMoveX(originPosX - hideShowMoveRange, hideShowDuration)) // 화면을 통째로 옆으로 이동
-            .Join(darkPanel.DOFade(0.5f, hideShowDuration)) // 화면 점점 어둡게
-            .OnKill(() =>
-            {
-                content.transform.localPosition = new Vector3(originPosX, content.transform.localPosition.y);
-                darkPanel.alpha = 0.0f;
-            });
+        InitContact();
     }
 
     /// <summary>
@@ -130,6 +101,9 @@ public class TeamContactWindow : ContactWindow
     {
         lastSelected = playerContact;
 
+        // 페이드아웃 오브젝트 설정
+        InitFadeOutObjs();
+
         // 플레이어 데이터 설정
         playerContact.UpdateInfo(PartyData.Instance.Player);
 
@@ -172,6 +146,19 @@ public class TeamContactWindow : ContactWindow
             EventSystem.current.SetSelectedGameObject(lastSelected.gameObject);
     }
 
+    private void InitFadeOutObjs()
+    {
+        // 페이드 아웃된 목록들의 알파값 초기화
+        foreach (GameObject obj in fadeOutObjects)
+        {
+            CanvasGroup cg = obj.GetComponent<CanvasGroup>();
+
+            if (cg == null) continue;
+
+            cg.alpha = 1.0f;
+        }
+    }
+
     private void OnSelectContact(TeamContact contact, CharacterData character)
     {
         lastSelected = contact;
@@ -196,22 +183,6 @@ public class TeamContactWindow : ContactWindow
 
         // 다이어리로 넘어가기
         app.FocusDiary();
-    }
-
-    protected override IEnumerator OpenAnimation()
-    {
-        // 페이드 아웃된 목록들의 알파값 초기화
-        foreach (GameObject obj in fadeOutObjects)
-        {
-            CanvasGroup cg = obj.GetComponent<CanvasGroup>();
-
-            if (cg == null) continue;
-
-            cg.alpha = 1.0f;
-        }
-
-        // 기존 애니메이션 진행
-        return base.OpenAnimation();
     }
 
     protected override IEnumerator CloseAnimation()

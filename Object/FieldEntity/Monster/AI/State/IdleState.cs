@@ -63,6 +63,4 @@ public class IdleState : IMonsterState
     {
         thinkDelay -= Time.deltaTime;
     }
-
-    public void OnTakeDamage(FSM fsm) { }
 }

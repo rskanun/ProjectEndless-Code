@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -88,15 +89,36 @@ public class ContactApp : App
     /// <summary>
     /// 현재 창에서 스킬 정보를 보여주는 창으로 바꾸기
     /// </summary>
-    public void ShowSkillInformation(Skill skill)
+    public async void ShowSkillInformation(Skill skill)
     {
+        // 현재 화면
+        var curContactWindow = windows[_state];
+
+        // 현 상태를 스킬로 갱신
         _state = ContactState.Skill;
 
-        // 맴버 정보 화면 숨기기
-        mainWindow.HideWindow();
+        // 현재 정보 화면 숨기기
+        curContactWindow.HideWindow();
 
         // 스킬 정보 불러오기
         skillWindow.OpenWindow(skill);
+
+        // 두 애니메이션 종료까지 대기
+        await UniTask.WaitWhile(() => curContactWindow.IsTweening || skillWindow.IsTweening);
+
+        // 다시 돌아왔을 때 메인 화면이도록 조정
+        if (curContactWindow != mainWindow)
+        {
+            // 현재 화면은 끄기
+            curContactWindow.gameObject.SetActive(false);
+
+            // 메인 화면 애니메이션 없이 켜기
+            mainWindow.gameObject.SetActive(true);
+            mainWindow.OpenWindowWithoutAnimation();
+
+            // 현재 화면 갱신
+            currentWindow = mainWindow;
+        }
     }
 
     /// <summary>

@@ -74,14 +74,17 @@ public class BattleSequence
 
     public void AddTurn(BattleAction action)
     {
-        int index = Sequence.BinarySearch(action);
-        if (index < 0) index = ~index;
-
+        int index = GetActionMinSeq(action);
         AddTurn(action, index);
     }
 
     public void AddTurn(BattleAction action, int index)
     {
+        // 오름차순에 맞춰 정렬
+        int minIdx = GetActionMinSeq(action);
+        if (minIdx > index) index = minIdx;
+
+        // 순서에 맞는 위치에 삽입
         if (index >= Sequence.Count) Sequence.Add(action);
         else Sequence.Insert(index, action);
 

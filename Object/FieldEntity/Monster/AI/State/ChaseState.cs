@@ -56,6 +56,4 @@ public class ChaseState : IMonsterState
     }
 
     public void OnEnterState() { }
-
-    public void OnTakeDamage(FSM fsm) { }
 }

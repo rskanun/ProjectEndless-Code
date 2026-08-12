@@ -16,6 +16,8 @@ public class SkillInformationWindow : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionField;
 
     private RectTransform rectTrans;
+    private bool _isTweening;
+    public bool IsTweening => _isTweening;
 
     // 애니메이션 설정
     private float openDuration = 0.2f;
@@ -35,6 +37,8 @@ public class SkillInformationWindow : MonoBehaviour
     /// <param name="skill">처음 화면에 띄워질 스킬</param>
     public void OpenWindow(Skill skill)
     {
+        _isTweening = true;
+
         // 정보 설정
         SetupInformation(skill);
 
@@ -51,7 +55,11 @@ public class SkillInformationWindow : MonoBehaviour
         // 화면 전환 애니메이션 실행
         // 종료 후 키 잠금 해제
         transform.DOLocalMoveX(0, openDuration)
-            .OnComplete(() => ControlContext.Instance.KeyUnlock());
+            .OnComplete(() =>
+            {
+                ControlContext.Instance.KeyUnlock();
+                _isTweening = false;
+            });
     }
 
     /// <summary>
@@ -59,6 +67,8 @@ public class SkillInformationWindow : MonoBehaviour
     /// </summary>
     public void CloseWindow()
     {
+        _isTweening = true;
+
         // 위치 저장
         Vector3 originPos = transform.localPosition;
 
@@ -78,6 +88,8 @@ public class SkillInformationWindow : MonoBehaviour
 
                 // 키 잠금 해제
                 ControlContext.Instance.KeyUnlock();
+
+                _isTweening = false;
             });
     }
 

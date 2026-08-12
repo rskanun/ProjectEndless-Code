@@ -15,9 +15,4 @@ public class FSM
     {
         curState?.OnAction(this);
     }
-
-    public void OnTakeDamage()
-    {
-        curState?.OnTakeDamage(this);
-    }
 }

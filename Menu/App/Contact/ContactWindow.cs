@@ -9,6 +9,7 @@ public abstract class ContactWindow : MonoBehaviour
     [SerializeField] protected RectTransform content;
     [SerializeField] protected VerticalLayoutGroup layoutGroup;
     [SerializeField] protected RectTransform viewportRect;
+    [SerializeField] protected CanvasGroup darkPanel;
     protected List<GameObject> contactList = new();
 
     protected bool _isTweening;
@@ -20,6 +21,8 @@ public abstract class ContactWindow : MonoBehaviour
     protected float offsetX = 300f;   // 클로즈 애니메이션이 끝나는 X 위치
     protected float interval = 0.05f; // 각 항목 등장 간격
     protected float duration = 0.3f; // 올라오는데 걸리는 시간
+    private float hideShowMoveRange = 80.0f; // 숨김보임 애니메이션 좌우 이동거리
+    private float hideShowDuration = 0.15f; // // 숨김보임 애니메이션 걸리는 시간
 
     public void KillAnimations()
     {
@@ -35,6 +38,51 @@ public abstract class ContactWindow : MonoBehaviour
 
         InitContact();
         StartCoroutine(OpenAnimation());
+    }
+
+    public void CloseWindow()
+    {
+        StartCoroutine(CloseAnimation());
+    }
+
+    /// <summary>
+    /// 스킬 정보를 위해 잠시 숨겨놓았던 화면 불러오기
+    /// </summary>
+    public void ShowWindow()
+    {
+        _isTweening = true;
+
+        // 본래 위치 저장
+        float originPosX = content.localPosition.x;
+
+        // 화면 위치 옮겨놓기
+        content.transform.localPosition -= new Vector3(hideShowMoveRange, 0);
+
+        // 화면 복구 애니메이션
+        DOTween.Sequence()
+            .Join(content.transform.DOLocalMoveX(originPosX, hideShowDuration))
+            .AppendCallback(() => _isTweening = false);
+    }
+
+    /// <summary>
+    /// 스킬 정보를 위해 화면 잠시 숨기기
+    /// </summary>
+    public void HideWindow()
+    {
+        _isTweening = true;
+
+        float originPosX = content.localPosition.x;
+
+        // 화면 숨김 애니메이션 실행
+        DOTween.Sequence()
+            .Join(content.transform.DOLocalMoveX(originPosX - hideShowMoveRange, hideShowDuration)) // 화면을 통째로 옆으로 이동
+            .Join(darkPanel.DOFade(0.5f, hideShowDuration)) // 화면 점점 어둡게
+            .OnKill(() =>
+            {
+                content.transform.localPosition = new Vector3(originPosX, content.transform.localPosition.y);
+                darkPanel.alpha = 0.0f;
+                _isTweening = false;
+            });
     }
 
     /// <summary>
@@ -120,16 +168,9 @@ public abstract class ContactWindow : MonoBehaviour
         _isTweening = false;
     }
 
-    public void CloseWindow()
-    {
-        StartCoroutine(CloseAnimation());
-    }
-
     protected virtual IEnumerator CloseAnimation()
     {
         _isTweening = true;
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(content);
 
         yield return null;
 

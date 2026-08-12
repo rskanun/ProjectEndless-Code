@@ -9,5 +9,4 @@ public interface IMonsterState
 {
     public void OnEnterState();
     public void OnAction(FSM fsm);
-    public void OnTakeDamage(FSM fsm);
 }
