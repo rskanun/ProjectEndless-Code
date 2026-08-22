@@ -206,6 +206,10 @@ public class EntityMotionManager : MonoBehaviour
             await UniTask.Yield();
         }
 
+        // 모든 방어 판정 제거(프레임 드랍 염두)
+        BattleData.Instance.IsDodgeFrame = false;
+        BattleData.Instance.IsParryFrame = false;
+
         // 원래 자리로 돌아오기
         await ReturnAnimation(originPos);
 
